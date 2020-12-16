@@ -25,7 +25,7 @@
         </rollingPolicy>
     </appender>
     
-    <logger name="daangnmeongcat" level="debug" >
+    <logger name="daangnmungcat" level="debug" >
         <appender-ref ref="console" />
     </logger>
     

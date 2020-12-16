@@ -52,7 +52,8 @@ dependencies {
 	compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
 	testCompile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.13.3'
    
-  	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.10.3'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.3'
+	compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.11.3'
 
 	testImplementation 'junit:junit:4.12'
 }

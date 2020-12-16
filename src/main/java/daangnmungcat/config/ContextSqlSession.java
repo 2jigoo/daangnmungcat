@@ -13,8 +13,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@MapperScan(basePackages = {"daangnmungcat.mapper"})
+//@Configuration
+//@MapperScan(basePackages = {"daangnmungcat.mapper"})
 public class ContextSqlSession {
 
 	@Autowired
@@ -25,8 +25,8 @@ public class ContextSqlSession {
 		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
 		
 		factoryBean.setDataSource(dataSource);
-		factoryBean.setConfigLocation(ApplicationContext.getResource("classpath:/mybatis-config.xml"));
-		factoryBean.setMapperLocations(ApplicationContext.getResources("classpath:/mappers/*Mapper.xml"));
+		//factoryBean.setConfigLocation(ApplicationContext.getResource("classpath:/mybatis-config.xml"));
+		//factoryBean.setMapperLocations(ApplicationContext.getResources("classpath:/mappers/*Mapper.xml"));
 		
 		return factoryBean;
 	}

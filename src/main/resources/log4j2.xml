@@ -19,7 +19,7 @@
    </Appenders>
    
    <Loggers>
-      <Logger name="daangnmeongcat" level="trace" additivity="false">
+      <Logger name="daangnmungcat" level="trace" additivity="false">
          <AppenderRef ref="Console" />
         <!--  <AppenderRef ref="RollingFile_Daily" /> -->
       </Logger>
