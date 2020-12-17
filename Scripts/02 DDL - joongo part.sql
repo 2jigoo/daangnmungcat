@@ -11,33 +11,38 @@ DROP TABLE JOONGO_CHAT CASCADE CONSTRAINTS; /* 중고_대화 */
 DROP TABLE JOONGO_MYSALE CASCADE CONSTRAINTS; /* 중고_판매내역 */
 DROP TABLE JOONGO_MYBUY CASCADE CONSTRAINTS; /* 중고_구매내역 */
 
+--재설정
 
 /* 멤버 */
 CREATE TABLE MEMBER (
-	id VARCHAR2(20) NOT NULL, /* 회원아이디 */
+	id VARCHAR2(20) NOT NULL PRIMARY key, /* 회원아이디 */
 	pwd VARCHAR2(255) NOT NULL, /* 비밀번호 */
 	name VARCHAR2(36) NOT NULL, /* 이름 */
 	nickname VARCHAR2(36) NOT NULL, /* 닉네임 */
-	email VARCHAR2(50) NOT NULL CONSTRAINT member_email_uq UNIQUE(email), /* 이메일 */
-	phone VARCHAR2(20) NOT NULL CONSTRAINT member_phone_uq UNIQUE(phone), /* 연락처 */
+	email VARCHAR2(50) NOT NULL, /* 이메일 */
+	phone VARCHAR2(20) NOT NULL, /* 연락처 */
 	mydongne VARCHAR2(30) NOT NULL, /* 내동네 */
 	grade NUMBER(1) NOT NULL, /* 등급 */
+	profile_pic VARCHAR2(255), /* 프로필사진 */
+	profile_text VARCHAR2(600),/* 프로필소개 */
+	regdate DATE DEFAULT sysdate /* 가입일 */
+);
+
+
+ALTER TABLE MEMBER ADD UNIQUE (email);
+ALTER TABLE MEMBER ADD UNIQUE (phone);
+
 	--identity_yn VARCHAR2(1) NOT NULL, /* 본인인증 여부 */
 	--birthday DATE, /* 생일 */
 	--zipcode NUMBER(5), /* 우편번호 */
 	--address1 VARCHAR2(255), /* 주소 */
 	--address2 VARCHAR2(255), /* 상세주소 */
 	--mileage NUMBER(10), /* 마일리지 */
-	profile_pic VARCHAR2(255), /* 프로필사진 */
-	profile_text VARCAHR2(600), /* 프로필소개 */
-	regdate DATE NOT NULL DEFAULT SYSDATE /* 가입일 */
-);
 
 ALTER TABLE MEMBER
 ADD CONSTRAINT PK_MEMBER PRIMARY KEY (id);
 	
 
-	
 /* 중고동네_1차 */
 CREATE TABLE DONGNE1 (
 	id NUMBER(12) NOT NULL, /* 동네1차아이디 */
@@ -57,6 +62,7 @@ CREATE TABLE DONGNE2 (
 ALTER TABLE DONGNE2
 ADD CONSTRAINT PK_DONGNE2 PRIMARY KEY (id);
 	
+
 
 
 /* 중고판매글 */
