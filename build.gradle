@@ -42,11 +42,11 @@ dependencies {
    compile group: 'org.springframework', name: 'spring-websocket', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-messaging', version: "${version.spring}"
    
-	//spring security
-	compile group: 'org.springframework.security', name: 'spring-security-core', version: "${version.spring}"
-	compile group: 'org.springframework.security', name: 'spring-security-web', version: "${version.spring}"
-	compile group: 'org.springframework.security', name: 'spring-security-config', version: "${version.spring}"
-	compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: "${version.spring}"
+	//spring security 5.2.9없으니께 바꾸지말아주세유
+	compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.1'
+	compile group: 'org.springframework.security', name: 'spring-security-web', version:  '5.4.1'
+	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.1'
+	compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.1'
    
    
    // DB 연동 관련

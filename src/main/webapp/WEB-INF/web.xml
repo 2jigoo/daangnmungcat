@@ -10,9 +10,12 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>daangnmungcat.config.ContextRoot
+		<param-value>
+		daangnmungcat.config.ContextRoot,
+		security-context.xml 
 		</param-value>
 	</context-param>
+	
 	
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -50,6 +53,7 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
 	
 	<!-- spring security -->
 	<filter>
