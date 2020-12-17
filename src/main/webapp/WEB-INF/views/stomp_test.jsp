@@ -4,7 +4,9 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>STMOP TEST</title>
+<title>STOMP TEST</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script> <!-- jquery, sockjs 등 webjar로 올릴 수도 있다 -->
 <script>
 	var sock = new SockJS("/stompTest");
