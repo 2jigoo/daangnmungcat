@@ -1,3 +1,4 @@
+
 plugins {
     id 'java'
     id 'war'
@@ -19,6 +20,7 @@ def version = [
 	spring: '5.2.9.RELEASE',
 	log4j2: '2.13.3'
 ]
+
 dependencies {
 	//jsp
 	compile group: 'javax.servlet', name: 'jstl', version: '1.2'
@@ -64,3 +66,4 @@ dependencies {
 
 	testImplementation 'junit:junit:4.12'
 }
+
