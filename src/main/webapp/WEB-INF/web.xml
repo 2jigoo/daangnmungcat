@@ -11,8 +11,7 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-		daangnmungcat.config.ContextRoot,
-		security-context.xml 
+		daangnmungcat.config.ContextRoot
 		</param-value>
 	</context-param>
 	
@@ -31,7 +30,9 @@
 		</init-param>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>daangnmungcat.config.WebMvcContextConfig</param-value>
+			<param-value>daangnmungcat.config.WebMvcContextConfig 
+			classpath:security-context.xml
+			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -56,14 +57,15 @@
 	
 	
 	<!-- spring security -->
+<!-- 	<listener><listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class></listener>
 	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+ 
+    <filter-mapping>
+          <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping> -->
 	
 </web-app>
