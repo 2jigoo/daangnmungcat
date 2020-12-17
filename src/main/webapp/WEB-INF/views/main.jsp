@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script src="${pageContext.request.contextPath}/js/aaa.js" type="text/javascript" ></script>
+<script src="<c:url value="/js/aaa.js" />" type="text/javascript" ></script>
 </head>
 <body>
 main페이지라노~<br>
