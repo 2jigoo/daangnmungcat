@@ -42,7 +42,7 @@ public class MemberController {
 			session.setAttribute("member", member);
 			mav.setViewName("redirect:/");
 		}catch(WrongIdPasswordException e) {
-			System.out.println("아이디비번틀림");
+			
 		}
 		
 		return mav;
