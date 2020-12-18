@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.MemberMapper">
+<sql id="selectSql">
+	select id, pwd, name, nickname, email, phone, grade, profile_pic, profile_text, regdate from member
+</sql>
 
+<sql id="whereSql">
+	<where>
+		<if test="id != null">
+			id = #{id}
+		</if>
+
+	</where>
+</sql>
+
+<!-- ResultMap -->
+
+	<resultMap type="Member" id="memberResult">
+		<id column="id" property="id"></id>
+		<result column="pwd" property="pwd"></result>
+		<result column="name" property="name"></result>
+		<result column="nickname" property="nickname"></result>
+		<result column="email" property="email"></result>
+		<result column="phone" property="phone"></result>
+		<result column="grade" property="grade"></result>
+		<result column="profile_pic" property="profilePic"></result>
+		<result column="profile_text" property="profileText"></result>
+		<result column="regdate" property="regdate"></result>
+	</resultMap>
+	
+<!-- query  -->
+	<select id="selectMemberByAll" resultMap="memberResult">
+		<include refid="selectSql"></include>
+	</select>
+	
+	<select id="selectMembetById" resultMap="memberResult">
+		<include refid="selectSql"></include>
+		<include refid="whereSql"></include>
+	</select>
+	
+	<select id="checkPwd" resultType="int" parameterType="String">
+		SELECT 1 FROM MEMBER WHERE id = #{id} and pwd = #{pwd}
+	</select>
+	
 </mapper>

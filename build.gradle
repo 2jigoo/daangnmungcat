@@ -18,8 +18,7 @@ repositories {
 
 def version = [
    spring: '5.2.9.RELEASE',
-   log4j2: '2.13.3',
-   lombok: '1.18.12' 
+   log4j2: '2.13.3'
 ]
 
 dependencies {
@@ -29,10 +28,7 @@ dependencies {
    providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
 
    // Lombok
-   compileOnly 'org.projectlombok:lombok:${version.lombok}'
-   annotationProcessor 'org.projectlombok:${version.lombok}'
-   testCompileOnly 'org.projectlombok:lombok:${version.lombok}'
-   testAnnotationProcessor 'org.projectlombok:lombok:${version.lombok}'
+   providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
    
    // spring
    compile group: 'org.springframework', name: 'spring-context', version: "${version.spring}"
@@ -71,4 +67,7 @@ dependencies {
    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.11.3'
 
    testImplementation 'junit:junit:4.12'
+   
+   //혜진 (혹시 이걸로 에러나면 지우시오)
+	compile group: 'com.oracle.database.nls', name: 'orai18n', version: '19.7.0.0'
 }

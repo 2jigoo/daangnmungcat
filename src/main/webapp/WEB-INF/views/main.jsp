@@ -20,12 +20,20 @@
 			<input type="text" class="text">
 			<input type="submit" class="btn">
 		</div>
-
+		<c:if test="${member == null}">
 		<ul class="h_util">
-			<li><a href="#">로그인</a></li>
+			<li><a href="login">로그인</a></li>
 			<li><a href="#">회원가입</a></li>
 			<li><a href="#">장바구니</a></li>
 		</ul>
+		</c:if>
+		<c:if test="${member != null}">
+			<ul class="h_util">
+			<li><a href="#">${member.getId()}님 안녕하세요.</a></li>
+			<li><a href="#">마이페이지</a></li>
+			<li><a href="logout">로그아웃</a></li>
+			</ul>
+		</c:if>
 
 		<div class="h_search_btn"><span class="text_hidden">검색</span></div>
 		<div id="menuToggle">
@@ -36,11 +44,20 @@
 	</div>
 	<nav id="gnb">
 		<div>
+			<c:if test="${member == null}">
 			<ul>
-				<li><a href="${path}/">로그인</a></li>
+				<li><a href="login">로그인</a></li>
 				<li><a href="#">회원가입</a></li>
 				<li><a href="#">장바구니</a></li>
 			</ul>
+			</c:if>
+			<c:if test="${member != null}">
+			<ul>
+				<li><a href="#">${member.getId()}님</a></li>
+				<li><a href="#">마이페이지</a></li>
+				<li><a href="logout">로그아웃</a></li>
+			</ul>
+			</c:if>
 		</div>
 		<ul>
 			<li><a href="#">중고</a></li>
