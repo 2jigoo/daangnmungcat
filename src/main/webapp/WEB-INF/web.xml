@@ -30,9 +30,7 @@
 		</init-param>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>daangnmungcat.config.WebMvcContextConfig 
-			classpath:security-context.xml
-			</param-value>
+			<param-value>daangnmungcat.config.WebMvcContextConfig</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
