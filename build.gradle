@@ -29,10 +29,7 @@ dependencies {
    providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.3'
 
    // Lombok
-   compileOnly 'org.projectlombok:lombok:${version.lombok}'
-   annotationProcessor 'org.projectlombok:${version.lombok}'
-   testCompileOnly 'org.projectlombok:lombok:${version.lombok}'
-   testAnnotationProcessor 'org.projectlombok:lombok:${version.lombok}'
+   providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
    
    // spring
    compile group: 'org.springframework', name: 'spring-context', version: "${version.spring}"
