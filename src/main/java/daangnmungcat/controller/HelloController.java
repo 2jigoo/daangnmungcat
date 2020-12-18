@@ -12,4 +12,9 @@ public class HelloController {
 		model.addAttribute("greeting", "안녕하세요, " + name);
 		return "hello";
 	}
+	
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 }
