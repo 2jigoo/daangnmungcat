@@ -15,3 +15,6 @@ INSERT INTO MEMBER VALUES('admin', '1234', '관리자', '관리자', 'admin@admi
 INSERT INTO MEMBER VALUES('test', '1234', '테스트', '테스트닉', 'test@test.co.kr', '010-5656-5656', '대구광역시 서구 웅앵동', 1, NULL, NULL, sysdate);
 
 SELECT * FROM MEMBER;
+
+SELECT 1 FROM MEMBER WHERE id = 'admin' and pwd = '1234';
+SELECT 1 FROM dual;
