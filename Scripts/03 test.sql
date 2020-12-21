@@ -11,8 +11,8 @@ SELECT * FROM MEMBER;
 --	profile_text VARCHAR2(600),/* 프로필소개 */
 --	regdate DATE DEFAULT sysdate /* 가입일 */
 
-INSERT INTO MEMBER VALUES('admin', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234', '대구광역시 서구 웅앵동', 1, NULL, NULL, sysdate);
-INSERT INTO MEMBER VALUES('test', '1234', '테스트', '테스트닉', 'test@test.co.kr', '010-5656-5656', '대구광역시 서구 웅앵동', 1, NULL, NULL, sysdate);
+INSERT INTO MEMBER VALUES('admin', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234', '대구광역시 서구', 1, NULL, NULL, sysdate);
+INSERT INTO MEMBER VALUES('test', '1234', '테스트', '테스트닉', 'test@test.co.kr', '010-5656-5656', '대구광역시 서구', 1, NULL, NULL, sysdate);
 
 SELECT * FROM MEMBER;
 
