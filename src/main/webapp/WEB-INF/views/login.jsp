@@ -2,15 +2,18 @@
     pageEncoding="UTF-8"%>
 
 <%@ include file="/resources/include/header.jsp" %>
-
+<style>
+.login-wrapper {text-align:center; padding:50px;}
+</style>
 
 
 <form method="post" action="login">
-	<div class="input">
+<div class="login-wrapper">
+	<div class="id">
 		<label>id</label>
 		<input type="text" name="id">
 	</div>
-	<div class="input">
+	<div class="pw">
 		<label>pw</label>
 		<input type="password" name="pwd">
 	</div>
@@ -20,6 +23,8 @@
 	<!-- csrf 토큰 hidden -->
 	csrf 토큰<br>
 	<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
+</div>
+
 </form>
 
 

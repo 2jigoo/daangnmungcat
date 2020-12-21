@@ -18,8 +18,8 @@ import daangnmungcat.mapper.MemberMapper;
 import daangnmungcat.service.AuthService;
 
 @Controller
-public class MemberController {
-	private static final Log log = LogFactory.getLog(MemberController.class);
+public class LoginController {
+	private static final Log log = LogFactory.getLog(LoginController.class);
 	
 	@Autowired
 	private AuthService authService;
@@ -28,12 +28,14 @@ public class MemberController {
 	private MemberMapper mapper;
 	
 	@GetMapping("/login")
-	public String login(Member member, HttpSession session) {
+	public String login() {
+		System.out.println("get");
 		return "/login";
 	}
 	
 	@PostMapping("/login")
 	public ModelAndView submit(Member member, HttpSession session) {
+		System.out.println("post");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("/login");
 		try {
