@@ -12,7 +12,7 @@ public interface MemberMapper {
 	List<Member> selectMemberByAll();
 	Member selectMembetById(String id);
 	int insertMember(Member member);
-	int checkPwd(@Param("id")String id, @Param("pwd")String pwd);
+	Integer checkPwd(@Param("id")String id, @Param("pwd")String pwd);
 	
 	List<Dongne1> Dongne1List();
 	List<Dongne2> Dongne2List(@Param("dongne1Id")int dongne1);

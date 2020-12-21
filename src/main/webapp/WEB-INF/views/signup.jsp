@@ -43,7 +43,10 @@ $(function(){
 	<table class="signup">
 	<tr>
 		<td>아이디</td>
-		<td><input type="text" name="id"></td>
+		<td>
+			<input type="text" name="id">
+			<input type="button" value="중복확인" onclick="">
+		</td>
 	</tr>
 	<tr>
 		<td>비밀번호</td>
