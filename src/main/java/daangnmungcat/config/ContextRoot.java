@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 @Configuration
-@Import({ContextDataSource.class, ContextSqlSession.class, WebSocketConfig.class, SecurityConfig.class})
-@ComponentScan(basePackages = {"daangnmungcat.mapper", "daangnmungcat.service"})
+@Import({ContextDataSource.class, ContextSqlSession.class, WebSocketMessageBrokerConfig.class, SecurityConfig.class})
+@ComponentScan(basePackages = {
+		"daangnmungcat.mapper",
+		"daangnmungcat.service"})
 public class ContextRoot {
 	
 }
