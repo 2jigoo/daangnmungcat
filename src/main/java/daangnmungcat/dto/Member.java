@@ -2,7 +2,6 @@ package daangnmungcat.dto;
 
 import java.time.LocalDateTime;
 
-
 public class Member {
 
 	private String id;
@@ -13,41 +12,37 @@ public class Member {
 	private String phone;
 	private String grade;
 	// 동네
+	private int dongne1;
+	private int dongne2;
 	// 등급
 	private String profilePic;
 	private String profileText;
 	private LocalDateTime regdate;
-	
+
 	/*
-	private boolean identifyYn; // 본인인증 여부
-	private LocalDate birthday;
-	private int zipcode;
-	private String address1;
-	private String address2;
-	priavate int mileage;
-	*/
-	
+	 * private boolean identifyYn; 
+	 * // 본인인증 여부 private LocalDate birthday;
+	 *  private int zipcode; 
+	 *  priavate int mileage;
+	 */
+
 	public Member() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	
-
-	public Member(String id) {
-		super();
-		this.id = id;
-	}
-
-
 
 	public Member(String id, String pwd) {
+		super();
 		this.id = id;
 		this.pwd = pwd;
 	}
+	
+	
+
+	
 
 	public Member(String id, String pwd, String name, String nickname, String email, String phone, String grade,
-			String profilePic, String profileText, LocalDateTime regdate) {
+			int dongne1, int dongne2, String profilePic, String profileText, LocalDateTime regdate) {
 		super();
 		this.id = id;
 		this.pwd = pwd;
@@ -56,6 +51,8 @@ public class Member {
 		this.email = email;
 		this.phone = phone;
 		this.grade = grade;
+		this.dongne1 = dongne1;
+		this.dongne2 = dongne2;
 		this.profilePic = profilePic;
 		this.profileText = profileText;
 		this.regdate = regdate;
@@ -91,6 +88,23 @@ public class Member {
 
 	public void setNickname(String nickname) {
 		this.nickname = nickname;
+	}
+	
+
+	public int getDongne1() {
+		return dongne1;
+	}
+
+	public void setDongne1(int dongne1) {
+		this.dongne1 = dongne1;
+	}
+
+	public int getDongne2() {
+		return dongne2;
+	}
+
+	public void setDongne2(int dongne2) {
+		this.dongne2 = dongne2;
 	}
 
 	public String getEmail() {
@@ -141,17 +155,19 @@ public class Member {
 		this.regdate = regdate;
 	}
 
-	@Override
-	public String toString() {
-		return "Member [id=" + id + ", pwd=" + pwd + ", name=" + name + ", nickname=" + nickname + ", email=" + email
-				+ ", phone=" + phone + ", grade=" + grade + ", profilePic=" + profilePic + ", profileText="
-				+ profileText + ", regdate=" + regdate + "]";
-	}
-	
-	//암호일치여부 확인
+	// 암호일치여부 확인
 	public boolean matchPassword(String pwd) {
 		return this.pwd.equals(pwd);
 	}
+
+	@Override
+	public String toString() {
+		return String.format(
+				"Member [id=%s, pwd=%s, name=%s, nickname=%s, email=%s, phone=%s, grade=%s, dongne1=%s, dongne2=%s, profilePic=%s, profileText=%s, regdate=%s]",
+				id, pwd, name, nickname, email, phone, grade, dongne1, dongne2, profilePic, profileText, regdate);
+	}
+
+
 	
-	
+
 }

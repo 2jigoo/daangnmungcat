@@ -23,7 +23,7 @@
 		<c:if test="${member == null}">
 		<ul class="h_util">
 			<li><a href="login">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
+			<li><a href="signup">회원가입</a></li>
 			<li><a href="#">장바구니</a></li>
 		</ul>
 		</c:if>
@@ -47,7 +47,7 @@
 			<c:if test="${member == null}">
 			<ul>
 				<li><a href="login">로그인</a></li>
-				<li><a href="#">회원가입</a></li>
+				<li><a href="signup">회원가입</a></li>
 				<li><a href="#">장바구니</a></li>
 			</ul>
 			</c:if>
