@@ -14,7 +14,7 @@
 
 <header id="header">
 	<div class="s-inner">
-		<h1 id="logo"><a href="#">당근멍캣</a></h1>
+		<h1 id="logo"><a href="<c:url value="/" />">당근멍캣</a></h1>
 
 		<div class="h_search">
 			<input type="text" class="text">
