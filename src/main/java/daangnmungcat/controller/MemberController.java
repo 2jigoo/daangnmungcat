@@ -28,7 +28,7 @@ public class MemberController {
 	private MemberMapper mapper;
 	
 	@GetMapping("/login")
-	public String login(Member member) {
+	public String login(Member member, HttpSession session) {
 		return "/login";
 	}
 	
