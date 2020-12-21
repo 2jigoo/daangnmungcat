@@ -27,15 +27,19 @@ public class LoginController {
 	@Autowired
 	private MemberMapper mapper;
 	
+	@GetMapping("/signup")
+	public String signForm() {
+		return "/signup";
+	}
+	
 	@GetMapping("/login")
 	public String login() {
-		System.out.println("get");
+		//파라미터에 member 추가하면 세션자동인듯
 		return "/login";
 	}
 	
 	@PostMapping("/login")
 	public ModelAndView submit(Member member, HttpSession session) {
-		System.out.println("post");
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("/login");
 		try {
@@ -55,7 +59,9 @@ public class LoginController {
 		session.invalidate();
 		return "redirect:/";
 	}
-	//테스트용
+	
+	
+	//security 테스트용
 	@GetMapping("/all")
 	public String doAll() {
 		return "/sample/all";

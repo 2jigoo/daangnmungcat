@@ -14,6 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import daangnmungcat.config.ContextRoot;
+import daangnmungcat.dto.Dongne1;
+import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -48,5 +50,11 @@ public class MemberMapperTest {
 		int res = mapper.checkPwd("admin", "1234");
 		System.out.println(res);
 		
+	}
+	
+	@Test
+	public void selectDong1() {
+		List<Dongne1> list1 = mapper.Dongne1List();
+		List<Dongne2> list2 = mapper.Dongne2List(1);
 	}
 }

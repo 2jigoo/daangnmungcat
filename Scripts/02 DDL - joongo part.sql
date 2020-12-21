@@ -21,7 +21,8 @@ CREATE TABLE MEMBER (
 	nickname VARCHAR2(36) NOT NULL, /* 닉네임 */
 	email VARCHAR2(50) NOT NULL, /* 이메일 */
 	phone VARCHAR2(20) NOT NULL, /* 연락처 */
-	mydongne VARCHAR2(30) NOT NULL, /* 내동네 */
+	dongne1 number(12) NOT NULL, /* 시 */
+	dongne2 number(12) NOT NULL, /* 군구 */
 	grade NUMBER(1) NOT NULL, /* 등급 */
 	profile_pic VARCHAR2(255), /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */

@@ -14,7 +14,7 @@
 
 <header id="header">
 	<div class="s-inner">
-		<h1 id="logo"><a href="#">당근멍캣</a></h1>
+		<h1 id="logo"><a href="<c:url value="/" />">당근멍캣</a></h1>
 
 		<div class="h_search">
 			<input type="text" class="text">
@@ -23,7 +23,7 @@
 		<c:if test="${member == null}">
 		<ul class="h_util">
 			<li><a href="login">로그인</a></li>
-			<li><a href="#">회원가입</a></li>
+			<li><a href="signup">회원가입</a></li>
 			<li><a href="#">장바구니</a></li>
 		</ul>
 		</c:if>
@@ -47,7 +47,7 @@
 			<c:if test="${member == null}">
 			<ul>
 				<li><a href="login">로그인</a></li>
-				<li><a href="#">회원가입</a></li>
+				<li><a href="signup">회원가입</a></li>
 				<li><a href="#">장바구니</a></li>
 			</ul>
 			</c:if>
