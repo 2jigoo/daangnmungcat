@@ -17,8 +17,8 @@ public class Chat {
 
 	int id;
 	Sale sale;
-	// Member saleMember 
-	// Member buyMember
+	// Member sellers
+	Member buyer;
 	LocalDateTime regdate;
 	LocalDateTime latestDate;
 	
