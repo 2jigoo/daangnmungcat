@@ -18,6 +18,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.exception.WrongIdPasswordException;
 import daangnmungcat.mapper.MemberMapper;
 import daangnmungcat.service.AuthService;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
 public class LoginController {
@@ -40,22 +41,26 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String submit(Member member,HttpServletRequest request) throws Exception {
+	public String submit(Member member, HttpServletRequest request) throws Exception {
+		
 		Integer res = mapper.checkPwd(member.getId(), member.getPwd());
 		HttpSession session = null;
+		
+		System.out.println("member: " + member);
+		System.out.println("res: " + res);
+		
 		try {
 			session = request.getSession();
 			if (res == 1) {
 				AuthInfo authInfo = authService.authenicate(member.getId(), member.getPwd());
 				// 세션에 id pwd 저장
-				System.out.println(res);
-				session.setAttribute("member", member);
+				// mapper로 조회해서 비번을 제외한 다른 회원 정보까지 포함해 set해야 할 듯. 아니면 아이디, 이름 정도만?
+				session.setAttribute("loginUser", member);
 				return "redirect:/";
 			}
 		}catch (Exception e) {
-			session.removeAttribute("member");
-			session.setAttribute("member", null);
-			session.setAttribute("msg", "아이디나 비밀번호가 맞지 않습니다.");
+			e.printStackTrace(); // 에러 발생시 확인
+			request.setAttribute("msg", "아이디나 비밀번호가 맞지 않습니다.");
 			return "/login";
 		}
 		return null;
