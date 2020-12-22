@@ -194,6 +194,7 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .product_list .price span {font-size:1.5em; font-weight:600;}
 
 @media screen and (max-width:1199px){
+	.product_list.s-inner {width:100%;}
 	.product_list .img {height:22vw}
 }
 
@@ -218,6 +219,25 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 @media screen and (max-width:1024px){
 	#subContent {margin:8% 0;}
 	#subTitle {font-size:2.3em; margin-bottom:5%;}
+}
+
+
+/* sub */
+#subContent {width:100%; margin:70px 0 80px;}
+#subTitle {font-size:2.4em; color:#111; font-weight:600; text-align:center; line-height:1.2em; margin-bottom:40px;}
+#pageCont {min-height:450px;}
+
+.list_top {width:100%; overflow:hidden; margin-bottom:10px;}
+.list_top .my_location {float:left; font-size:1em; line-height:40px; background:url(../images/ico_location.png) no-repeat left center; padding-left:18px;}
+.list_top > div {float:right;}
+.list_top > div select {width:180px; height:40px; border:1px solid #ccc; font-size:1em; font-family:'Noto Sans KR'; border-radius:5px;}
+
+@media screen and (max-width:1024px){
+	#subContent {margin:8% 0;}
+	#subTitle {font-size:2.3em; margin-bottom:5%;}
+
+	.list_top .my_location {line-height:35px;}
+	.list_top > div select {width:140px; height:35px;}
 }
 
 /* swiper */
