@@ -10,20 +10,25 @@
 	<!-- ResultMap -->
 	<resultMap type="Chat" id="chatRes">
 		<id column="id" property="id" />
-		<result column="sale_id" property="" />
-		<result column="sale_mem_id" property="name" />
-		<result column="buy_mem_id" property="nickname" />
+		<result column="sale_id" property="sale.id" />
+		<result column="sale_mem_id" property="sale.member.id" />
+		<result column="buy_mem_id" property="buyer.id" />
 		<result column="regdate" property="regdate" />
 		<result column="latest_date" property="latestDate" />
 	</resultMap>
 	
-	<resultMap type="Chat" id="chatRes">
-		<id column="id" property="id" />
-		<result column="sale_id" property="" />
-		<result column="sale_mem_id" property="name" />
-		<result column="buy_mem_id" property="nickname" />
-		<result column="regdate" property="regdate" />
-		<result column="latest_date" property="latestDate" />
-	</resultMap>
+	<sql id="selectSQL">
+		SELECT id, sale_id, sale_mem_id, buy_mem_id, regdate, latest_date
+		FROM JOONGO_CHAT
+	</sql>
 	
+	<insert id="insertChat">
+		INSERT INTO JOONGO_CHAT(id, sale_id, sale_mem_id, buy_mem_id, regdate, latest_date)
+		VALUES(chat_seq.nextval, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
+	</insert>
+	
+	<select id="selectAllChatsByMemberId" parameterType="Member">
+		<include refid="selectSQL" />
+		where sale_mem_id = #{sale.member.id} or buy_mem_id = #{buyer.id}
+	</select>
 </mapper>

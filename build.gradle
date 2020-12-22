@@ -34,7 +34,7 @@ dependencies {
    compile group: 'org.springframework', name: 'spring-context', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-webmvc', version: "${version.spring}"
    testCompile group: 'org.springframework', name: 'spring-test', version: "${version.spring}"
-   runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.6'
+   //runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.6'
    
    compile group: 'org.springframework', name: 'spring-websocket', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-messaging', version: "${version.spring}"

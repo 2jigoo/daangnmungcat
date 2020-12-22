@@ -159,8 +159,8 @@ CREATE TABLE JOONGO_CHAT (
 	sale_id NUMBER(12) NOT NULL, /* 판매글 */
 	sale_mem_id VARCHAR2(20), /* 판매자 아이디 */
 	buy_mem_id VARCHAR2(20) NOT NULL, /* 구매자 아이디 */
-	regdate DATE NOT NULL, /* 채팅시작일자 */
-	latest_date DATE /* 최근채팅일자 */
+	regdate DATE DEFAULT SYSDATE, /* 채팅시작일자 */
+	latest_date DATE DEFAULT SYSDATE /* 최근채팅일자 */
 );
 
 ALTER TABLE JOONGO_CHAT
