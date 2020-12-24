@@ -44,7 +44,7 @@
 	</div>
 	<nav id="gnb">
 		<div>
-			<c:if test="${member == null}">
+			<c:if test="${empty member}">
 			<ul>
 				<li><a href="login">로그인</a></li>
 				<li><a href="signup">회원가입</a></li>

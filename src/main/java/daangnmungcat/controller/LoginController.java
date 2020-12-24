@@ -35,7 +35,8 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
-	public String login() {
+	public String login(HttpSession session) {
+		session.removeAttribute("member");
 		return "/login";
 	}
 	
