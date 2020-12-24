@@ -29,12 +29,14 @@ dependencies {
 
    // Lombok
    providedCompile group: 'org.projectlombok', name: 'lombok', version: '1.18.16'
-   
+   annotationProcessor 'org.projectlombok:lombok:1.18.16'
+   testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+
    // spring
    compile group: 'org.springframework', name: 'spring-context', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-webmvc', version: "${version.spring}"
    testCompile group: 'org.springframework', name: 'spring-test', version: "${version.spring}"
-   //runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.6'
+   runtime group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.6'
    
    compile group: 'org.springframework', name: 'spring-websocket', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-messaging', version: "${version.spring}"
@@ -75,6 +77,6 @@ dependencies {
  	//compile group: 'org.webjars', name: 'bootstrap', version: '4.3.1'
 	//compile group: 'org.webjars.npm', name: 'vue', version: '2.5.16'
 	//compile group: 'org.webjars.npm', name: 'axios', version: '0.17.1'
-	compile group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
-	compile group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+	//compile group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
+	//compile group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
 }

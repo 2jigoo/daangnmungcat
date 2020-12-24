@@ -1,5 +1,7 @@
 package daangnmungcat.mapper;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.logging.Log;
@@ -56,5 +58,11 @@ public class MemberMapperTest {
 	public void selectDong1() {
 		List<Dongne1> list1 = mapper.Dongne1List();
 		List<Dongne2> list2 = mapper.Dongne2List(1);
+	}
+	
+	@Test
+	public void insertMember() {
+		Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, null, null);
+		mapper.insertMember(member);
 	}
 }

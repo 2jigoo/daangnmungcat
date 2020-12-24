@@ -25,6 +25,7 @@ public class LoginController {
 	
 	@Autowired
 	private MemberMapper mapper;
+
 	
 	@GetMapping("/signup")
 	public String signForm() {
@@ -33,7 +34,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login(HttpSession session) {
-		session.removeAttribute("member");
+		session.removeAttribute("loginUser");
 		return "/login";
 	}
 	

@@ -14,6 +14,7 @@ public interface MemberMapper {
 	int insertMember(Member member);
 	Integer checkPwd(@Param("id")String id, @Param("pwd")String pwd);
 	
+	int idCheck(@Param("id")String id);
 	List<Dongne1> Dongne1List();
 	List<Dongne2> Dongne2List(@Param("dongne1Id")int dongne1);
 }

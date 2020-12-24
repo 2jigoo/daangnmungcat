@@ -42,8 +42,7 @@ public class Member {
 	
 
 	public Member(String id, String pwd, String name, String nickname, String email, String phone, String grade,
-			int dongne1, int dongne2, String profilePic, String profileText, LocalDateTime regdate) {
-		super();
+			int dongne1, int dongne2, String profilePic, String profileText) {
 		this.id = id;
 		this.pwd = pwd;
 		this.name = name;
@@ -55,7 +54,6 @@ public class Member {
 		this.dongne2 = dongne2;
 		this.profilePic = profilePic;
 		this.profileText = profileText;
-		this.regdate = regdate;
 	}
 
 	public String getId() {

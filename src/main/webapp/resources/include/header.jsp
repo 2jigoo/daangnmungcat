@@ -11,7 +11,6 @@
 </head>
 <body>
 <div id="wrap">
-
 <header id="header">
 	<div class="s-inner">
 		<h1 id="logo"><a href="<c:url value="/" />">당근멍캣</a></h1>
@@ -20,7 +19,6 @@
 			<input type="text" class="text">
 			<input type="submit" class="btn">
 		</div>
-		${loginUser }
 		<c:if test="${loginUser eq null}">
 		<ul class="h_util">
 			<li><a href="login">로그인</a></li>
@@ -30,7 +28,7 @@
 		</c:if>
 		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
-			<li><a href="#">${member.getId()}님 안녕하세요.</a></li>
+			<li><a href="#">${loginUser.getId()}님 안녕하세요.</a></li>
 			<li><a href="#">마이페이지</a></li>
 			<li><a href="logout">로그아웃</a></li>
 			</ul>
@@ -54,7 +52,7 @@
 			</c:if>
 			<c:if test="${loginUser ne null}">
 			<ul>
-				<li><a href="#">${member.getId()}님</a></li>
+				<li><a href="#">${loginUser.getId()}님</a></li>
 				<li><a href="#">마이페이지</a></li>
 				<li><a href="logout">로그아웃</a></li>
 			</ul>
