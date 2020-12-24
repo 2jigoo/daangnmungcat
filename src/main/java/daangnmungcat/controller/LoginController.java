@@ -8,14 +8,11 @@ import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
-import daangnmungcat.exception.WrongIdPasswordException;
 import daangnmungcat.mapper.MemberMapper;
 import daangnmungcat.service.AuthService;
 
@@ -41,22 +38,26 @@ public class LoginController {
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String submit(Member member,HttpServletRequest request) throws Exception {
+	public String submit(Member member, HttpServletRequest request) throws Exception {
+		
 		Integer res = mapper.checkPwd(member.getId(), member.getPwd());
 		HttpSession session = null;
+		
+		System.out.println("member: " + member);
+		System.out.println("res: " + res);
+		
 		try {
 			session = request.getSession();
 			if (res == 1) {
 				AuthInfo authInfo = authService.authenicate(member.getId(), member.getPwd());
 				// 세션에 id pwd 저장
-				System.out.println(res);
-				session.setAttribute("member", member);
+				// mapper로 조회해서 비번을 제외한 다른 회원 정보까지 포함해 set해야 할 듯. 아니면 아이디, 이름 정도만?
+				session.setAttribute("loginUser", member);
 				return "redirect:/";
 			}
 		}catch (Exception e) {
-			session.removeAttribute("member");
-			session.setAttribute("member", null);
-			session.setAttribute("msg", "아이디나 비밀번호가 맞지 않습니다.");
+			e.printStackTrace(); // 에러 발생시 확인
+			request.setAttribute("msg", "아이디나 비밀번호가 맞지 않습니다.");
 			return "/login";
 		}
 		return null;

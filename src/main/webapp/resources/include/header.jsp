@@ -20,14 +20,15 @@
 			<input type="text" class="text">
 			<input type="submit" class="btn">
 		</div>
-		<c:if test="${member == null}">
+		${loginUser }
+		<c:if test="${loginUser eq null}">
 		<ul class="h_util">
 			<li><a href="login">로그인</a></li>
 			<li><a href="signup">회원가입</a></li>
 			<li><a href="#">장바구니</a></li>
 		</ul>
 		</c:if>
-		<c:if test="${member != null}">
+		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
 			<li><a href="#">${member.getId()}님 안녕하세요.</a></li>
 			<li><a href="#">마이페이지</a></li>
@@ -44,14 +45,14 @@
 	</div>
 	<nav id="gnb">
 		<div>
-			<c:if test="${empty member}">
+			<c:if test="${loginUser eq null}">
 			<ul>
 				<li><a href="login">로그인</a></li>
 				<li><a href="signup">회원가입</a></li>
 				<li><a href="#">장바구니</a></li>
 			</ul>
 			</c:if>
-			<c:if test="${member != null}">
+			<c:if test="${loginUser ne null}">
 			<ul>
 				<li><a href="#">${member.getId()}님</a></li>
 				<li><a href="#">마이페이지</a></li>
