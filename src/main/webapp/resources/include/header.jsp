@@ -4,6 +4,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
+	<!-- spring security 쓰면 post 전송할때 403에러 떠서 추가함 -->
+	<meta name="_csrf" th:content="${_csrf.token}">
 	<title>당근멍캣</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>

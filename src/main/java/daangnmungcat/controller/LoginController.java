@@ -10,11 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.mapper.MemberMapper;
 import daangnmungcat.service.AuthService;
+import daangnmungcat.service.MemberService;
 
 @Controller
 public class LoginController {
@@ -24,7 +26,7 @@ public class LoginController {
 	private AuthService authService;
 	
 	@Autowired
-	private MemberMapper mapper;
+	private MemberService service;
 
 	
 	@GetMapping("/signup")
@@ -41,7 +43,7 @@ public class LoginController {
 	@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String submit(Member member, HttpServletRequest request) throws Exception {
 		
-		Integer res = mapper.checkPwd(member.getId(), member.getPwd());
+		Integer res = service.checkPwd(member.getId(), member.getPwd());
 		HttpSession session = null;
 		
 		System.out.println("member: " + member);
@@ -69,8 +71,7 @@ public class LoginController {
 		session.invalidate();
 		return "redirect:/";
 	}
-	
-	
+		
 	//security 테스트용
 	@GetMapping("/all")
 	public String doAll() {

@@ -4,14 +4,21 @@
 
 <style>
 .wrapper {padding:50px; width:80%; margin:0 auto;}
-.signup {width:700px; margin:0 auto; }
-.btns {width:700px; margin:0 auto; text-align:center;}
+.signup {width:700px; margin:0 auto;}
+.btns {width:700px; margin:0 auto; text-align:center; padding:30px;}
 
 
 </style>
-<script type="text/javascript">
-$(function(){
+<script>
+$(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
+	var csrfToken = $("meta[name='_csrf']").attr("th:content");
+	console.log(csrfToken);
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
 	
 	$.get(contextPath+"/dongne1", function(json){
 		var datalength = json.length; 
@@ -37,8 +44,12 @@ $(function(){
 		});
 	});
 	
-	$('#signup').on("click", function(e){
-		e.preventDefault();
+	$('#signup').on("click", function(json){
+		if($('#id').val() != $('#id_confirm').val()){
+			alert('아이디 중복확인을 눌러주세요.');
+			return;
+		}
+		
 		var newMember = {
 				id: $('#id').val(),
 				pwd:$('#pwd2').val(),
@@ -48,9 +59,10 @@ $(function(){
 				phone:$('#phone').val(),
 				dongne1:$('#dongne1').val(),
 				dongne2:$('#dongne2').val(),
-				grade:'1',
+				grade:null,
 				profilePic:$('#profile_pic').val(),
-				profileText:$('#profile_text').val()
+				profileText:$('#profile_text').val(),
+				regdate: null
 				};
 		console.log(newMember);
 		
@@ -61,16 +73,61 @@ $(function(){
 			dataType: "json",
 			cache : false,
 			data : JSON.stringify(newMember),
-			success: function(newMember) {
-				alert(newMember);
+			success: function() {
+				alert('성공');
 			},
-			error: function(newMember){
-				alert(newMember);
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
 			}
 		});
 		console.log(contextPath+"/submit");
 	});
+	
+	//비밀번호 일치여부
+	$('#pwd').keyup(function(){
+		  $('font[name=check]').text('');
+		}); //#user_pass.keyup
+		$('#pwdCheck').keyup(function(){
+			  if($('#pwd').val()!=$('#pwdCheck').val()){
+			  	$('font[name=check]').text('');
+			   	$('font[name=check]').html("암호가 일치하지 않습니다.");
+			   	$('input[name=pwdCheck]').attr("style","border:2px solid #e16a93")
+			  }else{
+			  	$('font[name=check]').text('');
+			  	$('font[name=check]').html("암호가 일치합니다.");
+				$('input[name=pwdCheck]').attr("style","border:1px solid black")
+			  }
+	});	  
+	
+	//이메일 정규표현식 & 중복여부
+	$('#email').keyup(function(){
+		var email = $('#email').val();
+		var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+		if(exptext.test(email) == false){
+			$('font[name=email_check]').text('');
+		   	$('font[name=email_check]').html("이메일 형식에 맞게 작성해주세요.");
+		   	$('input[name=email]').attr("style","border:2px solid #e16a93");
+		}else {
+			$('font[name=email_check]').text('');
+		}
+	});
+	
+	//폰번호 자동 -> 인증추가할것
+	$('#phone').keyup(function(){
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	});
 });
+
+function id_check() {
+	var contextPath = "<%=request.getContextPath()%>";
+	var id = $('#id').val();
+	$.get(contextPath+"/idCheck/"+id, function(json){
+		console.log(json);
+		window.open(contextPath+"/idCheck?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50");
+	});
+
+}
+
 </script>
 
 <div class="wrapper">
@@ -78,18 +135,23 @@ $(function(){
 	<tr>
 		<td>아이디</td>
 		<td>
-			<input type="text" name="id" id="id">
-			<input type="button" value="중복확인" onclick="">
-			<input type="text" name="id_confirm" id="id_confirm">
-		</td>
+			<input type="text" name="id" id="id" placeholder="입력후 중복확인">
+			<input type="button" value="중복확인" onclick="id_check()">
+	</tr>
+	<tr>
+		<td>(<input type="text" name="id_confirm" id="id_confirm">)</td>
 	</tr>
 	<tr>
 		<td>비밀번호</td>
-		<td><input type="password" name="pwd1" id="pwd1"></td>
+		<td><input type="password" name="pwd" id="pwd"></td>
 	</tr>
 	<tr>
 		<td>비밀번호 확인</td>
-		<td><input type="password" name="pwd2"  id="pwd2"></td>
+		<td><input type="password" name="pwdCheck"  id="pwdCheck"></td>
+	</tr>
+	<tr height="30px">
+		<td></td>
+		<td><font size="2" color="black" name="check"></font></td>
 	</tr>
 	<tr>
 		<td>이름</td>
@@ -102,6 +164,10 @@ $(function(){
 	<tr>
 		<td>이메일</td>
 		<td><input type="text" name="email" id="email"></td>
+	</tr>
+	<tr height="30px">
+		<td></td>
+		<td><font size="2" color="black" name="email_check"></font></td>
 	</tr>
 	<tr>
 		<td>연락처</td>

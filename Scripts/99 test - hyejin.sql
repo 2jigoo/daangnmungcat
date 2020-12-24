@@ -15,6 +15,7 @@ SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, a.name AS dongne1 , b.
 FROM MEMBER m LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id;
 
 SELECT * FROM MEMBER;
+DELETE FROM MEMBER WHERE id='test2';
 SELECT count(*) FROM MEMBER WHERE id = 'test' AND pwd = 1234;
 
 SELECT count(*) FROM MEMBER WHERE id = 'admin';
