@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt "%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,7 +62,7 @@
 			</c:if>
 		</div>
 		<ul>
-			<li><a href="#">중고</a></li>
+			<li><a href="joongo_list">중고</a></li>
 			<li class="depth2"><a href="#">멍</a>
 				<ul>
 					<li><a href="#">사료</a></li>
