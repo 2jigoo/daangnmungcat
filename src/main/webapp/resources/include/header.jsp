@@ -62,7 +62,7 @@
 			</c:if>
 		</div>
 		<ul>
-			<li><a href="joongo_list">중고</a></li>
+			<li><a href="<c:url value="/joongo_list" />">중고</a></li>
 			<li class="depth2"><a href="#">멍</a>
 				<ul>
 					<li><a href="#">사료</a></li>
