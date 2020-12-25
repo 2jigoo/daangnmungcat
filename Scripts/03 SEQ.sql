@@ -1,5 +1,7 @@
 DROP SEQUENCE dongne1_seq;
 DROP SEQUENCE dongne2_seq;
+DROP SEQUENCE sale_seq;
+DROP SEQUENCE chat_seq;
 
 CREATE SEQUENCE dongne1_seq
 START WITH 1 
