@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>아이디 중복체크</title>
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script>
 
@@ -35,8 +35,8 @@ function confirm(){
 </head>
 <body>
     <div style="margin-top: 20px">  
-  	<% String status = request.getParameter("status");
-  	if(status.equals("1")){ %>
+  	<% String status = request.getParameter("status"); %>
+  	<% if(status.equals("1")){ %>
   		이미 사용중인 아이디입니다.
   		<input type="text" id="re_id">
   		<input type="button" value="중복확인" onclick="re_check()">

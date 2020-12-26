@@ -1,5 +1,8 @@
 package daangnmungcat.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.logging.Log;
@@ -48,11 +51,18 @@ public class SignUpControllor {
 		} catch (DuplicateMemberException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+		
 	}
 	
 	@GetMapping("/idCheck/{id}")
-	 public int reIdConfirm(@PathVariable String id, HttpServletRequest request){
+	 public int reIdConfirm(@PathVariable String id){
 		int res = service.idCheck(id);
+		return res;
+	}
+	
+	@GetMapping("/emailCheck/{email}/")
+	public int emailCheck(@PathVariable String email) {
+		int res = service.emailCheck(email);
 		return res;
 	}
 }
