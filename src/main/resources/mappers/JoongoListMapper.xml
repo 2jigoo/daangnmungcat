@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.JoongoListMapper">
+
+<sql id="selectSQL">
+	SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+</sql>
+
+<resultMap type="Sale" id="saleResult">
+	<id column="id" property="id"/>
+	<result column="mem_id" property="member.id"/>
+	<result column="dog_cate" property="dogCate"/>
+	<result column="cat_cate" property="catCate"/>
+	<result column="title" property="title"/>
+	<result column="content" property="content"/>
+	<result column="price" property="price"/>
+	<result column="buy_mem_id" property="buyMember.id"/>
+	<result column="sale_state" property="saleState"/>
+	<result column="regdate" property="regdate"/>
+	<result column="redate" property="redate"/>
+	<result column="hits" property="hits"/>
+	<result column="chat_count" property="chatCount"/>
+	<result column="heart_count" property="heartCount"/>
+	
+	<collection property="dongne1" resultMap="dongne1Result"/>
+	<collection property="dongne2" resultMap="dongne2Result"/>
+</resultMap>
+
+<resultMap type="Dongne1" id="dongne1Result">
+	<id column="DONGNE1ID" property="id"/>
+	<result column="DONGNE1NAME" property="name"/>
+</resultMap>
+
+<resultMap type="Dongne2" id="dongne2Result">
+	<id column="DONGNE2ID" property="id"/>
+	<result column="DONGNE2NAME" property="name"/>
+</resultMap>
+
+
+
+<select id="selectJoongoByAll" resultMap="saleResult">
+	<include refid="selectSQL"/>
+</select>
+
+<select id="selectJoongoByDongne1" resultMap="saleResult">
+	<include refid="selectSQL"/>
+	WHERE d1.NAME = #{dongne1.name}
+</select>
+
+<select id="selectJoongoByDongne2" parameterType="map" resultMap="saleResult">
+	<include refid="selectSQL"/>
+	WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2}
+</select>
+
+</mapper>
