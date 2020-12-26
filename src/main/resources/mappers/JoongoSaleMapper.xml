@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.JoongoSaleMapper">
+<sql id="selectSQL">
+	SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT 
+	FROM JOONGO_SALE s 
+	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
+	JOIN MEMBER m ON s.MEM_ID = m.id
+</sql>
+
+<resultMap type="Sale" id="saleResult">
+	<id column="id" property="id"></id>
+	<result column="mem_id" property="member.id"/>
+	<result column="dongne1_name" property="dongne1.name"/>
+	<result column="dongne2_name" property="dongne2.name"/>
+	<result column="grade" property="member.grade"/>
+	<result column="profile_pic" property="thumImg"/>
+	<result column="DOG_CATE" property="dogCate"/>
+	<result column="CAT_CATE" property="catCate"/>
+	<result column="TITLE" property="title"/>
+	<result column="CONTENT" property="content"/>
+	<result column="regdate" property="regdate"/>
+	<result column="REDATE" property="redate"/>
+	<result column="SALE_STATE" property="saleState"/>
+	<result column="BUY_MEM_ID" property="buyMember.id"/>
+	<result column="HITS" property="hits"/>
+	<result column="CHAT_COUNT" property="chatCount"/>
+	<result column="HEART_COUNT" property="heartCount"/>
+</resultMap>
+
+<select id="selectJoongoSaleByAll" resultMap="saleResult">
+	<include refid="selectSQL"></include>
+</select>
+
+
+</mapper>

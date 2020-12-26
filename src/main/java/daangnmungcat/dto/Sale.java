@@ -8,12 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Builder
+@ToString
 public class Sale {
 
 	private int id;
@@ -23,14 +25,17 @@ public class Sale {
 	private String title;
 	private String content;
 	private int price;
-	private Dongne1 dongene1;
+	private Dongne1 dongne1;
 	private Dongne2 dongne2;
 	private Member buyMember;
 	private int saleState;
 	private LocalDateTime regdate;
 	private LocalDateTime redate;
 	private int hits;
+	private int chatCount;
+	private int heartCount;
 	
+	private String thumImg;
 	private List<SaleImage> images;
 	/*
 		public Sale() {
