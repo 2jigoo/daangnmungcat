@@ -38,10 +38,17 @@ SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongn
 	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT 
 	FROM JOONGO_SALE s 
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
+	JOIN MEMBER m ON s.MEM_ID = m.id
+WHERE s.id = 2;
+
+CREATE VIEW sale_view AS SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT 
+	FROM JOONGO_SALE s 
+	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
 	JOIN MEMBER m ON s.MEM_ID = m.id;
 
-
-
+SELECT * FROM sale_view WHERE id =2;
 
 SELECT s.id as id, m.id AS MEM_ID, DONGNE1_ID , DONGNE2_ID , grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
