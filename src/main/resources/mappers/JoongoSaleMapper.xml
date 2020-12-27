@@ -28,7 +28,7 @@
 	<result column="dongne1_name" property="dongne1.name"/>
 	<result column="dongne2_name" property="dongne2.name"/>
 	<result column="grade" property="member.grade"/>
-	<result column="profile_pic" property="thumImg"/>
+	<result column="profile_pic" property="member.profilePic"/>
 	<result column="DOG_CATE" property="dogCate"/>
 	<result column="CAT_CATE" property="catCate"/>
 	<result column="TITLE" property="title"/>

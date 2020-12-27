@@ -33,7 +33,7 @@ SELECT * FROM dongne_view;
 
 
 
-SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+SELECT s.id AS id, m.id AS MEM_ID, PROFILE_PIC, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
 	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT 
 	FROM JOONGO_SALE s 
@@ -49,11 +49,11 @@ CREATE VIEW sale_view AS SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1
 	JOIN MEMBER m ON s.MEM_ID = m.id;
 
 SELECT * FROM sale_view WHERE id =2;
+DROP VIEW SALE_VIEW;
 
 SELECT s.id as id, m.id AS MEM_ID, DONGNE1_ID , DONGNE2_ID , grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
 	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT 
 	FROM JOONGO_SALE s 
 	JOIN MEMBER m ON s.MEM_ID = m.id;
-
 
