@@ -19,5 +19,6 @@ DELETE FROM MEMBER WHERE id='test2';
 SELECT count(*) FROM MEMBER WHERE id = 'test' AND pwd = 1234;
 
 SELECT count(*) FROM MEMBER WHERE id = 'admin';
+SELECT count(*) FROM MEMBER WHERE EMAIL = 'admin@admin.co.kr';
 
 INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, GRADE, PROFILE_PIC, PROFILE_TEXT) VALUES('test', '1234', 'test', 'test', 'test@admin.co.kr', '010-5656-1234',1, 1, 1, NULL, NULL);

@@ -60,9 +60,15 @@ public class MemberMapperTest {
 		List<Dongne2> list2 = mapper.Dongne2List(1);
 	}
 	
-	@Test
+	//@Test
 	public void insertMember() {
 		Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, "", "");
 		mapper.insertMember(member);
+	}
+	
+	@Test
+	public void emailCheck() {
+		int res = mapper.emailCheck("admin@admin.co.kr");
+		System.out.println(res);
 	}
 }

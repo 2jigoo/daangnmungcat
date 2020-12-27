@@ -37,9 +37,9 @@ public class Member {
 		this.pwd = pwd;
 	}
 	
-	
-
-	
+	public Member(String email) {
+		this.email = email;
+	}
 
 	public Member(String id, String pwd, String name, String nickname, String email, String phone, String grade,
 			int dongne1, int dongne2, String profilePic, String profileText) {
