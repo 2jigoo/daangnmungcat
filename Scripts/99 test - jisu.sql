@@ -20,3 +20,9 @@ SELECT * FROM joongo_sale;
 
 INSERT INTO JOONGO_SALE(id, mem_id, dog_cate, cat_cate, title, content, price, DONGNE1_ID, DONGNE2_ID, BUY_MEM_id, SALE_STATE, regdate, redate, hits)
 VALUES(sale_seq.nextval, 'chattest1', 'n', 'y', '고양이 그려드립니다ㅋ', '허접한 그림입니다', 100, 3, 44, NULL, 1, sysdate, sysdate, 0);
+
+SELECT * FROM JOONGO_CHAT jc
+where sale_mem_id = 'chatuser1' or buy_mem_id = 'chatuser1';
+
+DELETE FROM JOONGO_CHAT jc;
+DELETE FROM JOONGO_CHAT_MSG;

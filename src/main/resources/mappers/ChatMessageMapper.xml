@@ -24,7 +24,7 @@
 	</sql>
 	
 
-	<select id="selectAllChatMessageByChatId" parameterType="int">
+	<select id="selectAllChatMessageByChatId" parameterType="int" resultMap="msgRes">
 		<include refid="selectSQL" />
 		where chat_id = #{id}
 	</select>
@@ -37,9 +37,12 @@
 	</select>
  -->
  	
-	<insert id="insertChatMessage" parameterType="ChatMessage">
-		INSERT INTO JOONGO_CHAT(id, chat_id, mem_id, content, regdate, read_yn, image)
-		VALUES(chat_msg_seq.nextval, #{chat.id}, #{member.id}, #{content}, sysdate, 'n', #{image})
+	<insert id="insertChatMessage" parameterType="ChatMessage" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT chat_msg_seq.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO JOONGO_CHAT_MSG(id, chat_id, mem_id, content, regdate, read_yn, image)
+		VALUES(#{id}, #{chat.id}, #{member.id}, #{content, jdbcType=VARCHAR}, sysdate, 'n', #{image, jdbcType=VARCHAR})
 	</insert>
 	
 	<delete id="deleteChatMessageByChatMessageId" parameterType="ChatMessage">

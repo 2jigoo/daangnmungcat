@@ -22,14 +22,17 @@
 		FROM JOONGO_CHAT
 	</sql>
 	
-	<insert id="insertChat">
+	<insert id="insertChat" parameterType="Chat" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT chat_seq.nextval FROM DUAL
+		</selectKey>
 		INSERT INTO JOONGO_CHAT(id, sale_id, sale_mem_id, buy_mem_id, regdate, latest_date)
-		VALUES(chat_seq.nextval, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
+		VALUES(#{id}, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
 	</insert>
 	
-	<select id="selectAllChatsByMemberId" parameterType="Member" resultMap="chatRes">
+	<select id="selectAllChatsByMemberId" resultMap="chatRes">
 		<include refid="selectSQL" />
-		where sale_mem_id = #{member.id} or buy_mem_id = #{member.id}
+		where sale_mem_id = #{memberId} or buy_mem_id = #{memberId}
 	</select>
 	
 	<select id="selectChatByChatId" resultMap="chatRes">

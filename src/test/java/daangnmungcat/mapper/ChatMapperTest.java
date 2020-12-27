@@ -23,9 +23,10 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ContextConfiguration(classes = {ContextRoot.class} )
 @Transactional
+@Rollback(true)
 public class ChatMapperTest {
 
 	private static final Log log = LogFactory.getLog(ChatMapperTest.class);
@@ -36,28 +37,35 @@ public class ChatMapperTest {
 	@Autowired
 	private ChatMessageMapper cmMapper;
 	
+	// 테스트를 위해 insert한 chat 인스턴스. 테스트 후 롤백될 것임.
+	private static Chat chat;
+	private static Member chatUser1;
+	private static Member chatUser2;
+	private static ChatMessage message;
+	
 	@After
 	public void tearDown() throws Exception {
 		System.out.println();
 	}
 	
 	@Test
-	@Rollback(true)
-	public void test01InsertChat() {
+	@Rollback(false)
+	public void a_test_InsertChat() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		log.debug("-- Chat 추가 테스트");
+		
 		Sale sale = new Sale();
-		sale.setId(2);
+		sale.setId(1);
+		chatUser1 = new Member();
+		chatUser1.setId("chatuser1");
+		sale.setMember(chatUser1);
 		
-		Member seller = new Member();
-		seller.setId("chatuser1");
-		sale.setMember(seller);
+		chatUser2 = new Member();
+		chatUser2.setId("chatuser2");
 		
-		Member buyer = new Member();
-		buyer.setId("chatuser2");
-		
-		Chat chat = new Chat();
+		chat = new Chat();
 		chat.setSale(sale);;
-		chat.setBuyer(buyer);
+		chat.setBuyer(chatUser2);
 		
 		int res = cMapper.insertChat(chat);
 		Assert.assertEquals(1, res);
@@ -66,19 +74,27 @@ public class ChatMapperTest {
 		log.debug("res: " + res);
 	}
 	
+	
 	@Test
-	public void test02selectAllChatsByMemberId() {
+	@Rollback(false)
+	public void b_test_selectAllChatsByMemberId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		log.debug("-- 해당 유저의 채팅 리스트 가져오기");
+		
 		List<Chat> list = cMapper.selectAllChatsByMemberId("chatuser1");
 		Assert.assertNotNull(list);
 		
 		list.stream().forEach(chat -> log.debug(chat.toString()));
 	}
 	
+	
 	@Test
-	public void test03selectChatByChatId() {
+	@Rollback(false)
+	public void c_test_selectChatByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
-		Chat chat = cMapper.selectChatByChatId("4");
+		log.debug("-- 채팅 id로 채팅 정보 가져오기");
+		
+		chat = cMapper.selectChatByChatId(chat.getId());
 		Assert.assertNotNull(chat);
 		
 		log.debug("chat: " + chat);
@@ -87,36 +103,48 @@ public class ChatMapperTest {
 	
 	// ChatMessage Test
 	
+	
 	@Test
-	public void test04seletAllChatMessageByChatId() {
+	@Rollback(false)
+	public void d_test_seletAllChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
-		List<ChatMessage> message = cmMapper.selectAllChatMessageByChatId(4);
-		Assert.assertNotNull(message);
+		log.debug("-- ChatMessage 추가");
 		
-		log.debug("message: " + message);
+		message = new ChatMessage(0, chat, chatUser2, "안녕하세요~", null, null, "n");
+		int res = cmMapper.insertChatMessage(message);
+		Assert.assertEquals(1, res);
+		log.debug("chatMessage: " + message.toString());
 	}
 	
 	@Test
-	public void test05deleteChatMessageByChatMessageId() {
+	@Rollback(false)
+	public void e_test_seletAllChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		log.debug("-- 해당 Chat의 메시지들 가져오기");
 		
-		ChatMessage cm = new ChatMessage();
-		cm.setId(1);
+		List<ChatMessage> messageList = cmMapper.selectAllChatMessageByChatId(chat.getId());
+		Assert.assertNotNull(messageList);
 		
-		int res = cmMapper.deleteChatMessageByChatMessageId(cm);
+		messageList.stream().forEach(message -> log.debug(message.toString()));
+	}
+	
+	@Test
+	@Rollback(true)
+	public void f_test_deleteChatMessageByChatMessageId() {
+		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
+		log.debug("-- ChatMessage 삭제");
+		
+		int res = cmMapper.deleteChatMessageByChatMessageId(message);
 		Assert.assertEquals(1, res);
 	}
 	
 	@Test
-	public void test06deleteChatMessageByChatId() {
+	public void g_test_deleteChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
-		
-		Chat chat = new Chat();
-		chat.setId(4);
+		log.debug("-- 한 채팅의 모든 메시지를 삭제");
 		
 		int res = cmMapper.deleteChatMessagesByChatId(chat);
 		Assert.assertEquals(1, res);
 	}
-	
 
 }
