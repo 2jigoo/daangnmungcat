@@ -27,8 +27,13 @@
 		VALUES(chat_seq.nextval, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
 	</insert>
 	
-	<select id="selectAllChatsByMemberId" parameterType="Member">
+	<select id="selectAllChatsByMemberId" parameterType="Member" resultMap="chatRes">
 		<include refid="selectSQL" />
-		where sale_mem_id = #{sale.member.id} or buy_mem_id = #{buyer.id}
+		where sale_mem_id = #{member.id} or buy_mem_id = #{member.id}
+	</select>
+	
+	<select id="selectChatByChatId" resultMap="chatRes">
+		<include refid="selectSQL" />
+		where id = #{id}
 	</select>
 </mapper>
