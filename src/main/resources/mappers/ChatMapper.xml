@@ -18,17 +18,36 @@
 	</resultMap>
 	
 	<sql id="selectSQL">
-		SELECT id, sale_id, sale_mem_id, buy_mem_id, regdate, latest_date
-		FROM JOONGO_CHAT
+		SELECT jc.id, sale_id, sale_mem_id, sm.nickname, buy_mem_id, bm.nickname, jc.regdate, latest_date
+		FROM JOONGO_CHAT jc
+			LEFT OUTER JOIN MEMBER sm ON (jc.SALE_MEM_ID = sm.id)
+			LEFT OUTER JOIN MEMBER bm ON (jc.BUY_MEM_ID = bm.id)
 	</sql>
 	
-	<insert id="insertChat">
+	
+	
+	<select id="selectAllChatsByMemberId" resultMap="chatRes">
+		<include refid="selectSQL" />
+		where sale_mem_id = #{memberId} or buy_mem_id = #{memberId}
+	</select>
+	
+	<select id="selectChatByChatId" resultMap="chatRes">
+		<include refid="selectSQL" />
+		where id = #{id}
+	</select>
+	
+	
+	<insert id="insertChat" parameterType="Chat">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT chat_seq.nextval FROM DUAL
+		</selectKey>
 		INSERT INTO JOONGO_CHAT(id, sale_id, sale_mem_id, buy_mem_id, regdate, latest_date)
-		VALUES(chat_seq.nextval, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
+		VALUES(#{id}, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
 	</insert>
 	
-	<select id="selectAllChatsByMemberId" parameterType="Member">
-		<include refid="selectSQL" />
-		where sale_mem_id = #{sale.member.id} or buy_mem_id = #{buyer.id}
-	</select>
+	
+	<delete id="deleteChat" parameterType="Chat">
+		delete from JOONGO_CHAT where id = #{id}
+	</delete>
+	
 </mapper>

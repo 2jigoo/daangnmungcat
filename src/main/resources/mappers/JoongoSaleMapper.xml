@@ -10,13 +10,25 @@
 	JOIN MEMBER m ON s.MEM_ID = m.id
 </sql>
 
+<sql id="viewSQL">
+	SELECT * FROM sale_view 
+</sql>
+
+<sql id="whereSQl">
+	<where>
+		<if test="id != null">
+			id = #{id}
+		</if>
+	</where>
+</sql>
+
 <resultMap type="Sale" id="saleResult">
 	<id column="id" property="id"></id>
 	<result column="mem_id" property="member.id"/>
 	<result column="dongne1_name" property="dongne1.name"/>
 	<result column="dongne2_name" property="dongne2.name"/>
 	<result column="grade" property="member.grade"/>
-	<result column="profile_pic" property="thumImg"/>
+	<result column="profile_pic" property="member.profilePic"/>
 	<result column="DOG_CATE" property="dogCate"/>
 	<result column="CAT_CATE" property="catCate"/>
 	<result column="TITLE" property="title"/>
@@ -34,5 +46,10 @@
 	<include refid="selectSQL"></include>
 </select>
 
+
+<select id="selectJoonSaleById" resultMap="saleResult" parameterType="int">
+	<include refid="viewSQL"></include>
+	<include refid="whereSQl"></include>
+</select>
 
 </mapper>

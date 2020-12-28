@@ -31,6 +31,7 @@ $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
 	
+	
 	$.get(contextPath+"/dongne1", function(json){
 		var datalength = json.length; 
 		if(datalength >= 1){
@@ -107,7 +108,7 @@ $(function(){
 		<div>
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
-				<li><a href="#">
+				<li><a href="<%=request.getContextPath()%>/detailList?id=${list.id}">
 					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="txt">
 						<p class="location">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</p>
