@@ -13,8 +13,8 @@ import daangnmungcat.service.MemberService;
 import oracle.sql.CharacterSet;
 
 @RestController
-public class smsController {
-	private static final Log log = LogFactory.getLog(smsController.class);
+public class SmsController {
+	private static final Log log = LogFactory.getLog(SmsController.class);
 	
 	@Autowired
 	private MemberService service;

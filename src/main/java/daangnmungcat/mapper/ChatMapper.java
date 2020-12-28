@@ -10,4 +10,5 @@ public interface ChatMapper {
 	Chat selectChatByChatId(int chatId);
 	
 	int insertChat(Chat chat);
+	int deleteChat(Chat chat);
 }

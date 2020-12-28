@@ -10,8 +10,10 @@ public interface ChatMessageMapper {
 	List<ChatMessage> selectAllChatMessageByChatId(int chatId);
 	ChatMessage selectLatestChatMessageByChatId(int chatId);
 	
-	int insertChatMessage(ChatMessage message);
-	int deleteChatMessageByChatMessageId(ChatMessage message);
+	int selectCountChatMessageByChatId(Chat chat);
 	
+	int insertChatMessage(ChatMessage message);
+	
+	int deleteChatMessageByChatMessageId(ChatMessage message);
 	int deleteChatMessagesByChatId(Chat chat);
 }
