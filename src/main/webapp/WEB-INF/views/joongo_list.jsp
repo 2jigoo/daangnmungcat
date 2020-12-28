@@ -8,6 +8,27 @@ var dongne1Id;
 var dongne1Name = "${dongne1Name}"
 $(function(){
 	
+	if (navigator.geolocation) {
+	    navigator.geolocation.getCurrentPosition(
+	        function(location){
+
+	            //succ - 유저가 허용버튼을 클릭하여 값을 가져올 수 있는 상태
+	            var lat = location.coords.latitude;
+	            var lon = location.coords.longitude;
+	            
+	            console.log("lat : "+ lat)
+	            console.log("lon : "+ lon)
+	        },
+	        function(error){
+	            //fail - 유저가 차단버튼을 클릭하여 값을 가져올 수 없는 상태
+
+	       }
+	    );
+	}
+	else {
+	    //fail - 애초에 GPS 정보를 사용할 수 없는 상태
+	}
+	
 	var contextPath = "<%=request.getContextPath()%>";
 	
 	$.get(contextPath+"/dongne1", function(json){
