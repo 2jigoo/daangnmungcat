@@ -71,8 +71,8 @@ $(document).ready(function(){
 		}else if(email_status == 0){
 			alert('이미 사용중인 이메일입니다');
 			return;
-		}else if($('#phone').val() == ""){
-			alert('연락처를 입력하세요.');
+		}else if($('#certi').val() == 0){
+			alert('본인인증을 완료해주세요.');
 			return;
 		}else if($('#dongne1').val() == "0"){
 			alert('지역을 선택하세요.');
@@ -92,9 +92,9 @@ $(document).ready(function(){
 				dongne1:$('#dongne1').val(),
 				dongne2:$('#dongne2').val(),
 				grade:5,
-				profilePic:$('#profile_pic').val(),
-				profileText:$('#profile_text').val(),
-				regdate: null
+				regdate: null,
+				profile_text: null,
+				profile_pic:null
 				};
 		console.log(newMember);
 		
@@ -168,37 +168,94 @@ $(document).ready(function(){
 		}
 	});
 	
+	
 	//폰번호 입력시 '-' 자동
 	$('#phone').keyup(function(){
 		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
-
+		
 	});
 	
 	//휴대폰인증
     $('#send').click(function(){
         var number = $('#phone').val();
         var certiNum = $('#certiNum').val();
-       
-       
-        $.ajax({
-        	type:'get',
-        	url: contextPath + "/sendSMS/" + number + "/",
-       		success: function(json){
-       			console.log(json);
-       			$('#certiSubmit').click(function(){
-       				if(json == $('#certiNum').val()){
-       					alert('인증 완료');
-       	        	}else {
-       	        		alert('인증번호가 맞지 않습니다.')
-       	        	}
-       			})
-       		},
-       		error: function(){
-       			console.log('에러');
-       		}
-        })
         
+        if(number == ""){
+        	alert('연락처를 입력해주세요.');
+        	return;
+        }
+        
+        $.get(contextPath + "/phoneCheck/" + number + "/", function(res){
+    		if(res == 1){
+    			alert('이미 사용중인 폰번호입니다');
+    			return;
+    		}else {
+    			alert("인증번호가 발송되었습니다.");
+    			
+    			$("#certiSubmit").attr("disabled", false);
+    	    	$("#certiNum").attr("disabled", false);
+    	        
+    	        $.ajax({
+    	        	type:'get',
+    	        	url: contextPath + "/sendSMS/" + number + "/",
+    	       		success: function(json){
+    	       			console.log(json);
+    	       			$('#certiSubmit').click(function(){
+    	       				if(json == $('#certiNum').val()){
+    	       					alert('인증 완료');
+    	       					$("#certiSubmit").remove();
+    	       					$("#certiNum").remove();
+    	       					$("#certi").prop("value", "1");
+    	       					$(".certi_tr").replaceWith('<td></td><td><font size="2" color="black">인증완료</font></td>');
+    	       					console.log('인증확인'+$('#certi').val());
+    	       						
+    	       	        	}else {
+    	       	        		alert('인증번호가 맞지 않습니다.');
+    	       	        		console.log('인증확인'+$('#certi').val());
+    	       	        	}
+    	       			})
+    	       		},
+    	       		error: function(){
+    	       			console.log('에러');
+    	       		}
+    	        })
+    		}
+    	    });
+    		
+        });
+	
+    $('#test').on("click", function(){
+    	
+    	var contextPath = "<%=request.getContextPath()%>";
+    	var file = $('#uploadFile')[0];
+    	var formData = new FormData();
+    	
+    	formData.append('uploadFile', $('#uploadFile').val());
+    	console.log(formData);
+    	
+    	for(var pair of formData.entries()) {
+    		   console.log(pair[0]+ ', '+ pair[1]); 
+    	}
+    	
+    	$.ajax({
+    		url: contextPath + "/uploadProfile",
+    		type: "post",
+    		enctype: 'multipart/form-data',
+    		data: formData,
+    		processData: false,
+    		contentType: false, //multipart-form-data로 전송
+    		cache: false,
+    		success: function(res) {
+    			alert('전송');
+    		},
+    		error: function(request,status,error){
+    			alert('에러' + request.status+request.responseText+error);
+    		}
+    	});
+    	
     });
+        
+    		
     
 });
 
@@ -219,6 +276,8 @@ function id_check() {
 	});
 
 }
+
+
 
 
 </script>
@@ -244,7 +303,7 @@ function id_check() {
 	</tr>
 	<tr height="30px">
 		<td></td>
-		<td><font size="2" color="black" name="check">비밀번호는 한글과 숫자를 포함한 6~20자리 이내만 가능합니다.</font></td>
+		<td><font size="2" color="black" name="check">(임시)한글과 숫자를 포함한 6~20자리 이내만 가능합니다.</font></td>
 	</tr>
 	<tr>
 		<td>이름</td>
@@ -264,13 +323,14 @@ function id_check() {
 	</tr>
 	<tr class="phone">
 		<td>연락처</td>
-		<td><input type="text" name="phone" id="phone">
-		<input type="button" name="send" id="send" value="인증번호발송"></td>
+		<td class="replace"><input type="text" name="phone" id="phone">
+		<input type="button" name="send" id="send" value="인증번호발송">
+		<input type="hidden" id="certi" name="certi" value="0"></td>
 	</tr>
-	<tr class="certi">
+	<tr class="certi_tr">
 		<td></td>
-		<td><input type="text" name="certiNum" id="certiNum">
-		<input type="button" id="certiSubmit" value="확인">
+		<td><input type="text" name="certiNum" id="certiNum" disabled>
+		<input type="button" id="certiSubmit" value="확인" disabled>
 		</td>
 	</tr>
 	<tr>
@@ -284,19 +344,18 @@ function id_check() {
 		</select>
 		</td>
 	</tr>
-	<tr>
-		<td>프로필사진</td>
-		<td><input type="file" name="profile_pic" id="profile_pic"></td>
-	</tr>
-	<tr>
-		<td>프로필소개</td>
-		<td><input type="text" name="profile_text" id="profile_text"></td>
-	</tr>
+
 	</table>
 
 
 <div class="btns">
+	<input type="file" id="uploadFile" name="uploadFile" multiple="true">
+	<input type="button" id="test" value="테스트">
+
+	<br>
+	<br>
 	<input type="button" value="가입완료" id="signup">
+	
 </div>
 
 </div>
