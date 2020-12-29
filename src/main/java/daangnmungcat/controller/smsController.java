@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import daangnmungcat.service.MemberService;
-import oracle.sql.CharacterSet;
 
 @RestController
 public class smsController {
