@@ -45,4 +45,11 @@ public class JoongoSaleMapperTest {
 		list.stream().forEach(System.out::println);
 	}
 
+	@Test
+	public void test03SelectJoongoSalesByMemId() {
+		String memId = "chattest1";
+		List<Sale> sale = mapper.selectJoongoSalesByMemId(memId);
+		sale.stream().forEach(System.out::println);
+	}
+
 }
