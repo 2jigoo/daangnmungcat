@@ -149,7 +149,7 @@ $(function(){
 		<div>
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
-				<li><a href="<%=request.getContextPath()%>/detailList?id=${list.id}">
+				<li><a href="<%=request.getContextPath()%>/detailList?id=${list.id}&memId=${list.member.id}">
 					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="txt">
 						<p class="location">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</p>
