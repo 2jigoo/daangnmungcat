@@ -31,7 +31,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		List<Sale> list = mapper.selectJoonSaleById(id);
 		return list;
 	}
-	
-	
+
+	@Override
+	public List<Sale> getListByMemID(String memId) {
+		List<Sale> mlist = mapper.selectJoongoSalesByMemId(memId);
+		return mlist;
+	}
+
 
 }

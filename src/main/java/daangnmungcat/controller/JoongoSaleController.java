@@ -45,9 +45,14 @@ public class JoongoSaleController {
 //	}
 	
 	@RequestMapping(value="detailList", method=RequestMethod.GET)
-	public String listById(@RequestParam int id, Model model) {
+	public String listById(@RequestParam int id, @RequestParam String memId, Model model) {
 		List<Sale> list = service.getListsById(id);
+		List<Sale> mlist = service.getListByMemID(memId);
 		model.addAttribute("list", list);
+		model.addAttribute("mlist", mlist);
+		System.out.println("mlist 출력  >> ");
+		mlist.stream().forEach(System.out::println);
+		System.out.println("memId >> " +  memId);
 		return "/joongoSale/detailList";
 	}
 }

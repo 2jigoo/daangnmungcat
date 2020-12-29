@@ -9,10 +9,15 @@
 	article {
 		margin : 0 auto;
 	}
+	
+	#article{
+		margin: 8% 0;
+	}
 
 	#section_img {
 		position: relative;
-		margin-bottom: 20px;   		
+		margin-bottom: 10px;   	
+		text-align:center;		
 	}
 	
 	#img_slider {
@@ -30,6 +35,10 @@
 		width:40px;
 		height:40px;
 
+	}
+	
+	#section_profile, #section_description, #section_buttons, #section_goods{
+		padding-left: 20%;
 	}
 	
 	#section_profile #section_profile_img 
@@ -98,6 +107,7 @@
 
     #section_buttons {
 	   	padding-top: 10px;
+	   	padding-bottom: 5px;
    	}
 	
 	.lastTime {
@@ -107,9 +117,8 @@
 	
 </style>
 <script type="text/javascript">
-$(function(){
-	
-	
+
+$(document).ready(function(){
 	
 	//현재시간가져오기
 	var now = new Date();
@@ -121,6 +130,8 @@ $(function(){
 	var inDate = document.getElementById('regdate').innerHTML;
 	console.log("inDate >> " + inDate);
 	
+	
+	//KST를 빼면 new Date()에서 시간 읽는거 가능해진다..
 	afterStr = inDate.split('KST');
 	console.log(afterStr)
 	var testDate = afterStr[0]+afterStr[1]
@@ -152,7 +163,7 @@ $(function(){
         var writeTime = writeNow.getTime();
         if(nowTime>writeTime){
         //시간을 비교
-            sec =parseInt(nowTime - writeTime) / 1000;
+            sec = parseInt(nowTime - writeTime) / 1000;
             day  = parseInt(sec/60/60/24);
             sec = (sec - (day * 60 * 60 * 24));
             hour = parseInt(sec/60/60);
@@ -180,7 +191,9 @@ $(function(){
 
 </script>
 <article>
+<div id="article">
 <c:forEach items="${list}" var="list">
+<input id ="id" type="hidden" value="${list.id }"> 
 <section id="section_img">
 	<div class="img_slider">
 		<img src="<c:url value="/resources/images/sProduct_img1.png" />" id="section_div_img">
@@ -201,7 +214,6 @@ $(function(){
 				<div id="dongnename">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</div>
 			</div>		
 		</div>
-		</div>
 	</a>
 </section>
 
@@ -220,22 +232,41 @@ $(function(){
 			${list.content }
 		</div>
 	
-		<div id="description_count"> 관심 ${list.heartCount} 채팅 ${list.chatCount} 조회${list.hits } </div>
+		<div id="description_count"> 
+			관심 ${list.heartCount} 채팅 ${list.chatCount} 조회${list.hits } 
+		</div>
 	
 </section>
 	<section id="section_buttons">
 		<div>
-			<button type="button"><img src="/resources/images/ico_heart.png" alt="하트" onclick=""></button>
-			<input type="button" value="대화로 문의하기">
+			<button type="button"><img src="/resources/images/ico_heart.png" alt="하트"></button>
+			<input type="button" value="대화로 문의하기" style="width:80%;">
 		</div>
 	</section>
 
-	<section id="section_goods">	
+	<section id="section_goods">
 		<p>이 판매자의 다른 중고상품들 입니다.</p>
-		<div>
-			상품들..
-		</div>
+		<ul class="product_list s-inner">
+			<c:forEach items="${mlist }" var="mlist">
+					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
+					<div class="txt">
+						<c:if test="${param.id eq mlist.id }">
+						<!--원글 id랑 mlist.id랑 같으면 mlist.안보이게 하기 -->
+						</c:if>
+						<c:if test="${param.id ne mlist.id }">
+				<%-- 		<p>${mlist.id }</p> --%>
+						<p class="location">${mlist.dongne1.dong1Name} ${list.dongne2.dong2Name}</p>
+						<p class="subject">${mlist.title}</p>
+						<p class="price"><span>${mlist.price}</span>원</p>
+						<ul>
+							<li class="heart">${mlist.heartCount}</li>
+							<li class="chat">${mlist.chatCount}</li>
+						</ul>
+						</c:if>
+			</c:forEach>
+		</ul>
 	</section>
 </c:forEach>
+</div>
 </article>
 <jsp:include page="/resources/include/footer.jsp"/>
