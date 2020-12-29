@@ -1,17 +1,30 @@
 package daangnmungcat.controller;
 
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.mapper.JoongoListMapper;
+import daangnmungcat.service.GpsToAddressService;
 
 @Controller
 public class JoongoListController {
@@ -44,5 +57,33 @@ public class JoongoListController {
 		model.addAttribute("dongne1Name", dongne1);
 		model.addAttribute("dongne2Name", dongne2);
 		return "/joongo_list";
+	}
+	
+	@PostMapping("/gpsToAddress")
+	public void find(HttpServletResponse rs ,@RequestBody GpsToAddress gpsToAddress) throws Exception {
+		try {
+			JSONObject jso = new JSONObject();
+			GpsToAddressService gps = new GpsToAddressService(gpsToAddress.getLat(), gpsToAddress.getLon());
+			String[] address = gps.getAddress().split(" ");
+			jso.put("address1", address[1]);
+			jso.put("address2", address[2]);
+			rs.setContentType("text/html;charset=utf-8");
+			PrintWriter out = rs.getWriter();
+			out.print(jso.toString());
+		} catch (Exception e) {
+			System.out.println("오류");
+		}
+	}
+	
+	@GetMapping("/GpsToAddress/{lat}/{lon}")
+	public String findAddress(@PathVariable("lat") double lat, @PathVariable("lon") double lon) throws Exception {
+		System.out.println("왔다리");
+		double latitude = lat;
+		double longitude = lon;
+
+		GpsToAddressService gps = new GpsToAddressService(latitude, longitude);
+		System.out.println(gps.getAddress());
+		System.out.println(lat + ", " + lon);
+		return null;
 	}
 }
