@@ -7,7 +7,8 @@ import daangnmungcat.dto.Chat;
 public interface ChatMapper {
 
 	List<Chat> selectAllChatsByMemberId(String memberId);
-	Chat selectChatByChatId(String chatId);
+	Chat selectChatByChatId(int chatId);
 	
 	int insertChat(Chat chat);
+	int deleteChat(Chat chat);
 }

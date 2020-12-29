@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.ChatMessageMapper">
+
+	<!-- 
+		 joongo_chat: id, sale_id, sale_mem_id, buy_mem_id, regdate, latest_date
+		 joongo_chat_msg: id, chat_id, mem_id, content, regdate, read_yn, image
+	 -->
+	 
+	<!-- ResultMap -->
+	<resultMap type="ChatMessage" id="msgRes">
+		<id column="id" property="id" />
+		<result column="chat_id" property="chat.id" />
+		<result column="mem_id" property="member.id" />
+		<result column="content" property="content" />
+		<result column="regdate" property="regdate" />
+		<result column="read_yn" property="readYn" />
+		<result column="image" property="image" />
+	</resultMap>
+
+	<sql id="selectSQL">
+		SELECT id, chat_id, mem_id, content, regdate, read_yn, image
+		FROM JOONGO_CHAT_MSG
+	</sql>
+	
+
+	<select id="selectAllChatMessageByChatId" parameterType="int" resultMap="msgRes">
+		<include refid="selectSQL" />
+		where chat_id = #{id}
+	</select>
+
+	<select id="selectLatestChatMessageByChatId" resultMap="msgRes">
+		SELECT a.*, rownum
+		FROM (SELECT jcm.* FROM JOONGO_CHAT_MSG jcm ORDER BY regdate DESC) a
+		WHERE rownum = 1
+	</select>
+ 
+	<select id="selectCountChatMessageByChatId" parameterType="Chat" resultType="int">
+		SELECT count(*) FROM joongo_chat_msg
+		WHERE chat_id = #{id}
+	</select>
+ 	
+	<insert id="insertChatMessage" parameterType="ChatMessage">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT chat_msg_seq.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO JOONGO_CHAT_MSG(id, chat_id, mem_id, content, regdate, read_yn, image)
+		VALUES(#{id}, #{chat.id}, #{member.id}, #{content, jdbcType=VARCHAR}, sysdate, 'n', #{image, jdbcType=VARCHAR})
+	</insert>
+	
+	<delete id="deleteChatMessageByChatMessageId" parameterType="ChatMessage">
+		DELETE FROM JOONGO_CHAT_MSG
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteChatMessagesByChatId" parameterType="Chat">
+		DELETE FROM JOONGO_CHAT_MSG
+		where chat_id = #{id}
+	</delete>
+	
+</mapper>

@@ -1,5 +1,7 @@
 package daangnmungcat.mapper;
 
+import static org.junit.Assert.fail;
+
 import java.util.List;
 
 import org.apache.ibatis.logging.Log;
@@ -31,8 +33,15 @@ public class JoongoSaleMapperTest {
 	}
 	
 	@Test
-	public void testSelectJoongoSaleByAll() {
+	public void test01SelectJoongoSaleByAll() {
 		List<Sale> list = mapper.selectJoongoSaleByAll();
+		list.stream().forEach(System.out::println);
+	}
+
+	@Test
+	public void test02SelectJoonSaleById() {
+		int id = 2;
+		List<Sale> list = mapper.selectJoonSaleById(id);
 		list.stream().forEach(System.out::println);
 	}
 

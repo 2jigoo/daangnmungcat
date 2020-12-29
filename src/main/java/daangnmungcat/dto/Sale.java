@@ -1,6 +1,7 @@
 package daangnmungcat.dto;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -29,8 +30,8 @@ public class Sale {
 	private Dongne2 dongne2;
 	private Member buyMember;
 	private int saleState;
-	private LocalDateTime regdate;
-	private LocalDateTime redate;
+	private Date regdate;	
+	private Date redate;
 	private int hits;
 	private int chatCount;
 	private int heartCount;
