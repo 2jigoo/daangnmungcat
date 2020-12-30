@@ -14,10 +14,6 @@
 	SELECT * FROM sale_view 
 </sql>
 
-<sql id="memberIdSQL">
-	SELECT id, title, PRICE , dv.D1NAME AS DONGNE1_ID , dv.D2NAME AS DONGNE2_ID , HEART_COUNT , CHAT_COUNT FROM JOONGO_SALE s JOIN DONGNE_VIEW dv  ON  DV.D2ID  = s.DONGNE2_ID
-</sql>
-
 <sql id="whereSQL">
 	<where>
 		<if test="id != null">
@@ -29,7 +25,7 @@
 <sql id="whereIdSQL">
 	<where>
 		<if test="mem_id != null">
-			mem_id = #{member.id}
+			mem_id = #{member.id} 
 		</if>
 	</where>
 </sql>
@@ -65,7 +61,7 @@
 </select>
 
 <select id="selectJoongoSalesByMemId" resultMap="saleResult" parameterType="String">
-	<include refid="memberIdSQL"></include>
+	<include refid="viewSQL"></include>
 	<include refid="whereIdSQL"></include>
 </select>
 

@@ -12,6 +12,6 @@ public interface JoongoSaleMapper {
 	List<Sale> selectJoongoSaleByAll();
 	
 	List<Sale>  selectJoonSaleById(@Param("id")int id);
-	
+
 	List<Sale> selectJoongoSalesByMemId(String memId);
 }

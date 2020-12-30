@@ -115,6 +115,10 @@
 		color: #992124;
 	}
 	
+	#product_list {
+		width: 10%;
+	}
+	
 </style>
 <script type="text/javascript">
 
@@ -246,25 +250,31 @@ $(document).ready(function(){
 
 	<section id="section_goods">
 		<p>이 판매자의 다른 중고상품들 입니다.</p>
+		<div id = "product_list">
 		<ul class="product_list s-inner">
-			<c:forEach items="${mlist }" var="mlist">
-					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
-					<div class="txt">
+		<c:forEach items="${mlist }" var="mlist">
+			<li>
 						<c:if test="${param.id eq mlist.id }">
 						<!--원글 id랑 mlist.id랑 같으면 mlist.안보이게 하기 -->
 						</c:if>
+						
 						<c:if test="${param.id ne mlist.id }">
+						<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
+					<div class="txt">
 				<%-- 		<p>${mlist.id }</p> --%>
-						<p class="location">${mlist.dongne1.dong1Name} ${list.dongne2.dong2Name}</p>
+						<p class="location">${mlist.dongne1.dong1Name} ${mlist.dongne2.dong2Name}</p>
 						<p class="subject">${mlist.title}</p>
 						<p class="price"><span>${mlist.price}</span>원</p>
 						<ul>
 							<li class="heart">${mlist.heartCount}</li>
 							<li class="chat">${mlist.chatCount}</li>
 						</ul>
+					</div>	
 						</c:if>
+			</li>
 			</c:forEach>
 		</ul>
+		</div>
 	</section>
 </c:forEach>
 </div>
