@@ -52,4 +52,11 @@ public class JoongoSaleMapperTest {
 		sale.stream().forEach(System.out::println);
 	}
 
+	@Test
+	public void testJSaleHits() {
+		int id = 2;
+		mapper.JSaleHits(id);
+//		System.out.println(hits);
+	}
+
 }

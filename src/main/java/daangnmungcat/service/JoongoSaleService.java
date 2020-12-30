@@ -14,4 +14,7 @@ public interface JoongoSaleService {
 	List<Sale> getListsById(@Param("id")int id);
 	
 	List<Sale> getListByMemID(@Param("memId")String memId);
+	
+	void JSHits(int id);
+
 }

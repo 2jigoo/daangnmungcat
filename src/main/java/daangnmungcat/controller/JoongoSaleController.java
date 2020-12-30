@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.Sale;
+import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.service.JoongoSaleService;
 
 @Controller
@@ -49,10 +50,15 @@ public class JoongoSaleController {
 		List<Sale> list = service.getListsById(id);
 		List<Sale> mlist = service.getListByMemID(memId);
 		model.addAttribute("list", list);
+		String ok =  "ok";
+		if(mlist.size() == 1) {
+			System.out.println("한개");
+			model.addAttribute("emptylist", ok);
+		}
 		model.addAttribute("mlist", mlist);
-		System.out.println("mlist 출력  >> ");
-		mlist.stream().forEach(System.out::println);
-		System.out.println("memId >> " +  memId);
+//		System.out.println("mlist 출력  >> ");
+//		mlist.stream().forEach(System.out::println);
+		service.JSHits(id);
 		return "/joongoSale/detailList";
 	}
 }
