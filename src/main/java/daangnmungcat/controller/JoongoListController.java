@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.GpsToAddress;
+import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.mapper.JoongoListMapper;
@@ -34,28 +36,45 @@ public class JoongoListController {
 	private JoongoListMapper mapper;	
 	
 	@GetMapping("/joongo_list")
-	public String list(Model model) {
-		List<Sale> list = mapper.selectJoongoByAll();
-		model.addAttribute("list", list);
+	public String list(Model model, Criteria cri) {
+		List<Sale> list = mapper.selectJoongoByAllPage(cri);
 		System.out.println(list);
+		model.addAttribute("list", list);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(mapper.listCount());
+		model.addAttribute("pageMaker", pageMaker);
+		
 		return "/joongo_list";
 	}
 	
 	@GetMapping("/joongo_list/{dongne1}")
-	public String listDongne1(Model model, @PathVariable("dongne1") String dongne1){
-		List<Sale> list = mapper.selectJoongoByDongne1(dongne1);
+	public String listDongne1(Model model, @PathVariable("dongne1") String dongne1, Criteria cri){
+		List<Sale> list = mapper.selectJoongoByDongne1(dongne1, cri);
 		model.addAttribute("list", list);
 		model.addAttribute("dongne1Name", dongne1);
+
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(mapper.listCount1(dongne1));
+		model.addAttribute("pageMaker", pageMaker);
 		return "/joongo_list";
 	}
 	
 	@GetMapping("/joongo_list/{dongne1}/{dongne2}")
-	public String listDongne2(Model model, @PathVariable("dongne1") String dongne1, @PathVariable("dongne2") String dongne2) {
+	public String listDongne2(Model model, @PathVariable("dongne1") String dongne1, @PathVariable("dongne2") String dongne2, Criteria cri) {
 		System.out.println(dongne1);
-		List<Sale> list = mapper.selectJoongoByDongne2(dongne1, dongne2);
+		List<Sale> list = mapper.selectJoongoByDongne2(dongne1, dongne2, cri);
 		model.addAttribute("list", list);
 		model.addAttribute("dongne1Name", dongne1);
 		model.addAttribute("dongne2Name", dongne2);
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(mapper.listCount2(dongne1, dongne2));
+		model.addAttribute("pageMaker", pageMaker);
 		return "/joongo_list";
 	}
 	

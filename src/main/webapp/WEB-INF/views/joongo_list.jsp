@@ -6,6 +6,7 @@
 <script type="text/javascript">
 var dongne1Id;
 var dongne1Name = "${dongne1Name}"
+var pageNum = "${pageMaker.cri.page}"
 $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
@@ -129,6 +130,10 @@ $(function(){
 	        break;
 	    }
 	 }
+	 
+	 
+	 // page - active
+	 $(".board_page ul li:eq("+ (pageNum - 1) +")").addClass("active")
 });
 </script>
 
@@ -167,6 +172,53 @@ $(function(){
 				</c:if>
 			</ul>
 		</div>
+		
+		<div class="board_page">
+		    <c:if test="${pageMaker.prev}">
+		    	<c:choose>
+		    		<c:when test="${not empty dongne2Name}">
+		    			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}/${dongne2Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    		</c:when>
+		    		<c:when test="${not empty dongne1Name}">
+		    			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    		</c:when>
+		    		<c:otherwise>
+				    	<p><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    		</c:otherwise>
+		    	</c:choose>
+		    </c:if> 
+			<ul>
+			
+			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+			   <c:choose>
+			  		<c:when test="${not empty dongne2Name}">
+			  			<li><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}/${dongne2Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  		</c:when>
+			  		<c:when test="${not empty dongne1Name}">
+			  			<li><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  		</c:when>
+			  		<c:otherwise>
+			    	<li><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  		</c:otherwise>
+			 		</c:choose>
+			  </c:forEach>
+			</ul>
+			
+			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+			   <c:choose>
+			  		<c:when test="${not empty dongne2Name}">
+			  			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}/${dongne2Name}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			  		</c:when>
+			  		<c:when test="${not empty dongne1Name}">
+			  			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			  		</c:when>
+			  		<c:otherwise>
+			    		<p><a href="<%=request.getContextPath()%>/joongo_list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			  		</c:otherwise>
+			 		</c:choose>
+			  </c:if> 
+		</div>
+		
 	</div>
 </div>
 

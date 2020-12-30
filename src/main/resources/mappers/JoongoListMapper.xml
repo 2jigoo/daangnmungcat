@@ -3,7 +3,7 @@
 <mapper namespace="daangnmungcat.mapper.JoongoListMapper">
 
 <sql id="selectSQL">
-	SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	SELECT rownum, js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
 </sql>
 
 <resultMap type="Sale" id="saleResult">
@@ -42,14 +42,64 @@
 	<include refid="selectSQL"/>
 </select>
 
-<select id="selectJoongoByDongne1" resultMap="saleResult">
-	<include refid="selectSQL"/>
-	WHERE d1.NAME = #{dongne1.name}
+
+<select id="selectJoongoByAllPage" resultMap="saleResult">
+SELECT a.*
+  FROM (SELECT rownum AS rnum, b.*
+  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID ORDER BY js.id desc) b) a
+ WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+ ORDER BY a.rnum
 </select>
 
+
+<select id="selectJoongoByDongne1" parameterType="map" resultMap="saleResult">
+SELECT a.*
+  FROM (SELECT rownum AS rnum, b.*
+  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} ORDER BY js.id desc) b) a
+ WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+ ORDER BY a.rnum
+	<!-- <include refid="selectSQL"/>
+	WHERE d1.NAME = #{dongne1.name} -->
+</select>
+
+
 <select id="selectJoongoByDongne2" parameterType="map" resultMap="saleResult">
-	<include refid="selectSQL"/>
-	WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2}
+SELECT a.*
+  FROM (SELECT rownum AS rnum, b.*
+  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2} ORDER BY js.id desc) b) a
+ WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+ ORDER BY a.rnum
+	<!-- <include refid="selectSQL"/>
+	WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2} -->
+</select>
+
+
+
+<select id="listCount" parameterType="map" resultType="int">
+SELECT count(a.id)
+  FROM (SELECT rownum AS rnum, b.*
+  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID 
+  ORDER BY js.id desc) b) a
+</select>
+
+<select id="listCount1" parameterType="map" resultType="int">
+SELECT count(a.id)
+  FROM (SELECT rownum AS rnum, b.*
+  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} 
+  ORDER BY js.id desc) b) a
+</select>
+
+<select id="listCount2" parameterType="map" resultType="int">
+SELECT count(a.id)
+  FROM (SELECT rownum AS rnum, b.*
+  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} and d2.NAME = #{dongne2} 
+  ORDER BY js.id desc) b) a
 </select>
 
 </mapper>
