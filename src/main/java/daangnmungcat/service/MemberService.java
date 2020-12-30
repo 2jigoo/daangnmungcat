@@ -21,6 +21,7 @@ public interface MemberService {
 	int registerMember(Member member);
 	int idCheck(String id);
 	int emailCheck(String email);
+	int phoneCheck(String phone);
 	
 	//휴대폰인증
 	void certifiedPhoneNumber(String phoneNumber, String cerNum);

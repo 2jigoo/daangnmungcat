@@ -48,6 +48,19 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public int emailCheck(String email) {
+		int res =  mapper.emailCheck(email);
+		return res;
+	}
+	
+	@Override
+	public int phoneCheck(String phone) {
+		int res = mapper.phoneCheck(phone);
+		return res;
+	}
+	
+	
+	@Override
 	public List<Dongne1> Dongne1List() {
 		return mapper.Dongne1List();
 	}
@@ -55,12 +68,6 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<Dongne2> Dongne2List(int dongne1) {
 		return mapper.Dongne2List(dongne1);
-	}
-	
-	@Override
-	public int emailCheck(String email) {
-		int res =  mapper.emailCheck(email);
-		return res;
 	}
 	
 	@Override
@@ -85,5 +92,7 @@ public class MemberServiceImpl implements MemberService {
             System.out.println(e.getCode());
         }
 	}
+
+	
 
 }

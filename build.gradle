@@ -80,8 +80,8 @@ dependencies {
 	//compile group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
 	//compile group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
 	
-	//문자인증
-	compile group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+	
+
 	
 	// 위도 -> 한글 주소명으로 변환
 	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'

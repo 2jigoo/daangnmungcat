@@ -12,6 +12,16 @@
 
 function re_check() {
 	var reid = $('#re_id').val();
+	var reg = /^[A-Za-z0-9+]{4,20}$/; 
+	if(reid == ""){
+		alert('아이디를 입력하세요.');
+		return;
+	}else if(reg.test(reid) == false){
+		alert("아이디는 4자리 이상의 영문자와 숫자만 사용가능합니다.");
+		return;
+	}
+	
+	console.log(reid);
 	var url = new URL(window.location.href);
 	var id = url.searchParams.get("id");
 	var pathname = url.pathname; // /daangnmungcat/idCheck

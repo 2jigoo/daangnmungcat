@@ -75,6 +75,10 @@
 		SELECT count(*) FROM MEMBER WHERE email = #{email}
 	</select>
 	
+	<select id="phoneCheck" resultType="int">
+		SELECT count(*) FROM MEMBER WHERE phone = #{phone}
+	</select>
+	
 	<insert id="insertMember"  parameterType="Member">
 		INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, GRADE, PROFILE_PIC, PROFILE_TEXT) 
 		VALUES(#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{phone}, #{dongne1}, #{dongne2}, #{grade}, #{profilePic}, #{profileText})
