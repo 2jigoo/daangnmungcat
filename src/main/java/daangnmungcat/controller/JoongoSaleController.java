@@ -49,10 +49,14 @@ public class JoongoSaleController {
 		List<Sale> list = service.getListsById(id);
 		List<Sale> mlist = service.getListByMemID(memId);
 		model.addAttribute("list", list);
+		String ok =  "ok";
+		if(mlist.size() == 1) {
+			System.out.println("한개");
+			model.addAttribute("emptylist", ok);
+		}
 		model.addAttribute("mlist", mlist);
-		System.out.println("mlist 출력  >> ");
-		mlist.stream().forEach(System.out::println);
-		System.out.println("memId >> " +  memId);
+//		System.out.println("mlist 출력  >> ");
+//		mlist.stream().forEach(System.out::println);
 		return "/joongoSale/detailList";
 	}
 }

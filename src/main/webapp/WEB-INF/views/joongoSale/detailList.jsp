@@ -249,16 +249,25 @@ $(document).ready(function(){
 	</section>
 
 	<section id="section_goods">
-		<p>이 판매자의 다른 중고상품들 입니다.</p>
+		
 		<div id = "product_list">
 		<ul class="product_list s-inner">
+		
+		
+		<c:if test = "${emptylist eq 'ok'}">
+				<p>이 판매자의 다른 중고 상품이 없습니다.</p>
+		</c:if>
+		
+		<c:if test = "${emptylist ne 'ok'}" >	
+				<p>이 판매자의 다른 중고상품들 입니다.</p>
 		<c:forEach items="${mlist }" var="mlist">
-			<li>
-						<c:if test="${param.id eq mlist.id }">
 						<!--원글 id랑 mlist.id랑 같으면 mlist.안보이게 하기 -->
+						<c:if test="${param.id eq mlist.id }">
 						</c:if>
+			<li>
 						
-						<c:if test="${param.id ne mlist.id }">
+						 <c:if test="${param.id ne mlist.id }">
+						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}&memId=${mlist.member.id}">
 						<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="txt">
 				<%-- 		<p>${mlist.id }</p> --%>
@@ -270,9 +279,11 @@ $(document).ready(function(){
 							<li class="chat">${mlist.chatCount}</li>
 						</ul>
 					</div>	
-						</c:if>
+						</a>	
+					</c:if>
 			</li>
 			</c:forEach>
+			</c:if>
 		</ul>
 		</div>
 	</section>
