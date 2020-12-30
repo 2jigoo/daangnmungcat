@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		List<Sale> mlist = mapper.selectJoongoSalesByMemId(memId);
 		return mlist;
 	}
+
+	@Override
+	public void JSHits(int id) {
+		mapper.JSaleHits(id);
+	}
+
 
 
 }

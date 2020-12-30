@@ -37,6 +37,7 @@ public class Member {
 		this.pwd = pwd;
 	}
 	
+
 	public Member(String email) {
 		this.email = email;
 	}

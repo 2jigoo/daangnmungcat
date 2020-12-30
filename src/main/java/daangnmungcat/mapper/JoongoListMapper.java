@@ -12,4 +12,7 @@ public interface JoongoListMapper {
 	List<Sale> selectJoongoByDongne1(String dongne1);
 
 	List<Sale> selectJoongoByDongne2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
+	
+	int insertJoongoSale(Sale sale);
+
 }

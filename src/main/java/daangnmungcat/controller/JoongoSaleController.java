@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.Sale;
+import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.service.JoongoSaleService;
 
 @Controller
@@ -57,6 +58,7 @@ public class JoongoSaleController {
 		model.addAttribute("mlist", mlist);
 //		System.out.println("mlist 출력  >> ");
 //		mlist.stream().forEach(System.out::println);
+		service.JSHits(id);
 		return "/joongoSale/detailList";
 	}
 }

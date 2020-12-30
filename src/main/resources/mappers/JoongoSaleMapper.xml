@@ -65,4 +65,13 @@
 	<include refid="whereIdSQL"></include>
 </select>
 
+
+<!--조회수  -->
+<update id="JSaleHits" parameterType="int">
+	UPDATE JOONGO_SALE SET HITS = hits + 1
+	<include refid="whereSQL"></include>
+</update>
+
+
+
 </mapper>

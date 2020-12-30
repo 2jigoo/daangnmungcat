@@ -52,4 +52,12 @@
 	WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2}
 </select>
 
+
+<insert id="insertJoongoSale">
+	INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
+	values(sale_seq.nextval, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},#{saleState},sysdate,0,0,0)
+</insert>
+
+
+
 </mapper>
