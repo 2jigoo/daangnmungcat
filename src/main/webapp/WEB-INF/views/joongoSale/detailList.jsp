@@ -116,8 +116,48 @@
 	}
 	
 	#product_list {
-		width: 10%;
 	}
+	
+	
+	/* section_goods 부분 */
+
+			.section_goods_cl {overflow:hidden;}
+			.section_goods_cl > li {float:left; width:calc(25% - 15px); margin-right:20px;}
+			.section_goods_cl > li:nth-child(5n) {margin-right:0;}
+			.section_goods_cl > li:nth-child(5) ~ li {margin-top:40px;}
+			.section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
+			.section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
+			.section_goods_cl .section_img img {max-width:100%; max-height:100%;}
+			.section_goods_cl .section_txt {position:relative; color:#111;}
+			.section_goods_cl .section_txt ul {position:absolute; right:0; top:0;}
+			.section_goods_cl .section_txt ul li {float:left; margin-left:10px; font-size:0.7em;}
+			.section_goods_cl .section_txt ul li.section_heart {background:url(<%=request.getContextPath()%>/resources/images/ico_heart.png) no-repeat left center; padding-left:15px;}
+			.section_goods_cl .section_txt ul li.section_chat {background:url(<%=request.getContextPath()%>/resources/images/ico_chat.png) no-repeat left center; padding-left:22px;}
+			.section_goods_cl .section_location {font-size:0.85em;}
+			.section_goods_cl .section_subject {font-size:1.125em; font-weight:500;}
+			.section_goods_cl .section_price {font-size:0.93em; margin-top:10px; padding-top:10px; border-top:1px solid #ddd; text-align:right; letter-spacing:-0.05em;}
+			.section_goods_cl .section_price span {font-size:1.5em; font-weight:600;}
+			
+			@media screen and (max-width:1199px){
+				.section_goods_cl {width:100%;}
+				.product_list .img {height:22vw}
+			}
+			
+			@media screen and (max-width:1024px){
+				.mProduct {padding:11% 0;}
+				.mProduct .tit {font-size:2.4em; margin-bottom:6%;}
+				.product_list > li {width:calc(25% - 10px); margin-right:13.33px;}
+			}
+			
+			@media screen and (max-width:767px){
+				.product_list > li {width:calc(50% - 5px); margin-right:10px;}
+				.product_list > li:nth-child(even) {margin-right:0;}
+				.product_list > li:nth-child(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
+				.product_list .img {height:40vw;}
+			}
+	
+	
+	
 	
 </style>
 <script type="text/javascript">
@@ -243,7 +283,7 @@ $(document).ready(function(){
 </section>
 	<section id="section_buttons">
 		<div>
-			<button type="button"><img src="/resources/images/ico_heart.png" alt="하트"></button>
+			<button type="button"><img src="<%=request.getContextPath()%>/resources/images/ico_heart.png" alt="하트"></button>
 			<input type="button" value="대화로 문의하기" style="width:80%;">
 		</div>
 	</section>
@@ -251,7 +291,7 @@ $(document).ready(function(){
 	<section id="section_goods">
 		
 		<div id = "product_list">
-		<ul class="product_list s-inner">
+		<ul class="section_goods_cl">
 		
 		
 		<c:if test = "${emptylist eq 'ok'}">
@@ -268,15 +308,15 @@ $(document).ready(function(){
 						
 						 <c:if test="${param.id ne mlist.id }">
 						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}&memId=${mlist.member.id}">
-						<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
-					<div class="txt">
+						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
+					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>
-						<p class="location">${mlist.dongne1.dong1Name} ${mlist.dongne2.dong2Name}</p>
-						<p class="subject">${mlist.title}</p>
-						<p class="price"><span>${mlist.price}</span>원</p>
+						<p class="section_location">${mlist.dongne1.dong1Name} ${mlist.dongne2.dong2Name}</p>
+						<p class="section_subject">${mlist.title}</p>
+						<p class="section_price"><span>${mlist.price}</span>원</p>
 						<ul>
-							<li class="heart">${mlist.heartCount}</li>
-							<li class="chat">${mlist.chatCount}</li>
+							<li class="section_heart">${mlist.heartCount}</li>
+							<li class="section_chat">${mlist.chatCount}</li>
 						</ul>
 					</div>	
 						</a>	
