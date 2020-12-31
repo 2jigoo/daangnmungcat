@@ -122,9 +122,7 @@
 	/* section_goods 부분 */
 
 			.section_goods_cl {overflow:hidden;}
-			.section_goods_cl > li {float:left; width:calc(25% - 15px); margin-right:20px;}
-			.section_goods_cl > li:nth-child(5n) {margin-right:0;}
-			.section_goods_cl > li:nth-child(5) ~ li {margin-top:40px;}
+			.section_goods_cl > li {float:left;  margin-right:20px;}
 			.section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
 			.section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
 			.section_goods_cl .section_img img {max-width:100%; max-height:100%;}
