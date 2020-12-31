@@ -151,10 +151,10 @@ $(function(){
 			content : $('#content').val(),
 			price : $('#price').val(),			
 		 	dongne1: {
-		 		dong1Id : $('#result_dong1_id').val()
+		 		dong1Id : $('#dongne1').val()
 		 	},
 		 	dongne2: {
-		 		dong2Id : $('#result_dong2_id').val()
+		 		dong2Id : $('#dongne2').val()
 		 	}
 		 };
 		 	alert(JSON.stringify(newlist));
@@ -174,6 +174,7 @@ $(function(){
 	            },
 				success: function() {
 					alert('완료되었습니다.');
+					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
 					alert('에러!!!!' + request.status+request.responseText+error);

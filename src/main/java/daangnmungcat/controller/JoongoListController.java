@@ -163,6 +163,7 @@ public class JoongoListController {
 		System.out.println("/insert 컨트롤러");
 		try {
 			return ResponseEntity.ok(mapper.insertJoongoSale(sale));
+			
 		} catch (DuplicateMemberException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
