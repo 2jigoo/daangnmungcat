@@ -22,29 +22,6 @@ public class JoongoSaleController {
 	@Autowired
 	private JoongoSaleService service;
 	
-	@GetMapping("/joongsales")
-	public ResponseEntity<Object> joongsales(){
-		System.out.println("joongsales()");
-		return ResponseEntity.ok(service.getLists());
-	}
-	
-//	@GetMapping("/detailList")
-//	public String list(Model model) {
-//		List<Sale> list = service.getLists();
-//		model.addAttribute("list", list);
-//		System.out.println("컨트롤러 detailList >>> " + list);
-//		return "/joongoSale/detailList";
-//	}
-//	
-//	@GetMapping("/detailList/{id}")
-//	public ResponseEntity<Object> sales(@PathVariable int id, HttpServletResponse response){
-//		List<Sale> list = service.getListsById(id);
-//		if (list == null) {
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//		}
-//		return ResponseEntity.ok(list);
-//	}
-	
 	@RequestMapping(value="detailList", method=RequestMethod.GET)
 	public String listById(@RequestParam int id, @RequestParam String memId, Model model) {
 		List<Sale> list = service.getListsById(id);
@@ -56,7 +33,6 @@ public class JoongoSaleController {
 			model.addAttribute("emptylist", ok);
 		}
 		model.addAttribute("mlist", mlist);
-//		System.out.println("mlist 출력  >> ");
 //		mlist.stream().forEach(System.out::println);
 		service.JSHits(id);
 		return "/joongoSale/detailList";

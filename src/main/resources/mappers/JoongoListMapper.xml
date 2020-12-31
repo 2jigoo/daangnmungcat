@@ -6,6 +6,18 @@
 	SELECT rownum, js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
 </sql>
 
+
+<sql id="selectDongne1SQL">
+	SELECT  d1.id AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME
+	FROM DONGNE1 d1 JOIN DONGNE2 d2  ON d1.id = d2.DONGNE1_ID WHERE d1.NAME = #{dongne1} 
+</sql>
+
+
+<sql id="selectDongne2SQL">
+	SELECT  d1.id AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME
+	FROM DONGNE1 d1 JOIN DONGNE2 d2 ON d1.id = d2.DONGNE1_ID WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2}
+</sql>
+
 <resultMap type="Sale" id="saleResult">
 	<id column="id" property="id"/>
 	<result column="mem_id" property="member.id"/>
@@ -40,6 +52,15 @@
 
 <select id="selectJoongoByAll" resultMap="saleResult">
 	<include refid="selectSQL"/>
+</select>
+
+
+<select id="selectDongne1ByAll" resultMap="saleResult">
+	<include refid="selectDongne1SQL"/>
+</select>
+
+<select id="selectDongne2ByAll" resultMap="saleResult">
+	<include refid="selectDongne2SQL"/>
 </select>
 
 
@@ -105,9 +126,8 @@ SELECT count(a.id)
 
 <insert id="insertJoongoSale">
 	INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
-	values(sale_seq.nextval, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},#{saleState},sysdate,0,0,0)
+	values(sale_seq.nextval, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
 </insert>
-
 
 
 </mapper>
