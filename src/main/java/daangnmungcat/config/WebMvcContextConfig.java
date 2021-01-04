@@ -73,9 +73,9 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	
 	//파일업로드
 	@Bean
-	public MultipartResolver multipartResorver() {
-		StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
-		return resolver;
+	public MultipartResolver multipartResolver() {
+	    StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
+	    return resolver;
 	}
 	
 	
