@@ -228,13 +228,14 @@ $(document).ready(function(){
     	
     	var contextPath = "<%=request.getContextPath()%>";
     	//var file = $('#uploadFile')[0];
-    	var file = document.getElementById("uploadFile").files[0].name;
-    	console.log(file)
     	var formData = new FormData();
-    	//$('#uploadFile').val()
-    	var f = $("input[name='uploadFile']")[0].files;
-    	formData.append('uploadFile', f);
-    	console.log(f);
+    	var file = $("input[name='uploadFile']")[0].files;
+    	for(var i=0; i<file.length; i++){
+    		console.log(file[i]);
+    		formData.append('uploadFile', file[i]);
+    	}
+    	
+    	console.log(file);
     	
     	for(var pair of formData.entries()) {
     		   console.log(pair[0]+ ', '+ pair[1]); 
