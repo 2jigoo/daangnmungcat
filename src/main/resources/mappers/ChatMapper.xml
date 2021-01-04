@@ -8,20 +8,54 @@
 	 -->
 	 
 	<!-- ResultMap -->
+	<resultMap type="Chat" id="chatSimpleRes">
+		<id property="id" column="id" />
+		<result property="sale.id" column="sale_id" />
+		<result property="sale.member.id" column="sale_mem_id" />
+		<result property="buyer.id" column="buy_mem_id" />
+		<result property="regdate" column="regdate" />
+		<result property="latestDate" column="latest_date" />
+	</resultMap>
+	
+	<sql id="simpleSelSQL">
+		SELECT
+			id,
+			sale_id,
+			sale_mem_id,
+			buy_mem_id,
+			regdate,
+			latest_date
+		FROM JOONGO_CHAT		
+	</sql>
+
+
 	<resultMap type="Chat" id="chatRes">
-		<id column="id" property="id" />
-		<result column="sale_id" property="sale.id" />
-		<result column="sale_mem_id" property="sale.member.id" />
-		<result column="buy_mem_id" property="buyer.id" />
-		<result column="regdate" property="regdate" />
-		<result column="latest_date" property="latestDate" />
+		<id property="id" column="id" />
+		<result property="regdate" column="regdate" />
+		<result property="latestDate" column="latest_date" />
+		
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResult" />
+		<association property="buyer" columnPrefix="buyer_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	
 	<sql id="selectSQL">
-		SELECT jc.id, sale_id, sale_mem_id, sm.nickname, buy_mem_id, bm.nickname, jc.regdate, latest_date
-		FROM JOONGO_CHAT jc
-			LEFT OUTER JOIN MEMBER sm ON (jc.SALE_MEM_ID = sm.id)
-			LEFT OUTER JOIN MEMBER bm ON (jc.BUY_MEM_ID = bm.id)
+		SELECT
+			C.id			AS id,
+			C.sale_id		AS sale_id,
+			S.MEM_ID 		AS sale_mem_id,
+			SM.nickname		AS sale_mem_nickname,
+			SM.grade		AS sale_mem_grade,
+			S.title			AS sale_title,
+			S.dongne2		AS sale_dongne2,
+			S.sale_state	AS sale_sale_state,
+			C.buy_mem_id	AS buyer_id,
+			BM.nickname		AS buyer_nickname,
+			C.regdate		AS regdate,
+			C.latest_date	AS latest_date
+		FROM JOONGO_CHAT C
+			LEFT OUTER JOIN JOONGO_SALE S ON (C.SALE_ID = S.ID)
+			LEFT OUTER JOIN MEMBER SM ON (S.MEM_ID = SM.id)
+			LEFT OUTER JOIN MEMBER BM ON (C.BUY_MEM_ID = BM.id)
 	</sql>
 	
 	

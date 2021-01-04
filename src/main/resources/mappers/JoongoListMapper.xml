@@ -26,6 +26,27 @@
 	<collection property="dongne2" resultMap="dongne2Result"/>
 </resultMap>
 
+<resultMap type="Sale" id="saleResultForJoin">
+	<id column="id" property="id"/>
+	<result column="dog_cate" property="dogCate"/>
+	<result column="cat_cate" property="catCate"/>
+	<result column="title" property="title"/>
+	<result column="content" property="content"/>
+	<result column="price" property="price"/>
+	<result column="buy_mem_id" property="buyMember.id"/>
+	<result column="sale_state" property="saleState"/>
+	<result column="regdate" property="regdate"/>
+	<result column="redate" property="redate"/>
+	<result column="hits" property="hits"/>
+	<result column="chat_count" property="chatCount"/>
+	<result column="heart_count" property="heartCount"/>
+	<result column="dongne1" property="dongne1.id" />
+	<result column="dongne2" property="dongne2.id" />
+	
+	<association property="member" columnPrefix="mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+</resultMap>
+
+
 <resultMap type="Dongne1" id="dongne1Result">
 	<id column="DONGNE1ID" property="id"/>
 	<result column="DONGNE1NAME" property="name"/>

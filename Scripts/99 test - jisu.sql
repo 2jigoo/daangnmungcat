@@ -45,3 +45,27 @@ DROP CONSTRAINTS FK_JNG_CHAT_TO_JNG_CHT_MSG;
 
 INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '안녕하세요ㅎㅎㅎ', sysdate, 'n', null);
 INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '안녕하세요ㅎㅎㅎ', sysdate, 'n', null);
+
+
+-- select join
+
+SELECT
+	C.id,
+	C.sale_id,
+--	C.sale_mem_id	AS sale_member_id,
+	S.MEM_ID 		AS sale_mem_id,
+	S.nickname		AS sale_mem_nickname,
+	S.title			AS sale_title,
+	S.dongne2		AS sale_dongne2_id,
+	S.sale_state,
+	C.buy_mem_id	AS buyer_id,
+	B.nickname		AS buyer_nick,
+	C.regdate,
+	C.latest_date
+FROM JOONGO_CHAT C
+	LEFT OUTER JOIN JOONGO_SALE S ON (C.SALE_ID = S.ID)
+	LEFT OUTER JOIN MEMBER SM ON (S.MEM_ID = SM.id)
+	LEFT OUTER JOIN MEMBER BM ON (C.BUY_MEM_ID = BM.id);
+
+SELECT * FROM joongo_sale;
+SELECT * FROM joongo_chat;
