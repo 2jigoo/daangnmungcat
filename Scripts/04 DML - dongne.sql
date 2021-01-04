@@ -29,7 +29,7 @@ INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '경상북도'); --15
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '경상남도'); --16
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '제주특별자치도'); --17
 
-SELECT * FROM dongne2;
+SELECT * FROM dongne1;
 
 --서울특별시 
 INSERT INTO dongne2 VALUES (dongne2_seq.nextval, 1, '종로구');

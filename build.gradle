@@ -41,11 +41,11 @@ dependencies {
    compile group: 'org.springframework', name: 'spring-websocket', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-messaging', version: "${version.spring}"
    
-	//spring security 5.2.9없으니께 바꾸지말아주세유
-	compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.1'
-	compile group: 'org.springframework.security', name: 'spring-security-web', version:  '5.4.1'
-	compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.1'
-	compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.1'
+   //spring security 5.2.9없으니께 바꾸지말아주세유
+   compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.1'
+   compile group: 'org.springframework.security', name: 'spring-security-web', version:  '5.4.1'
+   compile group: 'org.springframework.security', name: 'spring-security-config', version: '5.4.1'
+   compile group: 'org.springframework.security', name: 'spring-security-taglibs', version: '5.4.1'
    
    
    // DB 연동 관련
@@ -71,19 +71,19 @@ dependencies {
    testImplementation 'junit:junit:4.12'
    
    //혜진 (혹시 이걸로 에러나면 지우시오)
-	compile group: 'com.oracle.database.nls', name: 'orai18n', version: '19.7.0.0'
-	
-	// webjars (쓸 지 고민중)
- 	//compile group: 'org.webjars', name: 'bootstrap', version: '4.3.1'
-	//compile group: 'org.webjars.npm', name: 'vue', version: '2.5.16'
-	//compile group: 'org.webjars.npm', name: 'axios', version: '0.17.1'
-	//compile group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
-	//compile group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
-	
-	
-	compile group: 'net.nurigo', name: 'javaSDK', version: '2.2'
-	
-	// 위도 -> 한글 주소명으로 변환
-	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-	
+   compile group: 'com.oracle.database.nls', name: 'orai18n', version: '19.7.0.0'
+   
+   // webjars (쓸 지 고민중)
+    //compile group: 'org.webjars', name: 'bootstrap', version: '4.3.1'
+   //compile group: 'org.webjars.npm', name: 'vue', version: '2.5.16'
+   //compile group: 'org.webjars.npm', name: 'axios', version: '0.17.1'
+   //compile group: 'org.webjars', name: 'sockjs-client', version: '1.1.2'
+   //compile group: 'org.webjars', name: 'stomp-websocket', version: '2.3.3-1'
+   
+   
+   compile group: 'net.nurigo', name: 'javaSDK', version: '2.2'
+   
+   // 위도 -> 한글 주소명으로 변환
+   compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+   
 }
