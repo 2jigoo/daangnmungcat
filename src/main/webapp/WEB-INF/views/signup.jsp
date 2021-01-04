@@ -7,9 +7,9 @@
 .signup {width:700px; margin:0 auto;}
 .btns {width:700px; margin:0 auto; text-align:center; padding:30px;}
 </style>
-
 <script>
 $(document).ready(function(){
+	
 	var contextPath = "<%=request.getContextPath()%>";
 	var csrfToken = $("meta[name='_csrf']").attr("th:content");
 	var email_status; //email_status가 0이면 return
@@ -227,11 +227,14 @@ $(document).ready(function(){
     $('#test').on("click", function(){
     	
     	var contextPath = "<%=request.getContextPath()%>";
-    	var file = $('#uploadFile')[0];
+    	//var file = $('#uploadFile')[0];
+    	var file = document.getElementById("uploadFile").files[0].name;
+    	console.log(file)
     	var formData = new FormData();
-    	
-    	formData.append('uploadFile', $('#uploadFile').val());
-    	console.log(formData);
+    	//$('#uploadFile').val()
+    	var f = $("input[name='uploadFile']")[0].files;
+    	formData.append('uploadFile', f);
+    	console.log(f);
     	
     	for(var pair of formData.entries()) {
     		   console.log(pair[0]+ ', '+ pair[1]); 
@@ -277,8 +280,24 @@ function id_check() {
 
 }
 
-
-
+function imageChange(){
+	var file = document.getElementById("uploadFile").files[0]
+	if (file) {
+	//console.log(document.getElementById("uploadFile").files[0])
+	 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+    reader.onload = function (e) {
+    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+        $('#productImg').attr('src', e.target.result);
+        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
+        //(아래 코드에서 읽어들인 dataURL형식)
+    }                   
+    reader.readAsDataURL(document.getElementById("uploadFile").files[0]);
+    //File내용을 읽어 dataURL형식의 문자열로 저장
+    
+	}
+	
+	
+}
 
 </script>
 
@@ -349,9 +368,11 @@ function id_check() {
 
 
 <div class="btns">
-	<input type="file" id="uploadFile" name="uploadFile" multiple="true">
+	<input type="file" id="uploadFile" name="uploadFile" onchange="imageChange()">
 	<input type="button" id="test" value="테스트">
-
+	<img id="productImg">
+	<div id="preview">
+	</div>
 	<br>
 	<br>
 	<input type="button" value="가입완료" id="signup">
