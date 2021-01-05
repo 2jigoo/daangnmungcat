@@ -229,7 +229,7 @@ $(document).ready(function(){
     	var contextPath = "<%=request.getContextPath()%>";
     	//var file = $('#uploadFile')[0];
     	var formData = new FormData();
-    	var file = $("input[name='uploadFile']")[0].files;
+    	var file = $("input[name='uploadFile']")[0].files[0];
     	for(var i=0; i<file.length; i++){
     		console.log(file[i]);
     		formData.append('uploadFile', file[i]);
