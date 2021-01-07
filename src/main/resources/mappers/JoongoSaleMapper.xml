@@ -4,7 +4,7 @@
 <sql id="selectSQL">
 	SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
-	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , IS_HEART, HEART_COUNT 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT 
 	FROM JOONGO_SALE s 
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
 	JOIN MEMBER m ON s.MEM_ID = m.id
@@ -43,11 +43,11 @@
 	<result column="CONTENT" property="content"/>
 	<result column="regdate" property="regdate"/>
 	<result column="REDATE" property="redate"/>
-	<result column="SALE_STATE" property="saleState"/>
+	<result column="SALE_STATE" property="saleState" jdbcType="INTEGER" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 	<result column="BUY_MEM_ID" property="buyMember.id"/>
 	<result column="HITS" property="hits"/>
 	<result column="CHAT_COUNT" property="chatCount"/>
-	<result column="IS_HEART" property="isHeart"/>
+	<!-- <result column="IS_HEART" property="isHeart"/> -->
 	<result column="HEART_COUNT" property="heartCount"/>
 </resultMap>
 

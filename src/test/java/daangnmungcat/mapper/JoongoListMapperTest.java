@@ -1,9 +1,5 @@
 package daangnmungcat.mapper;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
@@ -21,6 +17,7 @@ import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.dto.SaleState;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ContextRoot.class} )
@@ -53,10 +50,17 @@ public class JoongoListMapperTest {
 		Dongne2 dongne2 = new Dongne2(48, 3, "수성구");
 		sale.setDongne1(dongne1);
 		sale.setDongne2(dongne2);
-		sale.setSaleState(1);
+//		sale.setSaleState(1);
+		sale.setSaleState(SaleState.ON_SALE);
 		int res = mapper.insertJoongoSale(sale);
 		Assert.assertEquals(1, res);
 		System.out.println(sale);
 	}
 
+	@Test
+	public void testSelectJoongoSaleAll() {
+		mapper.selectJoongoByAll().forEach(s -> log.debug(s.toString()));
+	}
+	
+	
 }
