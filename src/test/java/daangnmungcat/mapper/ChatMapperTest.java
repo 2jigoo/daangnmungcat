@@ -25,7 +25,7 @@ import daangnmungcat.dto.Sale;
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = {ContextRoot.class} )
-@Transactional
+//@Transactional
 public class ChatMapperTest {
 
 	private static final Log log = LogFactory.getLog(ChatMapperTest.class);
@@ -101,7 +101,7 @@ public class ChatMapperTest {
 	
 	
 	@Test
-	public void d_test_seletAllChatMessageByChatId() {
+	public void d_test_insertChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- ChatMessage 추가");
 		
@@ -131,7 +131,7 @@ public class ChatMapperTest {
 		Assert.assertEquals(1, res);
 	}
 	
-	@Test
+//	@Test
 	public void g_test_deleteChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- 한 채팅의 모든 메시지를 삭제");

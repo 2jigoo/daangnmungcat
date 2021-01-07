@@ -1,6 +1,5 @@
 package daangnmungcat.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +33,7 @@ public class Sale {
 	private Date redate;
 	private int hits;
 	private int chatCount;
+	private String isHeart;
 	private int heartCount;
 	
 	private String thumImg;

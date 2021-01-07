@@ -240,6 +240,19 @@ $(document).ready(function(){
         for(var pair of formData.entries()) {
               console.log(pair[0]+ ', '+ pair[1]); 
         }
+    	//var file = $('#uploadFile')[0];
+    	var formData = new FormData();
+    	var file = $("input[name='uploadFile']")[0].files[0];
+    	for(var i=0; i<file.length; i++){
+    		console.log(file[i]);
+    		formData.append('uploadFile', file[i]);
+    	}
+    	
+    	console.log(file);
+    	
+    	for(var pair of formData.entries()) {
+    		   console.log(pair[0]+ ', '+ pair[1]); 
+    	}
     	
     	$.ajax({
     		url: contextPath + "/uploadProfile",

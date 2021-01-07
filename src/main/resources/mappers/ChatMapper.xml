@@ -34,35 +34,18 @@
 		<result property="regdate" column="regdate" />
 		<result property="latestDate" column="latest_date" />
 		
-		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResult" />
-		<association property="buyer" columnPrefix="buyer_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" />
+		<association property="buyer" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	
 	<sql id="selectSQL">
-		SELECT
-			C.id			AS id,
-			C.sale_id		AS sale_id,
-			S.MEM_ID 		AS sale_mem_id,
-			SM.nickname		AS sale_mem_nickname,
-			SM.grade		AS sale_mem_grade,
-			S.title			AS sale_title,
-			S.dongne2		AS sale_dongne2,
-			S.sale_state	AS sale_sale_state,
-			C.buy_mem_id	AS buyer_id,
-			BM.nickname		AS buyer_nickname,
-			C.regdate		AS regdate,
-			C.latest_date	AS latest_date
-		FROM JOONGO_CHAT C
-			LEFT OUTER JOIN JOONGO_SALE S ON (C.SALE_ID = S.ID)
-			LEFT OUTER JOIN MEMBER SM ON (S.MEM_ID = SM.id)
-			LEFT OUTER JOIN MEMBER BM ON (C.BUY_MEM_ID = BM.id)
+		SELECT * FROM chat_list_view
 	</sql>
-	
-	
 	
 	<select id="selectAllChatsByMemberId" resultMap="chatRes">
 		<include refid="selectSQL" />
 		where sale_mem_id = #{memberId} or buy_mem_id = #{memberId}
+		ORDER BY latest_date DESC
 	</select>
 	
 	<select id="selectChatByChatId" resultMap="chatRes">

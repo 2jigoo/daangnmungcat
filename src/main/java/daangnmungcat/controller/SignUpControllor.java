@@ -2,6 +2,7 @@ package daangnmungcat.controller;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
@@ -80,7 +82,6 @@ public class SignUpControllor {
 		// make folder --
 		File uploadPath = new File(uploadFolder, getFolder());
 		System.out.println("uploadPath: " + uploadPath);
-		
 		if(!uploadPath.exists()) {
 			uploadPath.mkdirs();
 		}

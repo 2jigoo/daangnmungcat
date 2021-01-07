@@ -4,6 +4,7 @@ DROP SEQUENCE sale_seq;
 DROP SEQUENCE chat_seq;
 DROP SEQUENCE chat_msg_seq;
 
+
 CREATE SEQUENCE dongne1_seq
 START WITH 1
 INCREMENT BY 1

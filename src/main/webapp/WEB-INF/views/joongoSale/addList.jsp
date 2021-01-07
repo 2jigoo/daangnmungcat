@@ -5,6 +5,11 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <style>
+	textarea {
+		width : 100%;
+		height:  500px;
+	}
+
 </style>
 <script type="text/javascript">
 var dongne1Id;
@@ -12,7 +17,6 @@ var dongne1Name = "${dongne1Name}"
 $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
-
 		$.get(contextPath+"/dongne1", function(json){
 		var datalength = json.length; 
 		if(datalength >= 1){
@@ -137,16 +141,37 @@ $(function(){
 		 //라디오버튼 강아지 눌렀을때 
 		 
 	 });
-
 	 
 	 $('#insertList').on("click", function(json){
+		 
+		 var price = $('#price').val();
+		 var num = /^[0-9]*$/;
+		 
+		 if($('#title').val() == ""){
+			 alert('제목을 입력해주세요.');
+			 return; 
+		 }else if($('#content').val() == ""){
+			 alert('내용을 입력해주세요.');
+			 return;
+		 }else if(num.test(price) == false){
+			 alert('가격은 숫자만 입력 가능합니다.');
+			 return;
+		 }else if($(':input[name=dogCate]:radio:checked').length < 1){
+			 alert('강아지카테고리 여부를 선택해주세요.');
+			 return;
+		 }else if($(':input[name=catCate]:radio:checked').length < 1){
+			 alert('고양이카테고리 여부를 선택해주세요.');
+			 return;
+		 } 
+		 
+		 
 		 var newlist = {
 			member : {
 				id:'chattest1'
 			},
 			
-			dogCate : 'y',
-			catCate : 'n',
+			dogCate : $(':input[name=dogCate]:radio:checked').val(),
+			catCate : $(':input[name=catCate]:radio:checked').val(),
 			title : $('#title').val(),
 			content : $('#content').val(),
 			price : $('#price').val(),			
@@ -157,7 +182,7 @@ $(function(){
 		 		dong2Id : $('#dongne2').val()
 		 	}
 		 };
-		 	alert(JSON.stringify(newlist));
+		// 	alert(JSON.stringify(newlist));
 		 	
 		 	
 		 	
@@ -177,7 +202,8 @@ $(function(){
 					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
-					alert('에러!!!!' + request.status+request.responseText+error);
+					alert('동네를 먼저 선택해주세요.');
+					//	alert('에러!!!!' + request.status+request.responseText+error);
 				}
 			});
 			console.log(contextPath+"/insert");	
@@ -213,16 +239,6 @@ $(function(){
 		</td>
 	</tr>
 	<tr>
-		<td>
-			<div id="result_dong1_id">
-			</div>
-			<div id="result_dong2_id">
-			</div>
-		</td>
-	
-	</tr>
-	
-	<tr>
 		<td>사진</td>
 		<td><input type="image"></td>
 	</tr>
@@ -246,12 +262,12 @@ $(function(){
 		<td><input type="text" name="title" id="title"></td>
 	</tr>
 	<tr>
-		<td>가격</td>
+		<td>가격<br>(*미입력시 0원으로 등록됩니다.)</td>
 		<td><input type="text" name="price" id="price"></td>
 	<tr>
 	<tr>
 		<td>내용</td>
-		<td><textarea class="content" name="content" id="content"></textarea>>
+		<td><textarea class="content" name="content" id="content"></textarea>
 	</tr>
 <!-- 	<tr>
 		<td></td>
