@@ -1,6 +1,5 @@
 package daangnmungcat.dto;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -29,11 +28,13 @@ public class Sale {
 	private Dongne1 dongne1;
 	private Dongne2 dongne2;
 	private Member buyMember;
-	private int saleState;
+//	private int saleState;
+	private SaleState saleState;
 	private Date regdate;	
 	private Date redate;
 	private int hits;
 	private int chatCount;
+	private String isHeart;
 	private int heartCount;
 	
 	private String thumImg;

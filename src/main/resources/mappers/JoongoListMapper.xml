@@ -27,16 +27,37 @@
 	<result column="content" property="content"/>
 	<result column="price" property="price"/>
 	<result column="buy_mem_id" property="buyMember.id"/>
-	<result column="sale_state" property="saleState"/>
+	<result column="sale_state" property="saleState" jdbcType="INTEGER" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 	<result column="regdate" property="regdate"/>
 	<result column="redate" property="redate"/>
 	<result column="hits" property="hits"/>
 	<result column="chat_count" property="chatCount"/>
+	<!-- <result column="is_heart" property="isHeart"/> -->
 	<result column="heart_count" property="heartCount"/>
 	
 	<association property="dongne1" resultMap="dongne1Result"/>
 	<association property="dongne2" resultMap="dongne2Result"/>
 </resultMap>
+
+<resultMap type="Sale" id="saleResultForJoin">
+	<id column="id" property="id"/>
+	<result column="dog_cate" property="dogCate"/>
+	<result column="cat_cate" property="catCate"/>
+	<result column="title" property="title"/>
+	<result column="content" property="content"/>
+	<result column="price" property="price"/>
+	<result column="buy_mem_id" property="buyMember.id"/>
+	<result column="sale_state" property="saleState" jdbcType="INTEGER" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
+	<result column="regdate" property="regdate"/>
+	<result column="redate" property="redate"/>
+	<result column="hits" property="hits"/>
+	<result column="chat_count" property="chatCount"/>
+	<result column="heart_count" property="heartCount"/>
+	<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
+	<association property="dongne2" columnPrefix="dongne2_" resultMap="daangnmungcat.mapper.MemberMapper.dongne2Result" />
+	<association property="member" columnPrefix="mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+</resultMap>
+
 
 <resultMap type="Dongne1" id="dongne1Result">
 	<id column="DONGNE1ID" property="id"/>

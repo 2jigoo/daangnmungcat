@@ -11,7 +11,7 @@ public interface JoongoSaleMapper {
 	
 	List<Sale> selectJoongoSaleByAll();
 	
-	List<Sale>  selectJoonSaleById(@Param("id")int id);
+	List<Sale>  selectJoonSaleById(int id);
 
 	List<Sale> selectJoongoSalesByMemId(String memId);
 	
@@ -20,6 +20,11 @@ public interface JoongoSaleMapper {
 
 	//하트수
 	int heartCount(int id);
+	
+	//찜 추가 및 해제
+	void updateHeart(@Param("id")int id, @Param("memId")String memId);
+	void updateUnHeart(@Param("id")int id, @Param("memId")String memId);
+	
 	
 	//채팅수
 	int chatCount(int id);
@@ -30,5 +35,7 @@ public interface JoongoSaleMapper {
 	int updateJoongoSale(Sale sale);
 	
 	int deleteJoongoSale(int id);
+	
+	
 	
 }

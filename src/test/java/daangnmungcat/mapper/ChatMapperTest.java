@@ -25,7 +25,7 @@ import daangnmungcat.dto.Sale;
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = {ContextRoot.class} )
-@Transactional
+//@Transactional
 public class ChatMapperTest {
 
 	private static final Log log = LogFactory.getLog(ChatMapperTest.class);
@@ -47,7 +47,7 @@ public class ChatMapperTest {
 		System.out.println();
 	}
 	
-//	@Test
+	@Test
 	public void a_test_InsertChat() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- Chat 추가 테스트");
@@ -85,7 +85,7 @@ public class ChatMapperTest {
 	}
 	
 	
-//	@Test
+	@Test
 	public void c_test_selectChatByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- 채팅 id로 채팅 정보 가져오기");
@@ -100,8 +100,8 @@ public class ChatMapperTest {
 	// ChatMessage Test
 	
 	
-//	@Test
-	public void d_test_seletAllChatMessageByChatId() {
+	@Test
+	public void d_test_insertChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- ChatMessage 추가");
 		
@@ -111,7 +111,7 @@ public class ChatMapperTest {
 		log.debug("chatMessage: " + message.toString());
 	}
 	
-//	@Test
+	@Test
 	public void e_test_seletAllChatMessageByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- 해당 Chat의 메시지들 가져오기");
@@ -122,7 +122,7 @@ public class ChatMapperTest {
 		messageList.stream().forEach(message -> log.debug(message.toString()));
 	}
 	
-//	@Test
+	@Test
 	public void f_test_deleteChatMessageByChatMessageId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- ChatMessage 삭제");
@@ -140,7 +140,7 @@ public class ChatMapperTest {
 		Assert.assertEquals(1, res);
 	}
 
-//	@Test
+	@Test
 	public void h_test_deleteChatByChatId() {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- 한 채팅 삭제. (메시지까지 cascade 되나?)");

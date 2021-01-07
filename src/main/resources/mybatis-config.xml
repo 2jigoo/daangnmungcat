@@ -10,4 +10,7 @@
 	<typeAliases>
 		<package name="daangnmungcat.dto"/>
 	</typeAliases>
+	<typeHandlers>
+		<typeHandler handler="daangnmungcat.dto.SaleState$TypeHandler"/>
+	</typeHandlers>
 </configuration>

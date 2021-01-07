@@ -154,13 +154,11 @@
 				.product_list .img {height:40vw;}
 			}
 	
-	
-	
-	
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){
+		
 	
 	//현재시간가져오기
 	var now = new Date();
@@ -235,7 +233,7 @@ $(document).ready(function(){
 <article>
 <div id="article">
 <c:forEach items="${list}" var="list">
-<input id ="id" type="hidden" value="${list.id }"> 
+<input id ="id" type="hidden" value="${list.member.id }"> 
 <section id="section_img">
 	<div class="img_slider">
 		<img src="<c:url value="/resources/images/sProduct_img1.png" />" id="section_div_img">
@@ -252,7 +250,7 @@ $(document).ready(function(){
 				<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
 			</div>
 			<div id="section_profile_left">
-				<div id="nickname">${list.member.id}</div>
+				<div id="nickname" >${list.member.id}</div>
 				<div id="dongnename">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</div>
 			</div>		
 		</div>
@@ -281,7 +279,24 @@ $(document).ready(function(){
 </section>
 	<section id="section_buttons">
 		<div>
-			<button type="button"><img src="<%=request.getContextPath()%>/resources/images/ico_heart.png" alt="하트"></button>
+			<c:choose>
+				<c:when test="${list.isHeart eq 'n'}">
+				<c:url var="heart" value="heart">
+				       <c:param name="id" value="${list.id}" />
+				       <c:param name="memId" value="${list.member.id}" />
+				</c:url>
+				<a href="${heart}">
+					<img src="<%=request.getContextPath()%>/resources/images/icon_big_empty_heart.png"/></a>
+				</c:when>
+				<c:otherwise>
+				<c:url var="unheart" value="unheart">
+				       <c:param name="id" value="${list.id}" />
+				       <c:param name="memId" value="${list.member.id}" />
+				</c:url>
+				<a href="${unheart}">
+					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
+				</c:otherwise>
+			</c:choose>
 			<input type="button" value="대화로 문의하기" style="width:80%;">
 		</div>
 	</section>

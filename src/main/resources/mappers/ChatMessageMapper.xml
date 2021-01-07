@@ -8,6 +8,21 @@
 	 -->
 	 
 	<!-- ResultMap -->
+	<resultMap type="ChatMessage" id="msgSimpleRes">
+		<id column="id" property="id" />
+		<result column="chat_id" property="chat.id" />
+		<result column="mem_id" property="member.id" />
+		<result column="content" property="content" />
+		<result column="regdate" property="regdate" />
+		<result column="read_yn" property="readYn" />
+		<result column="image" property="image" />
+	</resultMap>
+
+	<sql id="simpleSelSQL">
+		SELECT id, chat_id, mem_id, content, regdate, read_yn, image
+		FROM JOONGO_CHAT_MSG
+	</sql>
+	
 	<resultMap type="ChatMessage" id="msgRes">
 		<id column="id" property="id" />
 		<result column="chat_id" property="chat.id" />
@@ -22,16 +37,19 @@
 		SELECT id, chat_id, mem_id, content, regdate, read_yn, image
 		FROM JOONGO_CHAT_MSG
 	</sql>
-	
 
 	<select id="selectAllChatMessageByChatId" parameterType="int" resultMap="msgRes">
 		<include refid="selectSQL" />
-		where chat_id = #{id}
+		WHERE chat_id = #{id}
+		ORDER BY regdate DESC;
 	</select>
 
 	<select id="selectLatestChatMessageByChatId" resultMap="msgRes">
 		SELECT a.*, rownum
-		FROM (SELECT jcm.* FROM JOONGO_CHAT_MSG jcm ORDER BY regdate DESC) a
+		FROM (
+			SELECT jcm.* FROM JOONGO_CHAT_MSG jcm
+			WHERE chat_id = #{chatId}		
+			ORDER BY regdate DESC) a
 		WHERE rownum = 1
 	</select>
  
