@@ -224,7 +224,7 @@ $(document).ready(function(){
     		
         });
 	
-    $('#test').on("click", function(){
+	$('#test').on("click", function(){
     	
     	var contextPath = "<%=request.getContextPath()%>";
         //var file = $('#uploadFile')[0];
@@ -241,15 +241,7 @@ $(document).ready(function(){
               console.log(pair[0]+ ', '+ pair[1]); 
         }
     	//var file = $('#uploadFile')[0];
-    	var file = document.getElementById("uploadFile").files[0].name;
-    	console.log(file)
     	var formData = new FormData();
-<<<<<<< HEAD
-    	//$('#uploadFile').val()
-    	var f = $("input[name='uploadFile']")[0].files;
-    	formData.append('uploadFile', f);
-    	console.log(f);
-=======
     	var file = $("input[name='uploadFile']")[0].files[0];
     	for(var i=0; i<file.length; i++){
     		console.log(file[i]);
@@ -257,7 +249,6 @@ $(document).ready(function(){
     	}
     	
     	console.log(file);
->>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat.git
     	
     	for(var pair of formData.entries()) {
     		   console.log(pair[0]+ ', '+ pair[1]); 
