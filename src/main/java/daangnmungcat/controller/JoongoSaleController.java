@@ -42,41 +42,4 @@ public class JoongoSaleController {
 		return "/joongoSale/detailList";
 	}
 	
-	@GetMapping("/heart")
-	public String updateLike(HttpServletRequest req, Model model) {
-		System.out.println("좋아요?");
-		int id = 0;
-		String res = (String) req.getParameter("id");
-		if(res != null) {
-			id = Integer.parseInt(res);
-//			System.out.println("최종 id -> "  + id);
-		}
-		String memId = req.getParameter("memId");
-		mapper.updateHeart(id, memId);
-		
-		String textUrl = "detailList?id="+id+"&"+"memId="+memId;
-		model.addAttribute("msg","찜 설정하였습니다..");
-		model.addAttribute("url", textUrl);
-		
-		return "joongoSale/alertFrom";
-		
-	}
-	@GetMapping("/unheart")
-	public String updateUnLike(HttpServletRequest req, Model model) {
-		System.out.println("안좋아요?");
-		int id = 0;
-		String res = (String) req.getParameter("id");
-		if(res != null) {
-			id = Integer.parseInt(res);
-//			System.out.println("최종 id -> "  + id);
-		}
-		String memId = req.getParameter("memId");
-		mapper.updateUnHeart(id, memId);
-		
-		String textUrl = "detailList?id="+id+"&"+"memId="+memId;
-		model.addAttribute("msg","찜 해제하였습니다..");
-		model.addAttribute("url", textUrl);
-		return "joongoSale/alertFrom";
-		
-	}
 }
