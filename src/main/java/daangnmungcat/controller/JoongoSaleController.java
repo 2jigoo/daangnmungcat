@@ -26,8 +26,9 @@ public class JoongoSaleController {
 	private JoongoSaleMapper mapper;
 	
 	@RequestMapping(value="detailList", method=RequestMethod.GET)
-	public String listById(@RequestParam int id, @RequestParam String memId, Model model) {
+	public String listById(@RequestParam int id, Model model) {
 		List<Sale> list = service.getListsById(id);
+		String memId = list.get(0).getMember().getId();
 		List<Sale> mlist = service.getListByMemID(memId);
 		model.addAttribute("list", list);
 		String ok =  "ok";
@@ -36,10 +37,13 @@ public class JoongoSaleController {
 			model.addAttribute("emptylist", ok);
 		}
 		model.addAttribute("mlist", mlist);
-//		mlist.stream().forEach(System.out::println);
+		System.out.println("mlist");
+		mlist.stream().forEach(System.out::println);
+		System.out.println("list");
 		list.stream().forEach(System.out::println);
 		service.JSHits(id);
 		return "/joongoSale/detailList";
 	}
+	
 	
 }
