@@ -227,6 +227,10 @@ $(document).ready(function(){
     }
 	
 	
+	$('#btnLike').on("click", function(json){
+		
+	});
+	
 });
 
 </script>
@@ -280,24 +284,17 @@ $(document).ready(function(){
 	<section id="section_buttons">
 		<div>
 			<c:choose>
-				<c:when test="${list.isHeart eq 'n'}">
-				<c:url var="heart" value="heart">
-				       <c:param name="id" value="${list.id}" />
-				       <c:param name="memId" value="${list.member.id}" />
-				</c:url>
-				<a href="${heart}">
+				<c:when test="${isLiked eq 1}">
+					<a href="<%=request.getContextPath()%>/heart?id=${list.id}">
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_empty_heart.png"/></a>
 				</c:when>
-				<c:otherwise>
-				<c:url var="unheart" value="unheart">
-				       <c:param name="id" value="${list.id}" />
-				       <c:param name="memId" value="${list.member.id}" />
-				</c:url>
-				<a href="${unheart}">
+				<c:when test="${isLiked ne 1}">
+					<a href="<%=request.getContextPath()%>/heartNo?id=${list.id}">
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
-				</c:otherwise>
+				</c:when>
 			</c:choose>
-			<input type="button" value="대화로 문의하기" style="width:80%;">
+			
+ 			<input type="button" value="대화로 문의하기" style="width:80%;">
 		</div>
 	</section>
 
@@ -320,7 +317,7 @@ $(document).ready(function(){
 			<li>
 						
 						 <c:if test="${param.id ne mlist.id }">
-						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}&memId=${mlist.member.id}">
+						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}">
 						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>

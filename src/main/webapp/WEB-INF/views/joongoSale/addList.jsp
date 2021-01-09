@@ -212,7 +212,6 @@ $(function(){
 });
 </script>
 <article>
-<form action="/insert" method="POST">
 <div>
 <table border="1">
 	<colgroup>
@@ -287,6 +286,5 @@ $(function(){
 	</tr>
 </table>
 </div>
-</form>
 </article>
 <jsp:include page="/resources/include/footer.jsp"/>

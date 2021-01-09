@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.JoongoHeartMapper">
+<sql id="selectHeartSQL">
+	SELECT id, mem_id, sale_id, regdate FROM JOONGO_HEART
+</sql>
+
+
+<sql id="whereSQL">
+	<where>
+		<if test="id != null">
+			id = #{id}
+		</if>
+	</where>
+</sql>
+
+<resultMap type="Heart" id="heartResult">
+	<id column="id" property="id"></id>
+	<result column="mem_id" property="member.id"/>
+	<result column="sale_id" property="sale.id"/>
+	<result column="regdate" property="regdate"/>
+</resultMap>
+
+
+<select id="selectJoongoHeartById" resultMap="heartResult">
+	<include refid="selectHeartSQL"></include>
+</select>
+
+<insert id="insertHeart" parameterType="java.util.HashMap">
+	INSERT INTO JOONGO_HEART (id, mem_id, sale_id, regdate)values(heart_seq.nextval, #{memId}, #{id}, sysdate)
+</insert>
+
+<delete id="deleteHeart" parameterType="java.util.HashMap" >
+	delete from JOONGO_HEART where mem_id = #{memId} and sale_id=#{id}
+</delete>
+
+<select id="countHeart"  parameterType="java.util.HashMap" resultType="Integer">
+ <![CDATA[
+	SELECT count(*) FROM JOONGO_HEART where mem_id = #{memId} and sale_id=#{id}
+	 ]]>
+</select>
+
+
+</mapper>

@@ -47,7 +47,6 @@
 	<result column="BUY_MEM_ID" property="buyMember.id"/>
 	<result column="HITS" property="hits"/>
 	<result column="CHAT_COUNT" property="chatCount"/>
-	<!-- <result column="IS_HEART" property="isHeart"/> -->
 	<result column="HEART_COUNT" property="heartCount"/>
 </resultMap>
 
@@ -73,13 +72,14 @@
 	<include refid="whereSQL"></include>
 </update>
 
-<!-- 찜  -->
-<update id="updateHeart">
-UPDATE JOONGO_SALE SET is_heart = 'y', HEART_COUNT=HEART_COUNT+1 WHERE id = #{id} AND mem_id = #{memId} 
+<update id="inserthearCount" parameterType="int">
+	update JOONGO_SALE set HEART_COUNT = heart_count+1
+	<include refid="whereSQL"></include>
 </update>
 
-<update id="updateUnHeart">
-UPDATE JOONGO_SALE SET is_heart = 'n', heart_count=heart_count -1	WHERE id = #{id} AND mem_id = #{memId} 
+<update id="deletehearCount" parameterType="int">
+	update JOONGO_SALE set HEART_COUNT = heart_count-1
+	<include refid="whereSQL"></include>
 </update>
 
 </mapper>
