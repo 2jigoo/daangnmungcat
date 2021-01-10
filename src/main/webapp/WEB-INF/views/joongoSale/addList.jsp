@@ -5,11 +5,6 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <style>
-	textarea {
-		width : 100%;
-		height:  500px;
-	}
-
 </style>
 <script type="text/javascript">
 var dongne1Id;
@@ -17,6 +12,7 @@ var dongne1Name = "${dongne1Name}"
 $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
+
 		$.get(contextPath+"/dongne1", function(json){
 		var datalength = json.length; 
 		if(datalength >= 1){
@@ -141,10 +137,10 @@ $(function(){
 		 //라디오버튼 강아지 눌렀을때 
 		 
 	 });
+
 	 
 	 $('#insertList').on("click", function(json){
-		 
-		 var price = $('#price').val();
+		var price = $('#price').val();
 		 var num = /^[0-9]*$/;
 		 
 		 if($('#title').val() == ""){
@@ -163,13 +159,12 @@ $(function(){
 			 alert('고양이카테고리 여부를 선택해주세요.');
 			 return;
 		 } 
-		 
+		
 		 
 		 var newlist = {
 			member : {
-				id:'chattest1'
+				id : $('#memId').val()
 			},
-			
 			dogCate : $(':input[name=dogCate]:radio:checked').val(),
 			catCate : $(':input[name=catCate]:radio:checked').val(),
 			title : $('#title').val(),
@@ -182,7 +177,7 @@ $(function(){
 		 		dong2Id : $('#dongne2').val()
 		 	}
 		 };
-		// 	alert(JSON.stringify(newlist));
+		 	alert(JSON.stringify(newlist));
 		 	
 		 	
 		 	
@@ -202,8 +197,8 @@ $(function(){
 					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
-					alert('동네를 먼저 선택해주세요.');
-					//	alert('에러!!!!' + request.status+request.responseText+error);
+					alert("동네를 먼저선택해주세요!");
+					alert('에러!!!!' + request.status+request.responseText+error);
 				}
 			});
 			console.log(contextPath+"/insert");	
@@ -212,13 +207,17 @@ $(function(){
 });
 </script>
 <article>
+<form action="/insert" method="POST">
 <div>
 <table border="1">
 	<colgroup>
 		<col width="20%">
 		<col width="80%">
 	</colgroup>
-
+	<tr>
+		<td>아이디</td>
+		<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
+	</tr>
 	<tr>
 		<td>동네</td>
 		<td>
@@ -237,6 +236,7 @@ $(function(){
 			
 		</td>
 	</tr>
+	
 	<tr>
 		<td>사진</td>
 		<td><input type="image"></td>
@@ -261,13 +261,14 @@ $(function(){
 		<td><input type="text" name="title" id="title"></td>
 	</tr>
 	<tr>
-		<td>가격<br>(*미입력시 0원으로 등록됩니다.)</td>
+		<td>가격</td>
 		<td><input type="text" name="price" id="price"></td>
 	<tr>
 	<tr>
 		<td>내용</td>
-		<td><textarea class="content" name="content" id="content"></textarea>
+		<td><textarea class="content" name="content" id="content"></textarea>>
 	</tr>
+	
 <!-- 	<tr>
 		<td></td>
 		<td>
@@ -286,5 +287,6 @@ $(function(){
 	</tr>
 </table>
 </div>
+</form>
 </article>
 <jsp:include page="/resources/include/footer.jsp"/>

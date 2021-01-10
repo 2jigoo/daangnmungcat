@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -112,8 +113,14 @@ public class JoongoListController {
 	
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
-	public String insertfrom1(Model model){
-		return "/joongoSale/addList";
+	public String insertfrom1(HttpSession session, Model model){
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "/login";
+		} else {
+			model.addAttribute(loginUser.getId());
+			return "/joongoSale/addList";
+		}
 	}
 	
 	
@@ -156,7 +163,7 @@ public class JoongoListController {
 		} catch (Exception e) {
 			System.out.println("오류");
 		}
-	}
+	}	
 	
 	@PostMapping("/insert")
 	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
