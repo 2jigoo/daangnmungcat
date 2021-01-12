@@ -276,11 +276,9 @@ $(document).ready(function(){
     		
     
 });
-
 function id_check() {
 	var contextPath = "<%=request.getContextPath()%>";
 	var reg = /^[A-Za-z0-9+]{4,20}$/; 
-
 	var id = $('#id').val();
 	if(id == ""){
 		alert("아이디 입력 후 중복확인을 눌러주세요.");
@@ -292,9 +290,7 @@ function id_check() {
 		console.log(json);
 		window.open(contextPath+"/idCheck?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
-
 }
-
 function imageChange(){
 	var file = document.getElementById("uploadFile").files[0]
 	if (file) {
@@ -313,7 +309,6 @@ function imageChange(){
 	
 	
 }
-
 </script>
 
 <div class="wrapper">

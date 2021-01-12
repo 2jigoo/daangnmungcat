@@ -31,6 +31,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	@Override
 	public List<Sale> getListsById(int id) {
 		List<Sale> list = mapper.selectJoonSaleById(id);
+		JSHits(id);
 		return list;
 	}
 

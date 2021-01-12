@@ -304,11 +304,11 @@ $(document).ready(function(){
 		<ul class="section_goods_cl">
 		
 		
-		<c:if test = "${emptylist eq 'ok'}">
+		<c:if test = "${emptylist eq 1}">
 				<p>이 판매자의 다른 중고 상품이 없습니다.</p>
 		</c:if>
 		
-		<c:if test = "${emptylist ne 'ok'}" >	
+		<c:if test = "${emptylist ne 1}" >	
 				<p>이 판매자의 다른 중고상품들 입니다.</p>
 		<c:forEach items="${mlist }" var="mlist">
 						<!--원글 id랑 mlist.id랑 같으면 mlist.안보이게 하기 -->
