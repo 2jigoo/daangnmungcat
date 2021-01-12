@@ -58,7 +58,7 @@
 			<ul>
 				<li><a href="#">${loginUser.getId()}님</a></li>
 				<li><a href="#">마이페이지</a></li>
-				<li><a href="#">내 채팅</a></li>
+				<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 			</ul>
 			</c:if>

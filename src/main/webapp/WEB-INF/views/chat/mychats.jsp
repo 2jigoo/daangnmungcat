@@ -3,84 +3,13 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
 <jsp:include page="/resources/include/header.jsp"/>
-<style>
-	article {
-		margin : 0 auto;
-	}
-	
-	#article {
-		padding-left: 20%;
-		padding-right: 20%;
-	    margin: 60px 0;
-	}
 
-	img {
-	    border: 0;
-	    font-size: 0;
-	    vertical-align: top;
-    }
-    
-	.section_chat {
-		margin-bottom: 24px;
-	}
-	
-	.section_chat .section_chat_profile_img {
-	    width: 60px;
-	    height: 60px;
-	    display: inline-block;
-	}
-	
-	.section_chat_profile_img img {
-	    border-radius: 60px;
-	    width: 60px;
-	    height: 60px;
-	}
-
-	.section_chat .section_chat_link{
-	   	display : block;
-	   	padding-bottom: 30px;
-	   	position : relative;
-	    border-bottom: 1px solid #e9ecef;
-	}
-	
-	.section_chat .section_chat_left {
-	    display: inline-grid;
-   		margin-left: 10px;
-	}
-
-	.section_chat .section_chat_left .user_info {
-		    font-size: 14px;
-   			/* font-weight: 600; */
-    		line-height: 1.5;
-    		/* letter-spacing: -0.6px; */
-    		color: #9e9e9e;
-	}
-	
-	.section_chat .section_chat_left .user_info .nickname {
-		    font-size: 16px;
-   			font-weight: 600;
-    		line-height: 1.5;
-    		/* letter-spacing: -0.6px; */
-    		color: #212529;
-	}
-	
-	.section_chat .section_chat_left .dongnename {
-	    font-size: 16px;
-   		line-height: 2;
-    	/* letter-spacing: -0.6px; */
-    	color: #212529;
-	}
-	
-	.section_chat .section_chat_left .message {
-	
-	}
-</style>
 <div>
 	<article>
 		<div id="article">
 			<c:forEach items="${list }" var="chat">
 				<section class="section_chat">
-					<a id="section_chat_link" href="#">
+					<a id="section_chat_link" href="${pageContext.request.contextPath }/chat/${chat.id} ">
 						<div class="section_chat_profile_img">
 							<c:choose>
 								<c:when test="${chat.sale.member.profilePic eq null}">

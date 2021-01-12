@@ -41,7 +41,7 @@
 	<select id="selectAllChatMessageByChatId" parameterType="int" resultMap="msgRes">
 		<include refid="selectSQL" />
 		WHERE chat_id = #{id}
-		ORDER BY regdate DESC;
+		ORDER BY regdate DESC
 	</select>
 
 	<select id="selectLatestChatMessageByChatId" resultMap="msgRes">

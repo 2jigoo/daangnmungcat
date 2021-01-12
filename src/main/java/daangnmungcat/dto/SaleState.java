@@ -10,6 +10,7 @@ import org.apache.ibatis.type.MappedTypes;
 
 import daangnmungcat.typehandler.CodeEnum;
 import daangnmungcat.typehandler.CodeEnumTypeHandler;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -26,6 +27,7 @@ public enum SaleState implements CodeEnum {
 	}
 
 	private int code;
+	@Getter
 	private String label;
 	
 	@Override

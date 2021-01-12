@@ -56,7 +56,7 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	public void addViewControllers(final ViewControllerRegistry registry) {
 		System.out.println("addViewControllers 호출");
 		registry.addViewController("/").setViewName("main");
-		registry.addViewController("/stompTest").setViewName("stomp_test");
+		registry.addViewController("/test_page").setViewName("chat/test_page");
 		registry.addViewController("/idCheck").setViewName("idCheck");	
 		registry.addViewController("/test").setViewName("joongoSale/addList");
 	}
