@@ -9,6 +9,10 @@ public class Dongne1 {
 	public Dongne1() {
 	}
 
+	public Dongne1(int id) {
+		this.id = id;
+	}
+
 	public Dongne1(int dong1Id, String dong1Name) {
 		super();
 		this.id = dong1Id;

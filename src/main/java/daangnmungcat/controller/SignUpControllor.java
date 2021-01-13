@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -78,21 +79,21 @@ public class SignUpControllor {
 	}
 
 	@PostMapping("/uploadProfile")
-	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session) {
+	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
 		System.out.println("오나");
-		//String uploadFolder = "c://upload";
-		String uploadFolder = "c://upload";
 		
-		ServletContext context = session.getServletContext();
-		System.out.println("context:" + context);
-		String path = context.getRealPath("\\");
-		// make folder --
-		File uploadPath = new File(uploadFolder, getFolder());
-		System.out.println("uploadPath: " + uploadPath);
+		String uploadFolder = request.getSession().getServletContext().getRealPath("resources\\upload\\");
+		//테스트 경로-> /daangnmungcat/resources/upload/2021-01-13/파일이름.jpg
+		System.out.println("uploadfolder:" + uploadFolder);
 		
-		if(!uploadPath.exists()) {
-			uploadPath.mkdirs();
-		}
+		
+//		// 폴더만들기
+//		File uploadPath = new File(uploadFolder, getFolder());
+//		System.out.println("uploadPath: " + uploadPath);
+//		
+//		if(!uploadPath.exists()) {
+//			uploadPath.mkdirs();
+//		}
 		
 		
 		for(MultipartFile multipartFile : uploadFile) {
@@ -109,7 +110,7 @@ public class SignUpControllor {
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 			System.out.println("uploadFileName: " + uploadFileName);
 			
-			File saveFile = new File(uploadPath, uploadFileName);
+			File saveFile = new File(uploadFolder, uploadFileName);
 			try {
 				multipartFile.transferTo(saveFile);
 			} catch(Exception e) {

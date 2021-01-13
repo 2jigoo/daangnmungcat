@@ -7,9 +7,12 @@ public class Dongne2 {
 
 	public Dongne2() {
 	}
+	
+	public Dongne2(int id) {
+		this.id = id;
+	}
 
 	public Dongne2(int dong2Id, int dong1Id, String dong2Name) {
-		super();
 		this.id = dong2Id;
 		this.dongne1Id = dong1Id;
 		this.name = dong2Name;
