@@ -35,8 +35,8 @@
 	<!-- <result column="is_heart" property="isHeart"/> -->
 	<result column="heart_count" property="heartCount"/>
 	
-	<collection property="dongne1" resultMap="dongne1Result"/>
-	<collection property="dongne2" resultMap="dongne2Result"/>
+	<association property="dongne1" resultMap="dongne1Result"/>
+	<association property="dongne2" resultMap="dongne2Result"/>
 </resultMap>
 
 <resultMap type="Sale" id="saleResultForJoin">

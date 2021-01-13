@@ -224,7 +224,7 @@ $(document).ready(function(){
     		
         });
 	
-    $('#test').on("click", function(){
+	$('#test').on("click", function(){
     	
     	var contextPath = "<%=request.getContextPath()%>";
         //var file = $('#uploadFile')[0];

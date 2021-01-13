@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.JoongoSaleCommentMapper">
+
+<resultMap type="SaleComment" id="saleCommentResult">
+	<id column="id" property="id"/>
+	<result column="sale_id" property="sale.id"/>
+	<result column="mem_id" property="member.id"/>
+	<result column="origin_id" property="saleComment.id"/>
+	<result column="tag_mem_id" property="tagMember.id"/>
+	<result column="content" property="content"/>
+	<result column="regdate" property="regdate"/>
+</resultMap>
+
+<insert id="insertJoongoSaleComment" parameterType="SaleComment">
+	<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT joongo_comment_seq.nextval FROM DUAL
+		</selectKey>
+	INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) 
+	VALUES(#{id}, #{sale.id}, #{member.id}, #{content})
+</insert>
+
+</mapper>

@@ -107,7 +107,7 @@ CREATE TABLE JOONGO_COMMENT (
 	origin_id NUMBER(12), /* 원댓ID */
 	tag_mem_id VARCHAR2(20), /* 사용자태그 대상 */
 	content VARCHAR2(4000) NOT NULL, /* 내용 */
-	regdate DATE NOT NULL /* 등록일시 */
+	regdate DATE DEFAULT sysdate /* 등록일시 */
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE JOONGO_COMMENT
