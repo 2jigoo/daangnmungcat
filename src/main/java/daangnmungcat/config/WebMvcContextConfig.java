@@ -3,6 +3,7 @@ package daangnmungcat.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -16,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @ComponentScan(basePackages = {"daangnmungcat.controller"})
 public class WebMvcContextConfig implements WebMvcConfigurer {
+	
 	private final int MAX_SIZE = 10 * 1024 * 1024;
 	
 	@Override
@@ -51,7 +53,7 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	public void addViewControllers(final ViewControllerRegistry registry) {
 		System.out.println("addViewControllers 호출");
 		registry.addViewController("/").setViewName("main");
-		registry.addViewController("/stompTest").setViewName("stomp_test");
+		registry.addViewController("/test_page").setViewName("chat/test_page");
 		registry.addViewController("/idCheck").setViewName("idCheck");	
 		registry.addViewController("/test").setViewName("joongoSale/addList");
 	}

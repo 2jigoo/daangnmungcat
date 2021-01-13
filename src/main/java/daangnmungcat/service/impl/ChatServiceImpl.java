@@ -46,9 +46,25 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 채팅 하나 정보 읽어오기
 	@Override
-	public Chat getChat(int chatId) {
+	public Chat getChatInfo(int chatId) {
 		Chat chat = chatMapper.selectChatByChatId(chatId);
 		return chat;
+	}
+	
+	// 채팅 얻어오면서 메시지 리스트 set 하기
+	@Override
+	public Chat getChatWithMessages(int chatId) {
+		Chat chat = chatMapper.selectChatByChatId(chatId);
+		chat.setMessages(messageMapper.selectAllChatMessageByChatId(chatId));
+		return chat;
+	}
+	
+	
+	// 메시지들 읽어오기
+	@Override
+	public List<ChatMessage> getChatMessages(int chatId) {
+		List<ChatMessage> msgList = messageMapper.selectAllChatMessageByChatId(chatId);
+		return msgList;
 	}
 	
 	
