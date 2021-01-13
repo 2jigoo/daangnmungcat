@@ -245,6 +245,20 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 	.list_top > div select {width:140px; height:35px;}
 }
 
+
+.joongo_comment {margin-top:100px;}
+.joongo_comment > .tit {font-size:1.25em; color:#000; font-weight:500; margin-bottom:10px;}
+.joongo_comment_list > li {padding:15px 0; border-bottom:1px solid #eee;}
+.joongo_comment_list > li.reply {box-sizing:border-box; padding-left:50px;}
+.joongo_comment_list .user {width:100%; overflow:hidden;}
+.joongo_comment_list .user .img {width:35px; height:35px; background:#ddd; border-radius:50%; float:left;}
+.joongo_comment_list .user .name {float:left; font-size:1em; line-height:35px; margin-left:15px;}
+.joongo_comment_list .content {width:100%; margin:10px 0; font-size:0.95em; line-height:1.7em;}
+.joongo_comment_list .info {font-size:0.8em; color:#666}
+.joongo_comment_list .info .date {display:inline-block;}
+.joongo_comment_list .info ul {display:inline-block;}
+.joongo_comment_list .info ul li {display:inline-block; margin-left:10px; cursor:pointer;}
+
 /* swiper */
 /**
  * Swiper 5.3.0
