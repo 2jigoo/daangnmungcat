@@ -12,5 +12,7 @@
 	</typeAliases>
 	<typeHandlers>
 		<typeHandler handler="daangnmungcat.dto.SaleState$TypeHandler"/>
+		<!-- <package name="daangnmungcat.typehandler"/> -->
 	</typeHandlers>
+	
 </configuration>

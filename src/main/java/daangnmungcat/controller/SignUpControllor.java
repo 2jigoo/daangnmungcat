@@ -40,6 +40,7 @@ public class SignUpControllor {
 
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
+		System.out.println(service.Dongne1List());
 		return ResponseEntity.ok(service.Dongne1List());
 
 	}

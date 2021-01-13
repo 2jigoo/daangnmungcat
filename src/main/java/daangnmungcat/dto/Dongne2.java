@@ -12,40 +12,41 @@ public class Dongne2 {
 		this.id = id;
 	}
 
-	public Dongne2(int dong2Id, int dong1Id, String dong2Name) {
-		this.id = dong2Id;
-		this.dongne1Id = dong1Id;
-		this.name = dong2Name;
+	public Dongne2(int id, int dongne1Id, String name) {
+		super();
+		this.id = id;
+		this.dongne1Id = dongne1Id;
+		this.name = name;
 	}
 
-	public int getDong2Id() {
+	public int getId() {
 		return id;
 	}
 
-	public void setDong2Id(int dong2Id) {
-		this.id = dong2Id;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	
-	public int getDong1Id() {
+	public int getDongne1Id() {
 		return dongne1Id;
 	}
 
-	public void setDong1Id(int dong1Id) {
-		this.dongne1Id = dong1Id;
+	public void setDongne1Id(int dongne1Id) {
+		this.dongne1Id = dongne1Id;
 	}
 
-	public String getDong2Name() {
+	public String getName() {
 		return name;
 	}
 
-	public void setDong2Name(String dong2Name) {
-		this.name = dong2Name;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Dongne2 [dong2Id=%s, dong2Name=%s]", id, name);
+		return String.format("Dongne2 [id=%s, dongne1Id=%s, name=%s]", id, dongne1Id, name);
 	}
 
+	
 }

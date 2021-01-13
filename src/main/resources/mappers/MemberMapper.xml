@@ -17,14 +17,14 @@
 <!-- ResultMap -->
 
 	<resultMap type="Member" id="memberResult">
-		<id column="id" property="id"></id>
+		<result column="id" property="id"></result>
 		<result column="pwd" property="pwd"></result>
 		<result column="name" property="name"></result>
 		<result column="nickname" property="nickname"></result>
 		<result column="email" property="email"></result>
 		<result column="phone" property="phone"></result>
 		<result column="grade" property="grade"></result>
-		<result column="dongne1" property="dongne1.id" jdbcType=""></result>
+		<result column="dongne1" property="dongne1.id"></result>
 		<result column="dongne2" property="dongne2.id"></result>
 		<result column="profile_pic" property="profilePic"></result>
 		<result column="profile_text" property="profileText"></result>
@@ -32,23 +32,23 @@
 	</resultMap>
 	
 	<resultMap type="Dongne1" id="dongne1Result">
-		<id column="id" property="id"></id>
+		<result column="id" property="id"></result>
 		<result column="name" property="name"></result>
 	</resultMap>
 	
 	<resultMap type="Dongne2" id="dongne2Result">
-		<id column="id" property="id"></id>
+		<result column="id" property="id"></result>
 		<result column="dongne1_id" property="dongne1Id"></result>
 		<result column="name" property="name"></result>
 	</resultMap>
 	
 	
 <!-- query  -->
-	<select id="selectMemberByAll" resultMap="memberResult">
+	<select id="selectMemberByAll" resultMap="dongne1Result">
 		<include refid="selectSql"></include>
 	</select>
 	
-	<select id="selectMembetById" resultMap="memberResult">
+	<select id="selectMembetById" resultMap="dongne2Result">
 		<include refid="selectSql"></include>
 		<include refid="whereSql"></include>
 	</select>

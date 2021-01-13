@@ -1,7 +1,5 @@
 package daangnmungcat.dto;
 
-import java.util.List;
-
 public class Dongne1 {
 	private int id;
 	private String name;
@@ -13,32 +11,30 @@ public class Dongne1 {
 		this.id = id;
 	}
 
-	public Dongne1(int dong1Id, String dong1Name) {
-		super();
-		this.id = dong1Id;
-		this.name = dong1Name;
+	public Dongne1(int id, String name) {
+		this.id = id;
+		this.name = name;
 	}
 
-	public int getDong1Id() {
+	public int getId() {
 		return id;
 	}
 
-	public void setDong1Id(int dong1Id) {
-		this.id = dong1Id;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public String getDong1Name() {
+	public String getName() {
 		return name;
 	}
 
-	public void setDong1Name(String dong1Name) {
-		this.name = dong1Name;
+	public void setName(String name) {
+		this.name = name;
 	}
-
 
 	@Override
 	public String toString() {
-		return String.format("Dongne1 [dong1Id=%s, dong1Name=%s]", id, name);
+		return String.format("Dongne1 [id=%s, name=%s]", id, name);
 	}
 
 }

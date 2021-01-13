@@ -24,11 +24,12 @@ $(document).ready(function(){
 	});
 	
 	$.get(contextPath+"/dongne1", function(json){
+		console.log(json)
 		var datalength = json.length; 
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				sCont += '<option value="' + json[i].dong1Id + '">' + json[i].dong1Name + '</option>';
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
 		}
@@ -41,7 +42,7 @@ $(document).ready(function(){
 			var datalength = json.length; 
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				sCont += '<option value="' + json[i].dong2Id + '">' + json[i].dong2Name + '</option>';
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne2]").append(sCont);	
 		});
