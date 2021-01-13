@@ -80,3 +80,15 @@ SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE
  	UPDATE JOONGO_SALE SET is_heart = 'y', HEART_COUNT=HEART_COUNT+1 WHERE id=1 AND MEM_ID ='chattest1';
 
  UPDATE JOONGO_SALE  SET is_heart = 'n', heart_count=heart_count -1	WHERE id=1 AND mem_id = 'chattest1';
+ 
+
+
+----------------찜
+SELECT * FROM JOONGO_HEART;
+SELECT * FROM JOONGO_SALE ;
+SELECT id, mem_id, sale_id, regdate FROM JOONGO_HEART;
+SELECT * FROM JOONGO_HEART WHERE MEM_ID = 'chattest1';
+SELECT count(*) FROM JOONGO_HEART WHERE sale_id = 2 AND  MEM_ID ='chattest2';
+INSERT INTO JOONGO_HEART values(heart_seq.nextval, 'chattest1', 3, sysdate);
+
+ SELECT count(*) FROM JOONGO_HEART where mem_id = 'chattest2' and sale_id=1;
