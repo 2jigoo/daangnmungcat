@@ -6,7 +6,6 @@ public class AuthInfo {
 	private String email;
 	
 	public AuthInfo(String string) {
-		super();
 		this.id = string;
 	}
 
