@@ -1,10 +1,15 @@
 package daangnmungcat.controller;
 
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -75,10 +80,14 @@ public class SignUpControllor {
 	}
 
 	@PostMapping("/uploadProfile")
-	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session) {
 		System.out.println("오나");
-		String uploadFolder = "C:\\upload";
+		//String uploadFolder = "c://upload";
+		String uploadFolder = "c://upload";
 		
+		ServletContext context = session.getServletContext();
+		System.out.println("context:" + context);
+		String path = context.getRealPath("\\");
 		// make folder --
 		File uploadPath = new File(uploadFolder, getFolder());
 		System.out.println("uploadPath: " + uploadPath);
