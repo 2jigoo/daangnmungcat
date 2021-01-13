@@ -1,7 +1,6 @@
 package daangnmungcat.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,15 +15,11 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class Chat {
+public class Heart {
 
 	private int id;
+	private Member member;
 	private Sale sale;
-	// Member sellers
-	private Member buyer;
-	private LocalDateTime regdate;
-	private LocalDateTime latestDate;
-	
-	private List<ChatMessage> messages;
-	
+	private Date regdate;
+	private int cnt;
 }

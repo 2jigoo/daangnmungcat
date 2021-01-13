@@ -140,13 +140,33 @@ $(function(){
 
 	 
 	 $('#insertList').on("click", function(json){
+		var price = $('#price').val();
+		 var num = /^[0-9]*$/;
+		 
+		 if($('#title').val() == ""){
+			 alert('제목을 입력해주세요.');
+			 return; 
+		 }else if($('#content').val() == ""){
+			 alert('내용을 입력해주세요.');
+			 return;
+		 }else if(num.test(price) == false){
+			 alert('가격은 숫자만 입력 가능합니다.');
+			 return;
+		 }else if($(':input[name=dogCate]:radio:checked').length < 1){
+			 alert('강아지카테고리 여부를 선택해주세요.');
+			 return;
+		 }else if($(':input[name=catCate]:radio:checked').length < 1){
+			 alert('고양이카테고리 여부를 선택해주세요.');
+			 return;
+		 } 
+		
+		 
 		 var newlist = {
 			member : {
-				id:'chattest1'
+				id : $('#memId').val()
 			},
-			
-			dogCate : 'y',
-			catCate : 'n',
+			dogCate : $(':input[name=dogCate]:radio:checked').val(),
+			catCate : $(':input[name=catCate]:radio:checked').val(),
 			title : $('#title').val(),
 			content : $('#content').val(),
 			price : $('#price').val(),			
@@ -177,6 +197,7 @@ $(function(){
 					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
+					alert("동네를 먼저선택해주세요!");
 					alert('에러!!!!' + request.status+request.responseText+error);
 				}
 			});
@@ -193,7 +214,10 @@ $(function(){
 		<col width="20%">
 		<col width="80%">
 	</colgroup>
-
+	<tr>
+		<td>아이디</td>
+		<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
+	</tr>
 	<tr>
 		<td>동네</td>
 		<td>
@@ -211,15 +235,6 @@ $(function(){
 			</div>
 			
 		</td>
-	</tr>
-	<tr>
-		<td>
-			<div id="result_dong1_id">
-			</div>
-			<div id="result_dong2_id">
-			</div>
-		</td>
-	
 	</tr>
 	
 	<tr>
@@ -253,6 +268,7 @@ $(function(){
 		<td>내용</td>
 		<td><textarea class="content" name="content" id="content"></textarea>>
 	</tr>
+	
 <!-- 	<tr>
 		<td></td>
 		<td>

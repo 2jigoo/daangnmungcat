@@ -16,15 +16,12 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class Chat {
-
+public class SaleComment {
 	private int id;
 	private Sale sale;
-	// Member sellers
-	private Member buyer;
+	private Member member;
+	private SaleComment saleComment;
+	private Member tagMember;
+	private String content;
 	private LocalDateTime regdate;
-	private LocalDateTime latestDate;
-	
-	private List<ChatMessage> messages;
-	
 }

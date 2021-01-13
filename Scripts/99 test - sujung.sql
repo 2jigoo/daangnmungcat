@@ -29,7 +29,11 @@ SELECT count(a.id)
   FROM (SELECT rownum AS rnum, b.*
   		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
   FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID ORDER BY js.id desc) b) a;
+ 
+SELECT * FROM JOONGO_SALE;
 
-select *
- from ALL_TAB_COLUMNS
- where TABLE_NAME = 'JOONGO_SALE';
+SELECT joongo_comment_seq.nextval FROM DUAL;
+SELECT * FROM JOONGO_COMMENT;
+INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) values(joongo_comment_seq.nextval, 2, 'chattest1', '댓글 테스트입니다.');
+INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT) VALUES(joongo_comment_seq.nextval, 2, 'chattest2', 1, 'chattest1', '계층형 댓글 테스트입니다.');
+INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) values(joongo_comment_seq.nextval, 10, 'chattest1', '테스트');

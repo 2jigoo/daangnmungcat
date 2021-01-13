@@ -13,7 +13,7 @@ public interface ChatService {
 	int createNewChat(Chat chat, ChatMessage message);
 	int sendMessage(Chat chat, ChatMessage message);
 	
-	int deleteMessage(ChatMessage message);
+	int deleteMessage(ChatMessage... message);
 	int deleteChat(Chat chat);
 
 }

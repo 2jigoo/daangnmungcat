@@ -10,3 +10,4 @@ VALUES(sale_seq.nextval, 'chattest1', 'n', 'y', '고양이 그려드립니다ㅋ
 -- joongo_chat_msg: id, chat_id, mem_id, content, regdate, read_yn, image
 
 -- sale: id, mem_id, dog_cate, cat_cate, title, content, price, dongne1_id, dongne2_id, buy_mem_id, sale_state, regdate, regdate, hits
+

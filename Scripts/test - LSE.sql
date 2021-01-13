@@ -1,8 +1,10 @@
 -----시작!
 
+DROP VIEW SALE_VIEW;
+
 CREATE VIEW sale_view AS SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
-	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT , HEART_COUNT , IS_HEART
 	FROM JOONGO_SALE s 
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
 	JOIN MEMBER m ON s.MEM_ID = m.id;
@@ -73,5 +75,20 @@ SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE
   	SELECT  d1.id AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME
 	FROM DONGNE1 d1 JOIN DONGNE2 d2  ON d1.id = d2.DONGNE1_ID WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2}
   
-  
-	
+  SELECT * FROM JOONGO_SALE;
+ 	UPDATE JOONGO_SALE SET HEART_COUNT = HEART_COUNT +1, is_heart = 'n' WHERE id=#{} AND MEM_ID =#{};
+ 	UPDATE JOONGO_SALE SET is_heart = 'y', HEART_COUNT=HEART_COUNT+1 WHERE id=1 AND MEM_ID ='chattest1';
+
+ UPDATE JOONGO_SALE  SET is_heart = 'n', heart_count=heart_count -1	WHERE id=1 AND mem_id = 'chattest1';
+ 
+
+
+----------------찜
+SELECT * FROM JOONGO_HEART;
+SELECT * FROM JOONGO_SALE ;
+SELECT id, mem_id, sale_id, regdate FROM JOONGO_HEART;
+SELECT * FROM JOONGO_HEART WHERE MEM_ID = 'chattest1';
+SELECT count(*) FROM JOONGO_HEART WHERE sale_id = 2 AND  MEM_ID ='chattest2';
+INSERT INTO JOONGO_HEART values(heart_seq.nextval, 'chattest1', 3, sysdate);
+
+ SELECT count(*) FROM JOONGO_HEART where mem_id = 'chattest2' and sale_id=1;

@@ -224,12 +224,25 @@ $(document).ready(function(){
     		
         });
 	
-    $('#test').on("click", function(){
+	$('#test').on("click", function(){
     	
     	var contextPath = "<%=request.getContextPath()%>";
+        //var file = $('#uploadFile')[0];
+        var formData = new FormData();
+        var file = $("input[name='uploadFile']")[0].files;
+        for(var i=0; i<file.length; i++){
+           console.log(file[i]);
+           formData.append('uploadFile', file[i]);
+        }
+        
+        console.log(file);
+        
+        for(var pair of formData.entries()) {
+              console.log(pair[0]+ ', '+ pair[1]); 
+        }
     	//var file = $('#uploadFile')[0];
     	var formData = new FormData();
-    	var file = $("input[name='uploadFile']")[0].files;
+    	var file = $("input[name='uploadFile']")[0].files[0];
     	for(var i=0; i<file.length; i++){
     		console.log(file[i]);
     		formData.append('uploadFile', file[i]);
@@ -250,6 +263,7 @@ $(document).ready(function(){
     		contentType: false, //multipart-form-data로 전송
     		cache: false,
     		success: function(res) {
+    			console.log(res);
     			alert('전송');
     		},
     		error: function(request,status,error){

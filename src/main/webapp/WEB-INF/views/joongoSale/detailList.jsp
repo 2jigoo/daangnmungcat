@@ -154,13 +154,11 @@
 				.product_list .img {height:40vw;}
 			}
 	
-	
-	
-	
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){
+		
 	
 	//현재시간가져오기
 	var now = new Date();
@@ -229,13 +227,54 @@ $(document).ready(function(){
     }
 	
 	
+	// 댓글 쓰기
+	var contextPath = "<%=request.getContextPath()%>";
+	$(".comment_write_btn").click(function(){
+		if($(".comment_content").val() == ""){
+			alert("댓글내용을 입력해주세요.");
+			return false;
+		}
+		
+		var addComment = {
+			sale : {
+				id : $(".comment_sale_id").val()
+			},
+			member : {
+				id : $(".comment_member_id").val()
+			},
+			content : $(".comment_content").val()
+		}
+		console.log(addComment)
+		$.ajax({
+			type: "get",
+			url : contextPath+"/joongoCommentWrite",
+			contentType : "application/json; charset=utf-8",
+			cache : false,
+			dataType : "json",
+			data : JSON.stringify(addComment),
+			beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success:function(){
+				alert("성공");
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+			}
+		})
+	})
+	
+	$('#btnLike').on("click", function(json){
+		
+	});
+	
 });
 
 </script>
 <article>
 <div id="article">
 <c:forEach items="${list}" var="list">
-<input id ="id" type="hidden" value="${list.id }"> 
+<input id ="id" type="hidden" value="${list.member.id }"> 
 <section id="section_img">
 	<div class="img_slider">
 		<img src="<c:url value="/resources/images/sProduct_img1.png" />" id="section_div_img">
@@ -252,7 +291,7 @@ $(document).ready(function(){
 				<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
 			</div>
 			<div id="section_profile_left">
-				<div id="nickname">${list.member.id}</div>
+				<div id="nickname" >${list.member.id}</div>
 				<div id="dongnename">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</div>
 			</div>		
 		</div>
@@ -281,8 +320,18 @@ $(document).ready(function(){
 </section>
 	<section id="section_buttons">
 		<div>
-			<button type="button"><img src="<%=request.getContextPath()%>/resources/images/ico_heart.png" alt="하트"></button>
-			<input type="button" value="대화로 문의하기" style="width:80%;">
+			<c:choose>
+				<c:when test="${isLiked eq 1}">
+					<a href="<%=request.getContextPath()%>/heart?id=${list.id}">
+					<img src="<%=request.getContextPath()%>/resources/images/icon_big_empty_heart.png"/></a>
+				</c:when>
+				<c:when test="${isLiked ne 1}">
+					<a href="<%=request.getContextPath()%>/heartNo?id=${list.id}">
+					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
+				</c:when>
+			</c:choose>
+			
+ 			<input type="button" value="대화로 문의하기" style="width:80%;">
 		</div>
 	</section>
 
@@ -305,7 +354,7 @@ $(document).ready(function(){
 			<li>
 						
 						 <c:if test="${param.id ne mlist.id }">
-						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}&memId=${mlist.member.id}">
+						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}">
 						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>
@@ -326,6 +375,52 @@ $(document).ready(function(){
 		</div>
 	</section>
 </c:forEach>
+
+
+<div class="joongo_comment s-inner">
+	<p class="tit">댓글</p>
+	<ul class="joongo_comment_list">
+		<li>
+			<div class="user">
+				<p class="img"></p>
+				<p class="name">닉네임</p>
+			</div>
+			<p class="content">댓글 내용이다아아아</p>
+			<div class="info">
+				<p class="date">2021.01.05</p>
+				<ul>
+					<li>답글쓰기</li>
+					<li>수정</li>
+					<li>삭제</li>
+				</ul>
+			</div>
+		</li>
+		<li class="reply">
+			<div class="user">
+				<p class="img"></p>
+				<p class="name">닉네임</p>
+			</div>
+			<p class="content">댓글 내용이다아아아</p>
+			<div class="info">
+				<p class="date">2021.01.05</p>
+				<ul>
+					<li>답글쓰기</li>
+					<li>수정</li>
+					<li>삭제</li>
+				</ul>
+			</div>
+		</li>
+	</ul>
+	<div class="comment_write">
+		<c:forEach items="${list}" var="list">
+			<input type="hidden" value="${list.id}" class="comment_sale_id">
+		</c:forEach>
+		<input type="hidden" value="chattest1" class="comment_member_id">
+		<textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
+		<input type="button" value="등록" class="comment_write_btn">
+	</div>
+</div>
+
 </div>
 </article>
 <jsp:include page="/resources/include/footer.jsp"/>
