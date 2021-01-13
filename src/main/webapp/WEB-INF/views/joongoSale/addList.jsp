@@ -5,11 +5,6 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <style>
-	textarea {
-		width : 100%;
-		height:  500px;
-	}
-
 </style>
 <script type="text/javascript">
 var dongne1Id;
@@ -17,6 +12,7 @@ var dongne1Name = "${dongne1Name}"
 $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
+
 		$.get(contextPath+"/dongne1", function(json){
 		var datalength = json.length; 
 		if(datalength >= 1){
@@ -141,10 +137,10 @@ $(function(){
 		 //라디오버튼 강아지 눌렀을때 
 		 
 	 });
+
 	 
 	 $('#insertList').on("click", function(json){
-		 
-		 var price = $('#price').val();
+		var price = $('#price').val();
 		 var num = /^[0-9]*$/;
 		 
 		 if($('#title').val() == ""){
@@ -163,13 +159,21 @@ $(function(){
 			 alert('고양이카테고리 여부를 선택해주세요.');
 			 return;
 		 } 
-		 
+
+		//파일 선택 여부 - 유효성 검사(DOM에있는 파일이 비어있는게 있는지 확인)
+			var inputs = fileArea.getElementsByTagName('input');
+			for(var i=0;i<input.lenght; i++){
+				if(inputs[i].value == ""){
+					alert('파일을 선택하세요!');
+					inputs[i].focust();
+					return;
+				}
+			}
 		 
 		 var newlist = {
 			member : {
-				id:'chattest1'
+				id : $('#memId').val()
 			},
-			
 			dogCate : $(':input[name=dogCate]:radio:checked').val(),
 			catCate : $(':input[name=catCate]:radio:checked').val(),
 			title : $('#title').val(),
@@ -182,7 +186,7 @@ $(function(){
 		 		dong2Id : $('#dongne2').val()
 		 	}
 		 };
-		// 	alert(JSON.stringify(newlist));
+		 	alert(JSON.stringify(newlist));
 		 	
 		 	
 		 	
@@ -202,14 +206,68 @@ $(function(){
 					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
-					alert('동네를 먼저 선택해주세요.');
-					//	alert('에러!!!!' + request.status+request.responseText+error);
+					alert("동네를 먼저선택해주세요!");
+					alert('에러!!!!' + request.status+request.responseText+error);
 				}
 			});
 			console.log(contextPath+"/insert");	
 	 
 	});
+	 
+		//자바스크립트에서 DOM을 가져오기(문서객체모델 가져오기) -> 한번 다 읽고나서 
+		var form = document.forms[0]; //젤 첫번째 form을 dom으로 받겠다.
+		
+		var addFileBtn = document.getElementById("addFileBtn");
+		var delFileBtn = document.getElementById("delFileBtn");
+		var fileArea = document.getElementById("fileArea");
+		var cnt = 1;
+		
+		
+		//업로드input 미리만들지 않고 필요한 만큼 증가
+		$("#addFileBtn").on("click", function() {
+			if (cnt < 10) {
+				cnt++;
+				var element = document.createElement("input");
+				element.type = "file";
+				element.name = "upfile" + cnt;
+				var element2 = document.createElement("img");
+				element2.id = "productImg"+cnt;
+				var element3 = document.createElement('div');
+				element3.setAttribute("id", "preview"+cnt);
+
+				fileArea.appendChild(element);
+				fileArea.appendChild(element2);
+				fileArea.appendChild(element3);
+				fileArea.appendChild(document.createElement("br"));
+				
+			} else {
+				alert("파일은 10개까지 추가 가능합니다.");
+			}
+ 
+		});
+		
+		$("#delFileBtn").on("click", function() {
+			if (cnt > 1) {
+				cnt--;
+				var inputs = fileArea.getElementsByTagName('input');
+				var imgs = fileArea.getElementsByTagName('img');
+				var divs = fileArea.getElementsByTagName('div');
+				var brArr = fileArea.getElementsByTagName('br');
+				fileArea.removeChild(brArr[brArr.length-1]);
+				fileArea.removeChild(imgs[imgs.length-1]);
+				fileArea.removeChild(divs[divs.length-1]);
+				fileArea.removeChild(inputs[inputs.length-1]);
+			} else {
+				alert("상품 사진 최소 1개는 업로드 필요합니다.");
+			}
+
+		});
+
+		
 });
+
+
+
 </script>
 <article>
 <form action="/insert" method="POST">
@@ -219,7 +277,10 @@ $(function(){
 		<col width="20%">
 		<col width="80%">
 	</colgroup>
-
+	<tr>
+		<td>아이디</td>
+		<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
+	</tr>
 	<tr>
 		<td>동네</td>
 		<td>
@@ -238,9 +299,19 @@ $(function(){
 			
 		</td>
 	</tr>
+	
 	<tr>
-		<td>사진</td>
-		<td><input type="image"></td>
+		<td>사진 추가 / 제거 <br>
+			<input type="button" value="파일추가" id="addFileBtn">
+			<input type="button" value="파일제거" id="delFileBtn">
+		</td>
+		<td>
+			<div id="fileArea">
+				<input type="file" id="upfile1" name="upfile1" >
+				<img id="productImg1">
+				<div id="preview1"></div>
+			</div>
+		</td>
 	</tr>
 	<tr>
 	<tr>	
@@ -262,13 +333,14 @@ $(function(){
 		<td><input type="text" name="title" id="title"></td>
 	</tr>
 	<tr>
-		<td>가격<br>(*미입력시 0원으로 등록됩니다.)</td>
+		<td>가격</td>
 		<td><input type="text" name="price" id="price"></td>
 	<tr>
 	<tr>
 		<td>내용</td>
-		<td><textarea class="content" name="content" id="content"></textarea>
+		<td><textarea class="content" name="content" id="content"></textarea>>
 	</tr>
+	
 <!-- 	<tr>
 		<td></td>
 		<td>

@@ -1,11 +1,16 @@
 package daangnmungcat.controller;
 
+import java.io.File;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -22,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.GpsToAddress;
@@ -112,8 +118,14 @@ public class JoongoListController {
 	
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
-	public String insertfrom1(Model model){
-		return "/joongoSale/addList";
+	public String insertfrom1(HttpSession session, Model model){
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		if (loginUser == null) {
+			return "redirect:/login";
+		} else {
+			model.addAttribute(loginUser.getId());
+			return "/joongoSale/addList";
+		}
 	}
 	
 	
@@ -156,7 +168,7 @@ public class JoongoListController {
 		} catch (Exception e) {
 			System.out.println("오류");
 		}
-	}
+	}	
 	
 	@PostMapping("/insert")
 	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
@@ -170,4 +182,47 @@ public class JoongoListController {
 		
 	}
 	
+	@PostMapping("/uploadPhoto")
+	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+		String uploadFolder = "C:\\upload";
+		
+		// make folder --
+		File uploadPath = new File(uploadFolder, getFolder());
+		System.out.println("uploadPath: " + uploadPath);
+		if(!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
+		
+		
+		for(MultipartFile multipartFile : uploadFile) {
+			
+			System.out.println("--------------------");
+			System.out.println("Upload File Name: " + multipartFile.getOriginalFilename());
+			System.out.println("Upload File Size: " + multipartFile.getSize());
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
+			System.out.println("only file name: " + uploadFileName);
+			
+			UUID uuid = UUID.randomUUID();
+			uploadFileName = uuid.toString() + "_" + uploadFileName;
+			System.out.println("uploadFileName: " + uploadFileName);
+			
+			File saveFile = new File(uploadPath, uploadFileName);
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch(Exception e) {
+				log.error(e.getMessage());
+			}
+		}
+		
+	}
+	
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String str = sdf.format(date);
+		
+		return str;
+	}
 }

@@ -35,8 +35,8 @@
 	<!-- <result column="is_heart" property="isHeart"/> -->
 	<result column="heart_count" property="heartCount"/>
 	
-	<collection property="dongne1" resultMap="dongne1Result"/>
-	<collection property="dongne2" resultMap="dongne2Result"/>
+	<association property="dongne1" resultMap="dongne1Result"/>
+	<association property="dongne2" resultMap="dongne2Result"/>
 </resultMap>
 
 <resultMap type="Sale" id="saleResultForJoin">
@@ -149,6 +149,7 @@ SELECT count(a.id)
 	INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
 	values(sale_seq.nextval, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
 </insert>
+
 
 
 </mapper>

@@ -83,7 +83,6 @@ CREATE TABLE JOONGO_SALE (
 	redate DATE, /* 끌올일시 */
 	hits NUMBER(12) NOT NULL, /* 조회수 */
 	chat_count NUMBER(12), /* 채팅수 */
-	is_heart VARCHAR2(1) DEFAULT 'n', /*찜 여부 */
 	heart_count NUMBER(12) DEFAULT 0/* 찜수 */
 )SEGMENT CREATION IMMEDIATE;
 
@@ -108,7 +107,7 @@ CREATE TABLE JOONGO_COMMENT (
 	origin_id NUMBER(12), /* 원댓ID */
 	tag_mem_id VARCHAR2(20), /* 사용자태그 대상 */
 	content VARCHAR2(4000) NOT NULL, /* 내용 */
-	regdate DATE NOT NULL /* 등록일시 */
+	regdate DATE DEFAULT sysdate /* 등록일시 */
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE JOONGO_COMMENT
