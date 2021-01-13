@@ -31,12 +31,9 @@ public class Member {
 	 */
 
 	public Member() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Member(String id, String pwd) {
-		super();
 		this.id = id;
 		this.pwd = pwd;
 	}

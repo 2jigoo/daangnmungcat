@@ -17,7 +17,7 @@
 <!-- ResultMap -->
 
 	<resultMap type="Member" id="memberResult">
-		<result column="id" property="id"></result>
+		<id column="id" property="id"></id>
 		<result column="pwd" property="pwd"></result>
 		<result column="name" property="name"></result>
 		<result column="nickname" property="nickname"></result>
@@ -44,11 +44,11 @@
 	
 	
 <!-- query  -->
-	<select id="selectMemberByAll" resultMap="dongne1Result">
+	<select id="selectMemberByAll" resultMap="memberResult">
 		<include refid="selectSql"></include>
 	</select>
 	
-	<select id="selectMembetById" resultMap="dongne2Result">
+	<select id="selectMembetById" resultMap="memberResult">
 		<include refid="selectSql"></include>
 		<include refid="whereSql"></include>
 	</select>
