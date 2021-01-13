@@ -159,7 +159,16 @@ $(function(){
 			 alert('고양이카테고리 여부를 선택해주세요.');
 			 return;
 		 } 
-		
+
+		//파일 선택 여부 - 유효성 검사(DOM에있는 파일이 비어있는게 있는지 확인)
+			var inputs = fileArea.getElementsByTagName('input');
+			for(var i=0;i<input.lenght; i++){
+				if(inputs[i].value == ""){
+					alert('파일을 선택하세요!');
+					inputs[i].focust();
+					return;
+				}
+			}
 		 
 		 var newlist = {
 			member : {
@@ -204,7 +213,61 @@ $(function(){
 			console.log(contextPath+"/insert");	
 	 
 	});
+	 
+		//자바스크립트에서 DOM을 가져오기(문서객체모델 가져오기) -> 한번 다 읽고나서 
+		var form = document.forms[0]; //젤 첫번째 form을 dom으로 받겠다.
+		
+		var addFileBtn = document.getElementById("addFileBtn");
+		var delFileBtn = document.getElementById("delFileBtn");
+		var fileArea = document.getElementById("fileArea");
+		var cnt = 1;
+		
+		
+		//업로드input 미리만들지 않고 필요한 만큼 증가
+		$("#addFileBtn").on("click", function() {
+			if (cnt < 10) {
+				cnt++;
+				var element = document.createElement("input");
+				element.type = "file";
+				element.name = "upfile" + cnt;
+				var element2 = document.createElement("img");
+				element2.id = "productImg"+cnt;
+				var element3 = document.createElement('div');
+				element3.setAttribute("id", "preview"+cnt);
+
+				fileArea.appendChild(element);
+				fileArea.appendChild(element2);
+				fileArea.appendChild(element3);
+				fileArea.appendChild(document.createElement("br"));
+				
+			} else {
+				alert("파일은 10개까지 추가 가능합니다.");
+			}
+ 
+		});
+		
+		$("#delFileBtn").on("click", function() {
+			if (cnt > 1) {
+				cnt--;
+				var inputs = fileArea.getElementsByTagName('input');
+				var imgs = fileArea.getElementsByTagName('img');
+				var divs = fileArea.getElementsByTagName('div');
+				var brArr = fileArea.getElementsByTagName('br');
+				fileArea.removeChild(brArr[brArr.length-1]);
+				fileArea.removeChild(imgs[imgs.length-1]);
+				fileArea.removeChild(divs[divs.length-1]);
+				fileArea.removeChild(inputs[inputs.length-1]);
+			} else {
+				alert("상품 사진 최소 1개는 업로드 필요합니다.");
+			}
+
+		});
+
+		
 });
+
+
+
 </script>
 <article>
 <form action="/insert" method="POST">
@@ -238,8 +301,17 @@ $(function(){
 	</tr>
 	
 	<tr>
-		<td>사진</td>
-		<td><input type="image"></td>
+		<td>사진 추가 / 제거 <br>
+			<input type="button" value="파일추가" id="addFileBtn">
+			<input type="button" value="파일제거" id="delFileBtn">
+		</td>
+		<td>
+			<div id="fileArea">
+				<input type="file" id="upfile1" name="upfile1" >
+				<img id="productImg1">
+				<div id="preview1"></div>
+			</div>
+		</td>
 	</tr>
 	<tr>
 	<tr>	

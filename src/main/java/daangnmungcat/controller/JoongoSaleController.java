@@ -43,11 +43,9 @@ public class JoongoSaleController {
 			String memId = list.get(0).getMember().getId();
 			List<Sale> mlist = service.getListByMemID(memId);
 			model.addAttribute("list", list);
-			String ok = "ok";
-			if (mlist.size() == 1) {
-				System.out.println("한개");
-				model.addAttribute("emptylist", ok);
-			}
+				if (mlist.size() == 1) {
+					model.addAttribute("emptylist", 1);
+				}
 			model.addAttribute("mlist", mlist);
 //		list.stream().forEach(System.out::println);
 			service.JSHits(id);
@@ -57,22 +55,17 @@ public class JoongoSaleController {
 			String memId = list.get(0).getMember().getId();
 			List<Sale> mlist = service.getListByMemID(memId);
 			model.addAttribute("list", list);
-			String ok = "ok";
-			if (mlist.size() == 1) {
-				System.out.println("한개");
-				model.addAttribute("emptylist", ok);
-			}
+				if (mlist.size() == 1) {
+					model.addAttribute("emptylist", 1);
+				}
 			model.addAttribute("mlist", mlist);
-			service.JSHits(id);
-
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("id", id);
 			map.put("memId", loginUser.getId());
-
-			if (mapper.countHeart(map) == 0) {
-//				System.out.println("좋아요안되있는상태");
-				model.addAttribute("isLiked", 1);
-			}
+				if (mapper.countHeart(map) == 0) {
+	//				System.out.println("좋아요안되있는상태");
+					model.addAttribute("isLiked", 1);
+				}
 		}
 		return "/joongoSale/detailList";
 	}
