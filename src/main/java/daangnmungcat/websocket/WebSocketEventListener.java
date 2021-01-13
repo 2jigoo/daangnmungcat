@@ -1,4 +1,4 @@
-package daangnmungcat.controller;
+package daangnmungcat.websocket;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -19,11 +19,13 @@ public class WebSocketEventListener {
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
 
+    // connected
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
         log.info("Received a new web socket connection");
     }
 
+    // disconnected
     @EventListener
     public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
@@ -32,11 +34,11 @@ public class WebSocketEventListener {
         if(username != null) {
             log.info("User Disconnected : " + username);
 
-            ChatMessageForTest chatMessage = new ChatMessageForTest();
-            chatMessage.setType(MessageType.LEAVE);
-            chatMessage.setSender(username);
-
-            messagingTemplate.convertAndSend("/topic/public", chatMessage);
+			/*ChatMessage chatMessage = new ChatMessageForTest();
+			chatMessage.setType(MessageType.LEAVE);
+			chatMessage.setSender(username);
+			
+			messagingTemplate.convertAndSend("/topic/public", chatMessage);*/
         }
     }
 }

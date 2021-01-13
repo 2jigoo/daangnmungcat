@@ -1,7 +1,8 @@
-package daangnmungcat.controller;
+package daangnmungcat.websocket;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -10,7 +11,6 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import daangnmungcat.dto.ChatMessage;
-import daangnmungcat.dto.ChatMessageForTest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -32,16 +32,16 @@ public class ChatMessageController {
 	}
 	*/
 	
-	@MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessageForTest sendMessage(@Payload ChatMessageForTest chatMessage) {
+	@MessageMapping("/chat/{id}.sendMessage")
+    @SendTo("/topic/chat/{id}")
+    public ChatMessage sendMessage(@DestinationVariable int id, @Payload ChatMessage chatMessage) {
         return chatMessage;
     }
 
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessageForTest addUser(@Payload ChatMessageForTest chatMessage, SimpMessageHeaderAccessor headerAccessor){
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+    @MessageMapping("/chat/{id}.addUser")
+    @SendTo("/topic/chat/{id}")
+    public ChatMessage addUser(@DestinationVariable int id, @Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
+        headerAccessor.getSessionAttributes().put("username", chatMessage.getMember().getId());
         return chatMessage;
     }
 }

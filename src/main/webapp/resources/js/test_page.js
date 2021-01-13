@@ -7,39 +7,34 @@ var messageArea = document.querySelector('#messageArea');
 var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
-var username = null;
 
 var colors = [
     '#2196F3', '#32c787', '#00BCD4', '#ff5652',
     '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
 ];
 
-function connect(event) {
-    username = document.querySelector('#name').value.trim();
+function connect() {
+    // username = document.querySelector('#name').value.trim();
+	
+    var socket = new SockJS('/daangnmungcat/ws');
+    stompClient = Stomp.over(socket);
 
-    if(username) {
-        usernamePage.classList.add('hidden');
-        chatPage.classList.remove('hidden');
-
-        var socket = new SockJS('/daangnmungcat/ws');
-        stompClient = Stomp.over(socket);
-
-        stompClient.connect({}, onConnected, onError);
-    }
-    event.preventDefault();
+    stompClient.connect({}, onConnected, onError);
 }
 
 
 function onConnected() {
     // Subscribe to the Public Topic
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    stompClient.subscribe('/topic/chat/' + chatId, onMessageReceived);
 
     // Tell your username to the server
-    stompClient.send("/app/chat.addUser",
+    /*
+    stompClient.send('/app/chat/' + chatId + '.addUser',
     	{},
         JSON.stringify({sender: username, type: 'JOIN'})
     )
-
+    */
+    console.log('연결됨');
     connectingElement.classList.add('hidden');
 }
 
@@ -54,11 +49,11 @@ function sendMessage(event) {
     var messageContent = messageInput.value.trim();
     if(messageContent && stompClient) {
         var chatMessage = {
-            sender: username,
-            content: messageInput.value,
-            type: 'CHAT'
+            chat: {id: chatId},
+            member: {id: memberId, nickname: memberNickname},
+            content: messageInput.value
         };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send('/app/chat/' + chatId + '.sendMessage', {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
@@ -67,30 +62,35 @@ function sendMessage(event) {
 
 function onMessageReceived(payload) {
     var message = JSON.parse(payload.body);
-
+    console.log(message);
+    
     var messageElement = document.createElement('li');
 
+    /*
     if(message.type === 'JOIN') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' joined!';
     } else if (message.type === 'LEAVE') {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
-    } else {
-        messageElement.classList.add('chat-message');
+    } else { */
+    messageElement.classList.add('chat-message');
 
-        var avatarElement = document.createElement('i');
-        var avatarText = document.createTextNode(message.sender[0]);
-        avatarElement.appendChild(avatarText);
-        avatarElement.style['background-color'] = getAvatarColor(message.sender);
+    var avatarElement = document.createElement('i');
+//    var avatarText = document.createTextNode(message.member.nickname[0]);
+    var avatarText = document.createTextNode(message.member.id[0]);
+    avatarElement.appendChild(avatarText);
+//    avatarElement.style['background-color'] = getAvatarColor(message.member.nickname);
+    avatarElement.style['background-color'] = getAvatarColor(message.member.id);
 
-        messageElement.appendChild(avatarElement);
+    messageElement.appendChild(avatarElement);
 
-        var usernameElement = document.createElement('span');
-        var usernameText = document.createTextNode(message.sender);
-        usernameElement.appendChild(usernameText);
-        messageElement.appendChild(usernameElement);
-    }
+    var usernameElement = document.createElement('span');
+//    var usernameText = document.createTextNode(message.member.nickname);
+    var usernameText = document.createTextNode(message.member.id);
+    usernameElement.appendChild(usernameText);
+    messageElement.appendChild(usernameElement);
+    // }
 
     var textElement = document.createElement('p');
     var messageText = document.createTextNode(message.content);
@@ -112,5 +112,5 @@ function getAvatarColor(messageSender) {
     return colors[index];
 }
 
-usernameForm.addEventListener('submit', connect, true)
-messageForm.addEventListener('submit', sendMessage, true)
+connect();
+messageForm.addEventListener('submit', sendMessage, true);

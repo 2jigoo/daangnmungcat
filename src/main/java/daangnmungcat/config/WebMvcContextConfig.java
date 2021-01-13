@@ -1,14 +1,10 @@
 package daangnmungcat.config;
 
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletRegistration;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -21,6 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @ComponentScan(basePackages = {"daangnmungcat.controller"})
 public class WebMvcContextConfig implements WebMvcConfigurer {
+	
 	private final int MAX_SIZE = 10 * 1024 * 1024;
 	
 	@Override

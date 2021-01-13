@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.Member;
 import daangnmungcat.service.ChatService;
+import daangnmungcat.websocket.ChatMessageController;
 import lombok.extern.log4j.Log4j2;
 
 @Controller

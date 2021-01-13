@@ -8,77 +8,51 @@
 <script>
 	var chatId = ${chat.id};
 	var memberId = "${loginUser.id}";
+	var memberNickname = "${loginUser.nickname}";
+	console.log(chatId);
+	console.log(memberId);
 	
 	var headerName = "${_csrf.headerName}";
 	var token = "${_csrf.token}";
 	var headers = {};
 	headers[headerName] = token;
 	console.log(headers);
-	
-	var sock = null;
-	var client = null;
-	var url = "/daangnmungcat/ws-stomp";
-	
-	function setConnected(connected){
-		document.getElementById('connect').disabled = connected;
-		document.getElementById('disconnect').disabled = !connected;
-		document.getElementById('echo').disabled = !connected;
-	}
-	
-	function connect(){
-		sock = new SockJS(url);
-		client = Stomp.over(sock); // 1. SockJS를 내부에 들고 있는 client를 내어준다.
-		
-		// 2. connection이 맺어지면 실행된다.
-		client.connect(headers, function(frame){
-			setConnected(true);
-			log(frame);
-			
-			// subscribe(path, callback)로 메시지를 받을 수 있다. callback 첫번째 파라미터의 body로 메시지의 내용이 들어온다.
-			client.subscribe('/sub/chats/message', function(message){
-				log(message.body);
-			}, headers);
-		});
-	}
-	
-	function disconnect(){
-		if(client != null){
-			client.disconnect();
-			client = null;
-		}
-		setConnected(false);
-	}
-	
-	function echo(){
-		if(client != null){
-			var message = document.getElementById('message').value;
-			var chatMessage = {
-					chat: {id: chatId},
-					member: {id: memberId},
-					content: message
-			}
-			
-			log('Sent: ' + JSON.stringify(chatMessage));
-			// send(path, header, message)로 메시지를 보낼 수 있다.
-			client.send("/pub/sendMessage", headers, JSON.stringify(chatMessage));
-		}else{
-			alert('connection not established, please connect.');
-		}
-	}
-	
-	function log(message){
-		var console = document.getElementById('logging');
-		var p = document.createElement('p');
-		p.appendChild(document.createTextNode(message));
-		console.appendChild(p);
-		while(console.childNodes.length > 12){
-			console.removeChild(console.firstChild);
-		}
-		console.scrollTop = console.scrollHeight;
-	}
 </script>
 <div>
 	<article>
+		<div id="chat-page">
+		    <div class="chat-container">
+		        <div class="chat-header">
+		            <h2>${chat.sale.member.nickname }</h2>
+		            [${chat.sale.saleState.label }] ${chat.sale.title } <br>
+					${chat.sale.price }원 <br>
+		        </div>
+		        <div class="connecting">
+		            연결중...
+		        </div>
+		        <ul id="messageArea">
+		        	<c:forEach items="${chat.messages }" var="msg">
+					<li class="chat-message" msg_id="${msg.id }" sender="${msg.member.id }">
+						<i style="background-color: rgb(57, 187, 176);">*</i>
+						<span>${msg.member.nickname }</span>
+						<p>${msg.content } ${msg.image }</p>
+						${msg.readYn }
+						<javatime:format value="${msg.regdate }" pattern="yyyy-MM-dd HH:mm:ss" />
+					</li>
+					</c:forEach>
+		        </ul>
+		        <form id="messageForm" name="messageForm">
+		            <div class="form-group">
+		                <div class="input-group clearfix">
+		                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+		                    <button type="submit" class="primary">보내기</button>
+		                </div>
+		            </div>
+		        </form>
+		    </div>	
+		</div>
+	</article>
+	<%-- <article>
 		<div id="article">
 			<section class="section_chat">
 				${chat.sale.title } <br>
@@ -96,23 +70,8 @@
 				</c:forEach>
 			</section>
 		</div>
-		
-		<div id="connect-container" class="ui centered grid">
-	        <div class="row">
-	            <button id="connect" onclick="connect();" class="ui green button">Connect</button>
-	            <button id="disconnect" disabled="disabled" onclick="disconnect();" class="ui red button">Disconnect</button>
-	        </div>
-	        <div class="row">
-	            <textArea id="message" style="width: 350px" class="ui input" placeholder="Message to Echo"></textArea>
-	        </div>
-	        <div class="row">
-	            <button id="echo" onclick="echo();" disabled="disabled" class="ui button">Echo message</button>
-	        </div>
-	        <div id="console-container">
-	            <h3>Logging</h3>
-	            <div id="logging"></div>
-	        </div>
-	    </div>
-	</article>
+	</article> --%>
+	
 </div>
+<script src="${pageContext.request.contextPath }/resources/js/test_page.js"></script>
 <jsp:include page="/resources/include/footer.jsp"/>

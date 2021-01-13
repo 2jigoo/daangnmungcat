@@ -19,21 +19,7 @@
 </script>
 <body>
 
-<div id="username-page">
-    <div class="username-page-container">
-        <h1 class="title">username을 입력하세요</h1>
-        <form id="usernameForm" name="usernameForm">
-            <div class="form-group">
-                <input type="text" id="name" placeholder="Username" autocomplete="off" class="form-control" />
-            </div>
-            <div class="form-group">
-                <button type="submit" class="accent username-submit">채팅 시작하기</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div id="chat-page" class="hidden">
+<div id="chat-page">
     <div class="chat-container">
         <div class="chat-header">
             <h2>Spring WebSocket Chat Demo</h2>
