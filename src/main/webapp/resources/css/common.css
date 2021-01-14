@@ -230,8 +230,9 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 
 .list_top {width:100%; overflow:hidden; margin-bottom:10px;}
 .list_top .my_location {float:left; font-size:1em; line-height:40px; background:url(../images/ico_location.png) no-repeat left center; padding-left:18px; font-family:'S-CoreDream'}
-.list_top > div {float:right;}
+.list_top > div {float:right; overflow:hidden;}
 .list_top > div select {width:180px; height:40px; border:1px solid #ccc; font-size:1em; font-family:'Noto Sans KR'; border-radius:5px;}
+.list_top .dongne_btn {float:right; font-size:1em; line-height:40px; padding:0 15px; color:#fff; background:#ff7e15; cursor:pointer; margin-left:5px; border-radius:5px;}
 
 .board_page {text-align:center; margin-top:50px;}
 .board_page ul {display:inline-block;}

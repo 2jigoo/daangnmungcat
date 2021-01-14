@@ -25,4 +25,6 @@ public interface MemberService {
 	
 	//휴대폰인증
 	void certifiedPhoneNumber(String phoneNumber, String cerNum);
+	
+	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
 }
