@@ -292,7 +292,7 @@ $(document).ready(function(){
 			</div>
 			<div id="section_profile_left">
 				<div id="nickname" >${list.member.id}</div>
-				<div id="dongnename">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</div>
+				<div id="dongnename">${list.dongne1.name} ${list.dongne2.name}</div>
 			</div>		
 		</div>
 	</a>
@@ -358,7 +358,7 @@ $(document).ready(function(){
 						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>
-						<p class="section_location">${mlist.dongne1.dong1Name} ${mlist.dongne2.dong2Name}</p>
+						<p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
 						<p class="section_subject">${mlist.title}</p>
 						<p class="section_price"><span>${mlist.price}</span>원</p>
 						<ul>

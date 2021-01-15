@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.mapper.JoongoHeartMapper;
@@ -36,7 +37,7 @@ public class JoongoSaleController {
 
 	@RequestMapping(value = "detailList", method = RequestMethod.GET)
 	public String listById(@RequestParam int id, Model model, HttpSession session) {
-		Member loginUser = (Member) session.getAttribute("loginUser");
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			// 무조건 하트 0으로 설정
 			List<Sale> list = service.getListsById(id);
@@ -46,9 +47,10 @@ public class JoongoSaleController {
 				if (mlist.size() == 1) {
 					model.addAttribute("emptylist", 1);
 				}
-			model.addAttribute("mlist", mlist);
 //		list.stream().forEach(System.out::println);
 			service.JSHits(id);
+			list.get(0).setHits(list.get(0).getHits()+1);
+			model.addAttribute("mlist", mlist);
 			model.addAttribute("isLiked", 1);
 		} else {
 			List<Sale> list = service.getListsById(id);
@@ -72,7 +74,7 @@ public class JoongoSaleController {
 
 	@GetMapping("/heart")
 	public String heart(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
-		Member loginUser = (Member) session.getAttribute("loginUser");
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			String textUrl = "detailList?id=" + id;
 			model.addAttribute("msg", "로그인을 하셔야 합니다.");
@@ -99,7 +101,7 @@ public class JoongoSaleController {
 
 	@GetMapping("/heartNo")
 	public String heartNo(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
-		Member loginUser = (Member) session.getAttribute("loginUser");
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("id", id);
 			map.put("memId", loginUser.getId());

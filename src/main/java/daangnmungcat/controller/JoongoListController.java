@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,14 +19,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.Member;
@@ -119,7 +115,7 @@ public class JoongoListController {
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
 	public String insertfrom1(HttpSession session, Model model){
-		Member loginUser = (Member) session.getAttribute("loginUser");
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			return "redirect:/login";
 		} else {
