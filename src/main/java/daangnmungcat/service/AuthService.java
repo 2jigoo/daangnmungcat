@@ -15,7 +15,7 @@ public class AuthService {
 	private MemberService service;
 	
 	public AuthInfo authenicate(String id, String pwd) {
-		Member member = service.selectMembetById(id);
+		Member member = service.selectMemberById(id);
 		if(member == null) {
 			throw new WrongIdPasswordException();
 		}

@@ -12,7 +12,7 @@ import daangnmungcat.dto.Member;
 @Service
 public interface MemberService {
 	List<Member> selectMemberByAll();
-	Member selectMembetById(@Param("id")String id);
+	Member selectMemberById(@Param("id")String id);
 	Integer checkPwd(@Param("id")String id, @Param("pwd")String pwd);
 	
 	List<Dongne1> Dongne1List();
