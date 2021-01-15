@@ -233,7 +233,7 @@ $(function(){
 		    			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    		</c:when>
 		    		<c:otherwise>
-				    	<p><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+				    	<p><a href="<%=request.getContextPath()%>/joongo_list/all${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    		</c:otherwise>
 		    	</c:choose>
 		    </c:if> 
@@ -248,7 +248,7 @@ $(function(){
 			  			<li><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  		</c:when>
 			  		<c:otherwise>
-			    	<li><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			    	<li><a href="<%=request.getContextPath()%>/joongo_list/all${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  		</c:otherwise>
 			 		</c:choose>
 			  </c:forEach>
@@ -263,7 +263,7 @@ $(function(){
 			  			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  		</c:when>
 			  		<c:otherwise>
-			    		<p><a href="<%=request.getContextPath()%>/joongo_list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			    		<p><a href="<%=request.getContextPath()%>/joongo_list/all${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  		</c:otherwise>
 			 		</c:choose>
 			  </c:if> 

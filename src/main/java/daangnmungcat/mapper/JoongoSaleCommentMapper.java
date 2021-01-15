@@ -13,4 +13,6 @@ public interface JoongoSaleCommentMapper {
 	int insertJoongoSaleComment(SaleComment saleComment);
 	
 	List<SaleComment> selectJoongoCommentByAllPage(@Param("saleId") int saleId, @Param("cri") Criteria cri);
+	
+	int commentCount(int saleId);
 }

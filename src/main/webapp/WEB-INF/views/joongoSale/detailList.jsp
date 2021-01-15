@@ -382,7 +382,7 @@ $(document).ready(function(){
 </c:forEach>
 
 
-<div class="joongo_comment s-inner">
+<div class="joongo_comment s-inner" id="joongo_comment">
 	<p class="tit">댓글</p>
 	<ul class="joongo_comment_list">
 		<c:forEach items="${commentList}" var="commentList">
@@ -413,6 +413,24 @@ $(document).ready(function(){
 		</li>
 		</c:if>
 	</ul>
+	
+	<c:forEach items="${list}" var="list">
+		<div class="board_page">
+		    <c:if test="${pageMaker.prev}">
+				    <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.startPage - 1)}&id=${list.id}#joongo_comment">이전</a></p>
+		    </c:if> 
+			<ul>
+			
+			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+			    <li><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(idx)}&id=${list.id}#joongo_comment">${idx}</a></li>
+			  </c:forEach>
+			</ul>
+			
+			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+			    <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.endPage + 1)}&id=${list.id}#joongo_comment">다음</a></p>
+			  </c:if> 
+		</div>
+	</c:forEach>
 	
 	<div class="comment_write">
 		<c:forEach items="${list}" var="list">
