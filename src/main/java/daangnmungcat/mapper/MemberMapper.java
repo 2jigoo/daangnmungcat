@@ -23,4 +23,6 @@ public interface MemberMapper {
 	List<Dongne1> Dongne1List();
 	List<Dongne2> Dongne2List(@Param("dongne1Id")int dongne1);
 	
+	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
+	
 }

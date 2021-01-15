@@ -37,3 +37,7 @@ SELECT * FROM JOONGO_COMMENT;
 INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) values(joongo_comment_seq.nextval, 2, 'chattest1', '댓글 테스트입니다.');
 INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT) VALUES(joongo_comment_seq.nextval, 2, 'chattest2', 1, 'chattest1', '계층형 댓글 테스트입니다.');
 INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) values(joongo_comment_seq.nextval, 10, 'chattest1', '테스트');
+
+SELECT * FROM MEMBER;
+UPDATE MEMBER SET DONGNE1 = 1, DONGNE2 = 1 WHERE ID = 'chattest1';
+UPDATE MEMBER SET DONGNE1 = 3, DONGNE2 = 44 WHERE ID = 'chattest1';

@@ -84,6 +84,8 @@
 		VALUES(#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{phone}, #{dongne1.id}, #{dongne2.id}, #{grade}, #{profilePic}, #{profileText})
 	</insert>
 	
-	
+	<update id="dongneUpdate" parameterType="map">
+		UPDATE MEMBER SET DONGNE1 = #{dongne1.id}, DONGNE2 = #{dongne2.id} WHERE ID = #{id}
+	</update>
 	
 </mapper>
