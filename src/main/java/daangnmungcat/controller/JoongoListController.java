@@ -12,6 +12,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.client.AuthCache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.JSONObject;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.Member;
@@ -46,17 +48,23 @@ public class JoongoListController {
 	private JoongoListMapper mapper;	
 	
 	@GetMapping("/joongo_list")
-	public String list(Model model, Criteria cri) {
-		List<Sale> list = mapper.selectJoongoByAllPage(cri);
-		System.out.println(list);
-		model.addAttribute("list", list);
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(mapper.listCount());
-		model.addAttribute("pageMaker", pageMaker);
-		
-		return "/joongo_list";
+	public String list(Model model, Criteria cri, HttpSession session) {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		System.out.println("list : "+ loginUser);
+		if (loginUser == null) {
+			List<Sale> list = mapper.selectJoongoByAllPage(cri);
+			System.out.println(list);
+			model.addAttribute("list", list);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(mapper.listCount());
+			model.addAttribute("pageMaker", pageMaker);
+			
+			return "/joongo_list";
+		} else {
+			return null;
+		}
 	}
 	
 	@GetMapping("/joongo_list/{dongne1}")
