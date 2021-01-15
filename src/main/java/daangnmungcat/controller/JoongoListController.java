@@ -170,6 +170,7 @@ public class JoongoListController {
 		}
 	}	
 	
+	// /joongoSale/insert
 	@PostMapping("/insert")
 	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
 		System.out.println("/insert 컨트롤러");

@@ -24,6 +24,7 @@ public class AuthService {
 			throw new WrongIdPasswordException();
 		}
 		
-		return new AuthInfo(member.getId());
+		// 아이디/닉넴/프로필사진  생성자를 만들어서
+		return new AuthInfo(member.getId(), member.getNickname(), member.getProfilePic());
 	}
 }
