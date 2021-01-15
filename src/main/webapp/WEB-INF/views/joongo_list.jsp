@@ -11,39 +11,41 @@ $(function(){
    
    var contextPath = "<%=request.getContextPath()%>";
    
-   
+   // 동네1 대분류 목록 읽어오기
    $.get(contextPath+"/dongne1", function(json){
+	  console.log(json);
       var datalength = json.length; 
       if(datalength >= 1){
          var sCont = "";
          for(i=0; i<datalength; i++){
             if (json[i].dong1Name == dongne1Name){
-               sCont += '<option value="' + json[i].dong1Id + '" selected>';
-               dongne1Id = json[i].dong1Id;
+               sCont += '<option value="' + json[i].id + '" selected>';
+               dongne1Id = json[i].id;
                console.log("test2 : "+ dongne1Id)
             } else {
-               sCont += '<option value="' + json[i].dong1Id + '">';
+               sCont += '<option value="' + json[i].id + '">';
             }
-            sCont += json[i].dong1Name;
+            sCont += json[i].name;
             sCont += '</option>';
          }
          $("select[name=dongne1]").append(sCont);
       }
    });
    
+   // 동네2 목록 읽어오기
    setTimeout(function(){
-      console.log("test : "+ dongne1Id)
+      console.log("test : "+ dongne1Name)
       if (dongne1Name != ""){
-         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
+         $.get(contextPath+"/dongne2/"+ dongne1Name, function(json){
             var datalength = json.length; 
             var sCont = "<option>동네를 선택하세요</option>";
             for(i=0; i<datalength; i++){
-               if (json[i].dong2Name == "${dongne2Name}"){
-                  sCont += '<option value="' + json[i].dong2Id + '" selected>';
+               if (json[i].name == "${dongne2Name}"){
+                  sCont += '<option value="' + json[i].id + '" selected>';
                } else {
-                  sCont += '<option value="' + json[i].dong2Id + '">';
+                  sCont += '<option value="' + json[i].id + '">';
                }
-               sCont += json[i].dong2Name;
+               sCont += json[i].name;
                sCont += '</option>';
             }
             $("select[name=dongne2]").append(sCont);   
@@ -159,7 +161,7 @@ $(function(){
 				<li><a href="<%=request.getContextPath()%>/detailList?id=${list.id}">
 					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="txt">
-						<p class="location">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</p>
+						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>
 						<p class="price"><span>${list.price}</span>원</p>
 						<ul>

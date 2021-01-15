@@ -1,9 +1,15 @@
 package daangnmungcat.controller;
 
 import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -34,6 +40,7 @@ public class SignUpControllor {
 
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
+		System.out.println(service.Dongne1List());
 		return ResponseEntity.ok(service.Dongne1List());
 
 	}
@@ -73,17 +80,21 @@ public class SignUpControllor {
 	}
 
 	@PostMapping("/uploadProfile")
-	public void uploadAjaxPost(MultipartFile[] uploadFile) {
+	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
 		System.out.println("오나");
-		String uploadFolder = "C:\\upload";
 		
-		// make folder --
-		File uploadPath = new File(uploadFolder, getFolder());
-		System.out.println("uploadPath: " + uploadPath);
+		String uploadFolder = request.getSession().getServletContext().getRealPath("resources\\upload\\");
+		//테스트 경로-> /daangnmungcat/resources/upload/2021-01-13/파일이름.jpg
+		System.out.println("uploadfolder:" + uploadFolder);
 		
-		if(!uploadPath.exists()) {
-			uploadPath.mkdirs();
-		}
+		
+//		// 폴더만들기
+//		File uploadPath = new File(uploadFolder, getFolder());
+//		System.out.println("uploadPath: " + uploadPath);
+//		
+//		if(!uploadPath.exists()) {
+//			uploadPath.mkdirs();
+//		}
 		
 		
 		for(MultipartFile multipartFile : uploadFile) {
@@ -100,7 +111,7 @@ public class SignUpControllor {
 			uploadFileName = uuid.toString() + "_" + uploadFileName;
 			System.out.println("uploadFileName: " + uploadFileName);
 			
-			File saveFile = new File(uploadPath, uploadFileName);
+			File saveFile = new File(uploadFolder, uploadFileName);
 			try {
 				multipartFile.transferTo(saveFile);
 			} catch(Exception e) {

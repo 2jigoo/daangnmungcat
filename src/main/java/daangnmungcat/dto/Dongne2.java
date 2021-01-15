@@ -1,48 +1,27 @@
 package daangnmungcat.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter @Setter
+@ToString
 public class Dongne2 {
 	private int id;
-	private int dongne1Id;
+	private Dongne1 dongne1;
 	private String name;
 
 	public Dongne2() {
 	}
-
-	public Dongne2(int dong2Id, int dong1Id, String dong2Name) {
-		super();
-		this.id = dong2Id;
-		this.dongne1Id = dong1Id;
-		this.name = dong2Name;
-	}
-
-	public int getDong2Id() {
-		return id;
-	}
-
-	public void setDong2Id(int dong2Id) {
-		this.id = dong2Id;
-	}
-
 	
-	public int getDong1Id() {
-		return dongne1Id;
+	public Dongne2(int id) {
+		this.id = id;
 	}
 
-	public void setDong1Id(int dong1Id) {
-		this.dongne1Id = dong1Id;
+	public Dongne2(int id, Dongne1 dongne1, String name) {
+		this.id = id;
+		this.dongne1 = dongne1;
+		this.name = name;
 	}
-
-	public String getDong2Name() {
-		return name;
-	}
-
-	public void setDong2Name(String dong2Name) {
-		this.name = dong2Name;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Dongne2 [dong2Id=%s, dong2Name=%s]", id, name);
-	}
-
+	
 }

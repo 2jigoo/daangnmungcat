@@ -24,21 +24,21 @@
 		<result column="email" property="email"></result>
 		<result column="phone" property="phone"></result>
 		<result column="grade" property="grade"></result>
-		<result column="dongne1" property="dongne1"></result>
-		<result column="dongne2" property="dongne2"></result>
+		<result column="dongne1" property="dongne1.id"></result>
+		<result column="dongne2" property="dongne2.id"></result>
 		<result column="profile_pic" property="profilePic"></result>
 		<result column="profile_text" property="profileText"></result>
 		<result column="regdate" property="regdate"></result>
 	</resultMap>
 	
 	<resultMap type="Dongne1" id="dongne1Result">
-		<id column="id" property="id"></id>
+		<result column="id" property="id"></result>
 		<result column="name" property="name"></result>
 	</resultMap>
 	
 	<resultMap type="Dongne2" id="dongne2Result">
-		<id column="id" property="id"></id>
-		<result column="dongne1_id" property="dongne1Id"></result>
+		<result column="id" property="id"></result>
+		<result column="dongne1_id" property="dongne1.id"></result>
 		<result column="name" property="name"></result>
 	</resultMap>
 	
@@ -81,7 +81,7 @@
 	
 	<insert id="insertMember"  parameterType="Member">
 		INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, GRADE, PROFILE_PIC, PROFILE_TEXT) 
-		VALUES(#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{phone}, #{dongne1}, #{dongne2}, #{grade}, #{profilePic}, #{profileText})
+		VALUES(#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{phone}, #{dongne1.id}, #{dongne2.id}, #{grade}, #{profilePic}, #{profileText})
 	</insert>
 	
 	

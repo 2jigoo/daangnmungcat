@@ -5,6 +5,7 @@ INSERT INTO MEMBER VALUES('admin', '1234', '관리자', '관리자', 'admin@admi
 SELECT * FROM MEMBER;
 
 SELECT 1 FROM MEMBER WHERE id = 'admin' and pwd = '1234';
+SELECT 1 FROM MEMBER WHERE id = 'test' and pwd = '1234';
 SELECT NVL(null, 2) FROM MEMBER WHERE id = 'admin';
 
 SELECT * FROM dongne_view;

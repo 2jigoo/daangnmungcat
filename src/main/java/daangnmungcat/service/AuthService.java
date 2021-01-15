@@ -12,10 +12,10 @@ import daangnmungcat.mapper.MemberMapper;
 public class AuthService {
 	
 	@Autowired
-	private MemberMapper mapper;
+	private MemberService service;
 	
 	public AuthInfo authenicate(String id, String pwd) {
-		Member member = mapper.selectMembetById(id);
+		Member member = service.selectMembetById(id);
 		if(member == null) {
 			throw new WrongIdPasswordException();
 		}

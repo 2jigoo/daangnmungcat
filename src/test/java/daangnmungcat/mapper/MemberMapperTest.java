@@ -62,8 +62,8 @@ public class MemberMapperTest {
 	
 	//@Test
 	public void insertMember() {
-		Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, "", "");
-		mapper.insertMember(member);
+		//Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, "", "");
+		//mapper.insertMember(member);
 	}
 	
 	@Test

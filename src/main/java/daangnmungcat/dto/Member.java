@@ -16,8 +16,8 @@ public class Member {
 	private String phone;
 	private String grade;
 	// 동네
-	private int dongne1;
-	private int dongne2;
+	private Dongne1 dongne1;
+	private Dongne2 dongne2;
 	// 등급
 	private String profilePic;
 	private String profileText;
@@ -31,12 +31,9 @@ public class Member {
 	 */
 
 	public Member() {
-		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Member(String id, String pwd) {
-		super();
 		this.id = id;
 		this.pwd = pwd;
 	}
@@ -47,7 +44,7 @@ public class Member {
 	}
 
 	public Member(String id, String pwd, String name, String nickname, String email, String phone, String grade,
-			int dongne1, int dongne2, String profilePic, String profileText) {
+			Dongne1 dongne1,Dongne2 dongne2, String profilePic, String profileText) {
 		this.id = id;
 		this.pwd = pwd;
 		this.name = name;
@@ -94,19 +91,19 @@ public class Member {
 	}
 	
 
-	public int getDongne1() {
+	public Dongne1 getDongne1() {
 		return dongne1;
 	}
 
-	public void setDongne1(int dongne1) {
+	public void setDongne1(Dongne1 dongne1) {
 		this.dongne1 = dongne1;
 	}
 
-	public int getDongne2() {
+	public Dongne2 getDongne2() {
 		return dongne2;
 	}
 
-	public void setDongne2(int dongne2) {
+	public void setDongne2(Dongne2 dongne2) {
 		this.dongne2 = dongne2;
 	}
 
