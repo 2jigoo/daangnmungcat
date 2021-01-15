@@ -98,4 +98,34 @@
 		UPDATE MEMBER SET DONGNE1 = #{dongne1.id}, DONGNE2 = #{dongne2.id} WHERE ID = #{id}
 	</update>
 	
+	
+	
+	<!-- Dongne -->
+	
+	<resultMap type="Dongne2" id="dongneAllResult">
+		<result column="dongne1_id" property="dongne1.id"></result>
+		<result column="dongne1_name" property="dongne1.name"></result>
+		<result column="dongne2_id" property="id"></result>
+		<result column="dongne2_name" property="name"></result>
+	</resultMap>
+	
+	<select id="selectDongneByDongne2" parameterType="Dongne2" resultMap="dongneAllResult">
+		SELECT
+			d1.id AS dongne1_id,
+			d1.name AS dongne1_name,
+			d2.id AS dongne2_id,
+			d2.name AS dongne2_name
+		FROM dongne1 d1
+			LEFT OUTER JOIN dongne2 d2 ON (d1.ID = d2.dongne1_id)
+		<where>
+			<choose>
+				<when test="id != null">
+					d2.id = #{id}
+				</when>
+				<when test="name != null">
+					d2.name = #{name}
+				</when>
+			</choose>
+		</where>
+	</select>
 </mapper>

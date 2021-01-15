@@ -8,7 +8,7 @@
 	 -->
 	 
 	<!-- ResultMap -->
-	<resultMap type="Chat" id="chatSimpleRes">
+	<resultMap type="Chat" id="chatSimpleRes" >
 		<id property="id" column="id" />
 		<result property="sale.id" column="sale_id" />
 		<result property="sale.member.id" column="sale_mem_id" />

@@ -25,4 +25,5 @@ public interface MemberMapper {
 	
 	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
 	
+	Dongne2 selectDongneByDongne2(Dongne2 dongne2);
 }

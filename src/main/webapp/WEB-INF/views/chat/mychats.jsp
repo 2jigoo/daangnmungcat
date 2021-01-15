@@ -33,7 +33,7 @@
 										</c:otherwise>
 									</c:choose>
 								</span>
-								${chat.sale.dongne2} / <javatime:format value="${chat.latestDate }" pattern="yyyy-MM-dd HH:mm:ss" />
+								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name} / <javatime:format value="${chat.latestDate }" pattern="yyyy-MM-dd HH:mm:ss" />
 							</div>
 							<div class="dongnename">${chat.messages[0].content }</div>
 						</div>		
