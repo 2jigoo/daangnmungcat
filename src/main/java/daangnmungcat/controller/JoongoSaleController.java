@@ -77,7 +77,7 @@ public class JoongoSaleController {
 		}
 		
 		// 댓글
-		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(cri);
+		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(id, cri);
 		model.addAttribute("commentList", commentList);
 		
 		return "/joongoSale/detailList";

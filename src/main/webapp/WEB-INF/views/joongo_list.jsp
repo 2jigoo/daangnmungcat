@@ -52,7 +52,7 @@ $(function(){
    
    $("select[name=dongne1]").change(function(){
       if ($("select[name=dongne1]").val() == "전체 선택"){
-         window.location = "<c:url value='/joongo_list' />";
+         window.location = "<c:url value='/joongo_list/all' />";
       } else {
          var dong1 = $("select[name=dongne1] option:checked").text();
          window.location = "<c:url value='/joongo_list/"+ dong1 +"' />";

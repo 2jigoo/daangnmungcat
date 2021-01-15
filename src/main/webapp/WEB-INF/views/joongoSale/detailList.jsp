@@ -407,36 +407,11 @@ $(document).ready(function(){
 			</div>
 		</li>
 		</c:forEach>
-		<!-- <li>
-			<div class="user">
-				<p class="img"></p>
-				<p class="name">닉네임</p>
-			</div>
-			<p class="content">댓글 내용이다아아아</p>
-			<div class="info">
-				<p class="date">2021.01.05</p>
-				<ul>
-					<li>답글쓰기</li>
-					<li>수정</li>
-					<li>삭제</li>
-				</ul>
-			</div>
+		<c:if test="${empty commentList}">
+		<li class="no_comment">
+			등록된 댓글이 없습니다.
 		</li>
-		<li class="reply">
-			<div class="user">
-				<p class="img"></p>
-				<p class="name">닉네임</p>
-			</div>
-			<p class="content">댓글 내용이다아아아</p>
-			<div class="info">
-				<p class="date">2021.01.05</p>
-				<ul>
-					<li>답글쓰기</li>
-					<li>수정</li>
-					<li>삭제</li>
-				</ul>
-			</div>
-		</li> -->
+		</c:if>
 	</ul>
 	
 	<div class="comment_write">

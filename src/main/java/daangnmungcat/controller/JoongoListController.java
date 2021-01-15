@@ -47,21 +47,25 @@ public class JoongoListController {
 	@GetMapping("/joongo_list")
 	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		System.out.println("list : "+ loginUser);
 		if (loginUser == null) {
-			List<Sale> list = mapper.selectJoongoByAllPage(cri);
-			System.out.println(list);
-			model.addAttribute("list", list);
-			
-			PageMaker pageMaker = new PageMaker();
-			pageMaker.setCri(cri);
-			pageMaker.setTotalCount(mapper.listCount());
-			model.addAttribute("pageMaker", pageMaker);
-			
-			return "/joongo_list";
+			return "redirect:/joongo_list/all";
 		} else {
 			return "redirect:/joongo_list/"+ URLEncoder.encode(loginUser.getDongne1().getName(), "UTF-8") +"/"+ URLEncoder.encode(loginUser.getDongne2().getName(), "UTF-8");
 		}
+	}
+	
+	@GetMapping("/joongo_list/all")
+	public String listAll(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
+		List<Sale> list = mapper.selectJoongoByAllPage(cri);
+		System.out.println(list);
+		model.addAttribute("list", list);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(mapper.listCount());
+		model.addAttribute("pageMaker", pageMaker);
+		
+		return "/joongo_list";
 	}
 	
 	@GetMapping("/joongo_list/{dongne1}")
