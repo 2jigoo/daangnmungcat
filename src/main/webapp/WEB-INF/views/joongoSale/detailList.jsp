@@ -230,6 +230,11 @@ $(document).ready(function(){
 	// 댓글 쓰기
 	var contextPath = "<%=request.getContextPath()%>";
 	$(".comment_write_btn").click(function(){
+		if ($(".comment_member_id").val() == ""){
+			alert("회원만 댓글쓰기가 가능합니다.")
+			return false;
+		}
+		
 		if($(".comment_content").val() == ""){
 			alert("댓글내용을 입력해주세요.");
 			return false;
@@ -246,8 +251,8 @@ $(document).ready(function(){
 		}
 		console.log(addComment)
 		$.ajax({
-			type: "get",
-			url : contextPath+"/joongoCommentWrite",
+			type: "post",
+			url : contextPath+"/joongo/comment/write",
 			contentType : "application/json; charset=utf-8",
 			cache : false,
 			dataType : "json",
@@ -256,7 +261,7 @@ $(document).ready(function(){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
 			success:function(){
-				alert("성공");
+				location.reload();
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
@@ -380,7 +385,29 @@ $(document).ready(function(){
 <div class="joongo_comment s-inner">
 	<p class="tit">댓글</p>
 	<ul class="joongo_comment_list">
+		<c:forEach items="${commentList}" var="commentList">
+		<c:if test="${empty commentList.saleComment.id}">
 		<li>
+		</c:if>
+		<c:if test="${not empty commentList.saleComment.id}">
+		<li class="reply">
+		</c:if>
+			<div class="user">
+				<p class="img"></p>
+				<p class="name">${commentList.member.id}</p>
+			</div>
+			<p class="content">${commentList.content}</p>
+			<div class="info">
+				<p class="date">${commentList.regdate}</p>
+				<ul>
+					<li>답글쓰기</li>
+					<li>수정</li>
+					<li>삭제</li>
+				</ul>
+			</div>
+		</li>
+		</c:forEach>
+		<!-- <li>
 			<div class="user">
 				<p class="img"></p>
 				<p class="name">닉네임</p>
@@ -409,13 +436,14 @@ $(document).ready(function(){
 					<li>삭제</li>
 				</ul>
 			</div>
-		</li>
+		</li> -->
 	</ul>
+	
 	<div class="comment_write">
 		<c:forEach items="${list}" var="list">
 			<input type="hidden" value="${list.id}" class="comment_sale_id">
 		</c:forEach>
-		<input type="hidden" value="chattest1" class="comment_member_id">
+		<input type="hidden" value="${loginUser.id}" class="comment_member_id">
 		<textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
 		<input type="button" value="등록" class="comment_write_btn">
 	</div>

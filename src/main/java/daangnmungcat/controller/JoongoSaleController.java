@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.dto.SaleComment;
 import daangnmungcat.mapper.JoongoHeartMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
+import daangnmungcat.service.JoongoSaleCommentService;
 import daangnmungcat.service.JoongoSaleService;
 import lombok.extern.log4j.Log4j2;
 
@@ -28,6 +31,9 @@ public class JoongoSaleController {
 
 	@Autowired
 	private JoongoSaleService service;
+	
+	@Autowired
+	private JoongoSaleCommentService commentService;
 
 	@Autowired
 	private JoongoHeartMapper mapper;
@@ -36,7 +42,7 @@ public class JoongoSaleController {
 	private JoongoSaleMapper Smapper;
 
 	@RequestMapping(value = "detailList", method = RequestMethod.GET)
-	public String listById(@RequestParam int id, Model model, HttpSession session) {
+	public String listById(@RequestParam int id, Model model, HttpSession session, Criteria cri) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			// 무조건 하트 0으로 설정
@@ -69,6 +75,11 @@ public class JoongoSaleController {
 					model.addAttribute("isLiked", 1);
 				}
 		}
+		
+		// 댓글
+		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(cri);
+		model.addAttribute("commentList", commentList);
+		
 		return "/joongoSale/detailList";
 	}
 

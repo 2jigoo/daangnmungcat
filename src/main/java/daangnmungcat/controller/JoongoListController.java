@@ -2,6 +2,8 @@ package daangnmungcat.controller;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +45,7 @@ public class JoongoListController {
 	private JoongoListMapper mapper;	
 	
 	@GetMapping("/joongo_list")
-	public String list(Model model, Criteria cri, HttpSession session) {
+	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		System.out.println("list : "+ loginUser);
 		if (loginUser == null) {
@@ -58,7 +60,7 @@ public class JoongoListController {
 			
 			return "/joongo_list";
 		} else {
-			return null;
+			return "redirect:/joongo_list/"+ URLEncoder.encode(loginUser.getDongne1().getName(), "UTF-8") +"/"+ URLEncoder.encode(loginUser.getDongne2().getName(), "UTF-8");
 		}
 	}
 	
