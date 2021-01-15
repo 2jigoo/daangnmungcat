@@ -41,8 +41,11 @@ SELECT *
 FROM all_constraints
 WHERE table_name = 'JOONGO_CHAT_MSG';
 
+INSERT INTO JOONGO_CHAT(id, sale_id, SALE_MEM_ID, BUY_MEM_ID, regdate, LATEST_DATE )
+values(chat_seq.nextval, 11, 'chattest1', 'chattest2', sysdate, sysdate);
+
 INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '안녕하세요ㅎㅎㅎ', sysdate, 'n', null);
-INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 67, 'chattest2', '안녕하세요ㅎㅎㅎ', sysdate, 'n', null);
+INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '그림 그려주세요ㅋ', sysdate, 'n', null);
 
 
 SELECT * FROM CHAT_LIST_VIEW;
