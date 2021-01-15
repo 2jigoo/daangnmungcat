@@ -19,7 +19,7 @@ public class JoongoSaleCommentController {
 	@Autowired
 	private JoongoSaleCommentService service;
 	
-	@PostMapping("/joongoCommentWrite")
+	@PostMapping("/joongo/comment/write")
 	public ResponseEntity<Object> insertComment(@RequestBody SaleComment saleComment) {
 		System.out.println("왔다리");
 		try {
