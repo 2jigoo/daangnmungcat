@@ -4,6 +4,7 @@ import java.util.List;
 
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
+import daangnmungcat.dto.Criteria;
 
 public interface ChatService {
 
@@ -11,7 +12,10 @@ public interface ChatService {
 	Chat getChatInfo(int chatId);
 	
 	Chat getChatWithMessages(int chatId);
+	Chat getChatWithMessages(int chatId, Criteria criteria);
+	
 	List<ChatMessage> getChatMessages(int chatId);
+	List<ChatMessage> getChatMessages(int chatId, Criteria criteria);
 	
 	int createNewChat(Chat chat, ChatMessage message);
 	int sendMessage(Chat chat, ChatMessage message);

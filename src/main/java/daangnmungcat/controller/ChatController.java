@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Chat;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.websocket.ChatMessageController;
@@ -44,7 +45,8 @@ public class ChatController {
 	public String chatView(@PathVariable("id") int id, Model model, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
-		Chat chat = chatService.getChatWithMessages(id);
+		Criteria cri = new Criteria(1, 20);
+		Chat chat = chatService.getChatWithMessages(id, cri);
 		log.debug("chat: " + chat.toString());
 		
 		model.addAttribute("chat", chat);

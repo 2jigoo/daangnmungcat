@@ -103,3 +103,21 @@ INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, 
 values(7, 1, 'chattest2', 1, NULL, '1-첫번째 댓글의 첫번째자식 (7)', sysdate + 1/60/24 * 10);
 INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
 values(8, 1, 'chattest1', 1, 'chattest2', '1-첫번째 댓글의 두번째자식 (8)', sysdate + 1/60/24 * 11);
+
+SELECT rn, c.id, chat_id, mem_id, nickname AS mem_nickname, content, c.regdate, read_yn, image
+FROM
+(
+	SELECT *
+	FROM
+	(
+		SELECT rownum AS rn, a.*
+		FROM
+		(
+			SELECT *
+			FROM JOONGO_CHAT_MSG jcm
+			ORDER BY id desc
+		) a
+	) ORDER BY id
+) c LEFT OUTER JOIN MEMBER m ON (c.mem_id = m.id)
+WHERE rn >= 1 and rn <= 10
+ORDER BY rn desc;

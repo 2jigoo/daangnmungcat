@@ -77,17 +77,17 @@ function onMessageReceived(payload) {
     messageElement.classList.add('chat-message');
 
     var avatarElement = document.createElement('i');
-//    var avatarText = document.createTextNode(message.member.nickname[0]);
-    var avatarText = document.createTextNode(message.member.id[0]);
+    var avatarText = document.createTextNode(message.member.nickname[0]);
+//    var avatarText = document.createTextNode(message.member.id[0]);
     avatarElement.appendChild(avatarText);
-//    avatarElement.style['background-color'] = getAvatarColor(message.member.nickname);
-    avatarElement.style['background-color'] = getAvatarColor(message.member.id);
+    avatarElement.style['background-color'] = getAvatarColor(message.member.nickname);
+//    avatarElement.style['background-color'] = getAvatarColor(message.member.id);
 
     messageElement.appendChild(avatarElement);
 
     var usernameElement = document.createElement('span');
-//    var usernameText = document.createTextNode(message.member.nickname);
-    var usernameText = document.createTextNode(message.member.id);
+    var usernameText = document.createTextNode(message.member.nickname);
+//    var usernameText = document.createTextNode(message.member.id);
     usernameElement.appendChild(usernameText);
     messageElement.appendChild(usernameElement);
     // }
@@ -95,7 +95,10 @@ function onMessageReceived(payload) {
     var textElement = document.createElement('p');
     var messageText = document.createTextNode(message.content);
     textElement.appendChild(messageText);
-
+    
+    var regdateElement = document.createTextNode(message.readYn + " " + message.regdate);
+    textElement.appendChild(regdateElement);
+    
     messageElement.appendChild(textElement);
 
     messageArea.appendChild(messageElement);
