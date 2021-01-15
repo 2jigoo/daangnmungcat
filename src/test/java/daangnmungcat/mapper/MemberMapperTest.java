@@ -43,7 +43,7 @@ public class MemberMapperTest {
 	
 	@Test
 	public void selectMemberByNo() {
-		Member member = mapper.selectMembetById("admin");
+		Member member = mapper.selectMemberById("admin");
 		System.out.println(member);
 	}
 	

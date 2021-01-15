@@ -58,3 +58,18 @@ ORDER BY latest_date DESC;
 
 
 SELECT * FROM JOONGO_CHAT_MSG jcm;
+
+SELECT * FROM DONGNE2 d2 ;
+
+SELECT
+	m.id, pwd, m.name, nickname, email, phone,
+	DONGNE1 AS dongne1_id,
+	d1.name AS dongne1_name,
+	dongne2 AS dongne2_id,
+	d2.name AS dongne2_name,
+	grade, profile_pic, profile_text, regdate
+FROM MEMBER m
+	LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+	LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID);
+
+
