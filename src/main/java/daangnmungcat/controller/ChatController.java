@@ -11,11 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Chat;
+import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
-import daangnmungcat.dto.Member;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.websocket.ChatMessageController;
 
@@ -52,6 +53,15 @@ public class ChatController {
 		model.addAttribute("chat", chat);
 		
 		return "/chat/room";
+	}
+	
+	@ResponseBody
+	@GetMapping("/api/chat/")
+	public List<Chat> chatList(HttpSession session) {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		List<Chat> list = chatService.getMyChatsList("chattest1");
+		
+		return list;
 	}
 	
 }
