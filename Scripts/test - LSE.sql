@@ -82,7 +82,7 @@ SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE
  UPDATE JOONGO_SALE  SET is_heart = 'n', heart_count=heart_count -1	WHERE id=1 AND mem_id = 'chattest1';
  
 
-
+select id, pwd, name, nickname, email, phone, dongne1, dongne2, grade, profile_pic, profile_text, regdate from MEMBER;
 ----------------찜
 SELECT * FROM JOONGO_HEART;
 SELECT * FROM JOONGO_SALE ;

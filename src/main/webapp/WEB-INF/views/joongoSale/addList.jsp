@@ -230,6 +230,7 @@ $(function(){
 				var element = document.createElement("input");
 				element.type = "file";
 				element.name = "upfile" + cnt;
+				element.id = "upfile" + cnt;
 				var element2 = document.createElement("img");
 				element2.id = "productImg"+cnt;
 				var element3 = document.createElement('div');
@@ -265,6 +266,30 @@ $(function(){
 
 		
 });
+
+
+ function imageChange(){
+	 var inputs = fileArea.getElementsByTagName('input');
+	 for(num=1; num< inputs.length-1 ; num++){
+	 
+	var file = document.getElementById("upfile"+num).files[0];
+	 	console.log(file);
+	 }
+	
+	/* if (file) {
+	//console.log(document.getElementById("uploadFile").files[0])
+	 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+    reader.onload = function (e) {
+    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+        $('#productImg').attr('src', e.target.result);
+        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
+        //(아래 코드에서 읽어들인 dataURL형식)
+    }                   
+    reader.readAsDataURL(document.getElementById("uploadFile").files[0]);
+    //File내용을 읽어 dataURL형식의 문자열로 저장 */
+    
+	}
+	
 
 
 
@@ -307,7 +332,7 @@ $(function(){
 		</td>
 		<td>
 			<div id="fileArea">
-				<input type="file" id="upfile1" name="upfile1" >
+				<input type="file" id="upfile1" name="upfile1" onchange="imageChange()">
 				<img id="productImg1">
 				<div id="preview1"></div>
 			</div>
