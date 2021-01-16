@@ -43,7 +43,7 @@ public class ChatMessageController {
     @SendTo("/topic/chat/{id}")
     public ChatMessage sendMessage(@DestinationVariable int id, @Payload ChatMessage chatMessage) {
 		chatMessage.setReadYn("n");
-		chatMessage.setRegdate(LocalDateTime.now());
+//		chatMessage.setRegdate(LocalDateTime.now());
 		
 		int res = chatService.sendMessage(chatMessage.getChat(), chatMessage);
 		System.out.println("결과: " + res);
