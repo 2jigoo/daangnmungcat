@@ -4,6 +4,18 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <jsp:include page="/resources/include/header.jsp"/>
+<script>
+$(document).ready(function(){
+	
+	/* 글쓴 시간 비교시간 변경 */
+	var regdate = document.getElementsByClassName("regdate");
+	$.each(regdate, function(idx, item) {
+		var writeNow = moment(item.innerText).toDate();
+	 	item.innerHTML = timeBefore(writeNow);
+	});
+	
+});
+</script>
 
 <div>
 	<article>
@@ -33,7 +45,8 @@
 										</c:otherwise>
 									</c:choose>
 								</span>
-								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name} / <javatime:format value="${chat.latestDate }" pattern="yyyy-MM-dd HH:mm:ss" />
+								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}
+								/ <span class="regdate"> ${chat.latestDate }</span>
 							</div>
 							<div class="dongnename">${chat.messages[0].content }</div>
 						</div>		

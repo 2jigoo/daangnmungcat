@@ -159,72 +159,18 @@
 
 $(document).ready(function(){
 		
-	
-	//현재시간가져오기
-	var now = new Date();
-	console.log(now);
-		
-	
-	//글쓴시간 가져오기
-	
+	/* 글쓴 시간 가져오기 */
 	var inDate = document.getElementById('regdate').innerHTML;
-	console.log("inDate >> " + inDate);
 	
-	
-	//KST를 빼면 new Date()에서 시간 읽는거 가능해진다..
+	// KST를 빼면 new Date()에서 시간 읽는 거 가능해진다..
 	afterStr = inDate.split('KST');
-	console.log(afterStr)
-	var testDate = afterStr[0]+afterStr[1]
-	
+	var testDate = afterStr[0]+afterStr[1];
 	var writeNow = new Date(testDate);
-	console.log(writeNow)
 	
+	// timeBefore(writeNow) : writeNow - 변환할 날짜 객체
+	var timeBeforeRes = timeBefore(writeNow);
+	document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
 	
-	//현재시간이랑 글쓴시간 비교
-	var minus;
-	
-	if(now.getFullYear() > writeNow.getFullYear()){
-		minus= now.getFullYear() - writeNow.getFullYear();
-		 document.getElementsByClassName("lastTime")[0].innerHTML = minus+"년 전";
-		 console.log(minus+"년 전");
-	}else if(now.getMonth() > writeNow.getMonth()){
-        //년도가 같을 경우 달을 비교해서 출력
-        minus= now.getMonth()-writeNow.getMonth();
-        document.getElementsByClassName("lastTime")[0].innerHTML = minus+"달 전";
-        console.log(minus+"달 전");
-    }else if(now.getDate() > writeNow.getDate()){
-   	//같은 달일 경우 일을 계산
-        minus= now.getDate()-writeNow.getDate();
-        document.getElementsByClassName("lastTime")[0].innerHTML = minus+"일 전";
-        console.log(minus+"일 전");
-    }else if(now.getDate() == writeNow.getDate()){
-    //당일인 경우에는 
-        var nowTime = now.getTime();
-        var writeTime = writeNow.getTime();
-        if(nowTime>writeTime){
-        //시간을 비교
-            sec = parseInt(nowTime - writeTime) / 1000;
-            day  = parseInt(sec/60/60/24);
-            sec = (sec - (day * 60 * 60 * 24));
-            hour = parseInt(sec/60/60);
-            sec = (sec - (hour*60*60));
-            min = parseInt(sec/60);
-            sec = parseInt(sec-(min*60));
-            if(hour>0){
-            //몇시간전인지
-                document.getElementsByClassName("lastTime")[0].innerHTML = hour+"시간 전";
-                console.log(hour+"시간 전");
-            }else if(min>0){
-            //몇분전인지
-                document.getElementsByClassName("lastTime")[0].innerHTML = min+"분 전";
-                console.log(min+"분 전");
-            }else if(sec>0){
-            //몇초전인지 계산
-                document.getElementsByClassName("lastTime")[0].innerHTML = sec+"초 전";
-                console.log(sec+"초 전");
-            }
-        }
-    }
 	
 	
 	// 댓글 쓰기
@@ -310,7 +256,7 @@ $(document).ready(function(){
 			<c:if test="${list.dogCate == 'n'}"></c:if>
 			<c:if test="${list.catCate == 'y'}">고양이 카테고리</c:if>
 			<c:if test="${list.catCate == 'n'}"></c:if> 
-			· <div class="lastTime"></div> <div id="regdate">${list.regdate }</div> 
+			· <div class="lastTime"></div> <div class="regdate" id="regdate">${list.regdate }</div> 
 		</div>
 		<h2>${list.price }원</h2>
 		

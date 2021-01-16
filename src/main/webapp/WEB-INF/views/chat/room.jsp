@@ -11,6 +11,7 @@
 	var memberNickname = "${loginUser.nickname}";
 	console.log(chatId);
 	console.log(memberId);
+	console.log(moment().format());
 	
 	var headerName = "${_csrf.headerName}";
 	var token = "${_csrf.token}";

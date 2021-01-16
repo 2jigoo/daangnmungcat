@@ -3,6 +3,7 @@ package daangnmungcat.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -27,7 +28,11 @@ public class Chat {
 	private Sale sale;
 	// Member sellers
 	private Member buyer;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
 	private LocalDateTime regdate;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
 	private LocalDateTime latestDate;
 	
 	private List<ChatMessage> messages;
