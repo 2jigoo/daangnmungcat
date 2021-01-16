@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
@@ -56,10 +58,13 @@ public class ChatController {
 	}
 	
 	@ResponseBody
-	@GetMapping("/api/chat/")
-	public List<Chat> chatList(HttpSession session) {
+	@PostMapping("/api/chat/message")
+	public List<ChatMessage> chatList(@RequestParam(value = "id", required = true) int chatId, @RequestParam(value = "page", defaultValue = "1") int page, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		List<Chat> list = chatService.getMyChatsList("chattest1");
+		
+		Criteria criteria = new Criteria(page, 20);
+		chatService.getChatMessages(chatId, criteria);
+		List<ChatMessage> list = chatService.getChatMessages(chatId, criteria);
 		
 		return list;
 	}

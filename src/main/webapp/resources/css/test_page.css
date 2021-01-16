@@ -248,6 +248,20 @@ input {
    	color: #9e9e9e;
 }
 
+.chat-message.loading-btn {
+	text-align: center;
+	width: 100%;
+    cursor: pointer;
+    padding: 0px;
+    color: #666666;
+    background-color: #f9f9f9; 
+}
+
+.chat-message.loading-btn div {
+	pdding: 0px 10px;
+	vertical-align: middle;
+}
+
 .chat-message.you.profile_img {
 	width: 60px;
     height: 60px;

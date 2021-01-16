@@ -32,11 +32,11 @@ public class Chat {
 	private Member buyer;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime regdate;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-	@JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime latestDate;
 	
 	private List<ChatMessage> messages;
