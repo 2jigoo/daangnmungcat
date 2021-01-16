@@ -52,7 +52,7 @@ function sendMessage(event) {
             chat: {id: chatId},
             member: {id: memberId, nickname: memberNickname},
             content: messageInput.value,
-            regdate: moment(new Date()).format()
+            regdate: dayjs().format("YYYY-MM-DD hh:mm:ss")
         };
         stompClient.send('/app/chat/' + chatId + '.sendMessage', {}, JSON.stringify(chatMessage));
         messageInput.value = '';
