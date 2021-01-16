@@ -55,7 +55,8 @@ public class LoginController {
 				AuthInfo authInfo = authService.authenicate(member.getId(), member.getPwd());
 				// 세션에 id pwd 저장
 				// mapper로 조회해서 비번을 제외한 다른 회원 정보까지 포함해 set해야 할 듯. 아니면 아이디, 이름 정도만?
-				session.setAttribute("loginUser", member);
+				session.setAttribute("loginUser", authInfo);
+//				session.setAttribute("loginUser", member);
 				return "redirect:/";
 			}
 		}catch (Exception e) {

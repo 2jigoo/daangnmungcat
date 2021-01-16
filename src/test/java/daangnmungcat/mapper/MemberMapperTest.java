@@ -1,7 +1,5 @@
 package daangnmungcat.mapper;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.logging.Log;
@@ -34,7 +32,7 @@ public class MemberMapperTest {
 		System.out.println();
 	}
 
-	@Test
+	/*@Test
 	public void selectMemberByAll() {
 		List<Member> list = mapper.selectMemberByAll();
 		list.stream().forEach(System.out::println);
@@ -43,7 +41,7 @@ public class MemberMapperTest {
 	
 	@Test
 	public void selectMemberByNo() {
-		Member member = mapper.selectMembetById("admin");
+		Member member = mapper.selectMemberById("admin");
 		System.out.println(member);
 	}
 	
@@ -62,13 +60,19 @@ public class MemberMapperTest {
 	
 	//@Test
 	public void insertMember() {
-		Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, "", "");
-		mapper.insertMember(member);
+		//Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, "", "");
+		//mapper.insertMember(member);
 	}
 	
 	@Test
 	public void emailCheck() {
 		int res = mapper.emailCheck("admin@admin.co.kr");
 		System.out.println(res);
+	}*/
+	
+	@Test
+	public void dongne() {
+		Dongne2 dongne2 = mapper.selectDongneByDongne2(new Dongne2(10));
+		log.debug(dongne2.toString());
 	}
 }

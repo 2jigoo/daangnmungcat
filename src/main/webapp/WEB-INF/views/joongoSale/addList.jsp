@@ -18,14 +18,14 @@ $(function(){
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				if (json[i].dong1Name == dongne1Name){
-					sCont += '<option value="' + json[i].dong1Id + '" selected>';
-					dongne1Id = json[i].dong1Id;
+				if (json[i].name == dongne1Name){
+					sCont += '<option value="' + json[i].id + '" selected>';
+					dongne1Id = json[i].id;
 					console.log("test2 : "+ dongne1Id)
 				} else {
-					sCont += '<option value="' + json[i].dong1Id + '">';
+					sCont += '<option value="' + json[i].id + '">';
 				}
-				sCont += json[i].dong1Name;
+				sCont += json[i].name;
 				sCont += '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
@@ -39,12 +39,12 @@ $(function(){
 				var datalength = json.length; 
 				var sCont = "<option>동네를 선택하세요</option>";
 				for(i=0; i<datalength; i++){
-					if (json[i].dong2Name == "${dongne2Name}"){
-						sCont += '<option value="' + json[i].dong2Id + '" selected>';
+					if (json[i].name == "${dongne2Name}"){
+						sCont += '<option value="' + json[i].id + '" selected>';
 					} else {
-						sCont += '<option value="' + json[i].dong2Id + '">';
+						sCont += '<option value="' + json[i].id + '">';
 					}
-					sCont += json[i].dong2Name;
+					sCont += json[i].name;
 					sCont += '</option>';
 				}
 				$("select[name=dongne2]").append(sCont);	
@@ -342,15 +342,15 @@ $(function(){
 	<tr>	
 		<td>강아지 카테고리 인가요 ? </td>
 		<td>
-			<input type="radio" name="dogCate" id="dogCate" value="y">네! 맞아요!
-			<input type="radio" name="dogCate" id="dogCate" value="n">아니에요!
+			<input type="radio" name="dogCate" id="dogCateY" value="y">네! 맞아요!
+			<input type="radio" name="dogCate" id="dogCateN" value="n">아니에요!
 		</td>
 	</tr>
 	<tr>	
 		<td>고양이 카테고리 인가요 ? </td>
 		<td>
-			<input type="radio" name="catCate" id="catCate" value="y">네! 맞아요!
-			<input type="radio" name="catCate" id="catCate" value="n">아니에요!
+			<input type="radio" name="catCate" id="catCateY" value="y">네! 맞아요!
+			<input type="radio" name="catCate" id="catCateN" value="n">아니에요!
 		</td>
 	</tr>
 	<tr>

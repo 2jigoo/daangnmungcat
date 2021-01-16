@@ -47,7 +47,7 @@ public class JoongoListMapperTest {
 		sale.setContent("내용입니다.");
 		sale.setPrice(100);
 		Dongne1 dongne1 = new Dongne1(3, "부산광역시");
-		Dongne2 dongne2 = new Dongne2(48, 3, "수성구");
+		Dongne2 dongne2 = new Dongne2(48, new Dongne1(3), "수성구");
 		sale.setDongne1(dongne1);
 		sale.setDongne2(dongne2);
 //		sale.setSaleState(1);

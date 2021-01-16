@@ -24,11 +24,12 @@ $(document).ready(function(){
 	});
 	
 	$.get(contextPath+"/dongne1", function(json){
+		console.log(json)
 		var datalength = json.length; 
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				sCont += '<option value="' + json[i].dong1Id + '">' + json[i].dong1Name + '</option>';
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
 		}
@@ -41,7 +42,7 @@ $(document).ready(function(){
 			var datalength = json.length; 
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				sCont += '<option value="' + json[i].dong2Id + '">' + json[i].dong2Name + '</option>';
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne2]").append(sCont);	
 		});
@@ -235,24 +236,11 @@ $(document).ready(function(){
            formData.append('uploadFile', file[i]);
         }
         
-        console.log(file);
+        console.log('file >> ' + file);
         
         for(var pair of formData.entries()) {
               console.log(pair[0]+ ', '+ pair[1]); 
         }
-    	//var file = $('#uploadFile')[0];
-    	var formData = new FormData();
-    	var file = $("input[name='uploadFile']")[0].files[0];
-    	for(var i=0; i<file.length; i++){
-    		console.log(file[i]);
-    		formData.append('uploadFile', file[i]);
-    	}
-    	
-    	console.log(file);
-    	
-    	for(var pair of formData.entries()) {
-    		   console.log(pair[0]+ ', '+ pair[1]); 
-    	}
     	
     	$.ajax({
     		url: contextPath + "/uploadProfile",
@@ -388,6 +376,6 @@ function imageChange(){
 	<input type="button" value="가입완료" id="signup">
 	
 </div>
-
+<img src="/daangnmungcat/resources/upload/2021-01-13/9fd83797-9131-4966-8bd2-a2e1ffc56239_asdasdads.jpg">
 </div>
 <jsp:include page="/resources/include/footer.jsp"/>

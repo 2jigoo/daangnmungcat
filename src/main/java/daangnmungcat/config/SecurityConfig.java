@@ -24,13 +24,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		System.out.println("security 작동");
 		http.authorizeRequests()
-		.antMatchers("/#").permitAll()
-		.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/member").access("hasRole('ROLE_MEMBER')");
+			.antMatchers("/#").permitAll()
+			.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
+			.antMatchers("/member").access("hasRole('ROLE_MEMBER')");
 		
 		//admin access denined -> login page로 이동하여 로그인
 		//loginPage("뷰이름").loginProcessingUrl("경로");
 		http.formLogin().loginPage("/login").loginProcessingUrl("/sample/login");
+		
+		// 동일 도메인에서 iframe SockJS 지원하게끔
+		http.headers()
+	        .frameOptions().disable();
+		
+//		http.csrf().disable();
 	}
 
 	@Override

@@ -13,4 +13,5 @@
 	<typeHandlers>
 		<typeHandler handler="daangnmungcat.dto.SaleState$TypeHandler"/>
 	</typeHandlers>
+	
 </configuration>

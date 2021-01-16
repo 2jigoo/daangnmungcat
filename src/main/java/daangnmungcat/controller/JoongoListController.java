@@ -2,16 +2,17 @@ package daangnmungcat.controller;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.http.client.AuthCache;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.JSONObject;
@@ -21,14 +22,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.Member;
@@ -46,17 +45,23 @@ public class JoongoListController {
 	private JoongoListMapper mapper;	
 	
 	@GetMapping("/joongo_list")
-	public String list(Model model, Criteria cri) {
-		List<Sale> list = mapper.selectJoongoByAllPage(cri);
-		System.out.println(list);
-		model.addAttribute("list", list);
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(mapper.listCount());
-		model.addAttribute("pageMaker", pageMaker);
-		
-		return "/joongo_list";
+	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		System.out.println("list : "+ loginUser);
+		if (loginUser == null) {
+			List<Sale> list = mapper.selectJoongoByAllPage(cri);
+			System.out.println(list);
+			model.addAttribute("list", list);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(mapper.listCount());
+			model.addAttribute("pageMaker", pageMaker);
+			
+			return "/joongo_list";
+		} else {
+			return "redirect:/joongo_list/"+ URLEncoder.encode(loginUser.getDongne1().getName(), "UTF-8") +"/"+ URLEncoder.encode(loginUser.getDongne2().getName(), "UTF-8");
+		}
 	}
 	
 	@GetMapping("/joongo_list/{dongne1}")
@@ -119,7 +124,7 @@ public class JoongoListController {
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
 	public String insertfrom1(HttpSession session, Model model){
-		Member loginUser = (Member) session.getAttribute("loginUser");
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			return "redirect:/login";
 		} else {
@@ -170,6 +175,7 @@ public class JoongoListController {
 		}
 	}	
 	
+	// /joongoSale/insert
 	@PostMapping("/insert")
 	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
 		System.out.println("/insert 컨트롤러");

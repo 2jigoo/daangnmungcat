@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt "%>
+
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<!-- spring security 쓰면 post 전송할때 403에러 떠서 추가함 -->
-	<meta name="_csrf" th:content="${_csrf.token}">
+	<meta name="_csrf" content="${_csrf.token}">
 	<title>당근멍캣</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
+	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/test_page.css" />
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 </head>
@@ -58,7 +60,7 @@
 			<ul>
 				<li><a href="#">${loginUser.getId()}님</a></li>
 				<li><a href="#">마이페이지</a></li>
-				<li><a href="#">내 채팅</a></li>
+				<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 			</ul>
 			</c:if>
