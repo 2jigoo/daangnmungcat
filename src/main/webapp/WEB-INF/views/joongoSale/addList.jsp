@@ -72,6 +72,15 @@ $(function(){
 	});
 	
 	
+	$("select[name=dogCate]").change(function(){
+		var target = document.getElementById('dogCate');
+		if(target.options[target.selectedIndex].text == "강아지 카테고리"){
+			$('#catCate').attr('value','n');
+		}
+		
+	});
+	
+	
 	$(".my_location").on("click", function(){
 		navigator.geolocation.getCurrentPosition(success, fail)
 	    
@@ -133,14 +142,9 @@ $(function(){
 	 }
 	 
 	 
-	 $("input:radio[name=dogCate]").change(function(){
-		 //라디오버튼 강아지 눌렀을때 
-		 
-	 });
-
 	 
 	 $('#insertList').on("click", function(json){
-		var price = $('#price').val();
+		var price = $('#price').val();	
 		 var num = /^[0-9]*$/;
 		 
 		 if($('#title').val() == ""){
@@ -152,30 +156,19 @@ $(function(){
 		 }else if(num.test(price) == false){
 			 alert('가격은 숫자만 입력 가능합니다.');
 			 return;
-		 }else if($(':input[name=dogCate]:radio:checked').length < 1){
-			 alert('강아지카테고리 여부를 선택해주세요.');
+		 }else if($('#dogCate').val() == ""){
+			 alert('카테고리를 선택해주세요.');
 			 return;
-		 }else if($(':input[name=catCate]:radio:checked').length < 1){
-			 alert('고양이카테고리 여부를 선택해주세요.');
-			 return;
-		 } 
+		 }
 
-		//파일 선택 여부 - 유효성 검사(DOM에있는 파일이 비어있는게 있는지 확인)
-			var inputs = fileArea.getElementsByTagName('input');
-			for(var i=0;i<input.lenght; i++){
-				if(inputs[i].value == ""){
-					alert('파일을 선택하세요!');
-					inputs[i].focust();
-					return;
-				}
-			}
+		 
 		 
 		 var newlist = {
 			member : {
 				id : $('#memId').val()
 			},
-			dogCate : $(':input[name=dogCate]:radio:checked').val(),
-			catCate : $(':input[name=catCate]:radio:checked').val(),
+			dogCate : $('select[name=dogCate]').val(),
+			catCate : $('#catCate').val(),
 			title : $('#title').val(),
 			content : $('#content').val(),
 			price : $('#price').val(),			
@@ -268,30 +261,6 @@ $(function(){
 });
 
 
- function imageChange(){
-	 var inputs = fileArea.getElementsByTagName('input');
-	 for(num=1; num< inputs.length-1 ; num++){
-	 
-	var file = document.getElementById("upfile"+num).files[0];
-	 	console.log(file);
-	 }
-	
-	/* if (file) {
-	//console.log(document.getElementById("uploadFile").files[0])
-	 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
-    reader.onload = function (e) {
-    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-        $('#productImg').attr('src', e.target.result);
-        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
-        //(아래 코드에서 읽어들인 dataURL형식)
-    }                   
-    reader.readAsDataURL(document.getElementById("uploadFile").files[0]);
-    //File내용을 읽어 dataURL형식의 문자열로 저장 */
-    
-	}
-	
-
-
 
 </script>
 <article>
@@ -340,17 +309,16 @@ $(function(){
 	</tr>
 	<tr>
 	<tr>	
-		<td>강아지 카테고리 인가요 ? </td>
+		<td>카테고리</td>
 		<td>
-			<input type="radio" name="dogCate" id="dogCateY" value="y">네! 맞아요!
-			<input type="radio" name="dogCate" id="dogCateN" value="n">아니에요!
-		</td>
-	</tr>
-	<tr>	
-		<td>고양이 카테고리 인가요 ? </td>
-		<td>
-			<input type="radio" name="catCate" id="catCateY" value="y">네! 맞아요!
-			<input type="radio" name="catCate" id="catCateN" value="n">아니에요!
+			<select name="dogCate" id="dogCate" >
+				<option value="">카테고리를 선택하세요.</option>
+				<option value="y">강아지 카테고리</option>
+				<option value="n">고양이 카테고리 </option>
+				<option value="y"> 모두 포함 </option>
+			</select>
+			
+			<input type="hidden" name="catCate" value="y" id="catCate">
 		</td>
 	</tr>
 	<tr>
