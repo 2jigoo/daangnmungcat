@@ -1,7 +1,12 @@
 package daangnmungcat.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +21,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@JsonInclude(Include.NON_DEFAULT)
 public class Sale {
 
 	private int id;
@@ -30,8 +36,13 @@ public class Sale {
 	private Member buyMember;
 //	private int saleState;
 	private SaleState saleState;
-	private Date regdate;	
-	private Date redate;
+	
+	
+	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
+	private LocalDateTime regdate;	
+	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
+	private LocalDateTime redate;
+	
 	private int hits;
 	private int chatCount;
 	private String isHeart;

@@ -7,71 +7,43 @@
 <style>
 </style>
 <script type="text/javascript">
-var dongne1Id;
-var dongne1Name = "${dongne1Name}"
 $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
 
-		$.get(contextPath+"/dongne1", function(json){
+	console.log(contextPath);
+	
+	var test = ${loginUser.getDongne1().getId()}
+	
+	
+	$.get(contextPath+"/dongne1", function(json){
+		console.log(json)
 		var datalength = json.length; 
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				if (json[i].name == dongne1Name){
-					sCont += '<option value="' + json[i].id + '" selected>';
-					dongne1Id = json[i].id;
-					console.log("test2 : "+ dongne1Id)
-				} else {
-					sCont += '<option value="' + json[i].id + '">';
-				}
-				sCont += json[i].name;
-				sCont += '</option>';
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
 		}
 	});
 	
-	setTimeout(function(){
-		console.log("test : "+ dongne1Id)
-		if (dongne1Name != ""){
-			$.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
-				var datalength = json.length; 
-				var sCont = "<option>동네를 선택하세요</option>";
-				for(i=0; i<datalength; i++){
-					if (json[i].name == "${dongne2Name}"){
-						sCont += '<option value="' + json[i].id + '" selected>';
-					} else {
-						sCont += '<option value="' + json[i].id + '">';
-					}
-					sCont += json[i].name;
-					sCont += '</option>';
-				}
-				$("select[name=dongne2]").append(sCont);	
-			});
-		}
-	}, 50)
-	
 	$("select[name=dongne1]").change(function(){
-		if ($("select[name=dongne1]").val() == "시 선택"){
-			window.location = "<c:url value='/joongoSale/addList' />";
-		} else {
-			var dong1 = $("select[name=dongne1] option:checked").text();
-			window.location = "<c:url value='/joongoSale/addList/"+ dong1 +"' />";
-		}
-	});
-	
-	$("select[name=dongne2]").change(function(){
-		if ($("select[name=dongne2]").val() == "동네를 선택하세요"){
-			window.location = "<c:url value='/joongoSale/addList/"+ dongne1Name +"' />";
-		} else {
-			var dong1 = $("select[name=dongne1] option:checked").text();
-			var dong2 = $("select[name=dongne2] option:checked").text();
-			 window.location = "<c:url value='/joongoSale/addList/"+ dong1 +"/"+ dong2 +"' />";
-		}
+		$("select[name=dongne2]").find('option').remove();
+		var dong1 = $("select[name=dongne1]").val();
+		$.get(contextPath+"/dongne2/"+dong1, function(json){
+			var datalength = json.length; 
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne2]").append(sCont);	
+		});
 	});
 	
 	
+	1
+	//강아지 카테고리 선택시 고양이카테고리 value 'n' 주기
 	$("select[name=dogCate]").change(function(){
 		var target = document.getElementById('dogCate');
 		if(target.options[target.selectedIndex].text == "강아지 카테고리"){
@@ -87,61 +59,16 @@ $(function(){
 	    return false;
 	})
 	
-	function success(position) { //성공시
-	    var lat=position.coords["latitude"];
-	    var lon=position.coords["longitude"];
-	    console.log("1 : "+ lat)
-	    console.log("1 : "+ lon)
-	    
-		var test = {lat:lat, lon:lon}
-		console.log(test);
-	    $.ajax({
-			type:"post",
-			contentType:"application/json; charset=utf-8",
-			url:contextPath+"/gpsToAddress2",
-			cache:false,
-			dataType: "json",
-			data:JSON.stringify(test),
-			beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-			},
-	        success:function(data){
-				console.log(data.address);
-				if(confirm("검색된 주소로 검색하시겠습니다? - "+ data.address1+" "+ data.address2) == true){
-					window.location=contextPath+"/joongoSale/addList/"+ data.address1 +"/"+ data.address2;
-				}
-			    else{
-			        return ;
-			    }
-	        }, 
-	        error: function(){
-				alert("에러");
-			}
-		})
-		console.log(contextPath+"/gpsToAddress2")
-	}
+	 
+	 $('#checkFree').change(function(){
+	        if(this.checked){
+	            $('#priceDiv').fadeOut('fast');
+	        	$('#price').attr('value', 0);
+	        }else{
+	            $('#priceDiv').fadeIn('fast');
+	        }
+	    });
 	
-	 function fail(err){
-	    switch (err.code){
-	        case err.PERMISSION_DENIED:
-	        	alert("사용자 거부");
-	        break;
-	 
-	        case err.PERMISSION_UNAVAILABLE:
-	        	alert("지리정보를 얻을 수 없음");
-	        break;
-	 
-	        case err.TIMEOUT:
-	        	alert("시간초과");
-	        break;
-	 
-	        case err.UNKNOWN_ERROR:
-	        	alert("알 수 없는 오류 발생");
-	        break;
-	    }
-	 }
-	 
-	 
 	 
 	 $('#insertList').on("click", function(json){
 		var price = $('#price').val();	
@@ -172,19 +99,20 @@ $(function(){
 			title : $('#title').val(),
 			content : $('#content').val(),
 			price : $('#price').val(),			
-		 	dongne1: {
-		 		dong1Id : $('#dongne1').val()
+			dongne1: {
+		 		id : $('#dongne1').val()
 		 	},
 		 	dongne2: {
-		 		dong2Id : $('#dongne2').val()
+		 		id : $('#dongne2').val()
 		 	}
-		 };
+		};
+		 
 		 	alert(JSON.stringify(newlist));
 		 	
 		 	
 		 	
 			$.ajax({
-				url: contextPath + "/insert",
+				url: contextPath + "/joongoSale/insert",
 				type: "POST",
 				contentType:"application/json; charset=UTF-8",
 				dataType: "json",
@@ -199,7 +127,6 @@ $(function(){
 					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
-					alert("동네를 먼저선택해주세요!");
 					alert('에러!!!!' + request.status+request.responseText+error);
 				}
 			});
@@ -283,9 +210,10 @@ $(function(){
 					<button class="my_location">내 위치</button>
 				<div>
 				<select name="dongne1" id="dongne1">
-					<option>시 선택</option>
+					<option value="0">지역을 선택하세요</option>
 				</select> 
 				<select name="dongne2" id="dongne2">
+					<option value="0">동네를 선택하세요</option>
 				</select>
 				</div>
 				</div>
@@ -317,7 +245,6 @@ $(function(){
 				<option value="n">고양이 카테고리 </option>
 				<option value="y"> 모두 포함 </option>
 			</select>
-			
 			<input type="hidden" name="catCate" value="y" id="catCate">
 		</td>
 	</tr>
@@ -327,7 +254,10 @@ $(function(){
 	</tr>
 	<tr>
 		<td>가격</td>
-		<td><input type="text" name="price" id="price"></td>
+		<td>
+			<div id="priceDiv"><input type="text" name="price" id="price"></div>
+			<input type="checkbox" id="checkFree" name="price" value="0">무료나눔하기
+		</td>
 	<tr>
 	<tr>
 		<td>내용</td>

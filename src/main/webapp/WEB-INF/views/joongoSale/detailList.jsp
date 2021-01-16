@@ -159,7 +159,7 @@
 
 $(document).ready(function(){
 		
-	/* 글쓴 시간 가져오기 */
+	/* 글쓴 시간 가져오기
 	var inDate = document.getElementById('regdate').innerHTML;
 	
 	// KST를 빼면 new Date()에서 시간 읽는 거 가능해진다..
@@ -167,11 +167,15 @@ $(document).ready(function(){
 	var testDate = afterStr[0]+afterStr[1];
 	var writeNow = new Date(testDate);
 	
+	 */
+	
 	// timeBefore(writeNow) : writeNow - 변환할 날짜 객체
-	var timeBeforeRes = timeBefore(writeNow);
-	document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
+	//var timeBeforeRes = timeBefore(writeNow);
+	//document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
 	
-	
+	var regdate = document.getElementById('regdate').innerHTML;
+	var writeNow = dayjs(regdate).toDate();
+	document.getElementsByClassName("lastTime")[0].innerHTML = timeBefore(writeNow);
 	
 	// 댓글 쓰기
 	var contextPath = "<%=request.getContextPath()%>";
