@@ -2,6 +2,7 @@ package daangnmungcat.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -22,7 +23,10 @@ public class ChatMessage {
 	private Chat chat;
 	private Member member;
 	private String content;
+	
+	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
 	private LocalDateTime regdate;
+	
 	private String image;
 	private String readYn;
 	

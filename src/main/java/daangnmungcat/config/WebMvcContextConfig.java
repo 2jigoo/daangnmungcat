@@ -15,6 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebMvc
+@Import({JacksonConfig.class})
 @ComponentScan(basePackages = {"daangnmungcat.controller"})
 public class WebMvcContextConfig implements WebMvcConfigurer {
 	
@@ -76,6 +77,15 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	}
 	
 	
+	/*@Override
+	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
+				.featuresToEnable(SerializationFeature.INDENT_OUTPUT)
+				.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(formatter))
+				.simpleDateFormat("yyyy-MM-dd HH:mm:ss").build();
+		converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper));
+	}*/
 	
 
 }
