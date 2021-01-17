@@ -2,6 +2,7 @@ package daangnmungcat.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,23 @@ public class JoongoSaleCommentServiceImpl implements JoongoSaleCommentService {
 	}
 
 	@Override
-	public List<SaleComment> selectJoongoCommentByAllPage(Criteria cri) {
-		return mapper.selectJoongoCommentByAllPage(cri);
+	public List<SaleComment> selectJoongoCommentByAllPage(@Param("saleId") int saleId, @Param("cri") Criteria cri) {
+		return mapper.selectJoongoCommentByAllPage(saleId, cri);
+	}
+
+	@Override
+	public int commentCount(int saleId) {
+		return mapper.commentCount(saleId);
+	}
+
+	@Override
+	public int deleteComment(int commentId) {
+		return mapper.deleteComment(commentId);
+	}
+
+	@Override
+	public int updateComment(SaleComment saleComment) {
+		return mapper.updateComment(saleComment);
 	}
 
 }

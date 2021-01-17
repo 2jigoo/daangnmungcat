@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleComment;
 import daangnmungcat.mapper.JoongoHeartMapper;
@@ -77,8 +78,13 @@ public class JoongoSaleController {
 		}
 		
 		// 댓글
-		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(cri);
+		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(id, cri);
 		model.addAttribute("commentList", commentList);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(commentService.commentCount(id));
+		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/joongoSale/detailList";
 	}
