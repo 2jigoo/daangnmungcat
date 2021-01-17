@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.service.MemberService;
 
@@ -48,7 +49,8 @@ public class MypageController {
 //		}
 
 		session = request.getSession();
-		Member loginUser = (Member) session.getAttribute("loginUser");
+		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+		Member loginUser = service.selectMemberById(info.getId());
 		
 		for(MultipartFile multipartFile : uploadFile) {
 			
@@ -89,10 +91,9 @@ public class MypageController {
 	@GetMapping("/myProfilePic")
 	public Map<String, String> profilePic(HttpSession session, HttpServletRequest request) throws ParseException {
 		System.out.println("프로필업로드");
-		System.out.println();
 		session = request.getSession();
-		Member loginUser = (Member) session.getAttribute("loginUser");
-		System.out.println(loginUser);
+		System.out.println(session.getId());
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		String path = member.getProfilePic();
 		System.out.println("주소:"+ path);

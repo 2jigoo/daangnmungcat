@@ -56,6 +56,7 @@ public class LoginController {
 				// 세션에 id pwd 저장
 				// mapper로 조회해서 비번을 제외한 다른 회원 정보까지 포함해 set해야 할 듯. 아니면 아이디, 이름 정도만?
 				session.setAttribute("loginUser", authInfo);
+				System.out.println("authinfo:" + authInfo);
 //				session.setAttribute("loginUser", member);
 				return "redirect:/";
 			}
