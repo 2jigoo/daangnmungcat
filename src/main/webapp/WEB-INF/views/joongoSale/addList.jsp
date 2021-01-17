@@ -190,98 +190,104 @@ $(function(){
 
 
 </script>
-<article>
-<form action="/insert" method="POST">
-<div>
-<table border="1">
-	<colgroup>
-		<col width="20%">
-		<col width="80%">
-	</colgroup>
-	<tr>
-		<td>아이디</td>
-		<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
-	</tr>
-	<tr>
-		<td>동네</td>
-		<td>
-			<div id="add_location" class="s-inner">
-				<div class="list_top">
-					<button class="my_location">내 위치</button>
-				<div>
-				<select name="dongne1" id="dongne1">
-					<option value="0">지역을 선택하세요</option>
-				</select> 
-				<select name="dongne2" id="dongne2">
-					<option value="0">동네를 선택하세요</option>
-				</select>
-				</div>
-				</div>
-			</div>
+<div id="subContent">
+	<h2 id="subTitle">글쓰기</h2>
+	<div id="pageCont" class="s-inner">
+		<article>
+		<form action="/insert" method="POST">
+		<div>
+		<table border="1">
+			<colgroup>
+				<col width="20%">
+				<col width="80%">
+			</colgroup>
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
+			</tr>
+			<tr>
+				<td>동네</td>
+				<td>
+					<div id="add_location" class="s-inner">
+						<div class="list_top">
+							<button class="my_location">내 위치</button>
+						<div>
+						<select name="dongne1" id="dongne1">
+							<option value="0">지역을 선택하세요</option>
+						</select> 
+						<select name="dongne2" id="dongne2">
+							<option value="0">동네를 선택하세요</option>
+						</select>
+						</div>
+						</div>
+					</div>
+					
+				</td>
+			</tr>
 			
-		</td>
-	</tr>
-	
-	<tr>
-		<td>사진 추가 / 제거 <br>
-			<input type="button" value="파일추가" id="addFileBtn">
-			<input type="button" value="파일제거" id="delFileBtn">
-		</td>
-		<td>
-			<div id="fileArea">
-				<input type="file" id="upfile1" name="upfile1" onchange="imageChange()">
-				<img id="productImg1">
-				<div id="preview1"></div>
-			</div>
-		</td>
-	</tr>
-	<tr>
-	<tr>	
-		<td>카테고리</td>
-		<td>
-			<select name="dogCate" id="dogCate" >
-				<option value="">카테고리를 선택하세요.</option>
-				<option value="y">강아지 카테고리</option>
-				<option value="n">고양이 카테고리 </option>
-				<option value="y"> 모두 포함 </option>
-			</select>
-			<input type="hidden" name="catCate" value="y" id="catCate">
-		</td>
-	</tr>
-	<tr>
-		<td>제목(상품명)</td>
-		<td><input type="text" name="title" id="title"></td>
-	</tr>
-	<tr>
-		<td>가격</td>
-		<td>
-			<div id="priceDiv"><input type="text" name="price" id="price"></div>
-			<input type="checkbox" id="checkFree" name="price" value="0">무료나눔하기
-		</td>
-	<tr>
-	<tr>
-		<td>내용</td>
-		<td><textarea class="content" name="content" id="content"></textarea>>
-	</tr>
-	
-<!-- 	<tr>
-		<td></td>
-		<td>
-			<select>
-				<option>판매상태</option>
-				<option>판매중</option>		
-			</select>
+			<tr>
+				<td>사진 추가 / 제거 <br>
+					<input type="button" value="파일추가" id="addFileBtn">
+					<input type="button" value="파일제거" id="delFileBtn">
+				</td>
+				<td>
+					<div id="fileArea">
+						<input type="file" id="upfile1" name="upfile1" onchange="imageChange()">
+						<img id="productImg1">
+						<div id="preview1"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+			<tr>	
+				<td>카테고리</td>
+				<td>
+					<select name="dogCate" id="dogCate" >
+						<option value="">카테고리를 선택하세요.</option>
+						<option value="y">강아지 카테고리</option>
+						<option value="n">고양이 카테고리 </option>
+						<option value="y"> 모두 포함 </option>
+					</select>
+					<input type="hidden" name="catCate" value="y" id="catCate">
+				</td>
+			</tr>
+			<tr>
+				<td>제목(상품명)</td>
+				<td><input type="text" name="title" id="title"></td>
+			</tr>
+			<tr>
+				<td>가격</td>
+				<td>
+					<div id="priceDiv"><input type="text" name="price" id="price"></div>
+					<input type="checkbox" id="checkFree" name="price" value="0">무료나눔하기
+				</td>
+			<tr>
+			<tr>
+				<td>내용</td>
+				<td><textarea class="content" name="content" id="content"></textarea>
+			</tr>
 			
-		</td>
-	</tr>
- -->	
- 	<tr>
-	<td colspan="2">
-			<input type="button" id="insertList" value="글 등록하기">
-		</td>
-	</tr>
-</table>
+		<!-- 	<tr>
+				<td></td>
+				<td>
+					<select>
+						<option>판매상태</option>
+						<option>판매중</option>		
+					</select>
+					
+				</td>
+			</tr>
+		 -->	
+		 	<tr>
+			<td colspan="2">
+					<input type="button" id="insertList" value="글 등록하기">
+				</td>
+			</tr>
+		</table>
+		</div>
+		</form>
+		</article>
+	
+	</div>
 </div>
-</form>
-</article>
 <jsp:include page="/resources/include/footer.jsp"/>
