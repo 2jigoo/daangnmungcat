@@ -54,9 +54,11 @@
 	<result column="chat_count" property="chatCount"/>
 	<result column="heart_count" property="heartCount"/>
 	<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
-	<association property="dongne2" columnPrefix="dongne2_" resultMap="daangnmungcat.mapper.MemberMapper.dongne2Result" />
+	<association property="dongne2" column="dongne2_id" select="daangnmungcat.mapper.MemberMapper.selectDongneByDongne2" />
 	<association property="member" columnPrefix="mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 </resultMap>
+<!-- 	<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
+	<association property="dongne2" columnPrefix="dongne2_" resultMap="daangnmungcat.mapper.MemberMapper.dongne2Result" /> -->
 
 
 <resultMap type="Dongne1" id="dongne1Result">

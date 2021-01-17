@@ -93,7 +93,7 @@ public class MypageController {
 		session = request.getSession();
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		System.out.println(loginUser);
-		Member member = service.selectMembetById(loginUser.getId());
+		Member member = service.selectMemberById(loginUser.getId());
 		String path = member.getProfilePic();
 		System.out.println("주소:"+ path);
 		Map<String, String> map = new HashMap<>();

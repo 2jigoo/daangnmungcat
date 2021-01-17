@@ -17,4 +17,5 @@ public interface JoongoSaleService {
 	
 	void JSHits(int id);
 
+
 }

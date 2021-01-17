@@ -10,7 +10,7 @@ import daangnmungcat.dto.Member;
 
 public interface MemberMapper {
 	List<Member> selectMemberByAll();
-	Member selectMembetById(String id);
+	Member selectMemberById(String id);
 	
 	int insertMember(Member member);
 	
@@ -24,4 +24,8 @@ public interface MemberMapper {
 	List<Dongne2> Dongne2List(@Param("dongne1Id")int dongne1);
 	
 	int updateProfilePic(Member member);
+	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
+	
+	Dongne2 selectDongneByDongne2(Dongne2 dongne2);
+
 }

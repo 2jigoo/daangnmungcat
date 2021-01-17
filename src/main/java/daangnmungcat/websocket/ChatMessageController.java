@@ -1,7 +1,10 @@
 package daangnmungcat.websocket;
 
+import java.time.LocalDateTime;
+
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -11,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
 import daangnmungcat.dto.ChatMessage;
+import daangnmungcat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,6 +24,9 @@ public class ChatMessageController {
 	private static final Log log = LogFactory.getLog(ChatMessageController.class);
 	
 	private final SimpMessageSendingOperations messagingTemplate;
+	
+	@Autowired
+	private ChatService chatService;
 	
 	/*
 	@MessageMapping("/sendMessage")
@@ -35,6 +42,12 @@ public class ChatMessageController {
 	@MessageMapping("/chat/{id}.sendMessage")
     @SendTo("/topic/chat/{id}")
     public ChatMessage sendMessage(@DestinationVariable int id, @Payload ChatMessage chatMessage) {
+		chatMessage.setReadYn("n");
+//		chatMessage.setRegdate(LocalDateTime.now());
+		
+		int res = chatService.sendMessage(chatMessage.getChat(), chatMessage);
+		System.out.println("결과: " + res);
+		
         return chatMessage;
     }
 

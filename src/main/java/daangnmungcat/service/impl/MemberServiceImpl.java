@@ -27,8 +27,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member selectMembetById(String id) {
-		return mapper.selectMembetById(id);
+	public Member selectMemberById(String id) {
+		return mapper.selectMemberById(id);
 	}
 
 	@Override
@@ -97,6 +97,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int updateProfilePic(Member member) {
 		return mapper.updateProfilePic(member);
+	}
+
+	@Override
+	public int dongneUpdate(String id, Dongne1 dongne1, Dongne2 dongne2) {
+		return mapper.dongneUpdate(id, dongne1, dongne2);
 	}
 
 	

@@ -2,6 +2,9 @@ package daangnmungcat.dto;
 
 import java.time.LocalDateTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -22,7 +25,12 @@ public class ChatMessage {
 	private Chat chat;
 	private Member member;
 	private String content;
+	
+//	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime regdate;
+	
 	private String image;
 	private String readYn;
 	

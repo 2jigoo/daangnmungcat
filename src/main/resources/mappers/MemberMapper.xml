@@ -2,13 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.MemberMapper">
 <sql id="selectSql">
-	select id, pwd, name, nickname, email, phone, dongne1, dongne2, grade, profile_pic, profile_text, regdate from member
+	SELECT
+		m.id, pwd, m.name, nickname, email, phone,
+		DONGNE1 AS dongne1_id,
+		d1.name AS dongne1_name,
+		dongne2 AS dongne2_id,
+		d2.name AS dongne2_name,
+		grade, profile_pic, profile_text, regdate
+	FROM MEMBER m
+		LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+		LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
 </sql>
 
 <sql id="whereSql">
 	<where>
 		<if test="id != null">
-			id = #{id}
+			m.id = #{id}
 		</if>
 
 	</where>
@@ -24,11 +33,12 @@
 		<result column="email" property="email"></result>
 		<result column="phone" property="phone"></result>
 		<result column="grade" property="grade"></result>
-		<result column="dongne1" property="dongne1.id"></result>
-		<result column="dongne2" property="dongne2.id"></result>
 		<result column="profile_pic" property="profilePic"></result>
 		<result column="profile_text" property="profileText"></result>
 		<result column="regdate" property="regdate"></result>
+		
+		<association property="dongne1" columnPrefix="dongne1_" resultMap="dongne1Result" />
+		<association property="dongne2" columnPrefix="dongne2_" resultMap="dongne2Result" />
 	</resultMap>
 	
 	<resultMap type="Dongne1" id="dongne1Result">
@@ -38,7 +48,7 @@
 	
 	<resultMap type="Dongne2" id="dongne2Result">
 		<result column="id" property="id"></result>
-		<result column="dongne1_id" property="dongne1Id"></result>
+		<result column="dongne1_id" property="dongne1.id"></result>
 		<result column="name" property="name"></result>
 	</resultMap>
 	
@@ -48,7 +58,7 @@
 		<include refid="selectSql"></include>
 	</select>
 	
-	<select id="selectMembetById" resultMap="memberResult">
+	<select id="selectMemberById" resultMap="memberResult">
 		<include refid="selectSql"></include>
 		<include refid="whereSql"></include>
 	</select>
@@ -87,6 +97,39 @@
 	<update id="updateProfilePic">
 		UPDATE MEMBER SET PROFILE_PIC = #{profilePic} where id = #{id}
 	</update>
+
+	<update id="dongneUpdate" parameterType="map">
+		UPDATE MEMBER SET DONGNE1 = #{dongne1.id}, DONGNE2 = #{dongne2.id} WHERE ID = #{id}
+	</update>
 	
 	
+	
+	<!-- Dongne -->
+	
+	<resultMap type="Dongne2" id="dongneAllResult">
+		<result column="dongne1_id" property="dongne1.id"></result>
+		<result column="dongne1_name" property="dongne1.name"></result>
+		<result column="dongne2_id" property="id"></result>
+		<result column="dongne2_name" property="name"></result>
+	</resultMap>
+	
+	<select id="selectDongneByDongne2" parameterType="Dongne2" resultMap="dongneAllResult">
+		SELECT
+			d1.id AS dongne1_id,
+			d1.name AS dongne1_name,
+			d2.id AS dongne2_id,
+			d2.name AS dongne2_name
+		FROM dongne1 d1
+			LEFT OUTER JOIN dongne2 d2 ON (d1.ID = d2.dongne1_id)
+		<where>
+			<choose>
+				<when test="id != null">
+					d2.id = #{id}
+				</when>
+				<when test="name != null">
+					d2.name = #{name}
+				</when>
+			</choose>
+		</where>
+	</select>
 </mapper>

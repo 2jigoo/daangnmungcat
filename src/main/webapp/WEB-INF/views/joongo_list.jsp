@@ -11,49 +11,48 @@ $(function(){
    
    var contextPath = "<%=request.getContextPath()%>";
    
-   
    $.get(contextPath+"/dongne1", function(json){
-      var datalength = json.length; 
-      if(datalength >= 1){
-         var sCont = "";
-         for(i=0; i<datalength; i++){
-            if (json[i].dong1Name == dongne1Name){
-               sCont += '<option value="' + json[i].dong1Id + '" selected>';
-               dongne1Id = json[i].dong1Id;
-               console.log("test2 : "+ dongne1Id)
-            } else {
-               sCont += '<option value="' + json[i].dong1Id + '">';
-            }
-            sCont += json[i].dong1Name;
-            sCont += '</option>';
-         }
-         $("select[name=dongne1]").append(sCont);
-      }
-   });
-   
-   setTimeout(function(){
-      console.log("test : "+ dongne1Id)
-      if (dongne1Name != ""){
-         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
-            var datalength = json.length; 
-            var sCont = "<option>동네를 선택하세요</option>";
-            for(i=0; i<datalength; i++){
-               if (json[i].dong2Name == "${dongne2Name}"){
-                  sCont += '<option value="' + json[i].dong2Id + '" selected>';
-               } else {
-                  sCont += '<option value="' + json[i].dong2Id + '">';
-               }
-               sCont += json[i].dong2Name;
-               sCont += '</option>';
-            }
-            $("select[name=dongne2]").append(sCont);   
-         });
-      }
-   }, 50)
+	      var datalength = json.length; 
+	      if(datalength >= 1){
+	         var sCont = "";
+	         for(i=0; i<datalength; i++){
+	            if (json[i].name == dongne1Name){
+	               sCont += '<option value="' + json[i].id + '" selected>';
+	               dongne1Id = json[i].id;
+	            } else {
+	               sCont += '<option value="' + json[i].id + '">';
+	            }
+	            sCont += json[i].name;
+	            sCont += '</option>';
+	         }
+	         $("select[name=dongne1]").append(sCont);
+	      }
+	   });
+	   
+	   setTimeout(function(){
+	      console.log("test : "+ dongne1Id)
+	      if (dongne1Name != ""){
+	         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
+	            var datalength = json.length; 
+	            var sCont = "<option>동네를 선택하세요</option>";
+	            for(i=0; i<datalength; i++){
+	               if (json[i].name == "${dongne2Name}"){
+	                  sCont += '<option value="' + json[i].id + '" selected>';
+	               } else {
+	                  sCont += '<option value="' + json[i].id + '">';
+	               }
+	               sCont += json[i].name;
+	               sCont += '</option>';
+	            }
+	            $("select[name=dongne2]").append(sCont);   
+	         });
+	      }
+	   }, 50);
+
    
    $("select[name=dongne1]").change(function(){
-      if ($("select[name=dongne1]").val() == "시 선택"){
-         window.location = "<c:url value='/joongo_list' />";
+      if ($("select[name=dongne1]").val() == "전체 선택"){
+         window.location = "<c:url value='/joongo_list/all' />";
       } else {
          var dong1 = $("select[name=dongne1] option:checked").text();
          window.location = "<c:url value='/joongo_list/"+ dong1 +"' />";
@@ -134,6 +133,52 @@ $(function(){
     
     // page - active
     $(".board_page ul li:eq("+ (pageNum - 1) +")").addClass("active")
+    
+    $(".dongne_btn").click(function(){
+		var dongneData = {
+			id: "${loginUser.id}",
+			pwd: null,
+			name: null,
+			nickname: null,
+			email: null,
+			phone: null,
+			dongne1: {
+				id : $("select[name='dongne1']").val()
+			},
+			dongne2: {
+				id : $("select[name='dongne2']").val()
+			},
+			grade:null,
+			regdate: null,
+			profile_text: null,
+			profile_pic:null
+		};
+		console.log(dongneData);
+    	if ($("select[name='dongne1']").val() == "전체 선택" || $("select[name='dongne2']").val() == "동네를 선택하세요"){
+    		alert("저장할 동네를 검색해주세요.")
+    	} else {
+        	if (confirm("내 동네로 설정하시겠습니까? - "+ $("select[name='dongne1'] option:checked").text() +" "+ $("select[name='dongne2'] option:checked").text()) == true){
+        		$.ajax({
+        			url:contextPath+"/dongneUpdate",
+        			type:"post",
+        			contentType:"application/json; charset=utf-8",
+        			cache:false,
+        			dataType: "json",
+        			data:JSON.stringify(dongneData),
+        			beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+        				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        			},
+        			success:function(){
+        				alert("수정됐습니다.")
+        	        }, 
+        	        error: function(request,status,error){
+        	        	alert('에러' + request.status+request.responseText+error);
+        			}
+        		})
+        	}
+    	}
+    	console.log(contextPath+"/dongneUpdate")
+    })
 });
 
 </script>
@@ -147,10 +192,13 @@ $(function(){
 			<div>
 			<a href="<%=request.getContextPath()%>/joongoSale/addList">글쓰기</a>
 				<select name="dongne1">
-					<option>시 선택</option>
+					<option>전체 선택</option>
 				</select> 
 				<select name="dongne2">
 				</select>
+				<c:if test="${not empty loginUser}">
+					<p class="dongne_btn">내 동네 저장</p>
+				</c:if>
 			</div>
 		</div>
 		<div>
@@ -159,7 +207,7 @@ $(function(){
 				<li><a href="<%=request.getContextPath()%>/detailList?id=${list.id}">
 					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="txt">
-						<p class="location">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</p>
+						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>
 						<p class="price"><span>${list.price}</span>원</p>
 						<ul>
@@ -185,7 +233,7 @@ $(function(){
 		    			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    		</c:when>
 		    		<c:otherwise>
-				    	<p><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+				    	<p><a href="<%=request.getContextPath()%>/joongo_list/all${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    		</c:otherwise>
 		    	</c:choose>
 		    </c:if> 
@@ -200,7 +248,7 @@ $(function(){
 			  			<li><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  		</c:when>
 			  		<c:otherwise>
-			    	<li><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			    	<li><a href="<%=request.getContextPath()%>/joongo_list/all${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  		</c:otherwise>
 			 		</c:choose>
 			  </c:forEach>
@@ -215,7 +263,7 @@ $(function(){
 			  			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  		</c:when>
 			  		<c:otherwise>
-			    		<p><a href="<%=request.getContextPath()%>/joongo_list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			    		<p><a href="<%=request.getContextPath()%>/joongo_list/all${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  		</c:otherwise>
 			 		</c:choose>
 			  </c:if> 

@@ -1,6 +1,7 @@
 package daangnmungcat.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
@@ -8,6 +9,7 @@ import daangnmungcat.dto.ChatMessage;
 public interface ChatMessageMapper {
 
 	List<ChatMessage> selectAllChatMessageByChatId(int chatId);
+	List<ChatMessage> selectChatMessagesByChatIdWithPaging(Map<String, Object> pageMaker);
 	ChatMessage selectLatestChatMessageByChatId(int chatId);
 	
 	int selectCountChatMessageByChatId(Chat chat);
