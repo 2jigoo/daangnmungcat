@@ -93,6 +93,12 @@ public class MemberServiceImpl implements MemberService {
         }
 	}
 
+
+	@Override
+	public int updateProfilePic(Member member) {
+		return mapper.updateProfilePic(member);
+	}
+
 	
 
 }
