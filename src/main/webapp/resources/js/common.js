@@ -22,3 +22,54 @@ $(document).ready(function(){
         }
     })
 })
+
+//현재 시간이랑 글 쓴 시간 비교
+// writeNow: Date. 글 쓴 시각
+// lastTime: String. 비교 시간 표시할 클래스 이름.
+function timeBefore(writeNow) {
+	
+	//현재 시간가져오기
+	var now = new Date();
+	var minus;
+	var timeBeforeStr;
+	
+	if(now.getFullYear() > writeNow.getFullYear()){
+		minus = now.getFullYear() - writeNow.getFullYear();
+		timeBeforeStr = minus+"년 전";
+	}else if(now.getMonth() > writeNow.getMonth()){
+        //년도가 같을 경우 달을 비교해서 출력
+        minus= now.getMonth()-writeNow.getMonth();
+        timeBeforeStr = minus+"달 전";
+    }else if(now.getDate() > writeNow.getDate()){
+   	//같은 달일 경우 일을 계산
+        minus= now.getDate()-writeNow.getDate();
+        timeBeforeStr = minus+"일 전";
+    }else if(now.getDate() == writeNow.getDate()){
+    //당일인 경우에는 
+        var nowTime = now.getTime();
+        var writeTime = writeNow.getTime();
+        if(nowTime>writeTime){
+        //시간을 비교
+            sec = parseInt(nowTime - writeTime) / 1000;
+            day  = parseInt(sec/60/60/24);
+            sec = (sec - (day * 60 * 60 * 24));
+            hour = parseInt(sec/60/60);
+            sec = (sec - (hour*60*60));
+            min = parseInt(sec/60);
+            sec = parseInt(sec-(min*60));
+            if(hour>0){
+            //몇시간전인지
+            	timeBeforeStr = hour+"시간 전";
+            }else if(min>0){
+            //몇분전인지
+            	timeBeforeStr = min+"분 전";
+            }else if(sec>0){
+            //몇초전인지 계산
+            	timeBeforeStr = sec+"초 전";
+            }
+        }
+    }
+	
+	console.log("timeBeforeStr: " + timeBeforeStr);
+	return timeBeforeStr;
+}

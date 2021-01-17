@@ -2,6 +2,7 @@ package daangnmungcat.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -21,6 +22,7 @@ public class Member {
 	// 등급
 	private String profilePic;
 	private String profileText;
+	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
 	private LocalDateTime regdate;
 
 	/*

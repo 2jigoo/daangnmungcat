@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/test_page.css" />
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
+	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 </head>
 <body>

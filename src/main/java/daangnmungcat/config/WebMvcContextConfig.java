@@ -1,9 +1,16 @@
 package daangnmungcat.config;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -13,8 +20,13 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+
 @Configuration
 @EnableWebMvc
+@Import({JacksonConfig.class})
 @ComponentScan(basePackages = {"daangnmungcat.controller"})
 public class WebMvcContextConfig implements WebMvcConfigurer {
 	
@@ -55,7 +67,6 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("/").setViewName("main");
 		registry.addViewController("/test_page").setViewName("chat/test_page");
 		registry.addViewController("/idCheck").setViewName("idCheck");	
-		registry.addViewController("/test").setViewName("joongoSale/addList");
 	}
 	
 	/*
@@ -76,6 +87,15 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	}
 	
 	
+	@Override
+	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json()
+				.featuresToEnable(SerializationFeature.INDENT_OUTPUT)
+				.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(formatter))
+				.simpleDateFormat("yyyy-MM-dd HH:mm:ss").build();
+		converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper));
+	}
 	
 
 }

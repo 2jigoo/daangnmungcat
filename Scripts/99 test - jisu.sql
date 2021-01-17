@@ -25,6 +25,7 @@ FROM JOONGO_CHAT C
 	LEFT OUTER JOIN MEMBER SM ON (S.MEM_ID = SM.id)
 	LEFT OUTER JOIN MEMBER BM ON (C.BUY_MEM_ID = BM.id);
 
+SELECT * FROM CHAT_LIST_VIEW clv ;
 
 INSERT INTO MEMBER VALUES('chattest1', '1234', '채팅요정', 'chatUser01', 'chat01@test.co.kr', '010-1234-4321', 3,  44, 1, NULL, NULL, sysdate);
 INSERT INTO MEMBER VALUES('chattest2', '1234', '채팅유저', 'chatUser02', 'chat02@test.co.kr', '010-1234-4999', 3,  44, 1, NULL, NULL, sysdate);
@@ -45,7 +46,11 @@ INSERT INTO JOONGO_CHAT(id, sale_id, SALE_MEM_ID, BUY_MEM_ID, regdate, LATEST_DA
 values(chat_seq.nextval, 11, 'chattest1', 'chattest2', sysdate, sysdate);
 
 INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '안녕하세요ㅎㅎㅎ', sysdate, 'n', null);
-INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '그림 그려주세요ㅋ', sysdate, 'n', null);
+INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '그림 그려주세요ㅋ', sysdate + 1/60/24*1 , 'n', null);
+INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '그림 그려주세요ㅋㅋ', sysdate  + 1/60/24*2, 'n', null);
+INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '그림 그려주세요ㅋㅋㅋ', sysdate  + 1/60/24*3, 'n', null);
+INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest1', '즐ㅋ', sysdate + 1/60/24*4 , 'n', null);
+INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', ';;;', sysdate + 1/60/24*5, 'n', null);
 
 
 SELECT * FROM CHAT_LIST_VIEW;
@@ -62,14 +67,57 @@ SELECT * FROM JOONGO_CHAT_MSG jcm;
 SELECT * FROM DONGNE2 d2 ;
 
 SELECT
-	m.id, pwd, m.name, nickname, email, phone,
-	DONGNE1 AS dongne1_id,
+	d1.id AS dongne1_id,
 	d1.name AS dongne1_name,
-	dongne2 AS dongne2_id,
-	d2.name AS dongne2_name,
-	grade, profile_pic, profile_text, regdate
-FROM MEMBER m
-	LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
-	LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID);
+	d2.id AS dongne2_id,
+	d2.name AS dongne2_name
+FROM dongne1 d1
+	LEFT OUTER JOIN dongne2 d2 ON (d1.ID = d2.dongne1_id)
+WHERE d2.name = '달서구';
 
 
+SELECT * FROM JOONGO_COMMENT jc ;
+DELETE FROM joongo_comment;
+
+
+SELECT id, LEVEL, LPAD(' ', 3*(LEVEL - 1)) || MEM_ID AS CONNECTBY, SALE_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT, REGDATE 
+  FROM JOONGO_COMMENT jc 
+  WHERE SALE_ID = 1
+ START WITH origin_id IS NULL
+ CONNECT BY PRIOR id = ORIGIN_ID;
+
+
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(1, 1, 'chattest1', NULL, NULL, '1-첫번째 댓글 (1)', sysdate);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(2, 1, 'chattest2', NULL, NULL, '1-두번째 댓글 (2)', sysdate + 1/60/24 * 5);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(3, 1, 'chattest1', 2, null, '1-두번째 댓글의 첫번째 자식 (3)', sysdate + 1/60/24 * 6);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(4, 2, 'chattest2', null, null, '2-첫번째 댓글(4)', sysdate + 1/60/24 * 7);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(5, 2, 'chattest1', 4, NULL, '2-첫번째 댓글의 첫번째자식 (5)', sysdate + 1/60/24 * 8);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(6, 1, 'chattest2', 2, 'chattest1', '1-두번째 댓글의 두번째자식 (6)', sysdate + 1/60/24 * 9);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(7, 1, 'chattest2', 1, NULL, '1-첫번째 댓글의 첫번째자식 (7)', sysdate + 1/60/24 * 10);
+INSERT INTO JOONGO_COMMENT(id, sale_id, mem_id, ORIGIN_ID, tag_mem_id, content, regdate)
+values(8, 1, 'chattest1', 1, 'chattest2', '1-첫번째 댓글의 두번째자식 (8)', sysdate + 1/60/24 * 11);
+
+SELECT rn, c.id, chat_id, mem_id, nickname AS mem_nickname, content, c.regdate, read_yn, image
+FROM
+(
+	SELECT *
+	FROM
+	(
+		SELECT rownum AS rn, a.*
+		FROM
+		(
+			SELECT *
+			FROM JOONGO_CHAT_MSG jcm
+			ORDER BY id desc
+		) a
+	) ORDER BY id
+) c LEFT OUTER JOIN MEMBER m ON (c.mem_id = m.id)
+WHERE rn >= 1 and rn <= 10
+ORDER BY rn desc;

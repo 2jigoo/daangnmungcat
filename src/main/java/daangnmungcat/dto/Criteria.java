@@ -5,9 +5,15 @@ public class Criteria {
 	private int perPageNum;
 	private int rowStart;
 	private int rowEnd;
+
 	public Criteria() {
 		this.page = 1;
 		this.perPageNum = 20; // 한 페이지당 보일 수
+	}
+	
+	public Criteria(int page, int perPageNum) {
+		this.page = page;
+		this.perPageNum = perPageNum;
 	}
 	
 	public void setPage(int page) {

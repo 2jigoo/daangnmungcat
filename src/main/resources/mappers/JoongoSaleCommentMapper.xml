@@ -12,6 +12,7 @@
 	<result column="regdate" property="regdate"/>
 </resultMap>
 
+<<<<<<< HEAD
 <select id="selectJoongoCommentByAllPage" parameterType="map" resultMap="saleCommentResult">
 	SELECT a.*
 	  FROM (SELECT rownum AS rnum, b.*
@@ -27,6 +28,19 @@
 
 <select id="commentCount" resultType="int">
 	SELECT count(id) FROM JOONGO_COMMENT WHERE SALE_ID = #{saleId}
+=======
+<select id="selectJoongoCommentByAllPage" resultMap="saleCommentResult">
+SELECT a.*
+  FROM (SELECT rownum AS rnum, b.*
+    FROM (SELECT id, MEM_ID, SALE_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT, REGDATE 
+  FROM JOONGO_COMMENT jc 
+ WHERE SALE_ID = 1
+ START WITH origin_id IS NULL
+ CONNECT BY PRIOR id = ORIGIN_ID
+ ORDER SIBLINGS BY ID) b) a
+ WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd} 
+ORDER BY a.rnum
+>>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat.git
 </select>
 
 <insert id="insertJoongoSaleComment" parameterType="SaleComment">
