@@ -190,7 +190,9 @@ $(function(){
 			<!-- <button onclick="showData()" class="my_location">내 위치</button> -->
 			<button class="my_location">내 위치</button>
 			<div>
-			<a href="<%=request.getContextPath()%>/joongoSale/addList">글쓰기</a>
+				<c:if test="${not empty loginUser}">
+					<a href="<%=request.getContextPath()%>/joongoSale/addList">글쓰기</a>
+				</c:if>	
 				<select name="dongne1">
 					<option>전체 선택</option>
 				</select> 
