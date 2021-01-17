@@ -60,10 +60,12 @@ $(function(){
 	})
 	
 	 
-	 $('#checkFree').change(function(){
+	 $('#checkFree').change(function(e){
+		 console.log(this);
+		 console.log(e);
 	        if(this.checked){
 	            $('#priceDiv').fadeOut('fast');
-	        	$('#price').attr('value', 0);
+	        	$('#price').prop('value', 0);
 	        }else{
 	            $('#priceDiv').fadeIn('fast');
 	        }
