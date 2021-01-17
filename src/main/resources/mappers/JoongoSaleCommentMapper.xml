@@ -40,7 +40,6 @@ SELECT a.*
  ORDER SIBLINGS BY ID) b) a
  WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd} 
 ORDER BY a.rnum
->>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat.git
 </select>
 
 <insert id="insertJoongoSaleComment" parameterType="SaleComment">
