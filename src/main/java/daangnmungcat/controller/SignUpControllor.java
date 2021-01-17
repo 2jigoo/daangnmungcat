@@ -31,7 +31,6 @@ import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Controller
-@Log4j2
 public class SignUpControllor {
 	private static final Log log = LogFactory.getLog(SignUpControllor.class);
 
@@ -74,59 +73,10 @@ public class SignUpControllor {
 	}
 
 	@GetMapping("/phoneCheck/{phone}/")
-	public int phoneChec(@PathVariable String phone) {
+	public int phoneCheck(@PathVariable String phone) {
 		int res = service.phoneCheck(phone);
 		return res;
 	}
 
-	@PostMapping("/uploadProfile")
-	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
-		System.out.println("오나");
-		
-		String uploadFolder = request.getSession().getServletContext().getRealPath("resources\\upload\\");
-		//테스트 경로-> /daangnmungcat/resources/upload/2021-01-13/파일이름.jpg
-		System.out.println("uploadfolder:" + uploadFolder);
-		
-		
-//		// 폴더만들기
-//		File uploadPath = new File(uploadFolder, getFolder());
-//		System.out.println("uploadPath: " + uploadPath);
-//		
-//		if(!uploadPath.exists()) {
-//			uploadPath.mkdirs();
-//		}
-		
-		
-		for(MultipartFile multipartFile : uploadFile) {
-			
-			System.out.println("--------------------");
-			System.out.println("Upload File Name: " + multipartFile.getOriginalFilename());
-			System.out.println("Upload File Size: " + multipartFile.getSize());
-			
-			String uploadFileName = multipartFile.getOriginalFilename();
-			uploadFileName = uploadFileName.substring(uploadFileName.lastIndexOf("\\") + 1);
-			System.out.println("only file name: " + uploadFileName);
-			
-			UUID uuid = UUID.randomUUID();
-			uploadFileName = uuid.toString() + "_" + uploadFileName;
-			System.out.println("uploadFileName: " + uploadFileName);
-			
-			File saveFile = new File(uploadFolder, uploadFileName);
-			try {
-				multipartFile.transferTo(saveFile);
-			} catch(Exception e) {
-				log.error(e.getMessage());
-			}
-		}
-		
-	}
 	
-	private String getFolder() {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		String str = sdf.format(date);
-		
-		return str;
-	}
-
 }

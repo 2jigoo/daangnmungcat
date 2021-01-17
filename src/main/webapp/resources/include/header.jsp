@@ -14,6 +14,16 @@
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
+	<script>
+		//spring security -> ajax post 타입 전송시 필요
+		var csrfToken = $("meta[name='_csrf']").attr("content");
+		console.log(csrfToken);
+		$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+		    if (options['type'].toLowerCase() === "post") {
+		        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+		    }
+		});
+	</script>
 </head>
 <body>
 <div id="wrap">
@@ -35,7 +45,7 @@
 		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
 			<li><a href="#">${loginUser.getId()}님 안녕하세요.</a></li>
-			<li><a href="#">마이페이지</a></li>
+			<li><a href="<c:url value="/mypage" />">마이페이지</a></li>
 			<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 			<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
 			</ul>

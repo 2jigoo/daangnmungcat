@@ -93,6 +93,12 @@ public class MemberServiceImpl implements MemberService {
         }
 	}
 
+
+	@Override
+	public int updateProfilePic(Member member) {
+		return mapper.updateProfilePic(member);
+	}
+
 	@Override
 	public int dongneUpdate(String id, Dongne1 dongne1, Dongne2 dongne2) {
 		return mapper.dongneUpdate(id, dongne1, dongne2);

@@ -23,6 +23,8 @@ public interface MemberService {
 	int emailCheck(String email);
 	int phoneCheck(String phone);
 	
+	int updateProfilePic(Member member);
+	
 	//휴대폰인증
 	void certifiedPhoneNumber(String phoneNumber, String cerNum);
 	

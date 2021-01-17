@@ -11,17 +11,9 @@
 $(document).ready(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
-	var csrfToken = $("meta[name='_csrf']").attr("th:content");
 	var email_status; //email_status가 0이면 return
 	var pwd_status;
 	var data;
-	
-	console.log(csrfToken);
-	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
-	    if (options['type'].toLowerCase() === "post") {
-	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-	    }
-	});
 	
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
@@ -376,6 +368,6 @@ function imageChange(){
 	<input type="button" value="가입완료" id="signup">
 	
 </div>
-<img src="/daangnmungcat/resources/upload/2021-01-13/9fd83797-9131-4966-8bd2-a2e1ffc56239_asdasdads.jpg">
+<!-- <img src="/daangnmungcat/resources/upload/2021-01-13/9fd83797-9131-4966-8bd2-a2e1ffc56239_asdasdads.jpg"> -->
 </div>
 <jsp:include page="/resources/include/footer.jsp"/>
