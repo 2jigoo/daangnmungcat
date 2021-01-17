@@ -21,9 +21,28 @@ public class JoongoSaleCommentController {
 	
 	@PostMapping("/joongo/comment/write")
 	public ResponseEntity<Object> insertComment(@RequestBody SaleComment saleComment) {
-		System.out.println("왔다리");
 		try {
 			return ResponseEntity.ok(service.insertJoongoSaleComment(saleComment));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	@PostMapping("/joongo/comment/delete")
+	public ResponseEntity<Object> deleteComment(@RequestBody SaleComment saleComment){
+		System.out.println("삭제하러 왔다요");
+		try {
+			return ResponseEntity.ok(service.deleteComment(saleComment.getId()));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	@PostMapping("/joongo/comment/update")
+	public ResponseEntity<Object> updateComment(@RequestBody SaleComment saleComment){
+		System.out.println("수정하러 왔어요");
+		try {
+			return ResponseEntity.ok(service.updateComment(saleComment));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}

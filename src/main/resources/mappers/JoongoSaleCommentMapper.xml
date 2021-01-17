@@ -33,8 +33,16 @@
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT joongo_comment_seq.nextval FROM DUAL
 		</selectKey>
-	INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) 
-	VALUES(#{id}, #{sale.id}, #{member.id}, #{content})
+	INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT) 
+	VALUES(#{id}, #{sale.id}, #{member.id}, #{saleComment.id}, #{tagMember.id}, #{content})
 </insert>
+
+<update id="updateComment" parameterType="SaleComment">
+	UPDATE JOONGO_COMMENT SET CONTENT = #{content} WHERE ID = #{id}
+</update>
+
+<delete id="deleteComment" parameterType="int">
+	DELETE FROM JOONGO_COMMENT WHERE ID = #{commentId} OR ORIGIN_ID = #{commentId}
+</delete>
 
 </mapper>

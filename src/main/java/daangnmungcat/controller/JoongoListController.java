@@ -50,6 +50,7 @@ public class JoongoListController {
 		if (loginUser == null) {
 			return "redirect:/joongo_list/all";
 		} else {
+			System.out.println("loginUser check : "+ loginUser);
 			return "redirect:/joongo_list/"+ URLEncoder.encode(loginUser.getDongne1().getName(), "UTF-8") +"/"+ URLEncoder.encode(loginUser.getDongne2().getName(), "UTF-8");
 		}
 	}

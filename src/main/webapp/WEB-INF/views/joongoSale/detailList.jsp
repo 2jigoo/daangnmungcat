@@ -249,7 +249,6 @@ $(document).ready(function(){
 			},
 			content : $(".comment_content").val()
 		}
-		console.log(addComment)
 		$.ajax({
 			type: "post",
 			url : contextPath+"/joongo/comment/write",
@@ -271,8 +270,137 @@ $(document).ready(function(){
 	
 	$('#btnLike').on("click", function(json){
 		
-	});
+	})
 	
+	$(".joongo_comment .info .comment_btn").one("click", function(){
+		var comment_wrap = '<div class="comment_write">';
+		comment_wrap += '<input type="hidden" value="'+ $(".comment_write .comment_sale_id").val() +'" class="comment_sale_id2">';
+		comment_wrap += '<input type="hidden" value="${loginUser.id}" class="comment_member_id2">';
+		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").data("id") +'" class="comment_saleComment_id2">';
+		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").find(".name").text() +'" class="comment_tabMember_id2">';
+		comment_wrap += '<textarea placeholder="댓글내용을 입력해주세요" class="comment_content2"></textarea>';
+		comment_wrap += '<input type="button" value="등록" class="comment_write_btn2 btn">'
+		comment_wrap += '</div>'
+		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
+	})
+	
+	$(".joongo_comment .info .update_btn").one("click", function(){
+		var comment_wrap = '<div class="comment_write">';
+		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").data("id") +'" class="comment_sale_id">';
+		comment_wrap += '<textarea placeholder="댓글내용을 입력해주세요" class="comment_content">';
+		comment_wrap += $(this).parent("ul").parent("div").parent("li").find(".content").text().split('<br/>').join("\r\n");
+		comment_wrap += '</textarea>';
+		comment_wrap += '<input type="button" value="수정" class="comment_update btn">'
+		comment_wrap += '</div>';
+		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
+	})
+	
+	$(".joongo_comment .info .delete_btn").click(function(){
+		var deleteComment = {
+			id : $(this).parent("ul").parent("div").parent("li").data("id")
+		}
+		console.log(deleteComment)
+		$.ajax({
+			type: "post",
+			url : contextPath+"/joongo/comment/delete",
+			contentType : "application/json; charset=utf-8",
+			cache : false,
+			dataType : "json",
+			data : JSON.stringify(deleteComment),
+			beforeSend : function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success:function(){
+				alert("삭제됐습니다.")
+				location.reload();
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+			}
+		})
+	})
+	
+});
+
+$(document).on("click", ".comment_write_btn2", function(){
+	var contextPath = "<%=request.getContextPath()%>";
+	
+	console.log($(this).closest(".comment_write").find(".comment_member_id2").val())
+	if ($(this).closest(".comment_write").find(".comment_member_id2").val() == ""){
+		alert("회원만 댓글쓰기가 가능합니다.")
+		return false;
+	}
+	if ($(this).closest(".comment_write").find(".comment_content2").val() == ""){
+		alert("댓글내용을 입력해주세요.")
+		return false;
+	}
+	
+	var addComment = {
+		sale : {
+			id : $(this).closest(".comment_write").find(".comment_sale_id2").val()
+		},
+		member : {
+			id : $(this).closest(".comment_write").find(".comment_member_id2").val()
+		},
+		saleComment : {
+			id : $(this).closest(".comment_write").find(".comment_saleComment_id2").val()
+		},
+		tagMember : {
+			id : $(this).closest(".comment_write").find(".comment_tabMember_id2").val()
+		},
+		content : $(this).closest(".comment_write").find(".comment_content2").val()
+	}
+	console.log(addComment)
+	$.ajax({
+		type: "post",
+		url : contextPath+"/joongo/comment/write",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		dataType : "json",
+		data : JSON.stringify(addComment),
+		beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		},
+		success:function(){
+			location.reload();
+		},
+		error: function(request,status,error){
+			alert('에러' + request.status+request.responseText+error);
+		}
+	})
+});
+
+$(document).on("click", ".comment_update", function(){
+	var contextPath = "<%=request.getContextPath()%>";
+	
+	if ($(this).closest(".comment_write").find(".comment_content").val() == ""){
+		alert("댓글내용을 입력해주세요.")
+		return false;
+	}
+	
+	var updateComment = {
+		id : $(this).closest(".comment_write").find(".comment_sale_id").val(),
+		content : $(this).closest(".comment_write").find(".comment_content").val()
+	}
+	console.log(updateComment)
+	$.ajax({
+		type: "post",
+		url : contextPath+"/joongo/comment/update",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		dataType : "json",
+		data : JSON.stringify(updateComment),
+		beforeSend : function(xhr){   
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		},
+		success:function(){
+			alert("수정됐습니다.")
+			location.reload();
+		},
+		error: function(request,status,error){
+			alert('에러' + request.status+request.responseText+error);
+		}
+	})
 });
 
 </script>
@@ -381,28 +509,29 @@ $(document).ready(function(){
 	</section>
 </c:forEach>
 
-
 <div class="joongo_comment s-inner" id="joongo_comment">
 	<p class="tit">댓글</p>
 	<ul class="joongo_comment_list">
 		<c:forEach items="${commentList}" var="commentList">
 		<c:if test="${empty commentList.saleComment.id}">
-		<li>
+		<li data-id="${commentList.id}">
 		</c:if>
 		<c:if test="${not empty commentList.saleComment.id}">
-		<li class="reply">
+		<li class="reply" data-id="${commentList.id}">
 		</c:if>
 			<div class="user">
 				<p class="img"></p>
 				<p class="name">${commentList.member.id}</p>
 			</div>
-			<p class="content">${commentList.content}</p>
+			<pre class="content">${commentList.content}</pre>
 			<div class="info">
 				<p class="date">${commentList.regdate}</p>
 				<ul>
-					<li>답글쓰기</li>
-					<li>수정</li>
-					<li>삭제</li>
+					<li class="comment_btn">답글쓰기</li>
+					<c:if test="${loginUser.id == commentList.member.id}">
+					<li class="update_btn">수정</li>
+					<li class="delete_btn">삭제</li>
+					</c:if>
 				</ul>
 			</div>
 		</li>
@@ -438,7 +567,7 @@ $(document).ready(function(){
 		</c:forEach>
 		<input type="hidden" value="${loginUser.id}" class="comment_member_id">
 		<textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
-		<input type="button" value="등록" class="comment_write_btn">
+		<input type="button" value="등록" class="comment_write_btn btn">
 	</div>
 </div>
 

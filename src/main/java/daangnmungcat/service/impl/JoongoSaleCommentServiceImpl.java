@@ -33,4 +33,14 @@ public class JoongoSaleCommentServiceImpl implements JoongoSaleCommentService {
 		return mapper.commentCount(saleId);
 	}
 
+	@Override
+	public int deleteComment(int commentId) {
+		return mapper.deleteComment(commentId);
+	}
+
+	@Override
+	public int updateComment(SaleComment saleComment) {
+		return mapper.updateComment(saleComment);
+	}
+
 }
