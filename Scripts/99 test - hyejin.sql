@@ -1,4 +1,5 @@
 SELECT * FROM MEMBER;
+SELECT * FROM DONGNE1;
 
 INSERT INTO MEMBER VALUES('admin', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234',1, 1, 1, NULL, NULL, sysdate);
 

@@ -23,11 +23,12 @@ CREATE TABLE MEMBER (
 	phone VARCHAR2(20) NOT NULL, /* 연락처 */
 	dongne1 number(12) NOT NULL, /* 시 */
 	dongne2 number(12) NOT NULL, /* 군구 */
-	grade NUMBER(1) NOT NULL, /* 등급 */
+	grade char(1) NOT NULL, /* 등급 */
 	profile_pic VARCHAR2(255), /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */
 	regdate DATE DEFAULT sysdate /* 가입일 */
 )SEGMENT CREATION IMMEDIATE;
+
 
 
 ALTER TABLE MEMBER ADD UNIQUE (email);
@@ -180,6 +181,24 @@ CREATE TABLE JOONGO_CHAT_MSG (
 ALTER TABLE JOONGO_CHAT_MSG
 ADD CONSTRAINT PK_JOONGO_CHAT_MSG PRIMARY KEY (id);
 
+/*등급*/
+CREATE TABLE grade(
+	code char(1) NOT NULL, 
+	name varchar2(20) NOT NULL
+);
+
+ALTER TABLE grade
+ADD CONSTRAINT PK_GRADE PRIMARY KEY (code);
+
+ALTER TABLE MEMBER
+	ADD
+		CONSTRAINT FK_GRADE_TO_MEMBER
+		FOREIGN KEY (
+			grade
+		)
+		REFERENCES grade (
+			code
+		);
 
 
 ALTER TABLE JOONGO_COMMENT

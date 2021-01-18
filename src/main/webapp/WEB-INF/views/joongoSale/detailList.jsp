@@ -270,6 +270,8 @@ $(document).ready(function(){
 		})
 	})
 	
+	
+	
 });
 
 $(document).on("click", ".comment_write_btn2", function(){

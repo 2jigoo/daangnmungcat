@@ -23,6 +23,7 @@ public class AuthInfo {
 		this.nickname = nickname;
 		this.dongne1 = dongne1;
 		this.dongne2 = dongne2;
+		dongne2.setDongne1(dongne1);
 		this.profilePic = profilePic;
 	}
 	

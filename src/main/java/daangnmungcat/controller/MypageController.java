@@ -90,13 +90,10 @@ public class MypageController {
 	@ResponseBody
 	@GetMapping("/myProfilePic")
 	public Map<String, String> profilePic(HttpSession session, HttpServletRequest request) throws ParseException {
-		System.out.println("프로필업로드");
 		session = request.getSession();
-		System.out.println(session.getId());
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		String path = member.getProfilePic();
-		System.out.println("주소:"+ path);
 		Map<String, String> map = new HashMap<>();
 		map.put("path", path);
 		return map;
