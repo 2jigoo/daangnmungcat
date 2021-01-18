@@ -82,10 +82,8 @@ $(document).ready(function(){
 				nickname:$('#nickname').val(),
 				email:$('#email').val(),
 				phone:$('#phone').val(),
-				dongne1:$('#dongne1').val(),
-				dongne2:$('#dongne2').val(),
-				grade:5,
-				regdate: null,
+				dongne1:{id:$('#dongne1').val()},
+				dongne2:{id:$('#dongne2').val()},
 				profile_text: null,
 				profile_pic:null
 				};
@@ -334,7 +332,7 @@ function imageChange(){
 		<td>연락처</td>
 		<td class="replace"><input type="text" name="phone" id="phone">
 		<input type="button" name="send" id="send" value="인증번호발송">
-		<input type="hidden" id="certi" name="certi" value="0"></td>
+		<input type="hidden" id="certi" name="certi" value="1"></td>
 	</tr>
 	<tr class="certi_tr">
 		<td></td>

@@ -10,6 +10,7 @@ DROP TABLE JOONGO_CHAT_MSG CASCADE CONSTRAINTS; /* 중고_채팅_메시지 */
 DROP TABLE JOONGO_CHAT CASCADE CONSTRAINTS; /* 중고_대화 */
 DROP TABLE JOONGO_MYSALE CASCADE CONSTRAINTS; /* 중고_판매내역 */
 DROP TABLE JOONGO_MYBUY CASCADE CONSTRAINTS; /* 중고_구매내역 */
+DROP TABLE grade CASCADE CONSTRAINTS;
 
 --재설정
 
@@ -23,12 +24,11 @@ CREATE TABLE MEMBER (
 	phone VARCHAR2(20) NOT NULL, /* 연락처 */
 	dongne1 number(12) NOT NULL, /* 시 */
 	dongne2 number(12) NOT NULL, /* 군구 */
-	grade char(1) NOT NULL, /* 등급 */
+	grade char(1) DEFAULT 'W', /* 등급 */
 	profile_pic VARCHAR2(255), /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */
 	regdate DATE DEFAULT sysdate /* 가입일 */
 )SEGMENT CREATION IMMEDIATE;
-
 
 
 ALTER TABLE MEMBER ADD UNIQUE (email);

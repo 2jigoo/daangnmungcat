@@ -44,7 +44,7 @@
 		</c:if>
 		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
-			<li><a href="#">${loginUser.getId()}님 안녕하세요.</a></li>
+			<li><a href="#">${loginUser.getGrade()} / ${loginUser.getId()}님 안녕하세요.</a></li>
 			<li><a href="<c:url value="/mypage" />">마이페이지</a></li>
 			<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 			<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
