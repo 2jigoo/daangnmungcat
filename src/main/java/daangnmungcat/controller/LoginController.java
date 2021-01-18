@@ -31,7 +31,7 @@ public class LoginController {
 	
 	@GetMapping("/signup")
 	public String signForm() {
-		return "/signup";
+		return "sign/signup";
 	}
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)

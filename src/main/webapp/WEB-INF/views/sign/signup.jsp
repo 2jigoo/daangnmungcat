@@ -5,7 +5,8 @@
 <style>
 .wrapper {padding:50px; width:80%; margin:0 auto;}
 .signup {width:700px; margin:0 auto;}
-.btns {width:700px; margin:0 auto; text-align:center; padding:30px;}
+.btns {width:700px; margin:0 auto; padding:30px; text-align:center; }
+
 </style>
 <script>
 $(document).ready(function(){
@@ -26,6 +27,7 @@ $(document).ready(function(){
 			$("select[name=dongne1]").append(sCont);
 		}
 	});
+	
 	
 	$("select[name=dongne1]").change(function(){
 		$("select[name=dongne2]").find('option').remove();
@@ -85,7 +87,7 @@ $(document).ready(function(){
 				dongne1:{id:$('#dongne1').val()},
 				dongne2:{id:$('#dongne2').val()},
 				profile_text: null,
-				profile_pic:null
+				profile_pic:'upload/profile/default_user_image.png'
 				};
 		console.log(newMember);
 		
@@ -98,6 +100,7 @@ $(document).ready(function(){
 			data : JSON.stringify(newMember),
 			success: function() {
 				alert('회원가입이 완료되었습니다.');
+				window.location.href= contextPath+'/welcome';
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
@@ -332,8 +335,9 @@ function imageChange(){
 		<td>연락처</td>
 		<td class="replace"><input type="text" name="phone" id="phone">
 		<input type="button" name="send" id="send" value="인증번호발송">
-		<input type="hidden" id="certi" name="certi" value="1"></td>
+		<input type="hidden" id="certi" name="certi" value="1"></td> <!-- 0으로 변경해야됨 -->
 	</tr>
+	<tr><td>인증번호 해제해놨으니까 걍 번호입력만 하세유</td></tr>
 	<tr class="certi_tr">
 		<td></td>
 		<td><input type="text" name="certiNum" id="certiNum" disabled>
@@ -354,18 +358,10 @@ function imageChange(){
 
 	</table>
 
-
 <div class="btns">
-	<input type="file" id="uploadFile" name="uploadFile" onchange="imageChange()">
-	<input type="button" id="test" value="테스트">
-	<img id="productImg">
-	<div id="preview">
-	</div>
-	<br>
-	<br>
 	<input type="button" value="가입완료" id="signup">
-	
 </div>
-<!-- <img src="/daangnmungcat/resources/upload/2021-01-13/9fd83797-9131-4966-8bd2-a2e1ffc56239_asdasdads.jpg"> -->
+
 </div>
+
 <jsp:include page="/resources/include/footer.jsp"/>

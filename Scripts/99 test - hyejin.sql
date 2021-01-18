@@ -29,16 +29,3 @@ SELECT count(*) FROM MEMBER WHERE EMAIL = 'admin@admin.co.kr';
 SELECT count(*) FROM MEMBER WHERE phone = '010-5615-6004';
 
 INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, PROFILE_PIC, PROFILE_TEXT) VALUES('test', '1234', 'test', 'test', 'test@admin.co.kr', '010-5656-1234',1, 1, NULL, NULL);
-
-UPDATE MEMBER SET PROFILE_PIC = '';
-
-SELECT
-		m.id, pwd, m.name, nickname, email, phone,
-		DONGNE1 AS dongne1_id,
-		d1.name AS dongne1_name,
-		dongne2 AS dongne2_id,
-		d2.name AS dongne2_name,
-		grade, profile_pic, profile_text, regdate
-	FROM MEMBER m
-		LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
-		LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID);
