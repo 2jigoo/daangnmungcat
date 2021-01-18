@@ -355,3 +355,25 @@ img {
 .section_chat .section_chat_left .message {
 
 }
+
+
+
+/* joongo - addList */
+list_location {width:100%; overflow:hidden; margin-bottom:10px;}
+.list_location .my_location {float:left; font-size:1em; line-height:40px; background:url(../images/ico_location.png) no-repeat left center; padding-left:18px; font-family:'S-CoreDream'}
+.list_location {display:inline-flex; margin-left: 200px;}
+#add_location > select  {width:150px; height:30px; border:1px solid #ccc; font-size:1em; font-family:'Noto Sans KR'; border-radius:5px;}
+/*글쓰기버튼  */
+.list_location > div a {float:right; line-height:40px; margin-left:5px; padding:0 10px; background:#353535; color:#fff; border-radius:4px; font-size:1em;}
+/*내동네저장 버튼   */
+.list_location .dongne_btn {float:right; font-size:1em; line-height:40px; padding:0 15px; color:#fff; background:#ff7e15; cursor:pointer; margin-left:5px; border-radius:5px;}
+
+
+
+@media screen and (max-width:1024px){
+	#subContent {margin:8% 0;}
+	#subTitle {font-size:2.3em; margin-bottom:5%;}
+
+	.list_location .my_location {line-height:35px;}
+	.list_location > div select {width:140px; height:35px;}
+}
