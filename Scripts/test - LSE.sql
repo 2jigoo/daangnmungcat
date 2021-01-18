@@ -56,7 +56,7 @@ SELECT * FROM SALE_VIEW ;
 SELECT * FROM dongne_view;
 
 INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
-values(sale_seq.nextval, 'chattest2', 'y', 'n', '제목입니다.' , '내용입니다.',  100 , 2, 27 ,'1',sysdate,0,0,0)
+values(sale_seq.nextval, 'chattest1', 'y', 'n', '제목입니다.' , '내용입니다.',  100 , 3, 44 ,'1',sysdate,0,0,0);
 
 
 
@@ -82,7 +82,7 @@ SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE
  UPDATE JOONGO_SALE  SET is_heart = 'n', heart_count=heart_count -1	WHERE id=1 AND mem_id = 'chattest1';
  
 
-
+select id, pwd, name, nickname, email, phone, dongne1, dongne2, grade, profile_pic, profile_text, regdate from MEMBER;
 ----------------찜
 SELECT * FROM JOONGO_HEART;
 SELECT * FROM JOONGO_SALE ;
@@ -92,3 +92,12 @@ SELECT count(*) FROM JOONGO_HEART WHERE sale_id = 2 AND  MEM_ID ='chattest2';
 INSERT INTO JOONGO_HEART values(heart_seq.nextval, 'chattest1', 3, sysdate);
 
  SELECT count(*) FROM JOONGO_HEART where mem_id = 'chattest2' and sale_id=1;
+
+
+
+SELECT * FROM SALE_VIEW ORDER BY regdate desc;
+
+----- 
+SELECT rownum, id, MEM_ID, DONGNE1_NAME ,DONGNE2_NAME , grade, PROFILE_PIC , DOG_CATE ,CAT_CATE ,TITLE ,CONTENT ,PRICE ,REGDATE ,REDATE , 
+SALE_STATE ,BUY_MEM_ID ,HITS , CHAT_COUNT,HEART_COUNT 
+FROM (SELECT * from SALE_VIEW ORDER BY regdate DESC )WHERE ROWNUM < 9 AND MEM_ID = 'chattest1';

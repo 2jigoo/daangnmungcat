@@ -52,7 +52,7 @@ $(function(){
    
    $("select[name=dongne1]").change(function(){
       if ($("select[name=dongne1]").val() == "전체 선택"){
-         window.location = "<c:url value='/joongo_list' />";
+         window.location = "<c:url value='/joongo_list/all' />";
       } else {
          var dong1 = $("select[name=dongne1] option:checked").text();
          window.location = "<c:url value='/joongo_list/"+ dong1 +"' />";
@@ -190,7 +190,9 @@ $(function(){
 			<!-- <button onclick="showData()" class="my_location">내 위치</button> -->
 			<button class="my_location">내 위치</button>
 			<div>
-			<a href="<%=request.getContextPath()%>/joongoSale/addList">글쓰기</a>
+				<c:if test="${not empty loginUser}">
+					<a href="<%=request.getContextPath()%>/joongoSale/addList">글쓰기</a>
+				</c:if>	
 				<select name="dongne1">
 					<option>전체 선택</option>
 				</select> 
@@ -233,7 +235,7 @@ $(function(){
 		    			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    		</c:when>
 		    		<c:otherwise>
-				    	<p><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+				    	<p><a href="<%=request.getContextPath()%>/joongo_list/all${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    		</c:otherwise>
 		    	</c:choose>
 		    </c:if> 
@@ -248,7 +250,7 @@ $(function(){
 			  			<li><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  		</c:when>
 			  		<c:otherwise>
-			    	<li><a href="<%=request.getContextPath()%>/joongo_list${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			    	<li><a href="<%=request.getContextPath()%>/joongo_list/all${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  		</c:otherwise>
 			 		</c:choose>
 			  </c:forEach>
@@ -263,7 +265,7 @@ $(function(){
 			  			<p><a href="<%=request.getContextPath()%>/joongo_list/${dongne1Name}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  		</c:when>
 			  		<c:otherwise>
-			    		<p><a href="<%=request.getContextPath()%>/joongo_list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			    		<p><a href="<%=request.getContextPath()%>/joongo_list/all${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  		</c:otherwise>
 			 		</c:choose>
 			  </c:if> 

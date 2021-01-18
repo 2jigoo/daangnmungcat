@@ -12,7 +12,7 @@ import daangnmungcat.dto.Member;
 @Service
 public interface MemberService {
 	List<Member> selectMemberByAll();
-	Member selectMembetById(@Param("id")String id);
+	Member selectMemberById(@Param("id")String id);
 	Integer checkPwd(@Param("id")String id, @Param("pwd")String pwd);
 	
 	List<Dongne1> Dongne1List();
@@ -22,6 +22,8 @@ public interface MemberService {
 	int idCheck(String id);
 	int emailCheck(String email);
 	int phoneCheck(String phone);
+	
+	int updateProfilePic(Member member);
 	
 	//휴대폰인증
 	void certifiedPhoneNumber(String phoneNumber, String cerNum);

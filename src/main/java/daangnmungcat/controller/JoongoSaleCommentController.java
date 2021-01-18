@@ -2,8 +2,10 @@ package daangnmungcat.controller;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,14 +19,32 @@ public class JoongoSaleCommentController {
 	@Autowired
 	private JoongoSaleCommentService service;
 	
-	@RequestMapping(value = "/joongoCommentWrite", method = RequestMethod.GET)
-	public void insertComment(@RequestBody SaleComment saleComment) {
-		System.out.println("왔다리");
+	@PostMapping("/joongo/comment/write")
+	public ResponseEntity<Object> insertComment(@RequestBody SaleComment saleComment) {
 		try {
-			JSONObject jso = new JSONObject();
-			
+			return ResponseEntity.ok(service.insertJoongoSaleComment(saleComment));
 		} catch (Exception e) {
-			System.out.println("오류");
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	@PostMapping("/joongo/comment/delete")
+	public ResponseEntity<Object> deleteComment(@RequestBody SaleComment saleComment){
+		System.out.println("삭제하러 왔다요");
+		try {
+			return ResponseEntity.ok(service.deleteComment(saleComment.getId()));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	@PostMapping("/joongo/comment/update")
+	public ResponseEntity<Object> updateComment(@RequestBody SaleComment saleComment){
+		System.out.println("수정하러 왔어요");
+		try {
+			return ResponseEntity.ok(service.updateComment(saleComment));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
 

@@ -27,8 +27,8 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public Member selectMembetById(String id) {
-		return mapper.selectMembetById(id);
+	public Member selectMemberById(String id) {
+		return mapper.selectMemberById(id);
 	}
 
 	@Override
@@ -91,6 +91,12 @@ public class MemberServiceImpl implements MemberService {
             System.out.println(e.getMessage());
             System.out.println(e.getCode());
         }
+	}
+
+
+	@Override
+	public int updateProfilePic(Member member) {
+		return mapper.updateProfilePic(member);
 	}
 
 	@Override

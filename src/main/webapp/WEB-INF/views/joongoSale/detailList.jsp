@@ -159,77 +159,32 @@
 
 $(document).ready(function(){
 		
-	
-	//현재시간가져오기
-	var now = new Date();
-	console.log(now);
-		
-	
-	//글쓴시간 가져오기
-	
+	/* 글쓴 시간 가져오기
 	var inDate = document.getElementById('regdate').innerHTML;
-	console.log("inDate >> " + inDate);
 	
-	
-	//KST를 빼면 new Date()에서 시간 읽는거 가능해진다..
+	// KST를 빼면 new Date()에서 시간 읽는 거 가능해진다..
 	afterStr = inDate.split('KST');
-	console.log(afterStr)
-	var testDate = afterStr[0]+afterStr[1]
-	
+	var testDate = afterStr[0]+afterStr[1];
 	var writeNow = new Date(testDate);
-	console.log(writeNow)
 	
+	 */
 	
-	//현재시간이랑 글쓴시간 비교
-	var minus;
+	// timeBefore(writeNow) : writeNow - 변환할 날짜 객체
+	//var timeBeforeRes = timeBefore(writeNow);
+	//document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
 	
-	if(now.getFullYear() > writeNow.getFullYear()){
-		minus= now.getFullYear() - writeNow.getFullYear();
-		 document.getElementsByClassName("lastTime")[0].innerHTML = minus+"년 전";
-		 console.log(minus+"년 전");
-	}else if(now.getMonth() > writeNow.getMonth()){
-        //년도가 같을 경우 달을 비교해서 출력
-        minus= now.getMonth()-writeNow.getMonth();
-        document.getElementsByClassName("lastTime")[0].innerHTML = minus+"달 전";
-        console.log(minus+"달 전");
-    }else if(now.getDate() > writeNow.getDate()){
-   	//같은 달일 경우 일을 계산
-        minus= now.getDate()-writeNow.getDate();
-        document.getElementsByClassName("lastTime")[0].innerHTML = minus+"일 전";
-        console.log(minus+"일 전");
-    }else if(now.getDate() == writeNow.getDate()){
-    //당일인 경우에는 
-        var nowTime = now.getTime();
-        var writeTime = writeNow.getTime();
-        if(nowTime>writeTime){
-        //시간을 비교
-            sec = parseInt(nowTime - writeTime) / 1000;
-            day  = parseInt(sec/60/60/24);
-            sec = (sec - (day * 60 * 60 * 24));
-            hour = parseInt(sec/60/60);
-            sec = (sec - (hour*60*60));
-            min = parseInt(sec/60);
-            sec = parseInt(sec-(min*60));
-            if(hour>0){
-            //몇시간전인지
-                document.getElementsByClassName("lastTime")[0].innerHTML = hour+"시간 전";
-                console.log(hour+"시간 전");
-            }else if(min>0){
-            //몇분전인지
-                document.getElementsByClassName("lastTime")[0].innerHTML = min+"분 전";
-                console.log(min+"분 전");
-            }else if(sec>0){
-            //몇초전인지 계산
-                document.getElementsByClassName("lastTime")[0].innerHTML = sec+"초 전";
-                console.log(sec+"초 전");
-            }
-        }
-    }
-	
+	var regdate = document.getElementById('regdate').innerHTML;
+	var writeNow = dayjs(regdate).toDate();
+	document.getElementsByClassName("lastTime")[0].innerHTML = timeBefore(writeNow);
 	
 	// 댓글 쓰기
 	var contextPath = "<%=request.getContextPath()%>";
 	$(".comment_write_btn").click(function(){
+		if ($(".comment_member_id").val() == ""){
+			alert("회원만 댓글쓰기가 가능합니다.")
+			return false;
+		}
+		
 		if($(".comment_content").val() == ""){
 			alert("댓글내용을 입력해주세요.");
 			return false;
@@ -244,10 +199,9 @@ $(document).ready(function(){
 			},
 			content : $(".comment_content").val()
 		}
-		console.log(addComment)
 		$.ajax({
-			type: "get",
-			url : contextPath+"/joongoCommentWrite",
+			type: "post",
+			url : contextPath+"/joongo/comment/write",
 			contentType : "application/json; charset=utf-8",
 			cache : false,
 			dataType : "json",
@@ -256,7 +210,7 @@ $(document).ready(function(){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
 			success:function(){
-				alert("성공");
+				location.reload();
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
@@ -266,8 +220,137 @@ $(document).ready(function(){
 	
 	$('#btnLike').on("click", function(json){
 		
-	});
+	})
 	
+	$(".joongo_comment .info .comment_btn").one("click", function(){
+		var comment_wrap = '<div class="comment_write">';
+		comment_wrap += '<input type="hidden" value="'+ $(".comment_write .comment_sale_id").val() +'" class="comment_sale_id2">';
+		comment_wrap += '<input type="hidden" value="${loginUser.id}" class="comment_member_id2">';
+		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").data("id") +'" class="comment_saleComment_id2">';
+		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").find(".name").text() +'" class="comment_tabMember_id2">';
+		comment_wrap += '<textarea placeholder="댓글내용을 입력해주세요" class="comment_content2"></textarea>';
+		comment_wrap += '<input type="button" value="등록" class="comment_write_btn2 btn">'
+		comment_wrap += '</div>'
+		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
+	})
+	
+	$(".joongo_comment .info .update_btn").one("click", function(){
+		var comment_wrap = '<div class="comment_write">';
+		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").data("id") +'" class="comment_sale_id">';
+		comment_wrap += '<textarea placeholder="댓글내용을 입력해주세요" class="comment_content">';
+		comment_wrap += $(this).parent("ul").parent("div").parent("li").find(".content").text().split('<br/>').join("\r\n");
+		comment_wrap += '</textarea>';
+		comment_wrap += '<input type="button" value="수정" class="comment_update btn">'
+		comment_wrap += '</div>';
+		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
+	})
+	
+	$(".joongo_comment .info .delete_btn").click(function(){
+		var deleteComment = {
+			id : $(this).parent("ul").parent("div").parent("li").data("id")
+		}
+		console.log(deleteComment)
+		$.ajax({
+			type: "post",
+			url : contextPath+"/joongo/comment/delete",
+			contentType : "application/json; charset=utf-8",
+			cache : false,
+			dataType : "json",
+			data : JSON.stringify(deleteComment),
+			beforeSend : function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success:function(){
+				alert("삭제됐습니다.")
+				location.reload();
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+			}
+		})
+	})
+	
+});
+
+$(document).on("click", ".comment_write_btn2", function(){
+	var contextPath = "<%=request.getContextPath()%>";
+	
+	console.log($(this).closest(".comment_write").find(".comment_member_id2").val())
+	if ($(this).closest(".comment_write").find(".comment_member_id2").val() == ""){
+		alert("회원만 댓글쓰기가 가능합니다.")
+		return false;
+	}
+	if ($(this).closest(".comment_write").find(".comment_content2").val() == ""){
+		alert("댓글내용을 입력해주세요.")
+		return false;
+	}
+	
+	var addComment = {
+		sale : {
+			id : $(this).closest(".comment_write").find(".comment_sale_id2").val()
+		},
+		member : {
+			id : $(this).closest(".comment_write").find(".comment_member_id2").val()
+		},
+		saleComment : {
+			id : $(this).closest(".comment_write").find(".comment_saleComment_id2").val()
+		},
+		tagMember : {
+			id : $(this).closest(".comment_write").find(".comment_tabMember_id2").val()
+		},
+		content : $(this).closest(".comment_write").find(".comment_content2").val()
+	}
+	console.log(addComment)
+	$.ajax({
+		type: "post",
+		url : contextPath+"/joongo/comment/write",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		dataType : "json",
+		data : JSON.stringify(addComment),
+		beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		},
+		success:function(){
+			location.reload();
+		},
+		error: function(request,status,error){
+			alert('에러' + request.status+request.responseText+error);
+		}
+	})
+});
+
+$(document).on("click", ".comment_update", function(){
+	var contextPath = "<%=request.getContextPath()%>";
+	
+	if ($(this).closest(".comment_write").find(".comment_content").val() == ""){
+		alert("댓글내용을 입력해주세요.")
+		return false;
+	}
+	
+	var updateComment = {
+		id : $(this).closest(".comment_write").find(".comment_sale_id").val(),
+		content : $(this).closest(".comment_write").find(".comment_content").val()
+	}
+	console.log(updateComment)
+	$.ajax({
+		type: "post",
+		url : contextPath+"/joongo/comment/update",
+		contentType : "application/json; charset=utf-8",
+		cache : false,
+		dataType : "json",
+		data : JSON.stringify(updateComment),
+		beforeSend : function(xhr){   
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		},
+		success:function(){
+			alert("수정됐습니다.")
+			location.reload();
+		},
+		error: function(request,status,error){
+			alert('에러' + request.status+request.responseText+error);
+		}
+	})
 });
 
 </script>
@@ -292,7 +375,7 @@ $(document).ready(function(){
 			</div>
 			<div id="section_profile_left">
 				<div id="nickname" >${list.member.id}</div>
-				<div id="dongnename">${list.dongne1.dong1Name} ${list.dongne2.dong2Name}</div>
+				<div id="dongnename">${list.dongne1.name} ${list.dongne2.name}</div>
 			</div>		
 		</div>
 	</a>
@@ -305,7 +388,7 @@ $(document).ready(function(){
 			<c:if test="${list.dogCate == 'n'}"></c:if>
 			<c:if test="${list.catCate == 'y'}">고양이 카테고리</c:if>
 			<c:if test="${list.catCate == 'n'}"></c:if> 
-			· <div class="lastTime"></div> <div id="regdate">${list.regdate }</div> 
+			· <div class="lastTime"></div> <div class="regdate" id="regdate">${list.regdate }</div> 
 		</div>
 		<h2>${list.price }원</h2>
 		
@@ -358,7 +441,7 @@ $(document).ready(function(){
 						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>
-						<p class="section_location">${mlist.dongne1.dong1Name} ${mlist.dongne2.dong2Name}</p>
+						<p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
 						<p class="section_subject">${mlist.title}</p>
 						<p class="section_price"><span>${mlist.price}</span>원</p>
 						<ul>
@@ -376,48 +459,65 @@ $(document).ready(function(){
 	</section>
 </c:forEach>
 
-
-<div class="joongo_comment s-inner">
+<div class="joongo_comment s-inner" id="joongo_comment">
 	<p class="tit">댓글</p>
 	<ul class="joongo_comment_list">
-		<li>
+		<c:forEach items="${commentList}" var="commentList">
+		<c:if test="${empty commentList.saleComment.id}">
+		<li data-id="${commentList.id}">
+		</c:if>
+		<c:if test="${not empty commentList.saleComment.id}">
+		<li class="reply" data-id="${commentList.id}">
+		</c:if>
 			<div class="user">
 				<p class="img"></p>
-				<p class="name">닉네임</p>
+				<p class="name">${commentList.member.id}</p>
 			</div>
-			<p class="content">댓글 내용이다아아아</p>
+			<pre class="content">${commentList.content}</pre>
 			<div class="info">
-				<p class="date">2021.01.05</p>
+				<p class="date">${commentList.regdate}</p>
 				<ul>
-					<li>답글쓰기</li>
-					<li>수정</li>
-					<li>삭제</li>
+					<li class="comment_btn">답글쓰기</li>
+					<c:if test="${loginUser.id == commentList.member.id}">
+					<li class="update_btn">수정</li>
+					<li class="delete_btn">삭제</li>
+					</c:if>
 				</ul>
 			</div>
 		</li>
-		<li class="reply">
-			<div class="user">
-				<p class="img"></p>
-				<p class="name">닉네임</p>
-			</div>
-			<p class="content">댓글 내용이다아아아</p>
-			<div class="info">
-				<p class="date">2021.01.05</p>
-				<ul>
-					<li>답글쓰기</li>
-					<li>수정</li>
-					<li>삭제</li>
-				</ul>
-			</div>
+		</c:forEach>
+		<c:if test="${empty commentList}">
+		<li class="no_comment">
+			등록된 댓글이 없습니다.
 		</li>
+		</c:if>
 	</ul>
+	
+	<c:forEach items="${list}" var="list">
+		<div class="board_page">
+		    <c:if test="${pageMaker.prev}">
+				    <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.startPage - 1)}&id=${list.id}#joongo_comment">이전</a></p>
+		    </c:if> 
+			<ul>
+			
+			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+			    <li><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(idx)}&id=${list.id}#joongo_comment">${idx}</a></li>
+			  </c:forEach>
+			</ul>
+			
+			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+			    <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.endPage + 1)}&id=${list.id}#joongo_comment">다음</a></p>
+			  </c:if> 
+		</div>
+	</c:forEach>
+	
 	<div class="comment_write">
 		<c:forEach items="${list}" var="list">
 			<input type="hidden" value="${list.id}" class="comment_sale_id">
 		</c:forEach>
-		<input type="hidden" value="chattest1" class="comment_member_id">
+		<input type="hidden" value="${loginUser.id}" class="comment_member_id">
 		<textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
-		<input type="button" value="등록" class="comment_write_btn">
+		<input type="button" value="등록" class="comment_write_btn btn">
 	</div>
 </div>
 

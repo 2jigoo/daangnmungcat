@@ -1,7 +1,9 @@
 package daangnmungcat.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.mapper.ChatMapper;
 import daangnmungcat.mapper.ChatMessageMapper;
 import daangnmungcat.service.ChatService;
@@ -59,11 +62,27 @@ public class ChatServiceImpl implements ChatService {
 		return chat;
 	}
 	
+	@Override
+	public Chat getChatWithMessages(int chatId, Criteria criteria) {
+		Chat chat = chatMapper.selectChatByChatId(chatId);
+		chat.setMessages(getChatMessages(chatId, criteria));
+		return chat;
+	}
+	
 	
 	// 메시지들 읽어오기
 	@Override
 	public List<ChatMessage> getChatMessages(int chatId) {
 		List<ChatMessage> msgList = messageMapper.selectAllChatMessageByChatId(chatId);
+		return msgList;
+	}
+	
+	@Override
+	public List<ChatMessage> getChatMessages(int chatId, Criteria criteria) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("chatId", chatId);
+		params.put("criteria", criteria);
+		List<ChatMessage> msgList = messageMapper.selectChatMessagesByChatIdWithPaging(params);
 		return msgList;
 	}
 	

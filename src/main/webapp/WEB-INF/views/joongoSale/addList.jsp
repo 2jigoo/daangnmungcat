@@ -7,68 +7,49 @@
 <style>
 </style>
 <script type="text/javascript">
-var dongne1Id;
-var dongne1Name = "${dongne1Name}"
 $(function(){
 	
 	var contextPath = "<%=request.getContextPath()%>";
 
-		$.get(contextPath+"/dongne1", function(json){
+	console.log(contextPath);
+	
+	var test = ${loginUser.getDongne1().getId()}
+	
+	
+	$.get(contextPath+"/dongne1", function(json){
+		console.log(json)
 		var datalength = json.length; 
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				if (json[i].dong1Name == dongne1Name){
-					sCont += '<option value="' + json[i].dong1Id + '" selected>';
-					dongne1Id = json[i].dong1Id;
-					console.log("test2 : "+ dongne1Id)
-				} else {
-					sCont += '<option value="' + json[i].dong1Id + '">';
-				}
-				sCont += json[i].dong1Name;
-				sCont += '</option>';
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
 		}
 	});
 	
-	setTimeout(function(){
-		console.log("test : "+ dongne1Id)
-		if (dongne1Name != ""){
-			$.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
-				var datalength = json.length; 
-				var sCont = "<option>동네를 선택하세요</option>";
-				for(i=0; i<datalength; i++){
-					if (json[i].dong2Name == "${dongne2Name}"){
-						sCont += '<option value="' + json[i].dong2Id + '" selected>';
-					} else {
-						sCont += '<option value="' + json[i].dong2Id + '">';
-					}
-					sCont += json[i].dong2Name;
-					sCont += '</option>';
-				}
-				$("select[name=dongne2]").append(sCont);	
-			});
-		}
-	}, 50)
-	
 	$("select[name=dongne1]").change(function(){
-		if ($("select[name=dongne1]").val() == "시 선택"){
-			window.location = "<c:url value='/joongoSale/addList' />";
-		} else {
-			var dong1 = $("select[name=dongne1] option:checked").text();
-			window.location = "<c:url value='/joongoSale/addList/"+ dong1 +"' />";
-		}
+		$("select[name=dongne2]").find('option').remove();
+		var dong1 = $("select[name=dongne1]").val();
+		$.get(contextPath+"/dongne2/"+dong1, function(json){
+			var datalength = json.length; 
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne2]").append(sCont);	
+		});
 	});
 	
-	$("select[name=dongne2]").change(function(){
-		if ($("select[name=dongne2]").val() == "동네를 선택하세요"){
-			window.location = "<c:url value='/joongoSale/addList/"+ dongne1Name +"' />";
-		} else {
-			var dong1 = $("select[name=dongne1] option:checked").text();
-			var dong2 = $("select[name=dongne2] option:checked").text();
-			 window.location = "<c:url value='/joongoSale/addList/"+ dong1 +"/"+ dong2 +"' />";
+	
+	1
+	//강아지 카테고리 선택시 고양이카테고리 value 'n' 주기
+	$("select[name=dogCate]").change(function(){
+		var target = document.getElementById('dogCate');
+		if(target.options[target.selectedIndex].text == "강아지 카테고리"){
+			$('#catCate').attr('value','n');
 		}
+		
 	});
 	
 	
@@ -78,69 +59,19 @@ $(function(){
 	    return false;
 	})
 	
-	function success(position) { //성공시
-	    var lat=position.coords["latitude"];
-	    var lon=position.coords["longitude"];
-	    console.log("1 : "+ lat)
-	    console.log("1 : "+ lon)
-	    
-		var test = {lat:lat, lon:lon}
-		console.log(test);
-	    $.ajax({
-			type:"post",
-			contentType:"application/json; charset=utf-8",
-			url:contextPath+"/gpsToAddress2",
-			cache:false,
-			dataType: "json",
-			data:JSON.stringify(test),
-			beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-			},
-	        success:function(data){
-				console.log(data.address);
-				if(confirm("검색된 주소로 검색하시겠습니다? - "+ data.address1+" "+ data.address2) == true){
-					window.location=contextPath+"/joongoSale/addList/"+ data.address1 +"/"+ data.address2;
-				}
-			    else{
-			        return ;
-			    }
-	        }, 
-	        error: function(){
-				alert("에러");
-			}
-		})
-		console.log(contextPath+"/gpsToAddress2")
-	}
+	 
+	 $('#checkFree').change(function(){
+	        if(this.checked){
+	            $('#priceDiv').fadeOut('fast');
+	        	$('#price').attr('value', 0);
+	        }else{
+	            $('#priceDiv').fadeIn('fast');
+	        }
+	    });
 	
-	 function fail(err){
-	    switch (err.code){
-	        case err.PERMISSION_DENIED:
-	        	alert("사용자 거부");
-	        break;
-	 
-	        case err.PERMISSION_UNAVAILABLE:
-	        	alert("지리정보를 얻을 수 없음");
-	        break;
-	 
-	        case err.TIMEOUT:
-	        	alert("시간초과");
-	        break;
-	 
-	        case err.UNKNOWN_ERROR:
-	        	alert("알 수 없는 오류 발생");
-	        break;
-	    }
-	 }
-	 
-	 
-	 $("input:radio[name=dogCate]").change(function(){
-		 //라디오버튼 강아지 눌렀을때 
-		 
-	 });
-
 	 
 	 $('#insertList').on("click", function(json){
-		var price = $('#price').val();
+		var price = $('#price').val();	
 		 var num = /^[0-9]*$/;
 		 
 		 if($('#title').val() == ""){
@@ -152,46 +83,36 @@ $(function(){
 		 }else if(num.test(price) == false){
 			 alert('가격은 숫자만 입력 가능합니다.');
 			 return;
-		 }else if($(':input[name=dogCate]:radio:checked').length < 1){
-			 alert('강아지카테고리 여부를 선택해주세요.');
+		 }else if($('#dogCate').val() == ""){
+			 alert('카테고리를 선택해주세요.');
 			 return;
-		 }else if($(':input[name=catCate]:radio:checked').length < 1){
-			 alert('고양이카테고리 여부를 선택해주세요.');
-			 return;
-		 } 
+		 }
 
-		//파일 선택 여부 - 유효성 검사(DOM에있는 파일이 비어있는게 있는지 확인)
-			var inputs = fileArea.getElementsByTagName('input');
-			for(var i=0;i<input.lenght; i++){
-				if(inputs[i].value == ""){
-					alert('파일을 선택하세요!');
-					inputs[i].focust();
-					return;
-				}
-			}
+		 
 		 
 		 var newlist = {
 			member : {
 				id : $('#memId').val()
 			},
-			dogCate : $(':input[name=dogCate]:radio:checked').val(),
-			catCate : $(':input[name=catCate]:radio:checked').val(),
+			dogCate : $('select[name=dogCate]').val(),
+			catCate : $('#catCate').val(),
 			title : $('#title').val(),
 			content : $('#content').val(),
 			price : $('#price').val(),			
-		 	dongne1: {
-		 		dong1Id : $('#dongne1').val()
+			dongne1: {
+		 		id : $('#dongne1').val()
 		 	},
 		 	dongne2: {
-		 		dong2Id : $('#dongne2').val()
+		 		id : $('#dongne2').val()
 		 	}
-		 };
+		};
+		 
 		 	alert(JSON.stringify(newlist));
 		 	
 		 	
 		 	
 			$.ajax({
-				url: contextPath + "/insert",
+				url: contextPath + "/joongoSale/insert",
 				type: "POST",
 				contentType:"application/json; charset=UTF-8",
 				dataType: "json",
@@ -206,7 +127,6 @@ $(function(){
 					window.location.replace(contextPath+"/joongo_list");
 				},
 				error: function(request,status,error){
-					alert("동네를 먼저선택해주세요!");
 					alert('에러!!!!' + request.status+request.responseText+error);
 				}
 			});
@@ -230,6 +150,7 @@ $(function(){
 				var element = document.createElement("input");
 				element.type = "file";
 				element.name = "upfile" + cnt;
+				element.id = "upfile" + cnt;
 				var element2 = document.createElement("img");
 				element2.id = "productImg"+cnt;
 				var element3 = document.createElement('div');
@@ -269,96 +190,104 @@ $(function(){
 
 
 </script>
-<article>
-<form action="/insert" method="POST">
-<div>
-<table border="1">
-	<colgroup>
-		<col width="20%">
-		<col width="80%">
-	</colgroup>
-	<tr>
-		<td>아이디</td>
-		<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
-	</tr>
-	<tr>
-		<td>동네</td>
-		<td>
-			<div id="add_location" class="s-inner">
-				<div class="list_top">
-					<button class="my_location">내 위치</button>
-				<div>
-				<select name="dongne1" id="dongne1">
-					<option>시 선택</option>
-				</select> 
-				<select name="dongne2" id="dongne2">
-				</select>
-				</div>
-				</div>
-			</div>
+<div id="subContent">
+	<h2 id="subTitle">글쓰기</h2>
+	<div id="pageCont" class="s-inner">
+		<article>
+		<form action="/insert" method="POST">
+		<div>
+		<table border="1">
+			<colgroup>
+				<col width="20%">
+				<col width="80%">
+			</colgroup>
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
+			</tr>
+			<tr>
+				<td>동네</td>
+				<td>
+					<div id="add_location" class="s-inner">
+						<div class="list_top">
+							<button class="my_location">내 위치</button>
+						<div>
+						<select name="dongne1" id="dongne1">
+							<option value="0">지역을 선택하세요</option>
+						</select> 
+						<select name="dongne2" id="dongne2">
+							<option value="0">동네를 선택하세요</option>
+						</select>
+						</div>
+						</div>
+					</div>
+					
+				</td>
+			</tr>
 			
-		</td>
-	</tr>
-	
-	<tr>
-		<td>사진 추가 / 제거 <br>
-			<input type="button" value="파일추가" id="addFileBtn">
-			<input type="button" value="파일제거" id="delFileBtn">
-		</td>
-		<td>
-			<div id="fileArea">
-				<input type="file" id="upfile1" name="upfile1" >
-				<img id="productImg1">
-				<div id="preview1"></div>
-			</div>
-		</td>
-	</tr>
-	<tr>
-	<tr>	
-		<td>강아지 카테고리 인가요 ? </td>
-		<td>
-			<input type="radio" name="dogCate" id="dogCate" value="y">네! 맞아요!
-			<input type="radio" name="dogCate" id="dogCate" value="n">아니에요!
-		</td>
-	</tr>
-	<tr>	
-		<td>고양이 카테고리 인가요 ? </td>
-		<td>
-			<input type="radio" name="catCate" id="catCate" value="y">네! 맞아요!
-			<input type="radio" name="catCate" id="catCate" value="n">아니에요!
-		</td>
-	</tr>
-	<tr>
-		<td>제목(상품명)</td>
-		<td><input type="text" name="title" id="title"></td>
-	</tr>
-	<tr>
-		<td>가격</td>
-		<td><input type="text" name="price" id="price"></td>
-	<tr>
-	<tr>
-		<td>내용</td>
-		<td><textarea class="content" name="content" id="content"></textarea>>
-	</tr>
-	
-<!-- 	<tr>
-		<td></td>
-		<td>
-			<select>
-				<option>판매상태</option>
-				<option>판매중</option>		
-			</select>
+			<tr>
+				<td>사진 추가 / 제거 <br>
+					<input type="button" value="파일추가" id="addFileBtn">
+					<input type="button" value="파일제거" id="delFileBtn">
+				</td>
+				<td>
+					<div id="fileArea">
+						<input type="file" id="upfile1" name="upfile1" onchange="imageChange()">
+						<img id="productImg1">
+						<div id="preview1"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+			<tr>	
+				<td>카테고리</td>
+				<td>
+					<select name="dogCate" id="dogCate" >
+						<option value="">카테고리를 선택하세요.</option>
+						<option value="y">강아지 카테고리</option>
+						<option value="n">고양이 카테고리 </option>
+						<option value="y"> 모두 포함 </option>
+					</select>
+					<input type="hidden" name="catCate" value="y" id="catCate">
+				</td>
+			</tr>
+			<tr>
+				<td>제목(상품명)</td>
+				<td><input type="text" name="title" id="title"></td>
+			</tr>
+			<tr>
+				<td>가격</td>
+				<td>
+					<div id="priceDiv"><input type="text" name="price" id="price"></div>
+					<input type="checkbox" id="checkFree" name="price" value="0">무료나눔하기
+				</td>
+			<tr>
+			<tr>
+				<td>내용</td>
+				<td><textarea class="content" name="content" id="content"></textarea>
+			</tr>
 			
-		</td>
-	</tr>
- -->	
- 	<tr>
-	<td colspan="2">
-			<input type="button" id="insertList" value="글 등록하기">
-		</td>
-	</tr>
-</table>
+		<!-- 	<tr>
+				<td></td>
+				<td>
+					<select>
+						<option>판매상태</option>
+						<option>판매중</option>		
+					</select>
+					
+				</td>
+			</tr>
+		 -->	
+		 	<tr>
+			<td colspan="2">
+					<input type="button" id="insertList" value="글 등록하기">
+				</td>
+			</tr>
+		</table>
+		</div>
+		</form>
+		</article>
+	
+	</div>
 </div>
-</form>
-</article>
 <jsp:include page="/resources/include/footer.jsp"/>

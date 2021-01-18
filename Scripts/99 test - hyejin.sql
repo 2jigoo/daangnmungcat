@@ -4,6 +4,8 @@ INSERT INTO MEMBER VALUES('admin', '1234', '관리자', '관리자', 'admin@admi
 
 SELECT * FROM MEMBER;
 
+UPDATE MEMBER SET PROFILE_PIC = NULL;
+
 SELECT 1 FROM MEMBER WHERE id = 'admin' and pwd = '1234';
 SELECT 1 FROM MEMBER WHERE id = 'test' and pwd = '1234';
 SELECT NVL(null, 2) FROM MEMBER WHERE id = 'admin';
@@ -24,3 +26,5 @@ SELECT count(*) FROM MEMBER WHERE EMAIL = 'admin@admin.co.kr';
 SELECT count(*) FROM MEMBER WHERE phone = '010-5615-6004';
 
 INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, GRADE, PROFILE_PIC, PROFILE_TEXT) VALUES('test', '1234', 'test', 'test', 'test@admin.co.kr', '010-5656-1234',1, 1, 1, NULL, NULL);
+
+UPDATE MEMBER SET PROFILE_PIC = '';

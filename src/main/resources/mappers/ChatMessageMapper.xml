@@ -27,6 +27,7 @@
 		<id column="id" property="id" />
 		<result column="chat_id" property="chat.id" />
 		<result column="mem_id" property="member.id" />
+		<result column="mem_nickname" property="member.nickname" />
 		<result column="content" property="content" />
 		<result column="regdate" property="regdate" />
 		<result column="read_yn" property="readYn" />
@@ -42,6 +43,27 @@
 		<include refid="selectSQL" />
 		WHERE chat_id = #{id}
 		ORDER BY regdate DESC
+	</select>
+
+	<select id="selectChatMessagesByChatIdWithPaging" parameterType="HashMap" resultMap="msgRes">
+		SELECT rn, c.id, chat_id, mem_id, nickname AS mem_nickname, content, c.regdate, read_yn, image
+		FROM
+		(
+			SELECT *
+			FROM
+			(
+				SELECT rownum AS rn, a.*
+				FROM
+				(
+					SELECT *
+					FROM JOONGO_CHAT_MSG jcm
+					WHERE chat_id = #{chatId}
+					ORDER BY id desc
+				) a
+			) ORDER BY id
+		) c LEFT OUTER JOIN MEMBER m ON (c.mem_id = m.id)
+		WHERE rn <![CDATA[ >= ]]> #{criteria.rowStart} and rn <![CDATA[ <= ]]> #{criteria.rowEnd}
+		ORDER BY rn desc
 	</select>
 
 	<select id="selectLatestChatMessageByChatId" resultMap="msgRes">

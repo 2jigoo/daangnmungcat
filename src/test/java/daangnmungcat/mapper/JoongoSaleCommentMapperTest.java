@@ -49,5 +49,11 @@ public class JoongoSaleCommentMapperTest {
 		
 		mapper.insertJoongoSaleComment(saleComment);
 	}
+	
+	@Test
+	public void testDeleteComment() {
+		System.out.println("테스트중");
+		mapper.deleteComment(3);
+	}
 
 }
