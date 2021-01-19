@@ -253,11 +253,12 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .joongo_comment_list > li {padding:15px 0; border-bottom:1px solid #eee;}
 .joongo_comment_list > li.reply {box-sizing:border-box; padding-left:50px;}
 .joongo_comment_list > li.no_comment {text-align:center; padding:50px 0;}
-.joongo_comment_list .user {width:100%; overflow:hidden;}
+.joongo_comment_list .user {width:100%; overflow:hidden; margin-bottom:10px;}
 .joongo_comment_list .user .img {width:35px; height:35px; background:#ddd; border-radius:50%; float:left;}
 .joongo_comment_list .user .name {float:left; font-size:1em; line-height:35px; margin-left:15px;}
-.joongo_comment_list .content {width:100%; margin:10px 0; font-size:0.95em; line-height:1.7em; font-family:'S-CoreDream'}
-.joongo_comment_list .info {font-size:0.8em; color:#666}
+.joongo_comment_list .tag {display:inline; font-weight:600; color:#000;}
+.joongo_comment_list .content {width:100%; font-size:0.95em; line-height:1.7em; font-family:'S-CoreDream'; display:inline; white-space:break-spaces;}
+.joongo_comment_list .info {font-size:0.8em; color:#666; margin-top:10px;}
 .joongo_comment_list .info .date {display:inline-block;}
 .joongo_comment_list .info ul {display:inline-block;}
 .joongo_comment_list .info ul li {display:inline-block; margin-left:10px; cursor:pointer;}
