@@ -44,6 +44,22 @@ public class Member {
 	public Member(String email) {
 		this.email = email;
 	}
+	
+	
+
+	public Member(String id, String pwd, String name, String nickname, String email, String phone, Dongne1 dongne1,
+			Dongne2 dongne2, String profilePic, String profileText) {
+		this.id = id;
+		this.pwd = pwd;
+		this.name = name;
+		this.nickname = nickname;
+		this.email = email;
+		this.phone = phone;
+		this.dongne1 = dongne1;
+		this.dongne2 = dongne2;
+		this.profilePic = profilePic;
+		this.profileText = profileText;
+	}
 
 	public Member(String id, String pwd, String name, String nickname, String email, String phone, String grade,
 			Dongne1 dongne1,Dongne2 dongne2, String profilePic, String profileText) {

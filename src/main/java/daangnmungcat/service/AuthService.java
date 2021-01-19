@@ -25,6 +25,6 @@ public class AuthService {
 		}
 		
 		// 아이디/닉넴/프로필사진  생성자를 만들어서
-		return new AuthInfo(member.getId(), member.getNickname(), member.getDongne1(), member.getDongne2(), member.getProfilePic());
+		return new AuthInfo(member.getId(), member.getNickname(), member.getDongne1(), member.getDongne2(), member.getProfilePic(), member.getGrade());
 	}
 }

@@ -57,12 +57,7 @@ public class MemberMapperTest {
 		List<Dongne1> list1 = mapper.Dongne1List();
 		List<Dongne2> list2 = mapper.Dongne2List(1);
 	}
-	
-	//@Test
-	public void insertMember() {
-		//Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", "1", 1, 1, "", "");
-		//mapper.insertMember(member);
-	}
+
 	
 	@Test
 	public void emailCheck() {
@@ -70,9 +65,15 @@ public class MemberMapperTest {
 		System.out.println(res);
 	}*/
 	
-	@Test
+	//@Test
 	public void dongne() {
 		Dongne2 dongne2 = mapper.selectDongneByDongne2(new Dongne2(10));
 		log.debug(dongne2.toString());
+	}
+	
+	@Test
+	public void insertMember() {
+		Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", new Dongne1(1), new Dongne2(1), "", "");
+		mapper.insertMember(member);
 	}
 }
