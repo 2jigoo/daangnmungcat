@@ -24,37 +24,10 @@ textarea {
 <script type="text/javascript">
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
-	var dong = document.getElementById("dongName").value
-	var nae = document.getElementById("naeName").value
-	$.get(contextPath, function(jsonPlace){
-		var datalength = jsonPlace.length; 
-        var sCont = "";
-        var sCont2 = "";
-        for(i=0; i<datalength; i++){
-      		 sCont2 += '<option value="' + jsonPlace[i].id + '">' + jsonPlace[i].name + '</option>';
-        }
-        	$("select[name=dongne1]").append(sCont2);
-       /*  for(i=0; i<datalength; i++){
-      		 sCont += '<option value="' + jsonPlace[i].id + '">' + jsonPlace[i].name + '</option>';
-        }
-       	 $("select[name=dongne2]").append(sCont); */
-        	$('#dongne1').val(dong).prop("selected",true);
+		var dong = document.getElementById("dongName").value
+		var nae = document.getElementById("naeName").value
+        //	$('#dongne1').val(dong).prop("selected",true);
        // 	$('#dongne2').val(nae).prop("selected",true);
-	});
-
-	$("select[name=dongne1]").change(function(){
-		$("select[name=dongne2]").find('option').remove();
-			var dong = $("select[name=dongne1]").val();
-			$.get(contextPath+"/dongne2/"+dong1, function(json){
-			var datalength = json.length; 
-			var sCont = "";
-			for(i=0; i<datalength; i++){
-				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
-			}
-			$("select[name=dongne2]").append(sCont);	
-		});
-		
-	});
 	
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
@@ -65,15 +38,13 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
+			//$('#dongne1').val(dong).attr("selected","selected");
 		}
 	});
 	
-	
-	
-	
 	$("select[name=dongne1]").change(function(){
 		$("select[name=dongne2]").find('option').remove();
-			var dong1 = $("select[name=dongne1]").val();
+		var dong1 = $("select[name=dongne1]").val();
 		$.get(contextPath+"/dongne2/"+dong1, function(json){
 			var datalength = json.length; 
 			var sCont = "";
@@ -81,7 +52,7 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne2]").append(sCont);	
-		});				
+		});
 	});
 	
 	
@@ -96,9 +67,7 @@ $(function(){
 			}else{
 				//alert("모두 선택");
 			}
-			
 	});
-	
 	
 	
 	$(".my_location").on("click", function(){z

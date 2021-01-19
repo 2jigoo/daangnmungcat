@@ -132,30 +132,14 @@ public class JoongoListController {
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
 	public String addListForm(Model model, HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/login";
-		} else {
-			if( loginUser.getDongne1().getName() == "") {
-				//저장된 동네가 없으면
-			}else {
-				//사용자의 저장된 동네가 있으면 
-				List<Dongne2> list = service.Dongne2List(loginUser.getDongne1().getId());
-				Gson gson = new Gson();
-				String jsonPlace = gson.toJson(list);
-				model.getAttribute(jsonPlace);
-				System.out.println("json >>>>>>>>>>>" + jsonPlace);
-			}
 			return "joongoSale/addList";
 		}
-	}
 	
 	//insertForm용  -> 동네1 선택
 	@GetMapping("/joongoSale/addList/dongne1")
 	public ResponseEntity<Object> dongne1() {
 		return ResponseEntity.ok(service.Dongne1List());
 	}
-	
 	
 	//insertForm용 -> 동네2선택 후
 	@GetMapping("joongoSale/addList/dongne2/{dongne1}")
