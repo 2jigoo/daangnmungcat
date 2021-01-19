@@ -365,8 +365,7 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 #add_location > select  {width:150px; height:30px; border:1px solid #ccc; font-size:1em; font-family:'Noto Sans KR'; border-radius:5px;}
 /*글쓰기버튼  */
 .list_location > div a {float:right; line-height:40px; margin-left:5px; padding:0 10px; background:#353535; color:#fff; border-radius:4px; font-size:1em;}
-/*내동네저장 버튼   */
-.list_location .dongne_btn {float:right; font-size:1em; line-height:40px; padding:0 15px; color:#fff; background:#ff7e15; cursor:pointer; margin-left:5px; border-radius:5px;}
+#insertList {float:right; font-family: 'S-CoreDream', 'Noto Sans KR', 'Nanum Gothic', 'Malgun Gothic', 'Dotum', sans-serif; line-height:35px; padding:0 10px; color:#fff; background:#ff7e15; border:#ff7e15;  cursor:pointer; margin-left:5px; border-radius:5px;}
 
 
 

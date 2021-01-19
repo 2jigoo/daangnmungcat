@@ -23,13 +23,38 @@ textarea {
 </style>
 <script type="text/javascript">
 $(function(){
-	
 	var contextPath = "<%=request.getContextPath()%>";
+	var dong = document.getElementById("dongName").value
+	var nae = document.getElementById("naeName").value
+	$.get(contextPath, function(jsonPlace){
+		var datalength = jsonPlace.length; 
+        var sCont = "";
+        var sCont2 = "";
+        for(i=0; i<datalength; i++){
+      		 sCont2 += '<option value="' + jsonPlace[i].id + '">' + jsonPlace[i].name + '</option>';
+        }
+        	$("select[name=dongne1]").append(sCont2);
+       /*  for(i=0; i<datalength; i++){
+      		 sCont += '<option value="' + jsonPlace[i].id + '">' + jsonPlace[i].name + '</option>';
+        }
+       	 $("select[name=dongne2]").append(sCont); */
+        	$('#dongne1').val(dong).prop("selected",true);
+       // 	$('#dongne2').val(nae).prop("selected",true);
+	});
 
-	console.log(contextPath);
-	
-	var test = ${loginUser.getDongne1().getId()}
-	
+	$("select[name=dongne1]").change(function(){
+		$("select[name=dongne2]").find('option').remove();
+			var dong = $("select[name=dongne1]").val();
+			$.get(contextPath+"/dongne2/"+dong1, function(json){
+			var datalength = json.length; 
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne2]").append(sCont);	
+		});
+		
+	});
 	
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
@@ -43,9 +68,12 @@ $(function(){
 		}
 	});
 	
+	
+	
+	
 	$("select[name=dongne1]").change(function(){
 		$("select[name=dongne2]").find('option').remove();
-		var dong1 = $("select[name=dongne1]").val();
+			var dong1 = $("select[name=dongne1]").val();
 		$.get(contextPath+"/dongne2/"+dong1, function(json){
 			var datalength = json.length; 
 			var sCont = "";
@@ -53,7 +81,7 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne2]").append(sCont);	
-		});
+		});				
 	});
 	
 	
@@ -221,7 +249,12 @@ $(function(){
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td width="300px;">아이디</td>
-				<td width="500px;"><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly" style="border: none;"></td>
+				<td width="500px;">
+					<input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly" style="border: none;">
+					<input type="text" id="dongName" style="display: none;" value="${loginUser.getDongne1().getId()}">
+					<input type="text" id="naeName" style="display: none;" value="${loginUser.getDongne2().getId()}">
+				</td>
+					
 			</tr>
 			<tr>
 				<td>동네</td>
@@ -274,7 +307,7 @@ $(function(){
 			</tr>
 			<tr>
 				<td>제목(상품명)</td>
-				<td><input type="text" name="title" id="title"></td>
+				<td><input type="text" name="title" id="title" style="width: 100%"></td>
 			</tr>
 			<tr>
 				<td>가격</td>

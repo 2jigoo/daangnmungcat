@@ -390,7 +390,10 @@ $(document).on("click", ".comment_update", function(){
 			<c:if test="${list.catCate == 'n'}"></c:if> 
 			· <div class="lastTime"></div> <div class="regdate" id="regdate">${list.regdate }</div> 
 		</div>
-		<h2>${list.price }원</h2>
+		<h2>
+			<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
+			<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>
+		</h2>
 		
 		<div id="description_content">
 			${list.content }
@@ -443,7 +446,12 @@ $(document).on("click", ".comment_update", function(){
 				<%-- 		<p>${mlist.id }</p> --%>
 						<p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
 						<p class="section_subject">${mlist.title}</p>
-						<p class="section_price"><span>${mlist.price}</span>원</p>
+						<p class="section_price">
+							<span>
+								<c:if test="${mlist.price eq 0 }" >무료 나눔</c:if>
+								<c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
+							</span>
+						</p>
 						<ul>
 							<li class="section_heart">${mlist.heartCount}</li>
 							<li class="section_chat">${mlist.chatCount}</li>

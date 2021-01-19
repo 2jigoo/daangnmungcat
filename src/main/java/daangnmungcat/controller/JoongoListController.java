@@ -3,6 +3,7 @@ package daangnmungcat.controller;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.google.gson.Gson;
+
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
@@ -126,11 +131,21 @@ public class JoongoListController {
 	
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
-	public String addListForm(HttpSession session) {
+	public String addListForm(Model model, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
 			return "redirect:/login";
 		} else {
+			if( loginUser.getDongne1().getName() == "") {
+				//저장된 동네가 없으면
+			}else {
+				//사용자의 저장된 동네가 있으면 
+				List<Dongne2> list = service.Dongne2List(loginUser.getDongne1().getId());
+				Gson gson = new Gson();
+				String jsonPlace = gson.toJson(list);
+				model.getAttribute(jsonPlace);
+				System.out.println("json >>>>>>>>>>>" + jsonPlace);
+			}
 			return "joongoSale/addList";
 		}
 	}
@@ -147,8 +162,7 @@ public class JoongoListController {
 	public ResponseEntity<Object> dongne2(@PathVariable int dongne1) {
 		return ResponseEntity.ok(service.Dongne2List(dongne1));
 	}
-	
-	// 
+
 	@PostMapping("/joongoSale/insert")
 	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
 		System.out.println("/insert 컨트롤러");
