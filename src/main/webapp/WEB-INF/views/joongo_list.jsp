@@ -143,10 +143,16 @@ $(function(){
 			email: null,
 			phone: null,
 			dongne1: {
-				id : $("select[name='dongne1']").val()
+				id : $("select[name='dongne1']").val(),
+				name : $("select[name='dongne1'] option:checked").text()
 			},
 			dongne2: {
-				id : $("select[name='dongne2']").val()
+				id : $("select[name='dongne2']").val(),
+				dongne1 : {
+					id : $("select[name='dongne1']").val(),
+					name : $("select[name='dongne1'] option:checked").text()
+				},
+				name : $("select[name='dongne2'] option:checked").text()
 			},
 			grade:null,
 			regdate: null,
