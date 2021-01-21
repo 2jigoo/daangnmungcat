@@ -24,8 +24,14 @@ public interface MemberMapper {
 	List<Dongne2> Dongne2List(@Param("dongne1Id")int dongne1);
 	
 	int updateProfilePic(Member member);
+	int updateProfileText(Member member);
+	int updatePhone(Member member);
+	int updatePwd(Member member);
+	int updateInfo(Member member);
+	
+
 	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
 	
 	Dongne2 selectDongneByDongne2(Dongne2 dongne2);
-
+	
 }
