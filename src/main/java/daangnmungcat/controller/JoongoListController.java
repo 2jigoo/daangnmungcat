@@ -3,7 +3,6 @@ package daangnmungcat.controller;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,11 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.google.gson.Gson;
-
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
-import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
