@@ -451,7 +451,7 @@ CREATE TABLE MALL_PDT (
 	delivery_kind NUMBER(1) NOT NULL, /* 배송비 종류 */
 	delivery_condition NUMBER(10), /* 조건 금액 */
 	delivery_price NUMBER(10), /* 배송비 */
-	regdate DATE NOT NULL /* 등록일시 */
+	regdate DATE DEFAULT SYSDATE /* 등록일시 */
 )SEGMENT CREATION IMMEDIATE;
 
 CREATE UNIQUE INDEX PK_MALL_PDT
