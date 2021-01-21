@@ -1,16 +1,5 @@
 package daangnmungcat.controller;
 
-import java.io.File;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
-import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Controller
@@ -39,7 +26,6 @@ public class SignUpControllor {
 
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
-		System.out.println(service.Dongne1List());
 		return ResponseEntity.ok(service.Dongne1List());
 
 	}
@@ -51,7 +37,7 @@ public class SignUpControllor {
 
 	@PostMapping("/submit")
 	public ResponseEntity<Object> newMember(@RequestBody Member member) {
-		System.out.println("newMember");
+		System.out.println("가입");
 		try {
 			return ResponseEntity.ok(service.registerMember(member));
 		} catch (DuplicateMemberException e) {

@@ -66,9 +66,13 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		System.out.println("addViewControllers 호출");
 		registry.addViewController("/").setViewName("main");
 		registry.addViewController("/test_page").setViewName("chat/test_page");
-		registry.addViewController("/idCheck").setViewName("idCheck");	
 		registry.addViewController("/test").setViewName("joongoSale/addList");
+		
+		registry.addViewController("/idCheck").setViewName("sign/idCheck");	
+		registry.addViewController("/contract").setViewName("sign/contract");
+		registry.addViewController("/welcome").setViewName("sign/welcome");
 		registry.addViewController("/mypage").setViewName("mypage/mypage_main");
+		registry.addViewController("/memberUpdate").setViewName("mypage/member_update");
 
 	}
 	

@@ -143,10 +143,16 @@ $(function(){
 			email: null,
 			phone: null,
 			dongne1: {
-				id : $("select[name='dongne1']").val()
+				id : $("select[name='dongne1']").val(),
+				name : $("select[name='dongne1'] option:checked").text()
 			},
 			dongne2: {
-				id : $("select[name='dongne2']").val()
+				id : $("select[name='dongne2']").val(),
+				dongne1 : {
+					id : $("select[name='dongne1']").val(),
+					name : $("select[name='dongne1'] option:checked").text()
+				},
+				name : $("select[name='dongne2'] option:checked").text()
 			},
 			grade:null,
 			regdate: null,
@@ -211,7 +217,10 @@ $(function(){
 					<div class="txt">
 						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>
-						<p class="price"><span>${list.price}</span>원</p>
+						<p class="price"><span>
+							<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
+							<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>
+						</span></p>
 						<ul>
 							<li class="heart">${list.heartCount}</li>
 							<li class="chat">${list.chatCount}</li>

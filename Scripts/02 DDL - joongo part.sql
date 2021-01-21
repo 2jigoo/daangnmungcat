@@ -10,6 +10,10 @@ DROP TABLE JOONGO_CHAT_MSG CASCADE CONSTRAINTS; /* 중고_채팅_메시지 */
 DROP TABLE JOONGO_CHAT CASCADE CONSTRAINTS; /* 중고_대화 */
 DROP TABLE JOONGO_MYSALE CASCADE CONSTRAINTS; /* 중고_판매내역 */
 DROP TABLE JOONGO_MYBUY CASCADE CONSTRAINTS; /* 중고_구매내역 */
+DROP TABLE grade CASCADE CONSTRAINTS;
+DROP TABLE MALL_PDT CASCADE CONSTRAINTS; /* 쇼핑몰_상품 */
+DROP TABLE MALL_DOG_CATE CASCADE CONSTRAINTS; /* 쇼핑몰_멍 카테 */
+DROP TABLE MALL_CAT_CATE CASCADE CONSTRAINTS; /* 쇼핑몰_냥 카테 */
 
 --재설정
 
@@ -23,7 +27,7 @@ CREATE TABLE MEMBER (
 	phone VARCHAR2(20) NOT NULL, /* 연락처 */
 	dongne1 number(12) NOT NULL, /* 시 */
 	dongne2 number(12) NOT NULL, /* 군구 */
-	grade NUMBER(1) NOT NULL, /* 등급 */
+	grade char(1) DEFAULT 'W', /* 등급 */
 	profile_pic VARCHAR2(255), /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */
 	regdate DATE DEFAULT sysdate /* 가입일 */
@@ -180,6 +184,24 @@ CREATE TABLE JOONGO_CHAT_MSG (
 ALTER TABLE JOONGO_CHAT_MSG
 ADD CONSTRAINT PK_JOONGO_CHAT_MSG PRIMARY KEY (id);
 
+/*등급*/
+CREATE TABLE grade(
+	code char(1) NOT NULL, 
+	name varchar2(20) NOT NULL
+);
+
+ALTER TABLE grade
+ADD CONSTRAINT PK_GRADE PRIMARY KEY (code);
+
+ALTER TABLE MEMBER
+	ADD
+		CONSTRAINT FK_GRADE_TO_MEMBER
+		FOREIGN KEY (
+			grade
+		)
+		REFERENCES grade (
+			code
+		);
 
 
 ALTER TABLE JOONGO_COMMENT
@@ -370,5 +392,97 @@ ALTER TABLE JOONGO_REVIEW
 			buy_mem_id
 		)
 		REFERENCES MEMBER (
+			id
+		);
+		
+	
+	
+/* 쇼핑몰_멍_카테고리 */
+CREATE TABLE MALL_DOG_CATE (
+	id NUMBER(12) NOT NULL, /* 멍카테고리아이디 */
+	name VARCHAR2(36) NOT NULL /* 분류명 */
+)SEGMENT CREATION IMMEDIATE;
+
+CREATE UNIQUE INDEX PK_MALL_DOG_CATE
+	ON MALL_DOG_CATE (
+		id ASC
+	);
+
+ALTER TABLE MALL_DOG_CATE
+	ADD
+		CONSTRAINT PK_MALL_DOG_CATE
+		PRIMARY KEY (
+			id
+		);
+
+/* 쇼핑몰_냥_카테고리 */
+CREATE TABLE MALL_CAT_CATE (
+	id NUMBER(12) NOT NULL, /* 냥카테고리아이디 */
+	name VARCHAR2(36) NOT NULL /* 분류명 */
+)SEGMENT CREATION IMMEDIATE;
+
+CREATE UNIQUE INDEX PK_MALL_CAT_CATE
+	ON MALL_CAT_CATE (
+		id ASC
+	);
+
+ALTER TABLE MALL_CAT_CATE
+	ADD
+		CONSTRAINT PK_MALL_CAT_CATE
+		PRIMARY KEY (
+			id
+		);
+
+
+
+/* 쇼핑몰_상품 */
+CREATE TABLE MALL_PDT (
+	id NUMBER(12) NOT NULL, /* 상품아이디 */
+	dog_cate NUMBER(12), /* 멍카테고리아이디 */
+	cat_cate NUMBER(12), /* 냥카테고리아이디 */
+	name VARCHAR2(1500) NOT NULL, /* 상품명 */
+	price NUMBER(10) NOT NULL, /* 가격 */
+	content VARCHAR2(4000), /* 내용 */
+	sale_yn VARCHAR2(1) NOT NULL, /* 판매여부 */
+	stock NUMBER(12) NOT NULL, /* 재고 */
+	image1 VARCHAR2(255), /* 상품이미지1 */
+	image2 VARCHAR2(255), /* 상품이미지2 */
+	image3 VARCHAR2(255), /* 상품이미지3 */
+	delivery_kind NUMBER(1) NOT NULL, /* 배송비 종류 */
+	delivery_condition NUMBER(10), /* 조건 금액 */
+	delivery_price NUMBER(10), /* 배송비 */
+	regdate DATE NOT NULL /* 등록일시 */
+)SEGMENT CREATION IMMEDIATE;
+
+CREATE UNIQUE INDEX PK_MALL_PDT
+	ON MALL_PDT (
+		id ASC
+	);
+
+ALTER TABLE MALL_PDT
+	ADD
+		CONSTRAINT PK_MALL_PDT
+		PRIMARY KEY (
+			id
+		);
+
+
+ALTER TABLE MALL_PDT
+	ADD
+		CONSTRAINT FK_MALL_DOG_CATE_TO_MALL_PDT
+		FOREIGN KEY (
+			dog_cate
+		)
+		REFERENCES MALL_DOG_CATE (
+			id
+		);
+
+ALTER TABLE MALL_PDT
+	ADD
+		CONSTRAINT FK_MALL_CAT_CATE_TO_MALL_PDT
+		FOREIGN KEY (
+			cat_cate
+		)
+		REFERENCES MALL_CAT_CATE (
 			id
 		);

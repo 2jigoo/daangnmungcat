@@ -33,7 +33,7 @@ SELECT count(a.id)
 SELECT * FROM JOONGO_SALE;
 
 SELECT joongo_comment_seq.nextval FROM DUAL;
-SELECT * FROM JOONGO_COMMENT;
+SELECT * FROM JOONGO_COMMENT ORDER BY ID ;
 INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) values(joongo_comment_seq.nextval, 2, 'chattest1', '댓글 테스트입니다.');
 INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT) VALUES(joongo_comment_seq.nextval, 1, 'chattest2', 23, 'chattest1', '계층형 댓글 테스트입니다.4');
 INSERT INTO JOONGO_COMMENT(ID, SALE_ID, MEM_ID, CONTENT) values(joongo_comment_seq.nextval, 10, 'chattest1', '테스트');
