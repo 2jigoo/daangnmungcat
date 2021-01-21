@@ -4,37 +4,96 @@
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 #myPic, #preview {border-radius: 50px; width:40px; height:40px;}
-table {width:800px; margin:0 auto; padding:20px; border:1px solid black}
+table {width:800px; margin:0 auto; padding:20px;}
 
 </style>
 
 <script>
-$(function(){
+$(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	var number;
 	var email_status;
 	var member_email;
+	var dongne1Id;
+	var dongne2Id;
+	
 	console.log('인증상태:' + $('#certi').val());
 
  	$.get(contextPath +"/myProfilePic", function(json){
-		console.log(contextPath + "/resources/" + json.path);
+		console.log(contextPath + "/resources/" +  json.path);
 		if(json.path != null){
-			$('#myPic').prop('src', contextPath + "/resources/" + json.path);
+			$('#myPic').prop('src', contextPath +  "/resources/" + json.path);
+		}else {
+			console.log('널')
+		}
+	});
+ 	
+ 	$.get(contextPath+"/dongne1", function(json){
+		var datalength = json.length; 
+		if(datalength >= 1){
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne1]").append(sCont);
 		}
 	});
 	
 	$.get(contextPath +"/memberInfo", function(member){
+		console.log(member)
 		$('#profile_text').text(member.member.profileText);
 		$('#profile_nick').text(member.member.nickname);
 		
-		$('#id').prop('value', member.member.id);
-		$('#name').prop('value', member.member.name);
-		$('#nickname').prop('value', member.member.nickname);
-		$('#email').prop('value', member.member.email);
-		$('#phone').prop('value', member.member.phone);
-		$('#birth').prop('value', member.member.birthday);
+		$('#id').attr('value', member.member.id);
+		$('#name').attr('value', member.member.name);
+		$('#nickname').attr('value', member.member.nickname);
+		$('#email').attr('value', member.member.email);
+		$('#phone').attr('value', member.member.phone);
+		$('#birth').attr('value', member.member.birthday);
 		number = member.member.phone;
 		member_email = member.member.email;
+		dongne1Id = member.member.dongne1.id;
+		dongne2Id = member.member.dongne2.id;
+
+		$('select[name=dongne1]').val(member.member.dongne1.id).attr("selected", "selected");
+		var dongne1Name = member.member.dongne2.name;
+		
+		setTimeout(function(){
+		      if (dongne1Name != ""){
+		         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
+		            var datalength = json.length; 
+		            var sCont = "<option>동네를 선택하세요</option>";
+		            for(i=0; i<datalength; i++){
+		               if (json[i].name == "${dongne2Name}"){
+		                  sCont += '<option value="' + json[i].id + '" selected>';
+		               } else {
+		                  sCont += '<option value="' + json[i].id + '">';
+		               }
+		               sCont += json[i].name;
+		               sCont += '</option>';
+		            }
+		            $("select[name=dongne2]").append(sCont);
+		            $('select[name=dongne2]').val(member.member.dongne2.id).attr("selected", "selected");
+		         });
+		      }
+		   }, 50);
+		
+		
+		
+	});
+	
+	
+	$("select[name=dongne1]").change(function(){
+		$("select[name=dongne2]").find('option').remove();
+		var dong1 = $("select[name=dongne1]").val();
+		$.get(contextPath+"/dongne2/"+dong1, function(json){
+			var datalength = json.length; 
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne2]").append(sCont);	
+		});
 	});
 	
 	//프로필이미지 수정
@@ -119,42 +178,6 @@ $(function(){
 		}
 	});
 	
-	//현재 주소 가져오기
-	var dongne1Id = ${loginUser.getDongne1().id};
-	var dongne2Id = ${loginUser.getDongne2().id};
-	
-	$.get(contextPath+"/dongne1", function(json){
-	      var datalength = json.length; 
-	      if(datalength >= 1){
-	         var sCont = "";
-	         for(i=0; i<datalength; i++){
-	            if (json[i].id == dongne1Id){
-	               sCont += '<option value="' + json[i].id + '" selected>';
-	               dongne1Id = json[i].id;
-	            } else {
-	               sCont += '<option value="' + json[i].id + '">';
-	            }
-	            sCont += json[i].name;
-	            sCont += '</option>';
-	         }
-	         $("select[name=dongne1]").append(sCont);
-	      }
-	   });
-	
-	$.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
-        var datalength = json.length; 
-        var sCont = "<option>동네를 선택하세요</option>";
-        for(i=0; i<datalength; i++){
-           if (json[i].id == dongne2Id){
-              sCont += '<option value="' + json[i].id + '" selected>';
-           } else {
-              sCont += '<option value="' + json[i].id + '">';
-           }
-           sCont += json[i].name;
-           sCont += '</option>';
-        }
-        $("select[name=dongne2]").append(sCont);   
-     });
 	
 	
 	//정보수정
@@ -345,10 +368,10 @@ function imageChange(){
 
 <div class="wrapper">
 
-	<h2 id="subTitle">마이페이지</h2>
+	<h2 id="subTitle">회원정보 변경</h2>
 <div>
 	<table>
-		<tr>
+		<tr style="padding:30px;">
 			<td><img id="myPic"><span id="profile_nick"></span></td>
 			<td><span id="profile_text"></span></td>
 		</tr>
@@ -410,8 +433,8 @@ function imageChange(){
 	</tr>	
 	<tr>
 		<td>동네 설정</td>
-		<td><select name="dongne1"><option value="0">지역을 선택하세요</option></select> 
-			<select name="dongne2"> </select>
+		<td><select name="dongne1" id="dongne1"><option value="0">지역을 선택하세요</option></select> 
+			<select name="dongne2" id="dongne2"></select>
 		</td>
 	</tr>
 	</table>

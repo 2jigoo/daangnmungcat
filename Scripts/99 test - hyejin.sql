@@ -19,6 +19,7 @@ CREATE OR REPLACE VIEW member_view AS
 SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, a.name AS dongne1 , b.name AS dongne2 , m.grade, g.NAME AS grade_name, m.profile_pic, m.profile_text, m.regdate 
 FROM MEMBER m LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id LEFT OUTER JOIN grade g ON m.GRADE = g.CODE;
 
+SELECT * FROM DONGNE_VIEW;
 SELECT * FROM MEMBER_VIEW;
 DELETE FROM MEMBER WHERE id='test';
 SELECT count(*) FROM MEMBER WHERE id = 'test' AND pwd = 1234;

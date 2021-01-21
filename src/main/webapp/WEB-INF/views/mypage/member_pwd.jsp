@@ -83,15 +83,15 @@ $(function(){
 <table>
 	<tr>
 		<td>현재 비밀번호</td>
-		<td><input type="text" id="now_pwd" name="now_pwd"></td> 
+		<td><input type="password" id="now_pwd" name="now_pwd"></td> 
 	</tr>
 	<tr>
 		<td>새 비밀번호</td>
-		<td><input type="text" id="new_pwd" name="new_pwd"></td>
+		<td><input type="password" id="new_pwd" name="new_pwd"></td>
 	</tr>
 	<tr>
 		<td>비밀번호 확인</td>
-		<td><input type="text" id="re_pwd" name="re_pwd"></td>
+		<td><input type="password" id="re_pwd" name="re_pwd"></td>
 	</tr>
 	<tr>
 		<td></td>

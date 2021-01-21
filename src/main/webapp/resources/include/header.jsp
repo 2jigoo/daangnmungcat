@@ -12,8 +12,6 @@
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 	<meta http-equiv="Pragma" content="no-cache" />
 	<meta http-equiv="Expires" content="0" />
-	<!-- 주소 api -->
-	<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 	
 	<title>당근멍캣</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">

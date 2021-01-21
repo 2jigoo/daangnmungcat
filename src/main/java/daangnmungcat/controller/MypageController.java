@@ -43,6 +43,7 @@ public class MypageController {
 		File dir = new File(request.getSession().getServletContext().getRealPath("resources\\upload\\profile"));
 		System.out.println("delete할 Path:" + dir);
 		File files[] = dir.listFiles();
+		
 		for(int i=0; i<files.length; i++) {
 			File file = files[i];
 			String fileName = file.getName();
@@ -56,7 +57,7 @@ public class MypageController {
 		}
 
 		int res = 0;
-		String def = "upload/profile/default_user_image.png";
+		String def = "images/default_user_image.png";
 		member.setProfilePic(def);
 		res = service.updateProfilePic(member);
 		
@@ -69,18 +70,17 @@ public class MypageController {
 	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
 		System.out.println("upload profile");
 		int res = 0;
-		String uploadFolder = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
+		//String uploadFolder = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
 		//테스트 경로-> /daangnmungcat/resources/upload/2021-01-13/파일이름.jpg
+		String uploadFolder = getFolder(request);
 		System.out.println("uploadPath:" + uploadFolder);
 		
-		
 //		// 폴더만들기
-//		File uploadPath = new File(uploadFolder, getFolder());
-//		System.out.println("uploadPath: " + uploadPath);
-//		
-//		if(!uploadPath.exists()) {
-//			uploadPath.mkdirs();
-//		}
+		File uploadPath = new File(uploadFolder, getFolder(request));
+		
+		if(!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
 
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
@@ -106,6 +106,7 @@ public class MypageController {
 			System.out.println("uploadFileName: " + uploadFileName);
 			
 			File saveFile = new File(uploadFolder, uploadFileName);
+			
 			try {
 				multipartFile.transferTo(saveFile);
 			} catch(Exception e) {
@@ -121,6 +122,12 @@ public class MypageController {
 		}
 	}
 	
+	private String getFolder(HttpServletRequest request) {
+		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
+		return path;
+	}
+
+
 	@PostMapping("/updateProfileText")
 	public int updateProfileText(@RequestBody String json, HttpSession session, HttpServletRequest request) throws ParseException {
 		session = request.getSession();
