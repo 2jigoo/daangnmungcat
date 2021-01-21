@@ -22,27 +22,23 @@ CREATE TABLE MEMBER (
 	nickname VARCHAR2(36) NOT NULL, /* 닉네임 */
 	email VARCHAR2(50) NOT NULL, /* 이메일 */
 	phone VARCHAR2(20) NOT NULL, /* 연락처 */
+	grade char(1) DEFAULT 'W', /* 등급 */
 	dongne1 number(12) NOT NULL, /* 시 */
 	dongne2 number(12) NOT NULL, /* 군구 */
-	grade char(1) DEFAULT 'W', /* 등급 */
-	profile_pic VARCHAR2(255), /* 프로필사진 */
+	profile_pic VARCHAR2(300), /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */
-	regdate DATE DEFAULT sysdate /* 가입일 */
+	regdate DATE DEFAULT sysdate, /* 가입일 */
+	birthday DATE, 
+	zipcode NUMBER(10),
+	address1 varchar2(30),
+	address2 varchar2(30),
+	mileage NUMBER(10) DEFAULT 0,
+	useYn char(1) DEFAULT 'y'
 )SEGMENT CREATION IMMEDIATE;
-
 
 ALTER TABLE MEMBER ADD UNIQUE (email);
 ALTER TABLE MEMBER ADD UNIQUE (phone);
-
-	--identity_yn VARCHAR2(1) NOT NULL, /* 본인인증 여부 */
-	--birthday DATE, /* 생일 */
-	--zipcode NUMBER(5), /* 우편번호 */
-	--address1 VARCHAR2(255), /* 주소 */
-	--address2 VARCHAR2(255), /* 상세주소 */
-	--mileage NUMBER(10), /* 마일리지 */
-
-ALTER TABLE MEMBER
-ADD CONSTRAINT PK_MEMBER PRIMARY KEY (id);
+ALTER TABLE MEMBER ADD CONSTRAINT PK_MEMBER PRIMARY KEY (id);
 	
 
 /* 중고동네_1차 */

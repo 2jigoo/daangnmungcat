@@ -37,7 +37,6 @@ public class SignUpControllor {
 
 	@PostMapping("/submit")
 	public ResponseEntity<Object> newMember(@RequestBody Member member) {
-		System.out.println("가입");
 		try {
 			return ResponseEntity.ok(service.registerMember(member));
 		} catch (DuplicateMemberException e) {
