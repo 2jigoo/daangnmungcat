@@ -20,6 +20,11 @@ textarea {
 	height: 200px;
 }
 
+#preview1 > img {
+	width: 160px;
+	height: 160px;
+}
+
 </style>
 <script type="text/javascript">
 $(function(){
@@ -170,9 +175,7 @@ function handleImgs(e) {
 			alert("확장자는 이미지 확장자만 가능합니다.");
 			return;
 		}
-		
 		sel_files.push(f);
-		
 		var reader = new FileReader();
 		reader.onload = function(e){
 			var img_html = "<img src=\"" + e.target.result + "\" />";
