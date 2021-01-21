@@ -227,7 +227,11 @@ $(document).ready(function(){
 		comment_wrap += '<input type="hidden" value="'+ $(".comment_write .comment_sale_id").val() +'" class="comment_sale_id2">';
 		comment_wrap += '<input type="hidden" value="${loginUser.id}" class="comment_member_id2">';
 		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").data("id") +'" class="comment_saleComment_id2">';
-		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").find(".name").text() +'" class="comment_tabMember_id2">';
+		if ($(this).parent("ul").parent("div").parent("li").hasClass("reply")){
+			comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").find(".name").text() +'" class="comment_tabMember_id2">';
+		} else {
+			comment_wrap += '<input type="hidden" value="" class="comment_tabMember_id2">';
+		}
 		comment_wrap += '<textarea placeholder="댓글내용을 입력해주세요" class="comment_content2"></textarea>';
 		comment_wrap += '<input type="button" value="등록" class="comment_write_btn2 btn">'
 		comment_wrap += '</div>'
@@ -477,12 +481,15 @@ $(document).on("click", ".comment_update", function(){
 		<li data-id="${commentList.id}">
 		</c:if>
 		<c:if test="${not empty commentList.saleComment.id}">
-		<li class="reply" data-id="${commentList.id}">
+		<li class="reply" data-id="${commentList.saleComment.id}">
 		</c:if>
 			<div class="user">
 				<p class="img"></p>
 				<p class="name">${commentList.member.id}</p>
 			</div>
+			<c:if test="${not empty commentList.tagMember.id}">
+				<p class="tag">@${commentList.tagMember.id} </p>
+			</c:if>
 			<pre class="content">${commentList.content}</pre>
 			<div class="info">
 				<p class="date">${commentList.regdate}</p>
