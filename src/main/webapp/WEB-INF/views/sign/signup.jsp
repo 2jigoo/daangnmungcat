@@ -16,6 +16,7 @@ $(document).ready(function(){
 	var pwd_status;
 	var data;
 	
+	
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
 		var datalength = json.length; 
@@ -86,9 +87,9 @@ $(document).ready(function(){
 				phone:$('#phone').val(),
 				dongne1:{id:$('#dongne1').val()},
 				dongne2:{id:$('#dongne2').val()},
-				profile_text: null,
-				profile_pic:'upload/profile/default_user_image.png'
+				profilePic:'images/default_user_image.png'
 				};
+		
 		console.log(newMember);
 		
 		$.ajax({
@@ -100,13 +101,12 @@ $(document).ready(function(){
 			data : JSON.stringify(newMember),
 			success: function() {
 				alert('회원가입이 완료되었습니다.');
-				window.location.href= contextPath+'/welcome';
+				/* window.location.href= contextPath+'/welcome'; */
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		});
-		console.log(contextPath+"/submit");
 	});
 	
 	//비밀번호 일치여부
@@ -272,24 +272,7 @@ function id_check() {
 		window.open(contextPath+"/idCheck?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 }
-function imageChange(){
-	var file = document.getElementById("uploadFile").files[0]
-	if (file) {
-	//console.log(document.getElementById("uploadFile").files[0])
-	 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
-    reader.onload = function (e) {
-    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-        $('#productImg').attr('src', e.target.result);
-        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
-        //(아래 코드에서 읽어들인 dataURL형식)
-    }                   
-    reader.readAsDataURL(document.getElementById("uploadFile").files[0]);
-    //File내용을 읽어 dataURL형식의 문자열로 저장
-    
-	}
-	
-	
-}
+
 </script>
 
 <div class="wrapper">
@@ -301,7 +284,7 @@ function imageChange(){
 			<input type="button" value="중복확인" onclick="id_check()">
 	</tr>
 	<tr>
-		<td>(<input type="text" name="id_confirm" id="id_confirm">)</td>
+		<td><input type="hidden" name="id_confirm" id="id_confirm"></td>
 	</tr>
 	<tr>
 		<td>비밀번호</td>
@@ -345,7 +328,7 @@ function imageChange(){
 		</td>
 	</tr>
 	<tr>
-		<td>주소</td>
+		<td>위치 설정</td>
 		<td>
 		<select name="dongne1" id="dongne1">
 			<option value="0">지역을 선택하세요</option>
