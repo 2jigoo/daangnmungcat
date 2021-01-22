@@ -7,7 +7,7 @@
 table {width:800px; margin:0 auto; padding:20px;}
 
 </style>
-
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
@@ -50,6 +50,10 @@ $(document).ready(function(){
 		$('#email').attr('value', member.member.email);
 		$('#phone').attr('value', member.member.phone);
 		$('#birth').attr('value', member.member.birthday);
+		$('#zipcode').attr('value', member.member.zipcode);
+		$('#address1').attr('value', member.member.address1);
+		$('#address2').attr('value', member.member.address2);
+		
 		number = member.member.phone;
 		member_email = member.member.email;
 		dongne1Id = member.member.dongne1.id;
@@ -116,6 +120,8 @@ $(document).ready(function(){
                console.log(file[i]);
                formData.append('uploadFile', file[i]);
             }
+            
+            var text = '넘어가나';
             
         	if (confirm("프로필 사진을 변경하시겠습니까?") == true){
             	$.ajax({
@@ -215,7 +221,9 @@ $(document).ready(function(){
 				phone:$('#phone').val(),
 				birthday: $('#birth').val(),
 				dongne1:{id: $("select[name=dongne1]").val()},
-				dongne2:{id: $("select[name=dongne2]").val()}
+				dongne2:{id: $("select[name=dongne2]").val()},
+				
+				
 		}
 		console.log(member);
 		
@@ -363,7 +371,19 @@ function imageChange(){
 	}	
 }
 
-
+//주소 api
+function execPostCode(){
+	daum.postcode.load(function(){
+        new daum.Postcode({
+            oncomplete: function(data) {
+				//변수값 없을때는 ''
+				var addr = '';
+				$('#zipcode').attr('value', data.zonecode);
+				$('#addr1').attr('value', data.address);
+            	}
+            }).open();
+    });
+}
 </script>
 
 <div class="wrapper">
@@ -437,6 +457,21 @@ function imageChange(){
 			<select name="dongne2" id="dongne2"></select>
 		</td>
 	</tr>
+	<tr>
+		<td>주소</td>
+		<td><input type="text" id="zipcode">
+			<input type="button" value="우편번호검색" onclick="execPostCode()">
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="text" id="addr1"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="text" id="addr2"></td>
+	</tr>
+	<tr>
 	</table>
 	<div>
 	<input type="button" value="정보수정" id="update">

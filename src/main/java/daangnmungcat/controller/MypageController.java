@@ -70,6 +70,7 @@ public class MypageController {
 	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
 		System.out.println("upload profile");
 		int res = 0;
+		
 		//String uploadFolder = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
 		//테스트 경로-> /daangnmungcat/resources/upload/2021-01-13/파일이름.jpg
 		String uploadFolder = getFolder(request);

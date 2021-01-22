@@ -119,7 +119,10 @@
 			phone = #{phone}, 
 			birthday = #{birthday},
 			dongne1 = #{dongne1.id}, 
-			dongne2 = #{dongne2.id} 
+			dongne2 = #{dongne2.id},
+			zipcode = #{zipcode},
+			address1 = #{address1},
+			address2 = #{address2} 
 		<include refid="whereSql"></include>
 	</update>
 	

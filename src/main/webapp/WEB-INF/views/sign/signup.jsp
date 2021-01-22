@@ -87,7 +87,7 @@ $(document).ready(function(){
 				phone:$('#phone').val(),
 				dongne1:{id:$('#dongne1').val()},
 				dongne2:{id:$('#dongne2').val()},
-				profilePic:'upload/profile/default_user_image.png'
+				profilePic:'images/default_user_image.png'
 				};
 		
 		console.log(newMember);
