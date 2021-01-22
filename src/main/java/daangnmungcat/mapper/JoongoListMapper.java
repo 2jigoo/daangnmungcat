@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Sale;
 
 public interface JoongoListMapper {
@@ -25,4 +26,5 @@ public interface JoongoListMapper {
 	int listCount2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	
 	int insertJoongoSale(Sale sale);
+//	int insertFileForm(FileForm FileForm);
 }

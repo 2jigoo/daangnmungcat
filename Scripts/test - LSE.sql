@@ -88,8 +88,9 @@ select id, pwd, name, nickname, email, phone, dongne1, dongne2, grade, profile_p
 ----------------찜
 SELECT * FROM JOONGO_HEART;
 SELECT * FROM JOONGO_SALE ;
+SELECT * FROM MEMBER;
 SELECT id, mem_id, sale_id, regdate FROM JOONGO_HEART;
-SELECT * FROM JOONGO_HEART WHERE MEM_ID = 'chattest1';
+SELECT * FROM JOONGO_SALE WHERE MEM_ID = 'chattest1';
 SELECT count(*) FROM JOONGO_HEART WHERE sale_id = 2 AND  MEM_ID ='chattest2';
 INSERT INTO JOONGO_HEART values(heart_seq.nextval, 'chattest1', 3, sysdate);
 
@@ -103,3 +104,12 @@ SELECT * FROM SALE_VIEW ORDER BY regdate desc;
 SELECT rownum, id, MEM_ID, DONGNE1_NAME ,DONGNE2_NAME , grade, PROFILE_PIC , DOG_CATE ,CAT_CATE ,TITLE ,CONTENT ,PRICE ,REGDATE ,REDATE , 
 SALE_STATE ,BUY_MEM_ID ,HITS , CHAT_COUNT,HEART_COUNT 
 FROM (SELECT * from SALE_VIEW ORDER BY regdate DESC )WHERE ROWNUM < 9 AND MEM_ID = 'chattest1';
+
+SELECT max(ID) FROM JOONGO_SALE ;
+SELECT MAX(id)+1 FROM JOONGO_SALE; 
+
+SELECT * FROM JOONGO_IMAGE ;
+SELECT * FROM JOONGO_SALE WHERE id = 1;
+
+
+INSERT INTO JOONGO_IMAGE (id, SALE_ID, IMAGE_NAME )values(sale_img_seq.nextval, 1, '1');

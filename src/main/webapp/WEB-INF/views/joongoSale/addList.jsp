@@ -192,7 +192,7 @@ function handleImgs(e) {
 	<h2 id="subTitle">글쓰기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-		<form action="/insert" method="POST">
+		<form action="/insert" method="POST" enctype="multipart/form-data">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td width="300px;">아이디</td>

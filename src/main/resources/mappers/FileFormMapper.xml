@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.FileFormMapper">
+<sql id="selectHeartSQL">
+	SELECT id, sale_id, image_name from JOONGO_IMAGE
+</sql>
+
+<resultMap type="FileForm" id="fileFormResult">
+	<id column="id" property="id"></id>
+	<result column="sale_id" property="sale.id"/>
+	<result column="image_name" property="fileName"/>
+</resultMap>
+
+
+<insert id="insertSaleFile" parameterType="FileForm">
+	<selectKey resultType="int" keyProperty="sale.id" order="BEFORE">
+		SELECT MAX(ID) +1 
+		FROM JOONGO_SALE
+	</selectKey>
+
+	insert into joongo_image values(sale_img_seq.nextval, #{sale.id}, #{fileName})
+</insert>
+</mapper>

@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
@@ -29,6 +32,7 @@ import daangnmungcat.dto.Sale;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.service.GpsToAddressService;
+import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.service.MemberService;
 
 @Controller
@@ -40,6 +44,9 @@ public class JoongoListController {
 	
 	@Autowired
 	private MemberService service;
+
+	@Autowired
+	private JoongoSaleService s;
 	
 	@GetMapping("/joongo_list")
 	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
@@ -152,5 +159,20 @@ public class JoongoListController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
+	}
+	
+	@GetMapping("/test")
+    public String insertBoard(HttpServletRequest request, HttpServletResponse response, Sale sale) throws Exception {
+//        mapper.insertJoongoSale(sale);
+    	return "joongoSale/addTest";  
+     }
+	
+	@RequestMapping(value = "/test/insert")
+	@ResponseBody
+	public String testinsert(@RequestBody Sale sale) throws Exception {
+		System.out.println("왔다");
+		s.insertJoongoSale(sale);
+		
+		return null;
 	}
 }
