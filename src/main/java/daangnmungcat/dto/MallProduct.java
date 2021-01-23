@@ -33,7 +33,7 @@ public class MallProduct {
 	private String image1;
 	private String image2;
 	private String image3;
-	private int deliveryKind;
+	private String deliveryKind;
 	private int deliveryCondition;
 	private int deliveryPrice;
 	
