@@ -9,7 +9,8 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class MallDogCate {
+public class MallCate {
 	private int id;
 	private String name;
+
 }
