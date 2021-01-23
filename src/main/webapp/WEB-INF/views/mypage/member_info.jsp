@@ -51,9 +51,9 @@ $(document).ready(function(){
 		$('#phone').attr('value', member.member.phone);
 		$('#birth').attr('value', member.member.birthday);
 		$('#zipcode').attr('value', member.member.zipcode);
-		$('#address1').attr('value', member.member.address1);
-		$('#address2').attr('value', member.member.address2);
-		
+		$('#addr1').attr('value', member.member.address1);
+		$('#addr2').attr('value', member.member.address2);
+
 		number = member.member.phone;
 		member_email = member.member.email;
 		dongne1Id = member.member.dongne1.id;
@@ -222,8 +222,9 @@ $(document).ready(function(){
 				birthday: $('#birth').val(),
 				dongne1:{id: $("select[name=dongne1]").val()},
 				dongne2:{id: $("select[name=dongne2]").val()},
-				
-				
+				zipcode: $('#zipcode').val(),
+				address1: $('#addr1').val(),
+				address2: $('#addr2').val()
 		}
 		console.log(member);
 		

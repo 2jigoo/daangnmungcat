@@ -34,4 +34,4 @@ SELECT * FROM member_view;
 SELECT * FROM MALL_PDT;
 SELECT * FROM MALL_CAT_CATE;
 
-INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 1, NULL, '네츄럴코어', 13000, '네츄럴코어 사료입니다.', 'y', 100, NULL, NULL, NULL, '조건부 무료배송', 50000, 3000, sysdate);
+INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 1, NULL, '네츄럴코어', 13000, '네츄럴코어 사료입니다.', 'y', 100, NULL, NULL, NULL, 1, 50000, 3000, sysdate);

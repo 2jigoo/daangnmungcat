@@ -76,6 +76,31 @@ public class Member {
 		this.profilePic = profilePic;
 		this.profileText = profileText;
 	}
+	
+	
+
+	public Member(String id, String pwd, String name, String nickname, String email, String phone, String grade,
+			Dongne1 dongne1, Dongne2 dongne2, String profilePic, String profileText, LocalDateTime regdate,
+			LocalDate birthday, String useYn, int zipcode, String address1, String address2, int mileage) {
+		this.id = id;
+		this.pwd = pwd;
+		this.name = name;
+		this.nickname = nickname;
+		this.email = email;
+		this.phone = phone;
+		this.grade = grade;
+		this.dongne1 = dongne1;
+		this.dongne2 = dongne2;
+		this.profilePic = profilePic;
+		this.profileText = profileText;
+		this.regdate = regdate;
+		this.birthday = birthday;
+		this.useYn = useYn;
+		this.zipcode = zipcode;
+		this.address1 = address1;
+		this.address2 = address2;
+		this.mileage = mileage;
+	}
 
 	public String getId() {
 		return id;
