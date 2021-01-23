@@ -444,7 +444,7 @@ CREATE TABLE MALL_PDT (
 	image1 VARCHAR2(255), /* 상품이미지1 */
 	image2 VARCHAR2(255), /* 상품이미지2 */
 	image3 VARCHAR2(255), /* 상품이미지3 */
-	delivery_kind NUMBER(1) NOT NULL, /* 배송비 종류 */
+	delivery_kind VARCHAR2(1500) NOT NULL, /* 배송비 종류 */
 	delivery_condition NUMBER(10), /* 조건 금액 */
 	delivery_price NUMBER(10), /* 배송비 */
 	regdate DATE DEFAULT SYSDATE /* 등록일시 */
