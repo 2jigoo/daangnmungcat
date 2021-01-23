@@ -18,28 +18,6 @@
 
 <script>
 
-function window_close(){
-	this.close();
-	opener.document.location.reload(true);
-}
-
-function addr_save(){
-	console.log('추가하기')
-}
-//주소 api
-function execPostCode(){
-	daum.postcode.load(function(){
-        new daum.Postcode({
-            oncomplete: function(data) {
-				//변수값 없을때는 ''
-				var addr = '';
-				
-				$('#zipcode').attr('value', data.zonecode);
-				$('#addr1').attr('value', data.address);
-            	}
-            }).open();
-    });
-}
 
 $(function(){
 	var csrfToken = $("meta[name='_csrf']").attr("content");
@@ -57,6 +35,11 @@ $(function(){
 		console.log(member.member.id);
 		id = member.member.id;
 	});
+	
+	$('#addr_phone').keyup(function(){
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	});
+
 	
 	$.get(contextPath +"/addressInfo/" + ${id}, function(add){
 		$('#addr_subject').attr('value', add.subject);
@@ -134,6 +117,29 @@ $(function(){
 });
 
 
+function window_close(){
+	this.close();
+	opener.document.location.reload(true);
+}
+
+function addr_save(){
+	console.log('추가하기')
+}
+//주소 api
+function execPostCode(){
+	daum.postcode.load(function(){
+        new daum.Postcode({
+            oncomplete: function(data) {
+				//변수값 없을때는 ''
+				var addr = '';
+				zipcode = data.zonecode; 
+				$('#zipcode').attr('value', data.zonecode);
+				$('#address1').attr('value', data.address);
+				
+            	}
+            }).open();
+    });
+}
 
 </script>
 </head>
