@@ -1,11 +1,9 @@
 package daangnmungcat.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -25,8 +23,8 @@ import lombok.ToString;
 @JsonInclude(Include.NON_DEFAULT)
 public class MallProduct {
 	private int id;
-	private MallDogCate dogCate;
-	private MallCatCate catCate;
+	private MallCate dogCate;
+	private MallCate catCate;
 	private String name;
 	private int price;
 	private String content;
