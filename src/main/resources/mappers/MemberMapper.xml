@@ -164,4 +164,40 @@
 			</choose>
 		</where>
 	</select>
+	
+	<!-- address -->
+	<resultMap type="Address" id="addressResult">
+		<result column="id" property="id"></result>
+		<result column="mem_id" property="memId"></result>
+		<result column="subject" property="subject"></result>
+		<result column="name" property="name"/>
+		<result column="phone" property="phone"/>
+		<result column="zipcode" property="zipcode"/>
+		<result column="address1" property="address1"/>
+		<result column="address2" property="address2"/>
+		<result column="memo" property="memo"/>
+	</resultMap>
+	
+	<select id="selectAddressById" resultMap="addressResult">
+		SELECT ID, MEM_ID, SUBJECT, NAME, PHONE, ZIPCODE, ADDRESS1, ADDRESS2, MEMO FROM ORDER_address 
+		WHERE mem_id = #{memId}
+	</select>
+	
+	<insert id="insertAddress" parameterType="Address">
+		INSERT INTO order_address
+		VALUES(ORDER_ADDRESS_seq.nextval, #{memId}, #{subject}, #{name}, #{phone}, #{zipcode}, #{address1}, #{address2}, #{memo})
+	</insert>
+	
+	<update id="updateMyAddress">
+		UPDATE MEMBER SET ZIPCODE = #{zipcode}, ADDRESS1 = #{address1}, ADDRESS2 = #{address2} where id = #{id}
+	</update>
+	
+	<update id="updateAddress">
+		update order_address set mem_id= #{memId}, subject = #{subject}, name = #{name}, phone = #{phone}, zipcode = #{zipcode}, address1 = #{address1}, address2 = #{address2}, memo = #{memo}
+		where id = #{id}
+	</update>
+	
+	<select id="getAddress" resultMap="addressResult">
+		select * from order_address where id = #{id}
+	</select>
 </mapper>

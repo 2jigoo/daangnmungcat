@@ -7,8 +7,19 @@ table {width:800px; margin:0 auto;}
 
 </style>
 <script>
-$(function(){
+$(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
+	
+	$(document).on('click', '[id=update_addr]', function(){
+		var num = $(this).attr('addrId');
+		window.open(contextPath+"/shipping_update?id="+num, "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+	});
+
+	$(document).on('click', '[id=delete_addr]', function(){
+		var num = $(this).attr('addrId');
+		console.log(num);
+	});
+
 	
 	$('#add_addr').on("click", function(){
 		window.open(contextPath+"/shipping_popup", "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
@@ -42,17 +53,24 @@ function execPostCode(){
 
 </script>
 
-
 <div class="wrapper">
-<input type="button" id="add_addr" value="배송지추가" style="text-align:left">
-
-<table>
+<input type="button" value="배송지추가" id="add_addr">
+<table id="addr">
 	<tr>
 		<td>배송지이름</td> <td>받으실 분</td> <td>주소</td> <td>연락처</td> <td>수정/삭제</td>
 	</tr>
-	<tr id="addr">
-	</tr>
-	
+	<c:forEach var="add" items="${list}">
+		<tr>	
+				<td>${add.subject} <input type="hidden" value="${add.id}"></td>
+				<td>${add.name}</td>
+				<td>(${add.zipcode}) ${add.address1} ${add.address2}</td>
+				<td>${add.phone}</td>
+				<td>
+					<input type="button" value="수정" id="update_addr" addrId="${add.id}">
+					<input type="button" value="삭제" id="delete_addr" addrId="${add.id}">
+				</td>
+		</tr>
+	</c:forEach>
 </table>
 
    </div>

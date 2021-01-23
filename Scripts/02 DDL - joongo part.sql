@@ -14,6 +14,7 @@ DROP TABLE grade CASCADE CONSTRAINTS;
 DROP TABLE MALL_PDT CASCADE CONSTRAINTS; /* 쇼핑몰_상품 */
 DROP TABLE MALL_DOG_CATE CASCADE CONSTRAINTS; /* 쇼핑몰_멍 카테 */
 DROP TABLE MALL_CAT_CATE CASCADE CONSTRAINTS; /* 쇼핑몰_냥 카테 */
+DROP TABLE ORDER_address CASCADE CONSTRAINTS;
 
 --재설정
 
@@ -33,8 +34,8 @@ CREATE TABLE MEMBER (
 	regdate DATE DEFAULT sysdate, /* 가입일 */
 	birthday DATE, 
 	zipcode NUMBER(10),
-	address1 varchar2(30),
-	address2 varchar2(30),
+	address1 varchar2(255),
+	address2 varchar2(255),
 	mileage NUMBER(10) DEFAULT 0,
 	use_yn char(1) DEFAULT 'y'
 )SEGMENT CREATION IMMEDIATE;
@@ -484,3 +485,30 @@ ALTER TABLE MALL_PDT
 		REFERENCES MALL_CAT_CATE (
 			id
 		);
+		
+
+/* 배송지목록 */
+CREATE TABLE ORDER_ADDRESS (
+	id NUMBER(12) NOT NULL, /* 배송지번호 */
+	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
+	subject VARCHAR2(36) NOT NULL, /* 배송지명 */
+	name VARCHAR2(36) NOT NULL, /* 받는사람 */
+	phone VARCHAR2(20) NOT NULL, /* 전화번호 */
+	zipcode NUMBER(5) NOT NULL, /* 우편번호 */
+	address1 VARCHAR2(255) NOT NULL, /* 주소1 */
+	address2 VARCHAR2(255) NOT NULL, /* 주소2 */
+	memo VARCHAR2(1500) /* 메모 */
+);
+
+ALTER TABLE ORDER_ADDRESS ADD CONSTRAINT PK_ORDER_ADDRESS PRIMARY KEY (id);	
+
+ALTER TABLE ORDER_ADDRESS
+	ADD
+		CONSTRAINT FK_MEMBER_TO_ORDER_ADDRESS
+		FOREIGN KEY (
+			mem_id
+		)
+		REFERENCES MEMBER (
+			id
+		);
+

@@ -7,6 +7,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import daangnmungcat.dto.Address;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
@@ -124,6 +125,31 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int dongneUpdate(String id, Dongne1 dongne1, Dongne2 dongne2) {
 		return mapper.dongneUpdate(id, dongne1, dongne2);
+	}
+
+	@Override
+	public List<Address> myAddress(String id) {
+		return mapper.selectAddressById(id);
+	}
+
+	@Override
+	public int insertAddress(Address address) {
+		return mapper.insertAddress(address);
+	}
+
+	@Override
+	public int updateMyAddress(Member member) {
+		return mapper.updateMyAddress(member);
+	}
+
+	@Override
+	public int updateShippingAddress(Address address) {
+		return mapper.updateAddress(address);
+	}
+
+	@Override
+	public Address getAddress(String id) {
+		return mapper.getAddress(id);
 	}
 
 	

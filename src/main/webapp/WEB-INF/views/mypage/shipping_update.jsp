@@ -6,50 +6,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}">
-<title>배송지 추가</title>
-
+<title>배송지 수정</title>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
+
+<%  
+	String id = request.getParameter("id");
+	request.setAttribute("id", id);
+%>
+
 <script>
-//spring security -> ajax post 타입 전송시 필요
-var csrfToken = $("meta[name='_csrf']").attr("content");
-console.log(csrfToken);
-$.ajaxPrefilter(function(options, originalOptions, jqXHR){
-    if (options['type'].toLowerCase() === "post") {
-        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-    }
-});
-</script>
-<script>
+
+function window_close(){
+	this.close();
+	opener.document.location.reload(true);
+}
+
+function addr_save(){
+	console.log('추가하기')
+}
 //주소 api
 function execPostCode(){
 	daum.postcode.load(function(){
-      new daum.Postcode({
-          oncomplete: function(data) {
+        new daum.Postcode({
+            oncomplete: function(data) {
 				//변수값 없을때는 ''
 				var addr = '';
+				
 				$('#zipcode').attr('value', data.zonecode);
-				$('#address1').attr('value', data.address);
-          	}
-          }).open();
-  });
+				$('#addr1').attr('value', data.address);
+            	}
+            }).open();
+    });
 }
 
-$(document).ready(function(){
+$(function(){
+	var csrfToken = $("meta[name='_csrf']").attr("content");
+	console.log(csrfToken);
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
 	
 	var id;
 	var contextPath = "<%=request.getContextPath()%>";
+	
 	$.get(contextPath +"/memberInfo", function(member){
 		console.log(member.member.id);
 		id = member.member.id;
 	});
 	
-	$('#addr_phone').keyup(function(){
-		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	$.get(contextPath +"/addressInfo/" + ${id}, function(add){
+		$('#addr_subject').attr('value', add.subject);
+		$('#addr_name').attr('value', add.name);
+		$('#zipcode').attr('value', add.zipcode);
+		$('#address1').attr('value', add.address1);
+		$('#address2').attr('value', add.address2);
+		$('#addr_phone').attr('value', add.phone);
+		$('#addr_memo').attr('value', add.memo);
+	
 	});
-
-	$('#addr_save').on("click", function(){
+	
+	
+	$('#addr_update').on("click", function(){
 		var add = {
 				memId: id,
 				subject: $('#addr_subject').val(),
@@ -93,15 +114,14 @@ $(document).ready(function(){
 			}
 		
 			$.ajax({
-				url: contextPath + "/addAddress",
+				url: contextPath + "/updateShippingAddress/"+${id},
 				type: "POST",
 				contentType:"application/json; charset=utf-8",
 				dataType: "json",
 				cache : false,
 				data : JSON.stringify(add),
 				success: function() {
-					alert('배송지 추가 완료');
-					
+					alert('배송지 수정 완료');
 					opener.document.location.reload(true);
 				},
 				error: function(request,status,error){
@@ -110,12 +130,8 @@ $(document).ready(function(){
 			});
 			
 	});
+	
 });
-
-function window_close(){
-	this.close();
-	opener.document.location.reload(true);
-}
 
 
 
@@ -123,6 +139,7 @@ function window_close(){
 </head>
 
 <body>
+
 <div class="wrapper">
 <table>
 	<tr>
@@ -161,7 +178,7 @@ function window_close(){
 	</tr>
 </table>
 <input type="button" value="취소" id="cancel" onclick="window_close()">
-<input type="button" value="저장" id="addr_save">
+<input type="button" value="수정" id="addr_update" onclick="addr_save()">
 </div>
 </body>
 </html>

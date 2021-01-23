@@ -121,7 +121,6 @@ $(document).ready(function(){
                formData.append('uploadFile', file[i]);
             }
             
-            var text = '넘어가나';
             
         	if (confirm("프로필 사진을 변경하시겠습니까?") == true){
             	$.ajax({

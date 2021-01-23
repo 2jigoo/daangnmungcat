@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import daangnmungcat.dto.Address;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
@@ -28,10 +29,15 @@ public interface MemberMapper {
 	int updatePhone(Member member);
 	int updatePwd(Member member);
 	int updateInfo(Member member);
-	
 
 	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
 	
 	Dongne2 selectDongneByDongne2(Dongne2 dongne2);
 	
+	//주소
+	List<Address> selectAddressById(String id);
+	int insertAddress(Address address);
+	int updateMyAddress(Member member);
+	int updateAddress(Address address);
+	Address getAddress(String id);
 }
