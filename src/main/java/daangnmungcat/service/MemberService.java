@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
+import daangnmungcat.dto.Address;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
@@ -24,9 +25,22 @@ public interface MemberService {
 	int phoneCheck(String phone);
 	
 	int updateProfilePic(Member member);
+	int updateProfileText(Member member);
+	int updatePhone(Member member);
+	int updatePwd(Member member);
+	
+	int updateInfo(Member member);
 	
 	//휴대폰인증
 	void certifiedPhoneNumber(String phoneNumber, String cerNum);
 	
 	int dongneUpdate(@Param("id") String id, @Param("dongne1") Dongne1 dongne1, @Param("dongne2") Dongne2 dongne2);
+	
+	//주소
+	List<Address> myAddress(String id);
+	int insertAddress(Address address);
+	int updateMyAddress(Member member);
+	Address getAddress(String id);
+	int updateShippingAddress(Address address);
+
 }

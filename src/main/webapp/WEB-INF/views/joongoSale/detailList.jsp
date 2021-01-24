@@ -489,7 +489,14 @@ $(document).on("click", ".comment_update", function(){
 		<li class="reply" data-id="${commentList.saleComment.id}">
 		</c:if>
 			<div class="user">
-				<p class="img"></p>
+				<p class="img">
+					<c:if test="${empty commentList.member.profilePic}">
+					<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+					</c:if>
+					<c:if test="${not empty commentList.member.profilePic}">
+					<img src="<%=request.getContextPath()%>/resources/${commentList.member.profilePic}">
+					</c:if>
+				</p>
 				<p class="name">${commentList.member.id}</p>
 			</div>
 			<c:if test="${not empty commentList.tagMember.id}">

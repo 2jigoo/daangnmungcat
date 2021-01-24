@@ -8,6 +8,11 @@
 	<meta charset="UTF-8">
 	<!-- spring security 쓰면 post 전송할때 403에러 떠서 추가함 -->
 	<meta name="_csrf" content="${_csrf.token}">
+	<!-- 이미지 캐싱 x -->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	
 	<title>당근멍캣</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/test_page.css" />
@@ -44,7 +49,7 @@
 		</c:if>
 		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
-			<li><a href="#">(${loginUser.getGrade()})${loginUser.getId()}님 안녕하세요.</a></li>
+			<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
 			<li><a href="<c:url value="/mypage" />">마이페이지</a></li>
 			<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 			<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
