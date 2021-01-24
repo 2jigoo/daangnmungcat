@@ -29,7 +29,7 @@ CREATE TABLE MEMBER (
 	grade char(1) DEFAULT 'W', /* 등급 */
 	dongne1 number(12) NOT NULL, /* 시 */
 	dongne2 number(12) NOT NULL, /* 군구 */
-	profile_pic VARCHAR2(300), /* 프로필사진 */
+	profile_pic VARCHAR2(300) DEFAULT 'images/default_user_image.png', /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */
 	regdate DATE DEFAULT sysdate, /* 가입일 */
 	birthday DATE, 
