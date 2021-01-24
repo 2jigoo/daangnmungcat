@@ -115,6 +115,3 @@ function getAvatarColor(messageSender) {
     var index = Math.abs(hash % colors.length);
     return colors[index];
 }
-
-connect();
-messageForm.addEventListener('submit', sendMessage, true);

@@ -52,13 +52,12 @@ INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', '그림
 INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest1', '즐ㅋ', sysdate + 1/60/24*4 , 'n', null);
 INSERT INTO JOONGO_CHAT_MSG VALUES(chat_msg_seq.nextval, 1, 'chattest2', ';;;', sysdate + 1/60/24*5, 'n', null);
 
-
 SELECT * FROM CHAT_LIST_VIEW;
 SELECT * FROM joongo_sale;
 SELECT * FROM JOONGO_CHAT_MSG jcm;
 
 SELECT * FROM chat_list_view
-where sale_mem_id = 'chattest1' or buy_mem_id = 'chattest1'
+where (sale_mem_id = 'chattest1' or buy_mem_id = 'chattest1') AND sale_id = '1'
 ORDER BY latest_date DESC;
 
 
@@ -74,10 +73,6 @@ SELECT
 FROM dongne1 d1
 	LEFT OUTER JOIN dongne2 d2 ON (d1.ID = d2.dongne1_id)
 WHERE d2.name = '달서구';
-
-
-SELECT * FROM JOONGO_COMMENT jc ;
-DELETE FROM joongo_comment;
 
 
 SELECT id, LEVEL, LPAD(' ', 3*(LEVEL - 1)) || MEM_ID AS CONNECTBY, SALE_ID, ORIGIN_ID, TAG_MEM_ID, CONTENT, REGDATE 

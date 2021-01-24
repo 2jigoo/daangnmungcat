@@ -31,28 +31,28 @@ $(document).ready(function(){
 		<div id="article">
 			<c:forEach  var="chat" items="${list }" >
 				<c:if test="${chat.sale.member.id eq loginUser.id }">
-					<c:set var="member" value="${chat.sale.member }" />
+					<c:set var="you" value="${chat.buyer }" />
 				</c:if>
 				<c:if test="${chat.buyer.id eq loginUser.id }">
-					<c:set var="member" value="${chat.buyer }" />
+					<c:set var="you" value="${chat.sale.member }" />
 				</c:if>
 				<section class="section_chat">
 					<div class="section_chat_profile_img">
 						<a href="${pageContext.request.contextPath }/member/profile?id=${member.id}">
 							<c:choose>
 								<c:when test="${member.profilePic eq null}">
-									<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+									<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
 								</c:when>
 								<c:otherwise>
-									<img alt="개인프로필" src="<%=request.getContextPath() %>/resources/upload/profile/${member.profilePic}">
+									<img alt="개인프로필" src="<%=request.getContextPath() %>/resources/upload/profile/${you.profilePic}">
 								</c:otherwise>
 							</c:choose>
 						</a>
 					</div>
 					<a id="section_chat_link" href="${pageContext.request.contextPath }/chat/${chat.id} ">
 						<div class="section_chat_left">
-							<div class="user_info" user_id="${member.id }">
-								<span class="nickname"> ${member.nickname } </span>
+							<div class="user_info" user_id="${you.id }">
+								<span class="nickname"> ${you.nickname } </span>
 								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}
 								/ <span class="regdate" regdate="${chat.latestDate }"> ${chat.latestDate }</span>
 							</div>

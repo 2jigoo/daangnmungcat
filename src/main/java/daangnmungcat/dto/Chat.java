@@ -40,5 +40,10 @@ public class Chat {
 	private LocalDateTime latestDate;
 	
 	private List<ChatMessage> messages;
+
+	public Chat(Sale sale, Member buyer) {
+		this.sale = sale;
+		this.buyer = buyer;
+	}
 	
 }

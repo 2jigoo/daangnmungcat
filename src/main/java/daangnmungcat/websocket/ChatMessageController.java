@@ -28,17 +28,6 @@ public class ChatMessageController {
 	@Autowired
 	private ChatService chatService;
 	
-	/*
-	@MessageMapping("/sendMessage")
-	@SendTo("/sub/chats/message")
-	public String message(@Payload ChatMessage message) {
-		System.out.println(message);
-		log.debug("message(): " + message);
-	//		messagingTemplate.convertAndSend("/sub/chat/" + message.getChat().getId(), message);
-		return message.getChat().getId() + "방에 전송했음";
-	}
-	*/
-	
 	@MessageMapping("/chat/{id}.sendMessage")
     @SendTo("/topic/chat/{id}")
     public ChatMessage sendMessage(@DestinationVariable int id, @Payload ChatMessage chatMessage) {

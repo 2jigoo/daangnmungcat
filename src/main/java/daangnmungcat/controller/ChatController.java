@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +16,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Sale;
 import daangnmungcat.service.ChatService;
+import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.websocket.ChatMessageController;
 
 @Controller
@@ -27,6 +33,9 @@ public class ChatController {
 
 	@Autowired
 	private ChatService chatService;
+	
+	@Autowired
+	private JoongoSaleService saleService;
 	
 	private static final Log log = LogFactory.getLog(ChatMessageController.class);
 	
@@ -69,4 +78,57 @@ public class ChatController {
 		return list;
 	}
 	
+	
+	@GetMapping("/goToChat")
+	public String goToChatFromSale(@RequestParam(value = "id") int saleId, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+		
+		Sale sale = null;
+		String loginUserId = null;
+
+		// 로그아웃 상태이거나 해당 글이 없는 경우
+		try {
+			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			loginUserId = loginUser.getId();
+			sale = saleService.getListsById(saleId).get(0);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "redirect:/joongo_list";
+		}
+		
+		// 본인이 작성한 글에 접근했을 때
+		if(sale.getMember().getId().equals(loginUserId)) {
+			return "redirect:/detailList?id=" + saleId;
+		}
+		
+		Chat chat = chatService.getChatInfoFromSale(loginUserId, saleId);
+		// 기존의 채팅이 있는 경우 해당 채팅방으로 이동
+		if(chat != null) {
+			return "redirect:/chat/" + chat.getId();
+		}
+		
+		model.addAttribute("sale", sale);
+		return "/chat/new_room";
+	}
+	
+	
+	@PostMapping("/chat/createChat")
+	@ResponseBody
+	public ResponseEntity<Object> createNewRoom(@RequestParam(value = "sale") Sale sale, HttpSession session) {
+		
+		// #{id}, #{sale.id}, #{sale.member.id}, #{buyer.id}
+		Member buyer = null;
+		int chatId;
+		
+		try {
+			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			buyer = new Member(loginUser.getId());
+			Chat chat = new Chat(sale, buyer);
+			chatId = chatService.createNewChat(chat);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(chatId);
+	}
 }

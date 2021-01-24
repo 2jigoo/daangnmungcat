@@ -10,6 +10,7 @@ public interface ChatService {
 
 	List<Chat> getMyChatsList(String memberId);
 	Chat getChatInfo(int chatId);
+	Chat getChatInfoFromSale(String memberId, int saleId);
 	
 	Chat getChatWithMessages(int chatId);
 	Chat getChatWithMessages(int chatId, Criteria criteria);
@@ -17,7 +18,7 @@ public interface ChatService {
 	List<ChatMessage> getChatMessages(int chatId);
 	List<ChatMessage> getChatMessages(int chatId, Criteria criteria);
 	
-	int createNewChat(Chat chat, ChatMessage message);
+	int createNewChat(Chat chat);
 	int sendMessage(Chat chat, ChatMessage message);
 	
 	int deleteMessage(ChatMessage... message);

@@ -53,6 +53,12 @@
 		where id = #{id}
 	</select>
 	
+	<select id="selectChatByMemberIdAndSaleId" resultMap="chatRes">
+		<include refid="selectSQL" />
+		where (sale_mem_id = #{memberId} or buy_mem_id = #{memberId})
+		and sale_id = #{saleId}
+	</select>
+	
 	
 	<insert id="insertChat" parameterType="Chat">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">

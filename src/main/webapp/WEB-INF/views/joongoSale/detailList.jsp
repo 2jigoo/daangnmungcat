@@ -118,6 +118,10 @@
 	#product_list {
 	}
 	
+	.go_to_chat_btn {
+		width: 80%;
+		cursor: pointer;
+	}
 	
 	/* section_goods 부분 */
 
@@ -422,8 +426,9 @@ $(document).on("click", ".comment_update", function(){
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
 				</c:when>
 			</c:choose>
-			
- 			<input type="button" value="대화로 문의하기" style="width:80%;">
+			<a href="<%=request.getContextPath()%>/goToChat?id=${list.id}">
+				<button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
+			</a>
 		</div>
 	</section>
 

@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectedEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
-import daangnmungcat.dto.ChatMessageForTest;
-import daangnmungcat.dto.MessageType;
+import daangnmungcat.dto.AuthInfo;
 import lombok.extern.log4j.Log4j2;
 
 @Component
@@ -22,6 +21,7 @@ public class WebSocketEventListener {
     // connected
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectedEvent event) {
+    	System.out.println(event);
         log.info("Received a new web socket connection");
     }
 
