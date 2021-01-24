@@ -39,7 +39,11 @@ public class ChatServiceImpl implements ChatService {
 			ArrayList<ChatMessage> msgList = new ArrayList<ChatMessage>();
 			msgList.add(msg);
 			
-			chat.setLatestDate(msg.getRegdate());
+			try {
+				chat.setLatestDate(msg.getRegdate());
+			} catch (NullPointerException e) {
+				
+			}
 			chat.setMessages(msgList);
 		}
 		
@@ -89,16 +93,14 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 새 채팅 만들기
 	@Override
-	@Transactional
-	public int createNewChat(Chat chat, ChatMessage message) {
+	public int createNewChat(Chat chat) {
 		int res = chatMapper.insertChat(chat);
-		res += messageMapper.insertChatMessage(message);
 		
-		if (res != 2) {
+		if (res != 1) {
 			throw new RuntimeException();
 		}
 		
-		return res;
+		return chat.getId();
 	}
 	
 	
@@ -114,6 +116,22 @@ public class ChatServiceImpl implements ChatService {
 		return res;
 	}
 
+	
+	@Override
+	public String readChat(int id, String memberId) {
+		chatMapper.updateChatRead(id, memberId);
+		
+		Chat chat = chatMapper.selectChatByChatId(id);
+		return memberId;
+	}
+	
+	
+	@Override
+	public int readChatMessage(int id, String memberId) {
+		int res = messageMapper.updateChatMessageRead(id, memberId);
+		return res;
+	}
+	
 	
 	// 채팅창에서 선택한 메시지 지우기
 	@Override
@@ -140,6 +158,14 @@ public class ChatServiceImpl implements ChatService {
 		}
 		
 		return res;
+	}
+
+
+	// 해당 판매글에 member가 참여한 채팅 정보 조회
+	@Override
+	public Chat getChatInfoFromSale(String memberId, int saleId) {
+		Chat chat = chatMapper.selectChatByMemberIdAndSaleId(memberId, saleId);
+		return chat;
 	}
 	
 	

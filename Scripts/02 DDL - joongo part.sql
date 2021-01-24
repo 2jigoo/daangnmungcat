@@ -14,6 +14,7 @@ DROP TABLE grade CASCADE CONSTRAINTS;
 DROP TABLE MALL_PDT CASCADE CONSTRAINTS; /* 쇼핑몰_상품 */
 DROP TABLE MALL_DOG_CATE CASCADE CONSTRAINTS; /* 쇼핑몰_멍 카테 */
 DROP TABLE MALL_CAT_CATE CASCADE CONSTRAINTS; /* 쇼핑몰_냥 카테 */
+DROP TABLE ORDER_address CASCADE CONSTRAINTS;
 
 --재설정
 
@@ -28,15 +29,15 @@ CREATE TABLE MEMBER (
 	grade char(1) DEFAULT 'W', /* 등급 */
 	dongne1 number(12) NOT NULL, /* 시 */
 	dongne2 number(12) NOT NULL, /* 군구 */
-	profile_pic VARCHAR2(300), /* 프로필사진 */
+	profile_pic VARCHAR2(300) DEFAULT 'images/default_user_image.png', /* 프로필사진 */
 	profile_text VARCHAR2(600),/* 프로필소개 */
 	regdate DATE DEFAULT sysdate, /* 가입일 */
 	birthday DATE, 
 	zipcode NUMBER(10),
-	address1 varchar2(30),
-	address2 varchar2(30),
+	address1 varchar2(255),
+	address2 varchar2(255),
 	mileage NUMBER(10) DEFAULT 0,
-	useYn char(1) DEFAULT 'y'
+	use_yn char(1) DEFAULT 'y'
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE MEMBER ADD UNIQUE (email);
@@ -180,6 +181,7 @@ CREATE TABLE JOONGO_CHAT_MSG (
 ALTER TABLE JOONGO_CHAT_MSG
 ADD CONSTRAINT PK_JOONGO_CHAT_MSG PRIMARY KEY (id);
 
+
 /*등급*/
 CREATE TABLE grade(
 	code char(1) NOT NULL, 
@@ -198,6 +200,7 @@ ALTER TABLE MEMBER
 		REFERENCES grade (
 			code
 		);
+
 
 
 ALTER TABLE JOONGO_COMMENT
@@ -482,3 +485,30 @@ ALTER TABLE MALL_PDT
 		REFERENCES MALL_CAT_CATE (
 			id
 		);
+		
+
+/* 배송지목록 */
+CREATE TABLE ORDER_ADDRESS (
+	id NUMBER(12) NOT NULL, /* 배송지번호 */
+	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
+	subject VARCHAR2(36) NOT NULL, /* 배송지명 */
+	name VARCHAR2(36) NOT NULL, /* 받는사람 */
+	phone VARCHAR2(20) NOT NULL, /* 전화번호 */
+	zipcode NUMBER(5) NOT NULL, /* 우편번호 */
+	address1 VARCHAR2(255) NOT NULL, /* 주소1 */
+	address2 VARCHAR2(255) NOT NULL, /* 주소2 */
+	memo VARCHAR2(1500) /* 메모 */
+);
+
+ALTER TABLE ORDER_ADDRESS ADD CONSTRAINT PK_ORDER_ADDRESS PRIMARY KEY (id);	
+
+ALTER TABLE ORDER_ADDRESS
+	ADD
+		CONSTRAINT FK_MEMBER_TO_ORDER_ADDRESS
+		FOREIGN KEY (
+			mem_id
+		)
+		REFERENCES MEMBER (
+			id
+		);
+
