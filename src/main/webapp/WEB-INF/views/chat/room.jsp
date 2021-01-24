@@ -11,26 +11,27 @@
 	var chatId = ${chat.id};
 	var memberId = "${loginUser.id}";
 	var memberNickname = "${loginUser.nickname}";
-	console.log(chatId);
-	console.log(memberId);
 	
 	var page = 1;
 	var perPage = 20;
 	
-	var headerName = "${_csrf.headerName}";
+	/* var headerName = "${_csrf.headerName}";
 	var token = "${_csrf.token}";
 	var headers = {};
 	headers[headerName] = token;
-	console.log(headers);
+	console.log(headers); */
 	
 	$(document).ready(function(){
 		
-	/* 글쓴 시간 비교시간 변경 */
-	var regdate = document.getElementsByClassName("regdate");
-	$.each(regdate, function(idx, item) {
-		var writeNow = dayjs(item.innerText).format("YYYY년 M월 D일 h:mm");
-	 	item.innerHTML = writeNow;
-	});
+		/* 글쓴 시간 비교시간 변경 */
+		var regdate = document.getElementsByClassName("regdate");
+		$.each(regdate, function(idx, item) {
+			var writeNow = dayjs(item.innerText).format("YYYY년 M월 D일 h:mm");
+		 	item.innerHTML = writeNow;
+		});
+		
+		connect();
+		messageForm.addEventListener('submit', sendMessage, true);
 		
 		$("#chat-loading-btn").click(function() {
 			$.ajax({
@@ -41,6 +42,7 @@
 				dataType: "json",
 				success: function(data) {
 					console.log(data);
+					console.log(data.length);
 					if(data.length != 0) {
 						var li_str = "";
 						
@@ -63,7 +65,7 @@
 								li_str += "<div class='chat-message you profile_img'>";
 								li_str += "<a href='" + contextPath + "/member/profile?id=" + msg.member.id + "'>";
 								if(msg.member.profilePic == null) {
-									li_str += "<img alt='기본프로필' src='https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png'>";
+									li_str += "<img alt='기본프로필' src='" + contextPath + "/resources/images/default_user_image.png'>";
 								} else {
 									li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/upload/profile/" + msg.member.profilePic + "'>";
 								}
@@ -86,7 +88,9 @@
 						if(data.length < perPage) {
 							$("#chat-loading-btn").remove();
 						}
-					} 
+					} else {
+						$("#chat-loading-btn").remove();
+					}
 				}
 			});
 		});
@@ -117,9 +121,11 @@
 		          	  연결중...
 		        </div>
 		        <ul id="messageArea">
-		        	<li class="chat-message loading-btn" id="chat-loading-btn">
-		        		<div class="chat-message">더 읽어오기</div>
-		        	</li>
+		        	<c:if test="${chat.messages.size() eq 20}">
+			        	<li class="chat-message loading-btn" id="chat-loading-btn">
+			        		<div class="chat-message">더 읽어오기</div>
+			        	</li>
+		        	</c:if>
 		        	<c:forEach items="${chat.messages }" var="msg">
 		        	<c:choose>
 			        	<c:when test="${msg.member.id eq loginUser.id }">
@@ -137,7 +143,7 @@
 										<a href="${pageContext.request.contextPath }/member/profile?id=${msg.member.id}">
 										<c:choose>
 											<c:when test="${msg.member.profilePic eq null}">
-												<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+												<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
 											</c:when>
 											<c:otherwise>
 												<img alt="개인프로필" src="<%=request.getContextPath() %>/resources/upload/profile/${msg.member.profilePic}">
@@ -167,7 +173,7 @@
 		        <form id="messageForm" name="messageForm">
 		            <div class="form-group">
 		                <div class="input-group clearfix">
-		                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
+		                    <input type="text" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
 		                    <button type="submit" class="primary">보내기</button>
 		                </div>
 		            </div>
