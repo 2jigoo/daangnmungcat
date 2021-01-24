@@ -8,6 +8,7 @@
 <script>
 	var contextPath = "${pageContext.request.contextPath }";
 	
+	var isCreated = false;
 	var chatId = 0;
 	var memberId = "${loginUser.id}";
 	var memberNickname = "${loginUser.nickname}";
@@ -15,38 +16,42 @@
 	var page = 1;
 	var perPage = 20;
 	
-	/* var headerName = "${_csrf.headerName}";
-	var token = "${_csrf.token}";
-	var headers = {};
-	headers[headerName] = token;
-	console.log(headers); */
-	
 	$(document).ready(function(){
+		connect_for_new();
 		
-		/* 글쓴 시간 비교시간 변경 */
 		var regdate = document.getElementsByClassName("regdate");
 		$.each(regdate, function(idx, item) {
 			var writeNow = dayjs(item.innerText).format("YYYY년 M월 D일 h:mm");
 		 	item.innerHTML = writeNow;
 		});
 		
-		$("#chat-loading-btn").click(function(e) {
-			$.ajax({
-				url: contextPath + "/chat/createChat",
-				type: "post",
-				data: {id: ${sale.id}, member: {id: ${sale.member.id}}},
-				dataType: "",
-				success: function(data) {
-					console.log(data);
-				},
-				error: function(error) {
-					console.log(error);
-				}
-			});
+		$("#messageForm").on("submit", function(e) {
+			e.preventDefault();
 			
-			/* connect();
-			sendMessage(e);
-			messageForm.addEventListener('submit', sendMessage, true); */
+			var sale = {id: ${sale.id}, member: {id: "${sale.member.id}"}};
+			
+			if(isCreated == false) {
+				$.ajax({
+					url: contextPath + "/chat/createChat",
+					type: "post",
+					contentType:"application/json;charset=UTF-8",
+					data: JSON.stringify(sale),
+					dataType: "text",
+					success: function(data) {
+						//$(this).off(e);
+						console.log(data);
+						chatId = data;
+						
+						subscribe_for_new();
+						sendMessage(e);
+						messageForm.addEventListener('submit', sendMessage, true);
+						isCreated = true;
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+			}
 		});
 	});
 </script>
@@ -75,7 +80,7 @@
 		            <div class="form-group">
 		                <div class="input-group clearfix">
 		                    <input type="text" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
-		                    <button type="submit" class="primary">보내기</button>
+		                    <button type="submit" class="primary" id="msg_send_btn">보내기</button>
 		                </div>
 		            </div>
 		        </form>

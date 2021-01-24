@@ -26,7 +26,7 @@ function connect() {
 function onConnected() {
     // Subscribe to the Public Topic
     stompClient.subscribe('/topic/chat/' + chatId, onMessageReceived);
-
+	readChat();
     // Tell your username to the server
     /*
     stompClient.send('/app/chat/' + chatId + '.addUser',
@@ -36,6 +36,24 @@ function onConnected() {
     */
     console.log('연결됨');
     connectingElement.classList.add('hidden');
+}
+
+function connect_for_new() {
+	var socket = new SockJS('/daangnmungcat/ws');
+	stompClient = Stomp.over(socket);
+	
+	stompClient.connect({}, onConnected_for_new(), onError);
+}
+
+
+function onConnected_for_new() {
+	console.log('연결됨');
+	connectingElement.classList.add('hidden');
+}
+
+function subscribe_for_new() {
+	stompClient.subscribe('/topic/chat/' + chatId, onMessageReceived);
+	readChat();
 }
 
 
@@ -61,11 +79,26 @@ function sendMessage(event) {
 }
 
 
+function readChat() {
+	if(stompClient) {
+		stompClient.send('/app/chat/' + chatId + '.read', {}, memberId);
+	}
+}
+
 function onMessageReceived(payload) {
-    var message = JSON.parse(payload.body);
-    console.log(message);
-    
-    var messageElement = document.createElement('li');
+	console.log("received~~")
+	console.log(payload);
+	var msg = JSON.parse(payload.body);
+    console.log(msg);
+	
+	if(msg.chat === undefined) {
+		if(msg.id != memberId) {
+			$('.read_yn').attr('read_yn', 'y');
+			$('.read_yn').text('읽음 ');    	
+		}
+		return;
+	}
+	
 
     /*
     if(message.type === 'JOIN') {
@@ -75,20 +108,21 @@ function onMessageReceived(payload) {
         messageElement.classList.add('event-message');
         message.content = message.sender + ' left!';
     } else { */
+    
+    /*
+    var messageElement = document.createElement('li');
+    
     messageElement.classList.add('chat-message');
 
     var avatarElement = document.createElement('i');
     var avatarText = document.createTextNode(message.member.nickname[0]);
-//    var avatarText = document.createTextNode(message.member.id[0]);
     avatarElement.appendChild(avatarText);
     avatarElement.style['background-color'] = getAvatarColor(message.member.nickname);
-//    avatarElement.style['background-color'] = getAvatarColor(message.member.id);
 
     messageElement.appendChild(avatarElement);
 
     var usernameElement = document.createElement('span');
     var usernameText = document.createTextNode(message.member.nickname);
-//    var usernameText = document.createTextNode(message.member.id);
     usernameElement.appendChild(usernameText);
     messageElement.appendChild(usernameElement);
     // }
@@ -101,9 +135,43 @@ function onMessageReceived(payload) {
     textElement.appendChild(regdateElement);
     
     messageElement.appendChild(textElement);
-
-    messageArea.appendChild(messageElement);
+*/
+    var li_str = "";
+    
+    if (msg.member.id == memberId) {
+		// 나
+		li_str += "<li class='chat-message me' msg_id='" + msg.id + "' sender='" + msg.member.id + "'>";
+		li_str += "<div class='chat-message me bubble'><p>";
+		if(msg.content != null) {
+			li_str += msg.content;
+		} else {
+			li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
+		}
+		li_str += "</p><span class='read_yn' read_yn='" + msg.readYn + "'>";
+		li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + "</span>";
+		li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
+	} else {
+		// 너
+		li_str += "<li class='chat-message you' msg_id='" + msg.id + "' sender='" + msg.member.id +"'>";
+		li_str += "<div class='chat-message you profile_img'>";
+		li_str += "<a href='" + contextPath + "/member/profile?id=" + msg.member.id + "'>";
+		li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/" + msg.member.profilePic + "'>";
+		li_str += "</a></div>";
+		li_str += "<div class='chat-message you bubble'><span class='nickname'>" + msg.member.nickname + "</span>";
+		if(msg.content != null) {
+			li_str += msg.content;
+		} else {
+			li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
+		}
+		li_str += "</p>";
+		li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
+	}
+    
+    //messageArea.append(li_str);
+    $("#messageArea").append(li_str);
     messageArea.scrollTop = messageArea.scrollHeight;
+    
+    readChat();
 }
 
 

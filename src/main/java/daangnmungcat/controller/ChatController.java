@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -26,9 +25,10 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.service.JoongoSaleService;
-import daangnmungcat.websocket.ChatMessageController;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
+@Log4j2
 public class ChatController {
 
 	@Autowired
@@ -37,13 +37,11 @@ public class ChatController {
 	@Autowired
 	private JoongoSaleService saleService;
 	
-	private static final Log log = LogFactory.getLog(ChatMessageController.class);
-	
 	@GetMapping("/chat")
 	public String myChatList(Model model, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		log.debug("loginUser's ID: " + loginUser.getId());
-			
+		
 		List<Chat> list = chatService.getMyChatsList(loginUser.getId());
 		list.stream().forEach(chat -> log.debug(chat.toString()));
 		
@@ -56,6 +54,8 @@ public class ChatController {
 	@GetMapping("/chat/{id}")
 	public String chatView(@PathVariable("id") int id, Model model, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		
+		chatService.readChat(id, loginUser.getId());
 		
 		Criteria cri = new Criteria(1, 20);
 		Chat chat = chatService.getChatWithMessages(id, cri);
@@ -113,16 +113,18 @@ public class ChatController {
 	
 	@PostMapping("/chat/createChat")
 	@ResponseBody
-	public ResponseEntity<Object> createNewRoom(@RequestParam(value = "sale") Sale sale, HttpSession session) {
+	public ResponseEntity<Object> createNewRoom(@RequestBody Sale sale, HttpSession session) {
 		
 		// #{id}, #{sale.id}, #{sale.member.id}, #{buyer.id}
 		Member buyer = null;
-		int chatId;
+		int chatId = 0;
 		
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			buyer = new Member(loginUser.getId());
 			Chat chat = new Chat(sale, buyer);
+			log.debug(chat.toString());
+			
 			chatId = chatService.createNewChat(chat);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -131,4 +133,5 @@ public class ChatController {
 		
 		return ResponseEntity.ok(chatId);
 	}
+	
 }

@@ -41,9 +41,14 @@ public class Chat {
 	
 	private List<ChatMessage> messages;
 
+	public Chat(int id) {
+		this.id = id;
+	}
+	
 	public Chat(Sale sale, Member buyer) {
 		this.sale = sale;
 		this.buyer = buyer;
 	}
+
 	
 }

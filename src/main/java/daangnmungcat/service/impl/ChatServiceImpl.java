@@ -39,7 +39,11 @@ public class ChatServiceImpl implements ChatService {
 			ArrayList<ChatMessage> msgList = new ArrayList<ChatMessage>();
 			msgList.add(msg);
 			
-			chat.setLatestDate(msg.getRegdate());
+			try {
+				chat.setLatestDate(msg.getRegdate());
+			} catch (NullPointerException e) {
+				
+			}
 			chat.setMessages(msgList);
 		}
 		
@@ -112,6 +116,22 @@ public class ChatServiceImpl implements ChatService {
 		return res;
 	}
 
+	
+	@Override
+	public String readChat(int id, String memberId) {
+		chatMapper.updateChatRead(id, memberId);
+		
+		Chat chat = chatMapper.selectChatByChatId(id);
+		return memberId;
+	}
+	
+	
+	@Override
+	public int readChatMessage(int id, String memberId) {
+		int res = messageMapper.updateChatMessageRead(id, memberId);
+		return res;
+	}
+	
 	
 	// 채팅창에서 선택한 메시지 지우기
 	@Override

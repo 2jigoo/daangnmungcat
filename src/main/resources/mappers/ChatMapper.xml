@@ -59,7 +59,6 @@
 		and sale_id = #{saleId}
 	</select>
 	
-	
 	<insert id="insertChat" parameterType="Chat">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT chat_seq.nextval FROM DUAL
@@ -68,6 +67,11 @@
 		VALUES(#{id}, #{sale.id}, #{sale.member.id}, #{buyer.id}, sysdate, sysdate)
 	</insert>
 	
+	<update id="updateChatRead">
+		UPDATE JOONGO_CHAT_MSG
+		SET read_yn = 'y'
+		WHERE chat_id = #{id} and mem_id != #{memberId} and read_yn = 'n'
+	</update>
 	
 	<delete id="deleteChat" parameterType="Chat">
 		delete from JOONGO_CHAT where id = #{id}

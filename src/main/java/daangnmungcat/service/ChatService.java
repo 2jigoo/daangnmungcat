@@ -21,6 +21,9 @@ public interface ChatService {
 	int createNewChat(Chat chat);
 	int sendMessage(Chat chat, ChatMessage message);
 	
+	String readChat(int chat, String memberId);
+	int readChatMessage(int message, String memberId);
+	
 	int deleteMessage(ChatMessage... message);
 	int deleteChat(Chat chat);
 	

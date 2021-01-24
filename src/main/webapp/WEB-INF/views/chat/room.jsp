@@ -57,18 +57,14 @@
 									li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
 								}
 								li_str += "</p><span class='read_yn' read_yn='" + msg.readYn + "'>";
-								li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + '</span>';
+								li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + "</span>";
 								li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
 							} else {
 								// 너
 								li_str += "<li class='chat-message you' msg_id='" + msg.id + "' sender='" + msg.member.id +"'>";
 								li_str += "<div class='chat-message you profile_img'>";
 								li_str += "<a href='" + contextPath + "/member/profile?id=" + msg.member.id + "'>";
-								if(msg.member.profilePic == null) {
-									li_str += "<img alt='기본프로필' src='" + contextPath + "/resources/images/default_user_image.png'>";
-								} else {
-									li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/upload/profile/" + msg.member.profilePic + "'>";
-								}
+								li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/" + msg.member.profilePic + "'>";
 								li_str += "</a></div>";
 								li_str += "<div class='chat-message you bubble'><span class='nickname'>" + msg.member.nickname + "</span>";
 								if(msg.content != null) {
@@ -76,8 +72,7 @@
 								} else {
 									li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
 								}
-								li_str += "</p><span class='read_yn' read_yn='" + msg.readYn + "'>";
-								li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + '</span>';
+								li_str += "</p>";
 								li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
 							}
 						});
@@ -161,10 +156,12 @@
 								<span class="nickname">${msg.member.nickname }</span>
 							</c:if>
 							<p>${msg.content } ${msg.image }</p>
-							<span class="read_yn" read_yn="${msg.readYn }">
-								<c:if test="${msg.readYn eq 'y' }">읽음</c:if>
-								<c:if test="${msg.readYn eq 'n' }">읽지 않음</c:if>
-							</span>
+							<c:if test="${sender eq 'me' }">
+								<span class="read_yn" read_yn="${msg.readYn }">
+									<c:if test="${msg.readYn eq 'y' }">읽음</c:if>
+									<c:if test="${msg.readYn eq 'n' }">읽지 않음</c:if>
+								</span>
+							</c:if>
 							<span class="regdate" regdate="${msg.regdate }"> ${msg.regdate } </span>
 						</div>
 					</li>

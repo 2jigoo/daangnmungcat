@@ -13,5 +13,6 @@ public interface ChatMapper {
 	Chat selectChatByMemberIdAndSaleId(@Param("memberId")String memberId, @Param("saleId") int saleId);
 	
 	int insertChat(Chat chat);
+	int updateChatRead(@Param("id") int id, @Param("memberId") String memberId);
 	int deleteChat(Chat chat);
 }

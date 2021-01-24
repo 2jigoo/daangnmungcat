@@ -36,18 +36,15 @@ public class Member {
 	public Member() {
 	}
 
+	public Member(String id) {
+		this.id = id;
+	}
+
 	public Member(String id, String pwd) {
 		this.id = id;
 		this.pwd = pwd;
 	}
 	
-
-	public Member(String email) {
-		this.email = email;
-	}
-	
-	
-
 	public Member(String id, String pwd, String name, String nickname, String email, String phone, Dongne1 dongne1,
 			Dongne2 dongne2, String profilePic, String profileText) {
 		this.id = id;
