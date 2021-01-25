@@ -20,6 +20,7 @@
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 	<script>
+	$(document).ready(function(){
 		//spring security -> ajax post 타입 전송시 필요
 		var csrfToken = $("meta[name='_csrf']").attr("content");
 		console.log(csrfToken);
@@ -28,6 +29,32 @@
 		        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
 		    }
 		});
+		
+		
+		var contextPath = "<%=request.getContextPath()%>";
+		
+		$.get(contextPath +"/dog_cate", function(json){
+			var datalength = json.length;
+			if(datalength >= 1){
+				var sCont = "";
+				for(i=0; i<datalength; i++){
+					sCont += "<li><a href='"+ contextPath + "/mall/product/list/dog/" + json[i].id + "'>" + json[i].name + "</a>";
+				}
+				$('#dog_cate').append(sCont);
+			}
+		});
+		
+		$.get(contextPath +"/cat_cate", function(json){
+			var datalength = json.length;
+			if(datalength >= 1){
+				var sCont = "";
+				for(i=0; i<datalength; i++){
+					sCont += "<li><a href='" + contextPath + "/mall/product/list/cat/" + json[i].id + "'>" +  json[i].name + "</a>";
+				}
+				$('#cat_cate').append(sCont);
+			}
+		})
+	});
 	</script>
 </head>
 <body>
@@ -83,22 +110,12 @@
 		</div>
 		<ul>
 			<li><a href="<c:url value="/joongo_list" />">중고</a></li>
-			<li class="depth2"><a href="#">멍</a>
-				<ul>
-					<li><a href="#">사료</a></li>
-					<li><a href="#">배변패드</a></li>
-					<li><a href="#">간식</a></li>
-					<li><a href="#">장남감</a></li>
-					<li><a href="#">영양제</a></li>
+			<li class="depth2"><a href="<c:url value="/mall/product/list/dog" />">멍</a>
+				<ul id="dog_cate">
 				</ul>
 			</li>
-			<li class="depth2"><a href="#">냥</a>
-				<ul>
-					<li><a href="#">사료</a></li>
-					<li><a href="#">배변패드</a></li>
-					<li><a href="#">간식</a></li>
-					<li><a href="#">장남감</a></li>
-					<li><a href="#">영양제</a></li>
+			<li class="depth2"><a href="<c:url value="/mall/product/list/cat" />">냥</a>
+				<ul id="cat_cate">
 				</ul>
 			</li>
 			<li><a href="#">커뮤니티</a></li>
