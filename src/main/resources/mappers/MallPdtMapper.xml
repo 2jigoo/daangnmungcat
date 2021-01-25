@@ -2,12 +2,103 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.MallPdtMapper">
 
-<insert id="insertMallProduct" parameterType="MallProduct">
-	<selectKey keyProperty="id" resultType="int" order="BEFORE">
-		SELECT mall_pdt_seq.nextval FROM DUAL
-	</selectKey>
-	INSERT INTO MALL_PDT(ID, DOG_CATE, CAT_CATE, NAME, PRICE, CONTENT, SALE_YN, STOCK, IMAGE1, IMAGE2, IMAGE3, DELIVERY_KIND, DELIVERY_CONDITION, DELIVERY_PRICE)
-	 VALUES(#{id}, #{dogCate.id}, #{catCate.id}, #{name}, #{price}, #{content}, #{saleYn}, #{stock}, #{image1}, #{image2}, #{image3}, #{deliveryKind}, #{deliveryCondition}, #{deliveryPrice})
-</insert>
+<sql id="selectSql">
+	select ID, 
+		DOG_CATE, 
+		CAT_CATE, 
+		NAME, 
+		PRICE, 
+		CONTENT, 
+		SALE_YN, 
+		STOCK, 
+		IMAGE1, 
+		IMAGE2, 
+		IMAGE3, 
+		DELIVERY_KIND, 
+		DELIVERY_CONDITION,
+		DELIVERY_PRICE, 
+		REGDATE 
+	from MALL_PDT
+</sql>
+<sql id="whereSql">
+	<where>
+		<if test="id != null">
+			id = #{id}
+		</if>
+	</where>
+</sql>
+
+
+<!-- resultMap -->
+	<resultMap type="MallProduct" id="pdtResult">
+		<id column="id" property="id"></id>
+		<result column="dog_cate" property="dogCate.id"></result>
+		<result column="cat_cate" property="catCate.id"></result>
+		<result column="name" property="name"></result>
+		<result column="price" property="price"></result>
+		<result column="content" property="content"></result>
+		<result column="sale_yn" property="saleYn"></result>
+		<result column="stock" property="stock"></result>
+		<result column="image1" property="image1"></result>
+		<result column="image2" property="image2"></result>
+		<result column="image3" property="image3"></result>
+		<result column="delevery_kind" property="deliveryKind"></result>
+		<result column="delevery_condition" property="deliveryCondition"></result>
+		<result column="delevery_price" property="deliveryPrice"></result>
+	</resultMap>
+	
+	<resultMap type="MallCate" id="cateResult">
+		<id column="id" property="id"></id>
+		<result column="name" property="name"></result>
+	</resultMap>
+	
+
+<!-- query -->
+
+	<insert id="insertMallProduct" parameterType="MallProduct">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT mall_pdt_seq.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO MALL_PDT(ID, DOG_CATE, CAT_CATE, NAME, PRICE, CONTENT, SALE_YN, STOCK, IMAGE1, IMAGE2, IMAGE3, DELIVERY_KIND, DELIVERY_CONDITION, DELIVERY_PRICE)
+		 VALUES(#{id}, #{dogCate.id}, #{catCate.id}, #{name}, #{price}, #{content}, #{saleYn}, #{stock}, #{image1}, #{image2}, #{image3}, #{deliveryKind}, #{deliveryCondition}, #{deliveryPrice})
+	</insert>
+	
+	<select id="dogCateList" resultMap="cateResult">
+		SELECT id, name FROM MALL_DOG_CATE
+	</select>
+	
+	<select id="catCateList" resultMap="cateResult">
+		SELECT id, name FROM MALL_CAT_CATE
+	</select>
+	
+	<select id="selectProductByAll" resultMap="pdtResult">
+		<include refid="selectSql"></include>
+	</select>
+	
+	<select id="selectDogByAll"  resultMap="pdtResult">
+		<include refid="selectSql"></include>
+		WHERE DOG_CATE IS NOT NULL
+	</select>
+
+	<select id="selectCatByAll" resultMap="pdtResult">
+		<include refid="selectSql"></include>
+		WHERE CAT_CATE IS NOT NULL
+	</select>
+	
+	<select id="dogProductListByCate" parameterType="Int" resultMap="pdtResult">
+		<include refid="selectSql"></include>
+		where dog_cate = #{dogCate.id}
+	</select>
+	
+	<select id="catProductListByCate" parameterType="Int" resultMap="pdtResult">
+		<include refid="selectSql"></include>
+		where cat_cate = #{catCate.id}
+	</select>	
+	
+	<select id="getProductById" parameterType="Int" resultMap="pdtResult">
+		<include refid="selectSql"></include>	
+		<include refid="whereSql"></include>
+	</select>
+	
 
 </mapper>

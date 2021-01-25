@@ -36,8 +36,9 @@ public interface MemberMapper {
 	
 	//주소
 	List<Address> selectAddressById(String id);
+	Address getAddress(String id);
 	int insertAddress(Address address);
 	int updateMyAddress(Member member);
 	int updateAddress(Address address);
-	Address getAddress(String id);
+	int deleteAddress(String id);
 }

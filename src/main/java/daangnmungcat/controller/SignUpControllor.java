@@ -27,7 +27,6 @@ public class SignUpControllor {
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
 		return ResponseEntity.ok(service.Dongne1List());
-
 	}
 
 	@GetMapping("/dongne2/{dongne1}")

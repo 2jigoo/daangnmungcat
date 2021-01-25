@@ -152,6 +152,11 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.getAddress(id);
 	}
 
+	@Override
+	public int deleteShippingAddress(String id) {
+		return mapper.deleteAddress(id);
+	}
+
 	
 
 

@@ -200,4 +200,8 @@
 	<select id="getAddress" resultMap="addressResult">
 		select * from order_address where id = #{id}
 	</select>
+	
+	<delete id="deleteAddress">
+		delete from order_address where id = #{id}
+	</delete>
 </mapper>

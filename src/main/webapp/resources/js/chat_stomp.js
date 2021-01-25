@@ -64,20 +64,57 @@ function onError(error) {
 
 
 function sendMessage(event) {
+	event.preventDefault();
+	
     var messageContent = messageInput.value.trim();
-    if(messageContent && stompClient) {
-        var chatMessage = {
+    var customFile = $('#customFile').val();
+    
+    if(messageContent || customFile)
+    var chatMessage = {
             chat: {id: chatId},
             member: {id: memberId, nickname: memberNickname},
             content: messageInput.value,
             regdate: dayjs().format("YYYY-MM-DD hh:mm:ss")
         };
+    
+    if (customFile != "") {
+    	var form = $('#messageForm')[0];
+    	var form_data = new FormData(form);
+    	
+    	sendImage(form_data, chatMessage); // 텍스트랑 사진 같이 보냈을 때
+    	return;
+    }
+    
+    sendChatMessage(chatMessage); // 텍스트만 보냈을 때
+}
+
+function sendImage(form_data, chatMessage) {
+	$.ajax({
+		type: 'post',
+		enctype: 'multipart/form-data',
+		url: contextPath + '/chat/' + chatId + '/upload',
+		data: form_data,
+		processData: false,
+		contentType: false,
+		cache: false,
+		timeout: 600000,
+		success: function(data) {
+			chatMessage.image = data;
+			sendChatMessage(chatMessage);
+		},
+		error: function(error) {
+			console.log(error);
+		}
+		
+	})
+}
+
+function sendChatMessage(chatMessage) {
+	if(stompClient) {
         stompClient.send('/app/chat/' + chatId + '.sendMessage', {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
-    event.preventDefault();
 }
-
 
 function readChat() {
 	if(stompClient) {
@@ -86,10 +123,7 @@ function readChat() {
 }
 
 function onMessageReceived(payload) {
-	console.log("received~~")
-	console.log(payload);
 	var msg = JSON.parse(payload.body);
-    console.log(msg);
 	
 	if(msg.chat === undefined) {
 		if(msg.id != memberId) {
@@ -172,14 +206,4 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
     
     readChat();
-}
-
-
-function getAvatarColor(messageSender) {
-    var hash = 0;
-    for (var i = 0; i < messageSender.length; i++) {
-        hash = 31 * hash + messageSender.charCodeAt(i);
-    }
-    var index = Math.abs(hash % colors.length);
-    return colors[index];
 }

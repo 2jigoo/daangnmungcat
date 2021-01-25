@@ -42,27 +42,28 @@ public class MypageController {
 	
 	@GetMapping("/deleteProfile")
 	public int deleteAjaxPost(HttpServletRequest request, HttpSession session) {
-		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
-		String id = member.getId();
 		
-		File dir = new File(request.getSession().getServletContext().getRealPath("resources\\upload\\profile"));
+		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
 		System.out.println("delete할 Path:" + dir);
-		File files[] = dir.listFiles();
+		//File files[] = dir.listFiles();
 		
-		for(int i=0; i<files.length; i++) {
+		/*for(int i=0; i<files.length; i++) {
 			File file = files[i];
 			String fileName = file.getName();
 			int idx = fileName.lastIndexOf(".");
 			String onlyName = fileName.substring(0, idx);
-
+		
 			System.out.println("파일목록:" + onlyName);
 			if(onlyName.equals(id)) {
 				file.delete();
 			}
-		}
+		}*/
 
+		File deletePic = new File(dir, member.getProfilePic());
+		System.out.println(deletePic.delete());
+		
 		int res = 0;
 		String def = "images/default_user_image.png";
 		member.setProfilePic(def);
@@ -229,9 +230,6 @@ public class MypageController {
 		view.setViewName("/mypage/shipping_address");
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		if(info == null) {
-			System.out.println("로그인X");
-		}
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		List<Address> list = service.myAddress(loginUser.getId());
@@ -272,8 +270,7 @@ public class MypageController {
 	}
 	
 	@PostMapping("/updateShippingAddress/{id}")
-	public ResponseEntity<Object>updateShipping(@PathVariable String id, @RequestBody Map<String, Object> map) {
-		System.out.println("배송지수정");
+	public ResponseEntity<Object> updateShipping(@PathVariable String id, @RequestBody Map<String, Object> map) {
 		try {
 			Address add = service.getAddress(id);
 			add.setSubject(map.get("subject").toString());
@@ -288,6 +285,11 @@ public class MypageController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+	}
+	
+	@GetMapping("/deleteShippingAddress/{id}")
+	public ResponseEntity<Object> updateShipping(@PathVariable String id) {
+		return ResponseEntity.ok(service.deleteShippingAddress(id));
 	}
 	
 }

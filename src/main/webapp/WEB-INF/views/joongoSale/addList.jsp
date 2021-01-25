@@ -83,7 +83,9 @@ $(function(){
 	})
 	
 	 
-	 $('#checkFree').change(function(){
+	 $('#checkFree').change(function(e){
+		 console.log(this);
+		 console.log(e);
 	        if(this.checked){
 	            $('#priceDiv').fadeOut('fast');
 	        	$('#price').prop('value', 0);

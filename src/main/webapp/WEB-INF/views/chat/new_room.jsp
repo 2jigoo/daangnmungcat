@@ -38,7 +38,6 @@
 					data: JSON.stringify(sale),
 					dataType: "text",
 					success: function(data) {
-						//$(this).off(e);
 						console.log(data);
 						chatId = data;
 						
@@ -79,8 +78,12 @@
 		        <form id="messageForm" name="messageForm">
 		            <div class="form-group">
 		                <div class="input-group clearfix">
-		                    <input type="text" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
-		                    <button type="submit" class="primary" id="msg_send_btn">보내기</button>
+		                    <input type="text" name="content" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
+		                    <button type="submit" class="chat-btn primary">보내기</button>
+		                    <label for="customFile">
+		                    	<i class="far fa-image fa-2x" style="margin-left: 10px; line-height: 34px; cursor: pointer;"></i>
+		                    </label>
+		                    <input type="file" name="imageFile" id="customFile" accept="image/*" style="display:none;" />
 		                </div>
 		            </div>
 		        </form>
@@ -88,5 +91,5 @@
 		</div>
 	</article>
 </div>
-<script src="${pageContext.request.contextPath }/resources/js/test_page.js"></script>
+<script src="${pageContext.request.contextPath }/resources/js/chat_stomp.js"></script>
 <jsp:include page="/resources/include/footer.jsp"/>

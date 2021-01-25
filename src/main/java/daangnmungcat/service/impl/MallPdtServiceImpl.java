@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
 import daangnmungcat.mapper.MallPdtMapper;
 import daangnmungcat.service.MallPdtService;
@@ -59,6 +60,46 @@ public class MallPdtServiceImpl implements MallPdtService {
 	private String getFolder(HttpServletRequest request) {
 		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\product");
 		return path;
+	}
+
+	@Override
+	public List<MallProduct> selectProductByAll() {
+		return mapper.selectProductByAll();
+	}
+
+	@Override
+	public List<MallProduct> selectDogByAll() {
+		return mapper.selectDogByAll();
+	}
+
+	@Override
+	public List<MallProduct> selectCatByAll() {
+		return mapper.selectCatByAll();
+	}
+
+	@Override
+	public List<MallCate> dogCateList() {
+		return mapper.dogCateList();
+	}
+
+	@Override
+	public List<MallCate> catCateList() {
+		return mapper.catCateList();
+	}
+
+	@Override
+	public List<MallProduct> dogProductListByCate(int cate) {
+		return mapper.dogProductListByCate(cate);
+	}
+
+	@Override
+	public List<MallProduct> catProductListByCate(int cate) {
+		return mapper.catProductListByCate(cate);
+	}
+
+	@Override
+	public MallProduct getProductById(int id) {
+		return mapper.getProductById(id);
 	}
 
 }
