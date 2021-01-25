@@ -18,7 +18,5 @@ public interface JoongoSaleService {
 	
 	void JSHits(int id);
 	
-	
-	List<FileForm> getSaleFileInfo(Sale sale) throws Exception;
 	int insertJoongoSale(Sale sale) throws Exception;	
 }

@@ -22,11 +22,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.GpsToAddress;
+import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.exception.DuplicateMemberException;
@@ -154,33 +157,34 @@ public class JoongoListController {
 	}
 
 	@PostMapping("/joongoSale/insert")
-	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
-		System.out.println("/insert 컨트롤러");
-		try {
-			return ResponseEntity.ok(mapper.insertJoongoSale(sale));
-			
-		} catch (DuplicateMemberException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+	public String testtest(HttpSession session,HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] file) throws Exception {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		switch (category) {
+		case 1:
+			sale.setDogCate("y");
+			sale.setCatCate("n");
+			break;
+		case 2:
+			sale.setDogCate("n");
+			sale.setCatCate("y");
+			break;
+		case 3:
+			sale.setDogCate("y");
+			sale.setCatCate("y");
+			break;
 		}
 		
-	}
-	
-	@GetMapping("/test")
-    public String insertBoard(HttpServletRequest request, HttpServletResponse response, Sale sale) throws Exception {
-//        mapper.insertJoongoSale(sale);
-    	return "joongoSale/addTest";  
-     }
-	
-	@RequestMapping(value = "/test/insert")
-	@ResponseBody
-	public ResponseEntity<Object> testinsert(@RequestBody Sale sale ) throws Exception {
-		System.out.println("왔다");
-		//s.insertJoongoSale(sale);
-		try {
-			return ResponseEntity.ok(s.getSaleFileInfo(sale));
-			
-		} catch (DuplicateMemberException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		System.out.println("왓나?");
+		System.out.println(sale);
+		for(MultipartFile f : file) {
+			System.out.println(f.getOriginalFilename());
 		}
+		sale.setMember(new Member(loginUser.getId()));
+//		s.insertJoongoSale(sale);
+//		System.out.println("service 후");
+//		System.out.println(sale);
+		
+		return null;
 	}
+	
 }

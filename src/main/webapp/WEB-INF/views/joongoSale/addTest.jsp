@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+    
 
 <%@ include file="/resources/include/header.jsp" %>
 
@@ -30,61 +31,47 @@ textarea {
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	 
-	 
-		$('#imgInput').on("change", handleImgs);	
+		$('#imgInput').on("change", handleImgs);
 		
-		$('#insertList').on("click", function(){
-	        var formData = new FormData();
-	        var file = $("input[name='file']")[0].files;
-	        for(var i=0; i<file.length; i++){
-	           console.log(file[i]);
-	           formData.append('file', file[i]);
-	        }
-	        
-	        console.log('file >> ' + file);
-	        
-	        for(var pair of formData.entries()) {
-	              console.log(pair[0]+ ', '+ pair[1]); 
-	        }
-	        
-	   		 var newlist = {
-	   			member : {
-	   				id : $('#memId').val()
-	   			},
-	   			dogCate : $('#dogCate').val(),
-	   			catCate : $('#catCate').val(),
-	   			title : $('#title').val(),
-	   			content : $('#content').val(),
-	   			price : $('#price').val(),			
-	   			dongne1: {
-	   		 		id : $('#dongne1').val()
-	   		 	},
-	   		 	dongne2: {
-	   		 		id : $('#dongne2').val()
-	   		 	}
-	   		};
-	        	
-	    	
-	   		$.ajax({
-	    		url: contextPath + "/test/insert",
-	    		type: "post",
-	    		enctype: 'multipart/form-data',
-	    		data: formData,
-	    		processData: false,
-	    		contentType: false, //multipart-form-data로 전송
-	    		cache: false,
-	    		success: function(res) {
-	    			console.log(res);
-	    			alert('전송');
-	    		},
-	    		error: function(request,status,error){
-	    			alert('에러' + request.status+request.responseText+error);
-	    		}
-	    	});
-	        
-	    });
 		
-});
+	
+	});
+	
+	function insertBoard(){
+		var formData = new FormData($("#boardForm")[0]);
+		
+		$.ajax({
+			type : 'post',
+			url : contextPath + "/test/insert",
+			data : formData,
+			processData : false,
+			contentType : false,
+			success : function(html) {
+				alert("파일 업로드하였습니다.");
+				console.log(html);
+			},
+			error : function(error) {
+				alert("파일 업로드에 실패하였습니다.");
+				console.log(error);
+				console.log(error.status);
+			}
+		});
+	 /* $("#boardForm").ajaxForm({
+			url		: contextPath + "/test/insert",
+			enctype	: "multipart/form-data",
+			cache   : false,
+	        async   : true,
+			type	: "POST",					 	
+			success : function(obj) {
+				alert("성공");
+				console.log(obj);
+		    },	       
+		    error 	: function(xhr, status, error) {}
+		    
+	    }).submit(); */
+	
+	}
+		
 
 function handleImgs(e) {
 	var files = e.target.files;
@@ -112,8 +99,9 @@ function handleImgs(e) {
 <div id="subContent">
 	<h2 id="subTitle">글쓰기</h2> 	
 	<div id="pageCont" class="s-inner">
+		<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/test/insert" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<article>
-		<form id="boardForm" name="boardForm"  action="/test/insert" method="POST" enctype="multipart/form-data">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td width="300px;">아이디</td>
@@ -127,15 +115,15 @@ function handleImgs(e) {
 			<tr>
 				<td>동네</td>
 				<td>
-					<input type="text" name="dongne1" id="dongne1" value="1">
-					<input type="text" name="dongne2" id="dongne2" value="1">
+					<input type="text" name="dongne1.id" id="dongne1" value="1">
+					<input type="text" name="dongne2.id" id="dongne2" value="1">
 			</tr>
 			
 			<tr>
 				<td>사진</td>
 				<td>
 					<div id="fileArea">
-						<input multiple="multiple" type="file" name="file" id="imgInput" />
+						<input multiple="multiple" type="file" name="file" id="imgInput" accept="image/*"/>
 						<img id="productImg1">
 						<div id="preview1"></div>
 					</div>
@@ -157,7 +145,7 @@ function handleImgs(e) {
 				<td>가격</td>
 				<td>
 					<div id="priceDiv"><input type="text" name="price" id="price"></div>
-					<input type="checkbox" id="checkFree" name="price" value="0">무료나눔하기
+					<input type="checkbox" id="checkFree" value="0">무료나눔하기
 				</td>
 			<tr>
 			<tr>
@@ -167,13 +155,11 @@ function handleImgs(e) {
 			
 		 	<tr>
 				<td colspan="2">
-					<input type="button" id="insertList" value="글 등록하기">
-				</td>
+					<input type="submit" id="insertList" value="글 등록하기">
 			</tr>
 		</table>
-		</form>
-		</article>
-	
+		</article>	
+	</form>
 	</div>
 </div>
 <jsp:include page="/resources/include/footer.jsp"/>

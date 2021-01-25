@@ -53,9 +53,14 @@ values(sale_seq.nextval, ?,?,?,?,?,?,?,?,?,sysdate,0,0,0);
 SELECT * FROM JOONGO_SALE;
 select * FROM member;
 SELECT * FROM DONGNE1;
-SELECT * FROM DONGNE2;
+SELECT * FROM MALL_PDT;
 SELECT * FROM SALE_VIEW ;
 SELECT * FROM dongne_view;
+SELECT * FROM JOONGO_IMAGE;
+
+
+select * from user_sequences;
+
 
 INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
 values(sale_seq.nextval, 'chattest1', 'y', 'n', '제목입니다.' , '내용입니다.',  100 , 3, 44 ,'1',sysdate,0,0,0);

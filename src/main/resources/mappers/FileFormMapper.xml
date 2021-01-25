@@ -13,11 +13,9 @@
 
 
 <insert id="insertSaleFile" parameterType="FileForm">
-	<selectKey resultType="int" keyProperty="sale.id" order="BEFORE">
-		SELECT MAX(ID) +1 
-		FROM JOONGO_SALE
+	<selectKey resultType="int" keyProperty="id" order="BEFORE">
+		select sale_img_seq.nextval from dual
 	</selectKey>
-
-	insert into joongo_image values(sale_img_seq.nextval, #{sale.id}, #{fileName})
+	insert into joongo_image values(#{id}, #{sale.id}, #{fileName})
 </insert>
 </mapper>
