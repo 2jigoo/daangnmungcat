@@ -27,7 +27,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ChatServiceImpl implements ChatService {
 
-	private static final String UPLOAD_PATH = "resources\\upload\\chat";
+	private static final String UPLOAD_PATH = "resources" + File.separator + "upload" + File.separator + "chat";
 	
 	@Autowired
 	private ChatMapper chatMapper;
@@ -181,23 +181,22 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public String uploadImageMessage(ChatMessage message, MultipartFile file, HttpSession session) {
 		
-		String path = UPLOAD_PATH + "\\" + message.getChat().getId();
+		String path = UPLOAD_PATH + File.separator + message.getChat().getId();
 		
-		File dir = new File(session.getServletContext().getRealPath(path));
-		
-		System.out.println(dir.getAbsolutePath());
-		System.out.println(dir.exists());
+		/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
+		File dir = new File(session.getServletContext().getRealPath(path)); 
 		
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
 		
+		// 원본 파일명 자체를 수정하고 싶을 때 사용하기
 //		String originName = file.getOriginalFilename();
 //		int idx = originName.lastIndexOf(".");
 //		String ext = originName.substring(idx);
 		
 		String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-		File saveFile = new File(path, fileName);
+		File saveFile = new File(dir, fileName); // 위에서 지정한 폴더에 fileName 이름으로 저장
 		
 		try {
 			file.transferTo(saveFile);

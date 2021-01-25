@@ -155,7 +155,10 @@
 							<c:if test="${sender eq 'you' }">
 								<span class="nickname">${msg.member.nickname }</span>
 							</c:if>
-							<p>${msg.content } ${msg.image }</p>
+							<c:if test="${msg.image ne null}">
+								<img class="img-file" src="<%=request.getContextPath() %>/resources/upload/chat/${chat.id}/${msg.image }">
+							</c:if>
+							<p>${msg.content }</p>
 							<c:if test="${sender eq 'me' }">
 								<span class="read_yn" read_yn="${msg.readYn }">
 									<c:if test="${msg.readYn eq 'y' }">읽음</c:if>
@@ -171,8 +174,11 @@
 		            <div class="form-group">
 		                <div class="input-group clearfix">
 		                    <input type="text" name="content" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
-		                    <input type="file" name="imageFile" class="custom-file-input" id="customFile" accept="image/*">
-		                    <button type="submit" class="primary">보내기</button>
+		                    <button type="submit" class="chat-btn primary">보내기</button>
+		                    <label for="customFile">
+		                    	<i class="far fa-image fa-2x" style="margin-left: 10px; line-height: 34px; cursor: pointer;"></i>
+		                    </label>
+		                    <input type="file" name="imageFile" id="customFile" accept="image/*" style="display:none;" />
 		                </div>
 		            </div>
 		        </form>
@@ -200,5 +206,5 @@
 	</article> --%>
 	
 </div>
-<script src="${pageContext.request.contextPath }/resources/js/test_page.js"></script>
+<script src="${pageContext.request.contextPath }/resources/js/chat_stomp.js"></script>
 <jsp:include page="/resources/include/footer.jsp"/>

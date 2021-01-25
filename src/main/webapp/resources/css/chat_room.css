@@ -92,7 +92,7 @@ button.accent {
 
 .form-control {
     width: 100%;
-    min-height: 38px;
+    min-height: 34px;
     font-size: 15px;
     border: 1px solid #c8c8c8;
 }
@@ -101,7 +101,7 @@ button.accent {
     margin-bottom: 15px;
 }
 
-input {
+.chat-container input {
     padding-left: 10px;
     outline: none;
 }
@@ -219,14 +219,7 @@ input {
 
 #messageForm .input-group input {
     float: left;
-    width: calc(100% - 85px);
-}
-
-#messageForm .input-group button {
-    float: left;
-    width: 80px;
-    height: 38px;
-    margin-left: 5px;
+    width: calc(100% - 130px);
 }
 
 .chat-header {
@@ -292,6 +285,38 @@ input {
     width: 100%;
 }
 
+.chat-message .img-file {
+	width: 200px;
+}
+
+.chat-btn {
+    float: right;
+    font-size: 1em;
+    line-height: 34px;
+    padding: 0 15px;
+    color: #fff;
+    background: #ff7e15;
+    cursor: pointer;
+    margin-left: 5px;
+    border-radius: 5px;
+}
+
+.input-file-button{
+  /* padding: 6px 25px;
+  background-color:#FF6600;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer; */
+	float: right;
+	font-size: 1em;
+	line-height: 40px;
+	padding: 0 15px;
+	color: #fff;
+	background: #ff7e15;
+	cursor: pointer;
+	margin-left: 5px;
+	border-radius: 5px;
+}
 
 /* @media screen and (max-width: 730px) {
 
