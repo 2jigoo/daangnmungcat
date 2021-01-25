@@ -118,6 +118,10 @@
 	#product_list {
 	}
 	
+	.go_to_chat_btn {
+		width: 80%;
+		cursor: pointer;
+	}
 	
 	/* section_goods 부분 */
 
@@ -216,11 +220,11 @@ $(document).ready(function(){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		})
-	})
-	
+	});
+
 	$('#btnLike').on("click", function(json){
 		
-	})
+	});
 	
 	$(".joongo_comment .info .comment_btn").one("click", function(){
 		var comment_wrap = '<div class="comment_write">';
@@ -236,7 +240,7 @@ $(document).ready(function(){
 		comment_wrap += '<input type="button" value="등록" class="comment_write_btn2 btn">'
 		comment_wrap += '</div>'
 		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
-	})
+	});
 	
 	$(".joongo_comment .info .update_btn").one("click", function(){
 		var comment_wrap = '<div class="comment_write">';
@@ -247,7 +251,7 @@ $(document).ready(function(){
 		comment_wrap += '<input type="button" value="수정" class="comment_update btn">'
 		comment_wrap += '</div>';
 		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
-	})
+	});
 	
 	$(".joongo_comment .info .delete_btn").click(function(){
 		var deleteComment = {
@@ -272,8 +276,7 @@ $(document).ready(function(){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		})
-	})
-	
+	});
 	
 	
 });
@@ -359,6 +362,12 @@ $(document).on("click", ".comment_update", function(){
 	})
 });
 
+<c:if test="${loginUser eq null}">
+$(document).on("click", ".go_to_chat_btn", function(e) {
+	e.preventDefault();
+	alert("로그인 후 이용해주세요.");
+});
+</c:if>
 </script>
 <article>
 <div id="article">
@@ -422,8 +431,9 @@ $(document).on("click", ".comment_update", function(){
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
 				</c:when>
 			</c:choose>
-			
- 			<input type="button" value="대화로 문의하기" style="width:80%;">
+			<a href="<%=request.getContextPath()%>/goToChat?id=${list.id}">
+				<button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
+			</a>
 		</div>
 	</section>
 
@@ -484,7 +494,14 @@ $(document).on("click", ".comment_update", function(){
 		<li class="reply" data-id="${commentList.saleComment.id}">
 		</c:if>
 			<div class="user">
-				<p class="img"></p>
+				<p class="img">
+					<c:if test="${empty commentList.member.profilePic}">
+					<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+					</c:if>
+					<c:if test="${not empty commentList.member.profilePic}">
+					<img src="<%=request.getContextPath()%>/resources/${commentList.member.profilePic}">
+					</c:if>
+				</p>
 				<p class="name">${commentList.member.id}</p>
 			</div>
 			<c:if test="${not empty commentList.tagMember.id}">

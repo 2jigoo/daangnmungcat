@@ -40,5 +40,15 @@ public class Chat {
 	private LocalDateTime latestDate;
 	
 	private List<ChatMessage> messages;
+
+	public Chat(int id) {
+		this.id = id;
+	}
+	
+	public Chat(Sale sale, Member buyer) {
+		this.sale = sale;
+		this.buyer = buyer;
+	}
+
 	
 }
