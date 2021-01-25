@@ -40,7 +40,6 @@ function confirm(){
 	this.close();	
 }
 
-
 </script>
 </head>
 <body>

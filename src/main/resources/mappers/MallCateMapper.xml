@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.MallCateMapper">
+
+<sql id="selectDogSQL">
+	SELECT * FROM MALL_DOG_CATE
+</sql>
+
+<sql id="selectCatSQL">
+	SELECT * FROM MALL_CAT_CATE
+</sql>
+
+<select id="selectByAllDogCate" resultType="MallCate">
+	<include refid="selectDogSQL"/> ORDER BY ID
+</select>
+
+<select id="selectByAllCatCate" resultType="MallCate">
+	<include refid="selectCatSQL" /> ORDER BY ID
+</select>
+
+<select id="selectByIdDogCate" resultType="MallCate">
+	<include refid="selectDogSQL"/> WHERE ID = #{id}
+</select>
+
+<select id="selectByIdCatCate" resultType="MallCate">
+	<include refid="selectCatSQL" /> WHERE ID = #{id}
+</select>
+
+
+	
+<insert id="insertMallDogCate" parameterType="MallCate">
+	<selectKey keyProperty="id" resultType="int" order="BEFORE">
+		SELECT mall_dog_cate_seq.nextval FROM DUAL
+	</selectKey>
+	INSERT INTO MALL_DOG_CATE VALUES(#{id}, #{name})
+</insert>
+
+<insert id="insertMallCatCate" parameterType="MallCate">
+	<selectKey keyProperty="id" resultType="int" order="BEFORE">
+		SELECT mall_cat_cate_seq.nextval FROM DUAL
+	</selectKey>
+	INSERT INTO MALL_CAT_CATE VALUES(#{id}, #{name})
+</insert>
+
+<update id="updateMallDogCate" parameterType="MallCate">
+	UPDATE MALL_DOG_CATE SET NAME = #{name} WHERE ID = #{id}
+</update>
+
+<update id="updateMallCatCate" parameterType="MallCate">
+	UPDATE MALL_CAT_CATE SET NAME = #{name} WHERE ID = #{id}
+</update>
+	
+</mapper>

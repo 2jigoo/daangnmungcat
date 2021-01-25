@@ -9,7 +9,19 @@ SELECT id, name FROM DONGNE1;
 SELECT id, dongne1_id, name FROM DONGNE2 WHERE DONGNE1_ID = 1;
 
 SELECT d1id, d1name, d2name, d2id FROM dongne_view;
+DROP SEQUENCE dongne1_seq;
+DROP SEQUENCE dongne2_seq;
 
+
+CREATE SEQUENCE dongne1_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE dongne2_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
 
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '서울특별시'); --1
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '부산광역시'); --2

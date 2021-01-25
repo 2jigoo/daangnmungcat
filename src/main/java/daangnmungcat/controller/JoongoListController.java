@@ -48,7 +48,11 @@ public class JoongoListController {
 			return "redirect:/joongo_list/all";
 		} else {
 			System.out.println("loginUser check : "+ loginUser);
-			return "redirect:/joongo_list/"+ URLEncoder.encode(loginUser.getDongne1().getName(), "UTF-8") +"/"+ URLEncoder.encode(loginUser.getDongne2().getName(), "UTF-8");
+			if (loginUser.getDongne1().getName() == null || loginUser.getDongne2().getName() == null) {
+				return "redirect:/joongo_list/all";
+			} else {
+				return "redirect:/joongo_list/"+ URLEncoder.encode(loginUser.getDongne1().getName(), "UTF-8") +"/"+ URLEncoder.encode(loginUser.getDongne2().getName(), "UTF-8");
+			}
 		}
 	}
 	
@@ -126,14 +130,9 @@ public class JoongoListController {
 	
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
-	public String addListForm(HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			return "redirect:/login";
-		} else {
+	public String addListForm(Model model, HttpSession session) {
 			return "joongoSale/addList";
 		}
-	}
 	
 	//insertForm용  -> 동네1 선택
 	@GetMapping("/joongoSale/addList/dongne1")
@@ -141,14 +140,12 @@ public class JoongoListController {
 		return ResponseEntity.ok(service.Dongne1List());
 	}
 	
-	
 	//insertForm용 -> 동네2선택 후
 	@GetMapping("joongoSale/addList/dongne2/{dongne1}")
 	public ResponseEntity<Object> dongne2(@PathVariable int dongne1) {
 		return ResponseEntity.ok(service.Dongne2List(dongne1));
 	}
-	
-	// 
+
 	@PostMapping("/joongoSale/insert")
 	public ResponseEntity<Object> newJoongoList(@RequestBody Sale sale) throws Exception {
 		System.out.println("/insert 컨트롤러");

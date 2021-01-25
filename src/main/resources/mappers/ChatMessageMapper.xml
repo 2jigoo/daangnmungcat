@@ -88,6 +88,12 @@
 		VALUES(#{id}, #{chat.id}, #{member.id}, #{content, jdbcType=VARCHAR}, sysdate, 'n', #{image, jdbcType=VARCHAR})
 	</insert>
 	
+	<update id="updateChatMessageRead">
+		UPDATE JOONGO_CHAT_MSG
+		SET read_yn = 'y'
+		WHERE id = #{id} and mem_id != #{memberId} and read_yn = 'n'
+	</update>
+	
 	<delete id="deleteChatMessageByChatMessageId" parameterType="ChatMessage">
 		DELETE FROM JOONGO_CHAT_MSG
 		where id = #{id}

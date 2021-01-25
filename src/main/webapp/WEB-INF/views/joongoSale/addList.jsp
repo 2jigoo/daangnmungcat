@@ -5,16 +5,29 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <style>
+td, th {
+	word-break: keep-all;
+}
+
+table {
+ border-collapse: separate;
+  border-spacing: 0 10px;
+  height: auto;
+}
+
+textarea {
+	width: 100%;
+	height: 200px;
+}
+
 </style>
 <script type="text/javascript">
 $(function(){
-	
 	var contextPath = "<%=request.getContextPath()%>";
-
-	console.log(contextPath);
-	
-	var test = ${loginUser.getDongne1().getId()}
-	
+		var dong = document.getElementById("dongName").value
+		var nae = document.getElementById("naeName").value
+        //	$('#dongne1').val(dong).prop("selected",true);
+       // 	$('#dongne2').val(nae).prop("selected",true);
 	
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
@@ -25,6 +38,7 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name=dongne1]").append(sCont);
+			//$('#dongne1').val(dong).attr("selected","selected");
 		}
 	});
 	
@@ -42,18 +56,21 @@ $(function(){
 	});
 	
 	
-	1
-	//강아지 카테고리 선택시 고양이카테고리 value 'n' 주기
-	$("select[name=dogCate]").change(function(){
-		var target = document.getElementById('dogCate');
-		if(target.options[target.selectedIndex].text == "강아지 카테고리"){
-			$('#catCate').attr('value','n');
-		}
-		
+	$("input:radio[name=category]").change(function(){
+			if($("input:radio[name=category]:checked").val() == '1'){
+				//alert("강아지 선택");
+				$('#catCate').attr('value','n');
+			}else if($("input:radio[name=category]:checked").val() == '2'){
+				//alert("고양이 선택");
+				$('#catCate').attr('value','y');
+				$('#dogCate').attr('value','n');
+			}else{
+				//alert("모두 선택");
+			}
 	});
 	
 	
-	$(".my_location").on("click", function(){
+	$(".my_location").on("click", function(){z
 		navigator.geolocation.getCurrentPosition(success, fail)
 	    
 	    return false;
@@ -85,18 +102,23 @@ $(function(){
 		 }else if(num.test(price) == false){
 			 alert('가격은 숫자만 입력 가능합니다.');
 			 return;
-		 }else if($('#dogCate').val() == ""){
-			 alert('카테고리를 선택해주세요.');
-			 return;
-		 }
+		 }else if($('#price').val() == ""){
+			 alert('가격을 입력해주세요.');
+		 	return;
+		 }else if($('#dongne1').val() == "0"){
+			alert('지역을 선택하세요.');
+			return;
+		}else if($('#dongne2').val() == "0"){
+			alert('동네를 선택하세요.');
+			return;
+		}
 
-		 
 		 
 		 var newlist = {
 			member : {
 				id : $('#memId').val()
 			},
-			dogCate : $('select[name=dogCate]').val(),
+			dogCate : $('#dogCate').val(),
 			catCate : $('#catCate').val(),
 			title : $('#title').val(),
 			content : $('#content').val(),
@@ -109,8 +131,7 @@ $(function(){
 		 	}
 		};
 		 
-		 	alert(JSON.stringify(newlist));
-		 	
+		 	//alert(JSON.stringify(newlist));
 		 	
 		 	
 			$.ajax({
@@ -190,40 +211,38 @@ $(function(){
 });
 
 
-
 </script>
 <div id="subContent">
-	<h2 id="subTitle">글쓰기</h2>
+	<h2 id="subTitle">글쓰기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
 		<form action="/insert" method="POST">
-		<div>
-		<table border="1">
-			<colgroup>
-				<col width="20%">
-				<col width="80%">
-			</colgroup>
+		<table style="width: 800px; table-layout: fixed;">
 			<tr>
-				<td>아이디</td>
-				<td><input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly"></td>
+				<td width="300px;">아이디</td>
+				<td width="500px;">
+					<input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly" style="border: none;">
+					<input type="text" id="dongName" style="display: none;" value="${loginUser.getDongne1().getId()}">
+					<input type="text" id="naeName" style="display: none;" value="${loginUser.getDongne2().getId()}">
+				</td>
+					
 			</tr>
 			<tr>
 				<td>동네</td>
 				<td>
 					<div id="add_location" class="s-inner">
-						<div class="list_top">
-							<button class="my_location">내 위치</button>
-						<div>
 						<select name="dongne1" id="dongne1">
 							<option value="0">지역을 선택하세요</option>
 						</select> 
 						<select name="dongne2" id="dongne2">
 							<option value="0">동네를 선택하세요</option>
 						</select>
+						<div class="list_location">
+							<button class="my_location">내 위치</button>
+						<div>
 						</div>
 						</div>
 					</div>
-					
 				</td>
 			</tr>
 			
@@ -244,18 +263,22 @@ $(function(){
 			<tr>	
 				<td>카테고리</td>
 				<td>
-					<select name="dogCate" id="dogCate" >
+				<!-- 	<select name="dogCate" id="dogCate" >
 						<option value="">카테고리를 선택하세요.</option>
 						<option value="y">강아지 카테고리</option>
 						<option value="n">고양이 카테고리 </option>
 						<option value="y"> 모두 포함 </option>
-					</select>
+					</select> -->
+					<input type="radio" name=category id="category" value="1" checked="checked">강아지 카테고리
+					<input type="radio" name="category" id="category" value="2" style="margin-left: 15px;">고양이 카테고리
+					<input type="radio" name="category" id="category" value="3" style="margin-left: 15px;">모두 포함
 					<input type="hidden" name="catCate" value="y" id="catCate">
+					<input type="hidden" name="dogCate" value="y" id="dogCate">
 				</td>
 			</tr>
 			<tr>
 				<td>제목(상품명)</td>
-				<td><input type="text" name="title" id="title"></td>
+				<td><input type="text" name="title" id="title" style="width: 100%"></td>
 			</tr>
 			<tr>
 				<td>가격</td>
@@ -281,12 +304,11 @@ $(function(){
 			</tr>
 		 -->	
 		 	<tr>
-			<td colspan="2">
+				<td colspan="2">
 					<input type="button" id="insertList" value="글 등록하기">
 				</td>
 			</tr>
 		</table>
-		</div>
 		</form>
 		</article>
 	

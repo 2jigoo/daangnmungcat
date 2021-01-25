@@ -8,6 +8,11 @@
 	<meta charset="UTF-8">
 	<!-- spring security 쓰면 post 전송할때 403에러 떠서 추가함 -->
 	<meta name="_csrf" content="${_csrf.token}">
+	<!-- 이미지 캐싱 x -->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	
 	<title>당근멍캣</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/test_page.css" />
@@ -15,6 +20,7 @@
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 	<script>
+	$(document).ready(function(){
 		//spring security -> ajax post 타입 전송시 필요
 		var csrfToken = $("meta[name='_csrf']").attr("content");
 		console.log(csrfToken);
@@ -23,6 +29,32 @@
 		        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
 		    }
 		});
+		
+		
+		var contextPath = "<%=request.getContextPath()%>";
+		
+		$.get(contextPath +"/dog_cate", function(json){
+			var datalength = json.length;
+			if(datalength >= 1){
+				var sCont = "";
+				for(i=0; i<datalength; i++){
+					sCont += "<li><a href='"+ contextPath + "/mall/product/list/dog/" + json[i].id + "'>" + json[i].name + "</a>";
+				}
+				$('#dog_cate').append(sCont);
+			}
+		});
+		
+		$.get(contextPath +"/cat_cate", function(json){
+			var datalength = json.length;
+			if(datalength >= 1){
+				var sCont = "";
+				for(i=0; i<datalength; i++){
+					sCont += "<li><a href='" + contextPath + "/mall/product/list/cat/" + json[i].id + "'>" +  json[i].name + "</a>";
+				}
+				$('#cat_cate').append(sCont);
+			}
+		})
+	});
 	</script>
 </head>
 <body>
@@ -38,13 +70,13 @@
 		<c:if test="${loginUser eq null}">
 		<ul class="h_util">
 			<li><a href="<c:url value="/login" />">로그인</a></li>
-			<li><a href="<c:url value="/signup" />">회원가입</a></li>
+			<li><a href="<c:url value="/contract" />">회원가입</a></li>
 			<li><a href="#">장바구니</a></li>
 		</ul>
 		</c:if>
 		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
-			<li><a href="#">${loginUser.getId()}님 안녕하세요.</a></li>
+			<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
 			<li><a href="<c:url value="/mypage" />">마이페이지</a></li>
 			<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 			<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
@@ -63,7 +95,7 @@
 			<c:if test="${loginUser eq null}">
 			<ul>
 				<li><a href="<c:url value="/login" />">로그인</a></li>
-				<li><a href="<c:url value="/signup" />">회원가입</a></li>
+				<li><a href="<c:url value="/contract" />">회원가입</a></li>
 				<li><a href="#">장바구니</a></li>
 			</ul>
 			</c:if>
@@ -78,22 +110,12 @@
 		</div>
 		<ul>
 			<li><a href="<c:url value="/joongo_list" />">중고</a></li>
-			<li class="depth2"><a href="#">멍</a>
-				<ul>
-					<li><a href="#">사료</a></li>
-					<li><a href="#">배변패드</a></li>
-					<li><a href="#">간식</a></li>
-					<li><a href="#">장남감</a></li>
-					<li><a href="#">영양제</a></li>
+			<li class="depth2"><a href="<c:url value="/mall/product/list/dog" />">멍</a>
+				<ul id="dog_cate">
 				</ul>
 			</li>
-			<li class="depth2"><a href="#">냥</a>
-				<ul>
-					<li><a href="#">사료</a></li>
-					<li><a href="#">배변패드</a></li>
-					<li><a href="#">간식</a></li>
-					<li><a href="#">장남감</a></li>
-					<li><a href="#">영양제</a></li>
+			<li class="depth2"><a href="<c:url value="/mall/product/list/cat" />">냥</a>
+				<ul id="cat_cate">
 				</ul>
 			</li>
 			<li><a href="#">커뮤니티</a></li>

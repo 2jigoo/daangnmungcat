@@ -118,6 +118,10 @@
 	#product_list {
 	}
 	
+	.go_to_chat_btn {
+		width: 80%;
+		cursor: pointer;
+	}
 	
 	/* section_goods 부분 */
 
@@ -216,23 +220,27 @@ $(document).ready(function(){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		})
-	})
-	
+	});
+
 	$('#btnLike').on("click", function(json){
 		
-	})
+	});
 	
 	$(".joongo_comment .info .comment_btn").one("click", function(){
 		var comment_wrap = '<div class="comment_write">';
 		comment_wrap += '<input type="hidden" value="'+ $(".comment_write .comment_sale_id").val() +'" class="comment_sale_id2">';
 		comment_wrap += '<input type="hidden" value="${loginUser.id}" class="comment_member_id2">';
 		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").data("id") +'" class="comment_saleComment_id2">';
-		comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").find(".name").text() +'" class="comment_tabMember_id2">';
+		if ($(this).parent("ul").parent("div").parent("li").hasClass("reply")){
+			comment_wrap += '<input type="hidden" value="'+ $(this).parent("ul").parent("div").parent("li").find(".name").text() +'" class="comment_tabMember_id2">';
+		} else {
+			comment_wrap += '<input type="hidden" value="" class="comment_tabMember_id2">';
+		}
 		comment_wrap += '<textarea placeholder="댓글내용을 입력해주세요" class="comment_content2"></textarea>';
 		comment_wrap += '<input type="button" value="등록" class="comment_write_btn2 btn">'
 		comment_wrap += '</div>'
 		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
-	})
+	});
 	
 	$(".joongo_comment .info .update_btn").one("click", function(){
 		var comment_wrap = '<div class="comment_write">';
@@ -243,7 +251,7 @@ $(document).ready(function(){
 		comment_wrap += '<input type="button" value="수정" class="comment_update btn">'
 		comment_wrap += '</div>';
 		$(this).parent("ul").parent("div").parent("li").append(comment_wrap)
-	})
+	});
 	
 	$(".joongo_comment .info .delete_btn").click(function(){
 		var deleteComment = {
@@ -268,7 +276,8 @@ $(document).ready(function(){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		})
-	})
+	});
+	
 	
 });
 
@@ -353,6 +362,12 @@ $(document).on("click", ".comment_update", function(){
 	})
 });
 
+<c:if test="${loginUser eq null}">
+$(document).on("click", ".go_to_chat_btn", function(e) {
+	e.preventDefault();
+	alert("로그인 후 이용해주세요.");
+});
+</c:if>
 </script>
 <article>
 <div id="article">
@@ -390,7 +405,10 @@ $(document).on("click", ".comment_update", function(){
 			<c:if test="${list.catCate == 'n'}"></c:if> 
 			· <div class="lastTime"></div> <div class="regdate" id="regdate">${list.regdate }</div> 
 		</div>
-		<h2>${list.price }원</h2>
+		<h2>
+			<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
+			<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>
+		</h2>
 		
 		<div id="description_content">
 			${list.content }
@@ -413,8 +431,9 @@ $(document).on("click", ".comment_update", function(){
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
 				</c:when>
 			</c:choose>
-			
- 			<input type="button" value="대화로 문의하기" style="width:80%;">
+			<a href="<%=request.getContextPath()%>/goToChat?id=${list.id}">
+				<button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
+			</a>
 		</div>
 	</section>
 
@@ -443,7 +462,12 @@ $(document).on("click", ".comment_update", function(){
 				<%-- 		<p>${mlist.id }</p> --%>
 						<p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
 						<p class="section_subject">${mlist.title}</p>
-						<p class="section_price"><span>${mlist.price}</span>원</p>
+						<p class="section_price">
+							<span>
+								<c:if test="${mlist.price eq 0 }" >무료 나눔</c:if>
+								<c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
+							</span>
+						</p>
 						<ul>
 							<li class="section_heart">${mlist.heartCount}</li>
 							<li class="section_chat">${mlist.chatCount}</li>
@@ -467,12 +491,22 @@ $(document).on("click", ".comment_update", function(){
 		<li data-id="${commentList.id}">
 		</c:if>
 		<c:if test="${not empty commentList.saleComment.id}">
-		<li class="reply" data-id="${commentList.id}">
+		<li class="reply" data-id="${commentList.saleComment.id}">
 		</c:if>
 			<div class="user">
-				<p class="img"></p>
+				<p class="img">
+					<c:if test="${empty commentList.member.profilePic}">
+					<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+					</c:if>
+					<c:if test="${not empty commentList.member.profilePic}">
+					<img src="<%=request.getContextPath()%>/resources/${commentList.member.profilePic}">
+					</c:if>
+				</p>
 				<p class="name">${commentList.member.id}</p>
 			</div>
+			<c:if test="${not empty commentList.tagMember.id}">
+				<p class="tag">@${commentList.tagMember.id} </p>
+			</c:if>
 			<pre class="content">${commentList.content}</pre>
 			<div class="info">
 				<p class="date">${commentList.regdate}</p>

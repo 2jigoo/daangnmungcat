@@ -3,12 +3,13 @@
 <mapper namespace="daangnmungcat.mapper.MemberMapper">
 <sql id="selectSql">
 	SELECT
-		m.id, pwd, m.name, nickname, email, phone,
+		m.id, pwd, m.name, nickname, email, phone, grade,
 		DONGNE1 AS dongne1_id,
 		d1.name AS dongne1_name,
 		dongne2 AS dongne2_id,
 		d2.name AS dongne2_name,
-		grade, profile_pic, profile_text, regdate
+		grade, profile_pic, profile_text, regdate, birthday,
+		zipcode, address1, address2, mileage
 	FROM MEMBER m
 		LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
 		LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
@@ -19,9 +20,9 @@
 		<if test="id != null">
 			m.id = #{id}
 		</if>
-
 	</where>
 </sql>
+
 
 <!-- ResultMap -->
 
@@ -36,6 +37,11 @@
 		<result column="profile_pic" property="profilePic"></result>
 		<result column="profile_text" property="profileText"></result>
 		<result column="regdate" property="regdate"></result>
+		<result column="birthday" property="birthday"></result>
+		<result column="zipcode" property="zipcode"></result>
+		<result column="address1" property="address1"></result>
+		<result column="address2" property="address2"></result>
+		<result column="mileage" property="mileage"></result>
 		
 		<association property="dongne1" columnPrefix="dongne1_" resultMap="dongne1Result" />
 		<association property="dongne2" columnPrefix="dongne2_" resultMap="dongne2Result" />
@@ -51,8 +57,7 @@
 		<result column="dongne1_id" property="dongne1.id"></result>
 		<result column="name" property="name"></result>
 	</resultMap>
-	
-	
+
 <!-- query  -->
 	<select id="selectMemberByAll" resultMap="memberResult">
 		<include refid="selectSql"></include>
@@ -67,7 +72,7 @@
 		SELECT 1 FROM MEMBER WHERE id = #{id} and pwd = #{pwd}
 	</select>
 	
-	<!-- sign up -->
+<!-- sign up -->
 	
 	<select id="Dongne1List" resultMap="dongne1Result">
 		SELECT id, name FROM DONGNE1 order by id
@@ -90,14 +95,41 @@
 	</select>
 	
 	<insert id="insertMember"  parameterType="Member">
-		INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, GRADE, PROFILE_PIC, PROFILE_TEXT) 
-		VALUES(#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{phone}, #{dongne1.id}, #{dongne2.id}, #{grade}, #{profilePic}, #{profileText})
+		INSERT INTO MEMBER(id, pwd, name, NICKNAME, EMAIL, PHONE, DONGNE1, DONGNE2, PROFILE_PIC) 
+		VALUES(#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{phone}, #{dongne1.id}, #{dongne2.id}, #{profilePic})
 	</insert>
 	
 	<update id="updateProfilePic">
 		UPDATE MEMBER SET PROFILE_PIC = #{profilePic} where id = #{id}
 	</update>
-
+	
+	<update id="updateProfileText">
+		UPDATE MEMBER SET PROFILE_TEXT = #{profileText} where id = #{id}
+	</update>
+	
+	<update id="updatePhone">
+		update member set phone = #{phone} where id = #{id}
+	</update>
+	
+	<update id="updateInfo">
+		update member set 
+			name = #{name},
+			nickname = #{nickname}, 
+			email = #{email}, 
+			phone = #{phone}, 
+			birthday = #{birthday},
+			dongne1 = #{dongne1.id}, 
+			dongne2 = #{dongne2.id},
+			zipcode = #{zipcode},
+			address1 = #{address1},
+			address2 = #{address2} 
+		<include refid="whereSql"></include>
+	</update>
+	
+	<update id="updatePwd">
+		update member set pwd = #{pwd} where id = #{id}
+	</update>
+	
 	<update id="dongneUpdate" parameterType="map">
 		UPDATE MEMBER SET DONGNE1 = #{dongne1.id}, DONGNE2 = #{dongne2.id} WHERE ID = #{id}
 	</update>
@@ -132,4 +164,44 @@
 			</choose>
 		</where>
 	</select>
+	
+	<!-- address -->
+	<resultMap type="Address" id="addressResult">
+		<result column="id" property="id"></result>
+		<result column="mem_id" property="memId"></result>
+		<result column="subject" property="subject"></result>
+		<result column="name" property="name"/>
+		<result column="phone" property="phone"/>
+		<result column="zipcode" property="zipcode"/>
+		<result column="address1" property="address1"/>
+		<result column="address2" property="address2"/>
+		<result column="memo" property="memo"/>
+	</resultMap>
+	
+	<select id="selectAddressById" resultMap="addressResult">
+		SELECT ID, MEM_ID, SUBJECT, NAME, PHONE, ZIPCODE, ADDRESS1, ADDRESS2, MEMO FROM ORDER_address 
+		WHERE mem_id = #{memId}
+	</select>
+	
+	<insert id="insertAddress" parameterType="Address">
+		INSERT INTO order_address
+		VALUES(ORDER_ADDRESS_seq.nextval, #{memId}, #{subject}, #{name}, #{phone}, #{zipcode}, #{address1}, #{address2}, #{memo})
+	</insert>
+	
+	<update id="updateMyAddress">
+		UPDATE MEMBER SET ZIPCODE = #{zipcode}, ADDRESS1 = #{address1}, ADDRESS2 = #{address2} where id = #{id}
+	</update>
+	
+	<update id="updateAddress">
+		update order_address set mem_id= #{memId}, subject = #{subject}, name = #{name}, phone = #{phone}, zipcode = #{zipcode}, address1 = #{address1}, address2 = #{address2}, memo = #{memo}
+		where id = #{id}
+	</update>
+	
+	<select id="getAddress" resultMap="addressResult">
+		select * from order_address where id = #{id}
+	</select>
+	
+	<delete id="deleteAddress">
+		delete from order_address where id = #{id}
+	</delete>
 </mapper>

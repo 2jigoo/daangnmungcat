@@ -5,7 +5,8 @@
 <style>
 .wrapper {padding:50px; width:80%; margin:0 auto;}
 .signup {width:700px; margin:0 auto;}
-.btns {width:700px; margin:0 auto; text-align:center; padding:30px;}
+.btns {width:700px; margin:0 auto; padding:30px; text-align:center; }
+
 </style>
 <script>
 $(document).ready(function(){
@@ -14,6 +15,7 @@ $(document).ready(function(){
 	var email_status; //email_status가 0이면 return
 	var pwd_status;
 	var data;
+	
 	
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
@@ -26,6 +28,7 @@ $(document).ready(function(){
 			$("select[name=dongne1]").append(sCont);
 		}
 	});
+	
 	
 	$("select[name=dongne1]").change(function(){
 		$("select[name=dongne2]").find('option').remove();
@@ -82,13 +85,11 @@ $(document).ready(function(){
 				nickname:$('#nickname').val(),
 				email:$('#email').val(),
 				phone:$('#phone').val(),
-				dongne1:$('#dongne1').val(),
-				dongne2:$('#dongne2').val(),
-				grade:5,
-				regdate: null,
-				profile_text: null,
-				profile_pic:null
+				dongne1:{id:$('#dongne1').val()},
+				dongne2:{id:$('#dongne2').val()},
+				profilePic:'images/default_user_image.png'
 				};
+		
 		console.log(newMember);
 		
 		$.ajax({
@@ -100,12 +101,12 @@ $(document).ready(function(){
 			data : JSON.stringify(newMember),
 			success: function() {
 				alert('회원가입이 완료되었습니다.');
+				/* window.location.href= contextPath+'/welcome'; */
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		});
-		console.log(contextPath+"/submit");
 	});
 	
 	//비밀번호 일치여부
@@ -271,24 +272,7 @@ function id_check() {
 		window.open(contextPath+"/idCheck?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 }
-function imageChange(){
-	var file = document.getElementById("uploadFile").files[0]
-	if (file) {
-	//console.log(document.getElementById("uploadFile").files[0])
-	 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
-    reader.onload = function (e) {
-    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-        $('#productImg').attr('src', e.target.result);
-        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
-        //(아래 코드에서 읽어들인 dataURL형식)
-    }                   
-    reader.readAsDataURL(document.getElementById("uploadFile").files[0]);
-    //File내용을 읽어 dataURL형식의 문자열로 저장
-    
-	}
-	
-	
-}
+
 </script>
 
 <div class="wrapper">
@@ -300,7 +284,7 @@ function imageChange(){
 			<input type="button" value="중복확인" onclick="id_check()">
 	</tr>
 	<tr>
-		<td>(<input type="text" name="id_confirm" id="id_confirm">)</td>
+		<td><input type="hidden" name="id_confirm" id="id_confirm"></td>
 	</tr>
 	<tr>
 		<td>비밀번호</td>
@@ -334,8 +318,9 @@ function imageChange(){
 		<td>연락처</td>
 		<td class="replace"><input type="text" name="phone" id="phone">
 		<input type="button" name="send" id="send" value="인증번호발송">
-		<input type="hidden" id="certi" name="certi" value="0"></td>
+		<input type="hidden" id="certi" name="certi" value="1"></td> <!-- 0으로 변경해야됨 -->
 	</tr>
+	<tr><td>인증번호 해제해놨으니까 걍 번호입력만 하세유</td></tr>
 	<tr class="certi_tr">
 		<td></td>
 		<td><input type="text" name="certiNum" id="certiNum" disabled>
@@ -343,7 +328,7 @@ function imageChange(){
 		</td>
 	</tr>
 	<tr>
-		<td>주소</td>
+		<td>위치 설정</td>
 		<td>
 		<select name="dongne1" id="dongne1">
 			<option value="0">지역을 선택하세요</option>
@@ -356,18 +341,10 @@ function imageChange(){
 
 	</table>
 
-
 <div class="btns">
-	<input type="file" id="uploadFile" name="uploadFile" onchange="imageChange()">
-	<input type="button" id="test" value="테스트">
-	<img id="productImg">
-	<div id="preview">
-	</div>
-	<br>
-	<br>
 	<input type="button" value="가입완료" id="signup">
-	
 </div>
-<!-- <img src="/daangnmungcat/resources/upload/2021-01-13/9fd83797-9131-4966-8bd2-a2e1ffc56239_asdasdads.jpg"> -->
+
 </div>
+
 <jsp:include page="/resources/include/footer.jsp"/>
