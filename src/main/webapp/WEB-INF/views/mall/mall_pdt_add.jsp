@@ -20,7 +20,7 @@ $(function(){
 		}
 	})
 	
-	$("#pdt_write_btn").click(function(e){
+	/*$("#pdt_write_btn").click(function(e){
 		e.preventDefault();
 		
 		if ($("select[name='dogCate']").val() == "" && $("select[name='catCate']").val() == ""){
@@ -63,7 +63,9 @@ $(function(){
 				return false;
 			}
 		}
-	})
+		
+		$("form[name='pdtWrite']").submit()
+	})*/
 })
 </script>
 

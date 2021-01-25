@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,8 +36,8 @@ public class MallPdtController {
 	
 	@GetMapping("/mall/product/write")
 	public String insertViewProduct(Model model) {
-		List<MallCate> dogCate = cateService.selectByAllDogCate();
-		List<MallCate> catCate = cateService.selectByAllCatCate();
+		List<MallCate> dogCate = service.dogCateList();
+		List<MallCate> catCate = service.catCateList();
 		
 		model.addAttribute("dogCate", dogCate);
 		model.addAttribute("catCate", catCate);
@@ -45,7 +47,6 @@ public class MallPdtController {
 	
 	@PostMapping("/mall/product/write")
 	public String insertWriteProduct(MultipartHttpServletRequest mtfRequest, HttpServletRequest request) throws UnsupportedEncodingException {
-		
 		// 썸네일 이미지
 		MultipartFile thumbFile = mtfRequest.getFile("thumb_file");
 		// 상세 이미지
@@ -89,9 +90,6 @@ public class MallPdtController {
 		product.setContent(new String(mtfRequest.getParameter("content").getBytes("8859_1"), "utf-8"));
 		product.setSaleYn(mtfRequest.getParameter("saleYn"));
 		product.setStock(Integer.parseInt(mtfRequest.getParameter("stock")));
-		product.setImage1(thumbFile.getOriginalFilename());
-		product.setImage2(fileList.get(0).getOriginalFilename());
-		product.setImage3(fileList.get(1).getOriginalFilename());
 		product.setDeliveryKind(new String(mtfRequest.getParameter("deliveryKind").getBytes("8859_1"), "utf-8"));
 		product.setDeliveryCondition(Integer.parseInt(mtfRequest.getParameter("deliveryCondition")));
 		product.setDeliveryPrice(Integer.parseInt(mtfRequest.getParameter("deliveryPrice")));
