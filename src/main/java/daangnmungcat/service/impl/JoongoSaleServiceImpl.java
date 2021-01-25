@@ -1,15 +1,22 @@
   
 package daangnmungcat.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
-import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.mapper.FileFormMapper;
+import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.service.JoongoSaleService;
 
@@ -20,6 +27,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	
 	@Autowired
 	private JoongoSaleMapper mapper;
+	
+	@Autowired
+	private FileFormMapper FileMapper;
+	
+	@Autowired
+	private JoongoListMapper ListMapper;
 	
 	@Override
 	public List<Sale> getLists() {
@@ -47,5 +60,10 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 
-
+	@Override
+	public int insertJoongoSale(Sale sale) throws Exception {
+		ListMapper.insertJoongoSale(sale);
+		return 1;
+	}
+	
 }

@@ -155,7 +155,7 @@ $(function(){
 					<li>
 						<p>상품 썸네일 이미지</p>
 						<div>
-							<input multiple="multiple" type="file" name="thumb_file">
+							<input multiple="multiple" type="file" name="thumb_file" accept="image/*">
 						</div>
 					</li>
 					<li>
