@@ -1,13 +1,19 @@
 package daangnmungcat.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
@@ -21,6 +27,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class ChatServiceImpl implements ChatService {
 
+	private static final String UPLOAD_PATH = "resources\\upload\\chat";
+	
 	@Autowired
 	private ChatMapper chatMapper;
 	
@@ -166,6 +174,38 @@ public class ChatServiceImpl implements ChatService {
 	public Chat getChatInfoFromSale(String memberId, int saleId) {
 		Chat chat = chatMapper.selectChatByMemberIdAndSaleId(memberId, saleId);
 		return chat;
+	}
+
+
+	// 이미지 첨부한 채팅 메시지 보내기
+	@Override
+	public String uploadImageMessage(ChatMessage message, MultipartFile file, HttpSession session) {
+		
+		String path = UPLOAD_PATH + "\\" + message.getChat().getId();
+		
+		File dir = new File(session.getServletContext().getRealPath(path));
+		
+		System.out.println(dir.getAbsolutePath());
+		System.out.println(dir.exists());
+		
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
+//		String originName = file.getOriginalFilename();
+//		int idx = originName.lastIndexOf(".");
+//		String ext = originName.substring(idx);
+		
+		String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+		File saveFile = new File(path, fileName);
+		
+		try {
+			file.transferTo(saveFile);
+		} catch(Exception e) {
+			log.error(e.getMessage());
+		}
+		
+		return fileName;
 	}
 	
 	

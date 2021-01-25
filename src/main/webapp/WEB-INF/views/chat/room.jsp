@@ -167,10 +167,11 @@
 					</li>
 					</c:forEach>
 		        </ul>
-		        <form id="messageForm" name="messageForm">
+		        <form id="messageForm" name="messageForm" method="post" enctype="multipart/form-data">
 		            <div class="form-group">
 		                <div class="input-group clearfix">
-		                    <input type="text" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
+		                    <input type="text" name="content" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
+		                    <input type="file" name="imageFile" class="custom-file-input" id="customFile" accept="image/*">
 		                    <button type="submit" class="primary">보내기</button>
 		                </div>
 		            </div>

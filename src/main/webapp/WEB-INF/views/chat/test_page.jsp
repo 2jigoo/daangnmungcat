@@ -1,47 +1,166 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <title>Spring Boot WebSocket Chat Application</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/test_page.css" />
-</head>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
+<jsp:include page="/resources/include/header.jsp"/>
+<script src="${pageContext.request.contextPath }/resources/js/stomp.js"></script>
+<script src="${pageContext.request.contextPath }/resources/js/sockjs.min.js"></script>
 <script>
 	var contextPath = "${pageContext.request.contextPath }";
-	console.log(contextPath);
 	
-	/* var headerName = "${_csrf.headerName}>";
+	var chatId = 1000;
+	var memberId = "${loginUser.id}";
+	var memberNickname = "${loginUser.nickname}";
+	
+	var page = 1;
+	var perPage = 20;
+	
+	/* var headerName = "${_csrf.headerName}";
 	var token = "${_csrf.token}";
 	var headers = {};
-
 	headers[headerName] = token;
 	console.log(headers); */
+	
+	$(document).ready(function(){
+		
+		/* 글쓴 시간 비교시간 변경 */
+		var regdate = document.getElementsByClassName("regdate");
+		$.each(regdate, function(idx, item) {
+			var writeNow = dayjs(item.innerText).format("YYYY년 M월 D일 h:mm");
+		 	item.innerHTML = writeNow;
+		});
+		
+		connect();
+		messageForm.addEventListener('submit', sendMessage, true);
+		
+		/* $("#chat-loading-btn").click(function() {
+			$.ajax({
+				url: "/daangnmungcat/api/chat/message",
+				type: "post",
+				data: {id: chatId, page: ++page},
+				beforeSend : function(xhr){xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");},
+				dataType: "json",
+				success: function(data) {
+					console.log(data);
+					console.log(data.length);
+					if(data.length != 0) {
+						var li_str = "";
+						
+						$.each(data, function(idx, msg) {
+							if (msg.member.id == memberId) {
+								// 나
+								li_str += "<li class='chat-message me' msg_id='" + msg.id + "' sender='" + msg.member.id + "'>";
+								li_str += "<div class='chat-message me bubble'><p>";
+								if(msg.content != null) {
+									li_str += msg.content;
+								} else {
+									li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
+								}
+								li_str += "</p><span class='read_yn' read_yn='" + msg.readYn + "'>";
+								li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + "</span>";
+								li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
+							} else {
+								// 너
+								li_str += "<li class='chat-message you' msg_id='" + msg.id + "' sender='" + msg.member.id +"'>";
+								li_str += "<div class='chat-message you profile_img'>";
+								li_str += "<a href='" + contextPath + "/member/profile?id=" + msg.member.id + "'>";
+								li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/" + msg.member.profilePic + "'>";
+								li_str += "</a></div>";
+								li_str += "<div class='chat-message you bubble'><span class='nickname'>" + msg.member.nickname + "</span>";
+								if(msg.content != null) {
+									li_str += msg.content;
+								} else {
+									li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
+								}
+								li_str += "</p>";
+								li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
+							}
+						});
+						
+						console.log(li_str);
+						$(".loading-btn").after(li_str);
+						
+						if(data.length < perPage) {
+							$("#chat-loading-btn").remove();
+						}
+					} else {
+						$("#chat-loading-btn").remove();
+					}
+				}
+			});
+		}); */
+	});
 </script>
-<body>
-
-<div id="chat-page">
-    <div class="chat-container">
-        <div class="chat-header">
-            <h2>Spring WebSocket Chat Demo</h2>
-        </div>
-        <div class="connecting">
-            연결중...
-        </div>
-        <ul id="messageArea">
-
-        </ul>
-        <form id="messageForm" name="messageForm">
-            <div class="form-group">
-                <div class="input-group clearfix">
-                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off" class="form-control"/>
-                    <button type="submit" class="primary">보내기</button>
-                </div>
-            </div>
-        </form>
-    </div>	
+<div>
+	<article>
+		<div id="chat-page">
+		    <div class="chat-container">
+		        <div class="connecting">
+		          	  연결중...
+		        </div>
+		        <ul id="messageArea">
+		        	<c:if test="${chat.messages.size() eq 20}">
+			        	<li class="chat-message loading-btn" id="chat-loading-btn">
+			        		<div class="chat-message">더 읽어오기</div>
+			        	</li>
+		        	</c:if>
+		        	<c:forEach items="${chat.messages }" var="msg">
+		        	<c:choose>
+			        	<c:when test="${msg.member.id eq loginUser.id }">
+							<c:set var="sender" value="me" />
+						</c:when>
+						<c:otherwise>
+							<c:set var="sender" value="you" />
+						</c:otherwise>
+					</c:choose>
+					<li class="chat-message ${sender }" msg_id="${msg.id }" sender="${msg.member.id }">
+						<!-- <i style="background-color: rgb(57, 187, 176);">*</i> -->
+							<c:choose>
+								<c:when test="${sender eq 'you' }">
+									<div class="chat-message ${sender } profile_img">
+										<a href="${pageContext.request.contextPath }/member/profile?id=${msg.member.id}">
+										<c:choose>
+											<c:when test="${msg.member.profilePic eq null}">
+												<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
+											</c:when>
+											<c:otherwise>
+												<img alt="개인프로필" src="<%=request.getContextPath() %>/resources/upload/profile/${msg.member.profilePic}">
+											</c:otherwise>
+										</c:choose>
+										</a>
+									</div>
+								</c:when>
+								<c:otherwise>
+									<!-- 내가 보낸 메시지 -->
+								</c:otherwise>
+							</c:choose>
+						<div class="chat-message ${sender } bubble">
+							<c:if test="${sender eq 'you' }">
+								<span class="nickname">${msg.member.nickname }</span>
+							</c:if>
+							<p>${msg.content } ${msg.image }</p>
+							<c:if test="${sender eq 'me' }">
+								<span class="read_yn" read_yn="${msg.readYn }">
+									<c:if test="${msg.readYn eq 'y' }">읽음</c:if>
+									<c:if test="${msg.readYn eq 'n' }">읽지 않음</c:if>
+								</span>
+							</c:if>
+							<span class="regdate" regdate="${msg.regdate }"> ${msg.regdate } </span>
+						</div>
+					</li>
+					</c:forEach>
+		        </ul>
+		        <form id="messageForm" name="messageForm">
+		            <div class="form-group">
+		                <div class="input-group clearfix">
+		                    <input type="text" id="message" placeholder="메시지를 입력하세요." autocomplete="off" class="form-control"/>
+		                    <button type="submit" class="primary">보내기</button>
+		                </div>
+		            </div>
+		        </form>
+		    </div>	
+		</div>
+	</article>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="${pageContext.request.contextPath }/resources/js/test_page.js"></script>
-</body>
-</html>
+<jsp:include page="/resources/include/footer.jsp"/>

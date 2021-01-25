@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import daangnmungcat.dto.AuthInfo;
@@ -134,4 +135,21 @@ public class ChatController {
 		return ResponseEntity.ok(chatId);
 	}
 	
+	@PostMapping("/chat/{id}/upload")
+	@ResponseBody
+	public ResponseEntity<Object> uploadImageFile(@PathVariable(value = "id") int id, @RequestParam(value="imageFile") MultipartFile file, ChatMessage message, HttpSession session) {
+		System.out.println(">> uploadImageFile()");
+		String fileName = null;
+		
+		try {
+			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			message.setChat(new Chat(id));
+			fileName = chatService.uploadImageMessage(message, file, session);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(fileName);
+	}
 }
