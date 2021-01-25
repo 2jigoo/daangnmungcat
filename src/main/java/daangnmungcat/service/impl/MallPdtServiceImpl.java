@@ -3,6 +3,7 @@ package daangnmungcat.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,8 +33,13 @@ public class MallPdtServiceImpl implements MallPdtService {
 			uploadPath.mkdirs();
 		}
 		
+		UUID uuid = UUID.randomUUID();
+		String savedName = null;
+		
 		try {
-			thumbFile.transferTo(new File(uploadFolder, thumbFile.getOriginalFilename()));
+			savedName = uuid.toString() +"_"+ thumbFile.getOriginalFilename();
+			product.setImage1("/upload/product/"+ savedName);
+			thumbFile.transferTo(new File(uploadFolder, savedName));
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -41,10 +47,18 @@ public class MallPdtServiceImpl implements MallPdtService {
 		}
 		
 		// 상세 이미지 추가
+		int num = 1;
 		for (MultipartFile multipartFile : fileList) {
-			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
+			savedName = uuid.toString() +"_"+ multipartFile.getOriginalFilename();
+			if (num == 1) {
+				product.setImage2("/upload/product/"+ savedName);
+			} else {
+				product.setImage3("/upload/product/"+ savedName);
+			}
+			File saveFile = new File(uploadFolder, savedName);
 			try {
 				multipartFile.transferTo(saveFile);
+				num++;
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

@@ -12,7 +12,7 @@ $(function(){
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
 				<li><a href="<%=request.getContextPath()%>/mall/product/${list.id}">
-					<div class="img"><img src="<c:url value="${list.image1}" />"></div>
+					<div class="img"><img src="<c:url value="/resources${list.image1}" />"></div>
 					<div class="txt">
 						<p class="subject">${list.name}</p>
 						<p class="price">${list.price}</p>
