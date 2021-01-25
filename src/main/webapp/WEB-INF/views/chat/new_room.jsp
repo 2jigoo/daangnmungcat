@@ -38,7 +38,6 @@
 					data: JSON.stringify(sale),
 					dataType: "text",
 					success: function(data) {
-						//$(this).off(e);
 						console.log(data);
 						chatId = data;
 						

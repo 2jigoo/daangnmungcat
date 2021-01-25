@@ -17,13 +17,22 @@ $(document).ready(function(){
 
 	$(document).on('click', '[id=delete_addr]', function(){
 		var num = $(this).attr('addrId');
-		console.log(num);
+		$.get(contextPath +"/addressInfo/" + num, function(add){
+			if (confirm("["+ add.subject + "] 배송지를 삭제하시겠습니까?") == true){
+				$.get(contextPath +"/deleteShippingAddress/" + num, function(){
+					location.reload(true);
+				});
+			}else{
+				return;
+			}
+		});
 	});
-
 	
 	$('#add_addr').on("click", function(){
 		window.open(contextPath+"/shipping_popup", "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
+	
+	
 	
 });
 

@@ -42,5 +42,6 @@ public interface MemberService {
 	int updateMyAddress(Member member);
 	Address getAddress(String id);
 	int updateShippingAddress(Address address);
+	int deleteShippingAddress(String id);
 
 }

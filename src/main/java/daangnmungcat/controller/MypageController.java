@@ -229,9 +229,6 @@ public class MypageController {
 		view.setViewName("/mypage/shipping_address");
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		if(info == null) {
-			System.out.println("로그인X");
-		}
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		List<Address> list = service.myAddress(loginUser.getId());
@@ -272,8 +269,7 @@ public class MypageController {
 	}
 	
 	@PostMapping("/updateShippingAddress/{id}")
-	public ResponseEntity<Object>updateShipping(@PathVariable String id, @RequestBody Map<String, Object> map) {
-		System.out.println("배송지수정");
+	public ResponseEntity<Object> updateShipping(@PathVariable String id, @RequestBody Map<String, Object> map) {
 		try {
 			Address add = service.getAddress(id);
 			add.setSubject(map.get("subject").toString());
@@ -288,6 +284,11 @@ public class MypageController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+	}
+	
+	@GetMapping("/deleteShippingAddress/{id}")
+	public ResponseEntity<Object> updateShipping(@PathVariable String id) {
+		return ResponseEntity.ok(service.deleteShippingAddress(id));
 	}
 	
 }

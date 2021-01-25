@@ -8,12 +8,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
@@ -103,4 +106,86 @@ public class MallPdtController {
 		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\product");
 		return path;
 	}
+	
+	//카테고리
+	@GetMapping("/dog_cate")
+	public ResponseEntity<Object> dogCate() {
+		return ResponseEntity.ok(service.dogCateList());
+	}
+	
+	@GetMapping("/cat_cate")
+	public ResponseEntity<Object> catCate() {
+		return ResponseEntity.ok(service.catCateList());
+	}
+	
+	//리스트
+	@GetMapping("/mall/product/list/all")
+	public ModelAndView allProduct() {
+		ModelAndView view = new ModelAndView();
+		//view.setViewName("/mall/mall_dog_list");
+		
+		List<MallProduct> list = service.selectProductByAll();
+		view.addObject("list", list);
+		return view;
+	}
+	
+	@GetMapping("/mall/product/list/{cate}")
+	public ModelAndView catProduct(@PathVariable String cate) {
+		ModelAndView view = new ModelAndView();
+		List<MallProduct> list = null;
+		String name = null; 
+		String parameter = null;
+		System.out.println(cate);
+		
+		if(cate.equals("cat")) {
+			list = service.selectCatByAll();
+			name = "고양이";
+			parameter = "cat";
+		}else if(cate.equals("dog")) {
+			list = service.selectDogByAll();
+			name = "강아지";
+			parameter = "dog";
+		}else if(cate.equals("all")) {
+			list = service.selectProductByAll();
+		}
+		
+		view.addObject("name", name);
+		view.addObject("kind", parameter);
+		view.setViewName("/mall/mall_list");
+		view.addObject("list", list);
+		return view;
+	}
+	
+	@GetMapping("/mall/product/list/{cate}/{id}")
+	public ModelAndView catProductById(@PathVariable int id, @PathVariable String cate) {
+		ModelAndView view = new ModelAndView();
+		view.setViewName("/mall/mall_list");
+		List<MallProduct> list = null;
+		String name = null; 
+		String parameter = null;
+		if(cate.equals("cat")) {
+			list = service.catProductListByCate(id);
+			name = "고양이";
+			parameter = "cat";
+		}else if(cate.equals("dog")) {
+			list = service.dogProductListByCate(id);
+			name = "강아지";
+			parameter = "dog";
+		}
+		view.addObject("name", name);
+		view.addObject("kind", parameter);
+		view.addObject("list", list);
+		return view;
+	}
+	
+	@GetMapping("/mall/product/{id}")
+	public ModelAndView catProductById(@PathVariable int id) {
+		ModelAndView view = new ModelAndView();
+		MallProduct pdt = service.getProductById(id);
+		System.out.println(pdt);
+		view.addObject("pdt", pdt);
+		view.setViewName("/mall/mall_detail");
+		return view;
+	}
+	
 }
