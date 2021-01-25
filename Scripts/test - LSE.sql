@@ -53,9 +53,14 @@ values(sale_seq.nextval, ?,?,?,?,?,?,?,?,?,sysdate,0,0,0);
 SELECT * FROM JOONGO_SALE;
 select * FROM member;
 SELECT * FROM DONGNE1;
-SELECT * FROM DONGNE2;
+SELECT * FROM MALL_PDT;
 SELECT * FROM SALE_VIEW ;
 SELECT * FROM dongne_view;
+SELECT * FROM JOONGO_IMAGE;
+
+
+select * from user_sequences;
+
 
 INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
 values(sale_seq.nextval, 'chattest1', 'y', 'n', '제목입니다.' , '내용입니다.',  100 , 3, 44 ,'1',sysdate,0,0,0);
@@ -88,8 +93,9 @@ select id, pwd, name, nickname, email, phone, dongne1, dongne2, grade, profile_p
 ----------------찜
 SELECT * FROM JOONGO_HEART;
 SELECT * FROM JOONGO_SALE ;
+SELECT * FROM MEMBER;
 SELECT id, mem_id, sale_id, regdate FROM JOONGO_HEART;
-SELECT * FROM JOONGO_HEART WHERE MEM_ID = 'chattest1';
+SELECT * FROM JOONGO_SALE WHERE MEM_ID = 'chattest1';
 SELECT count(*) FROM JOONGO_HEART WHERE sale_id = 2 AND  MEM_ID ='chattest2';
 INSERT INTO JOONGO_HEART values(heart_seq.nextval, 'chattest1', 3, sysdate);
 
@@ -103,3 +109,12 @@ SELECT * FROM SALE_VIEW ORDER BY regdate desc;
 SELECT rownum, id, MEM_ID, DONGNE1_NAME ,DONGNE2_NAME , grade, PROFILE_PIC , DOG_CATE ,CAT_CATE ,TITLE ,CONTENT ,PRICE ,REGDATE ,REDATE , 
 SALE_STATE ,BUY_MEM_ID ,HITS , CHAT_COUNT,HEART_COUNT 
 FROM (SELECT * from SALE_VIEW ORDER BY regdate DESC )WHERE ROWNUM < 9 AND MEM_ID = 'chattest1';
+
+SELECT max(ID) FROM JOONGO_SALE ;
+SELECT MAX(id)+1 FROM JOONGO_SALE; 
+
+SELECT * FROM JOONGO_IMAGE ;
+SELECT * FROM JOONGO_SALE WHERE id = 1;
+
+
+INSERT INTO JOONGO_IMAGE (id, SALE_ID, IMAGE_NAME )values(sale_img_seq.nextval, 1, '1');
