@@ -48,7 +48,7 @@ public class MypageController {
 		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
 		System.out.println("delete할 Path:" + dir);
 		//File files[] = dir.listFiles();
-		
+		//굿땡큐
 		/*for(int i=0; i<files.length; i++) {
 			File file = files[i];
 			String fileName = file.getName();
