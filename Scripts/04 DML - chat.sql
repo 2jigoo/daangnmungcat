@@ -1,6 +1,10 @@
 -- test용 유저
-INSERT INTO MEMBER VALUES('chattest1', '1234', '채팅요정', '챗1', 'chat01@test.co.kr', '010-1234-4321', 3,  44, 1, NULL, NULL, sysdate);
+
+INSERT INTO MEMBER VALUES('chattest1', '1234', '채팅요정', '챗1', 'chat01@test.co.kr', '010-1234-4321', 44, 1, NULL, NULL, sysdate);
 INSERT INTO MEMBER VALUES('chattest2', '1234', '채팅유저', '챗2', 'chat02@test.co.kr', '010-1234-4999', 3,  44, 1, NULL, NULL, sysdate);
+
+INSERT INTO MEMBER (id,PWD ,name,NICKNAME,EMAIL,PHONE,DONGNE1,DONGNE2,PROFILE_PIC,PROFILE_TEXT,REGDATE) VALUES('chattest1', '1234', '채팅요정', '챗1', 'chat01@test.co.kr', '010-1234-4321', 44, 1, NULL, NULL, sysdate);
+INSERT INTO MEMBER (id,PWD ,name,NICKNAME,EMAIL,PHONE,DONGNE1,DONGNE2,PROFILE_PIC,PROFILE_TEXT,REGDATE) VALUES('chattest2', '1234', '채팅유저', '챗2', 'chat02@test.co.kr', '010-1234-4999', 44, 1, NULL, NULL, sysdate);
 
 -- test용 중고판매글
 INSERT INTO JOONGO_SALE(id, mem_id, dog_cate, cat_cate, title, content, price, DONGNE1_ID, DONGNE2_ID, BUY_MEM_id, SALE_STATE, regdate, redate, hits)

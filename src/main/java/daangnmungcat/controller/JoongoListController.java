@@ -169,10 +169,14 @@ public class JoongoListController {
 	
 	@RequestMapping(value = "/test/insert")
 	@ResponseBody
-	public String testinsert(@RequestBody Sale sale) throws Exception {
+	public ResponseEntity<Object> testinsert(@RequestBody Sale sale ) throws Exception {
 		System.out.println("왔다");
-		s.insertJoongoSale(sale);
-		
-		return null;
+		//s.insertJoongoSale(sale);
+		try {
+			return ResponseEntity.ok(s.getSaleFileInfo(sale));
+			
+		} catch (DuplicateMemberException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 }

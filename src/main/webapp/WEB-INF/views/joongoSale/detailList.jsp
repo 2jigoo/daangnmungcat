@@ -377,14 +377,7 @@ $(document).on("click", ".comment_update", function(){
 				${list.member.grade } 
 			</div>
 			<div id="section_profile_img">
-				<c:choose>
-					<c:when test="${list.member.profilePic eq 'upload/profile/default_user_image.png'}">
-						<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
-					</c:when>
-					<c:otherwise>
 						<img alt="프로필" src="<%=request.getContextPath() %>/resources/${list.member.profilePic}">
-					</c:otherwise>
-				</c:choose>
 			</div>
 			<div id="section_profile_left">
 				<div id="nickname" >${list.member.id}</div>
