@@ -42,27 +42,28 @@ public class MypageController {
 	
 	@GetMapping("/deleteProfile")
 	public int deleteAjaxPost(HttpServletRequest request, HttpSession session) {
-		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
-		String id = member.getId();
 		
-		File dir = new File(request.getSession().getServletContext().getRealPath("resources\\upload\\profile"));
+		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
 		System.out.println("delete할 Path:" + dir);
-		File files[] = dir.listFiles();
+		//File files[] = dir.listFiles();
 		
-		for(int i=0; i<files.length; i++) {
+		/*for(int i=0; i<files.length; i++) {
 			File file = files[i];
 			String fileName = file.getName();
 			int idx = fileName.lastIndexOf(".");
 			String onlyName = fileName.substring(0, idx);
-
+		
 			System.out.println("파일목록:" + onlyName);
 			if(onlyName.equals(id)) {
 				file.delete();
 			}
-		}
+		}*/
 
+		File deletePic = new File(dir, member.getProfilePic());
+		System.out.println(deletePic.delete());
+		
 		int res = 0;
 		String def = "images/default_user_image.png";
 		member.setProfilePic(def);

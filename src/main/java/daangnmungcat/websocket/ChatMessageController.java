@@ -37,13 +37,14 @@ public class ChatMessageController {
 		
         return chatMessage;
     }
+	
 
-    /*@MessageMapping("/chat/{id}.addUser")
-    @SendTo("/topic/chat/{id}")
-    public ChatMessage addUser(@DestinationVariable int id, @Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor){
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getMember().getId());
-        return chatMessage;
-    }*/
+	/*@MessageMapping("/chat/{id}.sendImage")
+	@SendTo("/topic/chat/{id}")
+	public ChatMessage addUser(@DestinationVariable int id, @Payload ChatMessage chatMessage){
+		chatService.getChatMessages(chatId);
+	    return chatMessage;
+	}*/
 
     @MessageMapping("/chat/{id}.read")
     @SendTo("/topic/chat/{id}")
