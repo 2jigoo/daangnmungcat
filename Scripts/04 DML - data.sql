@@ -1,28 +1,28 @@
 
-SELECT a.id, a.name, b.ID ,b.name FROM dongne1 a LEFT OUTER JOIN DONGNE2 b ON a.ID = b.DONGNE1_ID ORDER BY a.id, b.id;
+/*쇼핑몰 카테고리 */
+INSERT INTO MALL_DOG_CATE VALUES(mall_dog_cate_seq.nextval, '미지정');
+INSERT INTO MALL_DOG_CATE VALUES(mall_dog_cate_seq.nextval, '사료');
+INSERT INTO MALL_DOG_CATE VALUES(mall_dog_cate_seq.nextval, '배변패드');
+INSERT INTO MALL_DOG_CATE VALUES(mall_dog_cate_seq.nextval, '간식');
+INSERT INTO MALL_DOG_CATE VALUES(mall_dog_cate_seq.nextval, '장난감');
+INSERT INTO MALL_DOG_CATE VALUES(mall_dog_cate_seq.nextval, '영양제');
 
-CREATE OR REPLACE VIEW dongne_view AS
-SELECT a.id AS d1id , a.name AS d1name, b.name AS d2name, b.id AS d2id FROM dongne1 a 
-LEFT OUTER JOIN DONGNE2 b ON a.ID = b.DONGNE1_ID ORDER BY a.id, b.id;
+INSERT INTO MALL_CAT_CATE VALUES(mall_cat_cate_seq.nextval, '미지정');
+INSERT INTO MALL_CAT_CATE VALUES(mall_cat_cate_seq.nextval, '사료');
+INSERT INTO MALL_CAT_CATE VALUES(mall_cat_cate_seq.nextval, '배변패드');
+INSERT INTO MALL_CAT_CATE VALUES(mall_cat_cate_seq.nextval, '간식');
+INSERT INTO MALL_CAT_CATE VALUES(mall_cat_cate_seq.nextval, '장난감');
+INSERT INTO MALL_CAT_CATE VALUES(mall_cat_cate_seq.nextval, '영양제');
 
-SELECT id, name FROM DONGNE1;
-SELECT id, dongne1_id, name FROM DONGNE2 WHERE DONGNE1_ID = 1;
+/* 회원 등급 */
+--white silver gold vip 0 10 30 50 
+INSERT INTO grade VALUES ('W', 'white');
+INSERT INTO grade VALUES ('S', 'silver');
+INSERT INTO grade VALUES ('G', 'gold');
+INSERT INTO grade VALUES ('V', 'vip');
 
-SELECT d1id, d1name, d2name, d2id FROM dongne_view;
-DROP SEQUENCE dongne1_seq;
-DROP SEQUENCE dongne2_seq;
 
-
-CREATE SEQUENCE dongne1_seq
-START WITH 1
-INCREMENT BY 1
-MINVALUE 1;
-
-CREATE SEQUENCE dongne2_seq
-START WITH 1
-INCREMENT BY 1
-MINVALUE 1;
-
+/*동네 */
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '서울특별시'); --1
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '부산광역시'); --2
 INSERT INTO DONGNE1 VALUES (dongne1_seq.nextval, '대구광역시'); --3

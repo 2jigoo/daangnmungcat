@@ -57,3 +57,16 @@ SELECT * FROM mall_pdt WHERE dog_CATE = 1;
 CREATE OR REPLACE VIEW mall_pdt_view AS
 SELECT p.ID, d.NAME, c.NAME AS cat_cate_name, p.NAME AS pname, p.PRICE, p.CONTENT, p.SALE_YN, p.STOCK, p.IMAGE1, p.IMAGE2, p.IMAGE3, p.DELIVERY_KIND, p.DELIVERY_CONDITION, p.DELIVERY_PRICE, p.REGDATE 
 FROM MALL_PDT p LEFT OUTER JOIN mall_dog_cate d ON d.ID = p.DOG_CATE LEFT OUTER JOIN MALL_CAT_CATE c ON c.ID = p.CAT_CATE;
+
+
+
+CREATE TABLE sendcost(
+	id number(12) NOT NULL , 
+	zipcode number(5) NOT NULL,
+	name varchar(255) NOT NULL,
+	price number(12) NOT NULL
+);
+
+ALTER TABLE sendcost ADD CONSTRAINT PK_SENDCOST_ID PRIMARY KEY (id);
+
+SELECT * FROM sendcost ORDER BY ID;
