@@ -21,6 +21,10 @@ $(document).ready(function(){
             $("#gnb > ul > li.depth2 > ul").hide()
         }
     })
+    
+    $(".history_back_btn").click(function(){
+    	window.history.back();
+    })
 })
 
 //현재 시간이랑 글 쓴 시간 비교

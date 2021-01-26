@@ -53,8 +53,8 @@ public class MallPdtController {
 		product.setDeliveryKind(new String(request.getParameter("deliveryKind").getBytes("8859_1"), "utf-8"));
 		
 		service.insertMallProduct(product, thumbFile, file, request);
-		
-		return "/mall/mall_pdt_add";
+
+		return "redirect:/admin/mall/product/list";
 	}
 	
 	//카테고리
@@ -69,7 +69,7 @@ public class MallPdtController {
 	}
 	
 	//리스트
-	@GetMapping("/mall/product/list/all")
+	/*@GetMapping("/mall/product/list/all")
 	public ModelAndView allProduct() {
 		ModelAndView view = new ModelAndView();
 		//view.setViewName("/mall/mall_dog_list");
@@ -77,7 +77,7 @@ public class MallPdtController {
 		List<MallProduct> list = service.selectProductByAll();
 		view.addObject("list", list);
 		return view;
-	}
+	}*/
 	
 	@GetMapping("/mall/product/list/{cate}")
 	public ModelAndView catProduct(@PathVariable String cate) {
@@ -136,6 +136,41 @@ public class MallPdtController {
 		view.addObject("pdt", pdt);
 		view.setViewName("/mall/mall_detail");
 		return view;
+	}
+	
+	@GetMapping("/mall/product/update")
+	public String updateViewProduct(Model model, @RequestParam int id) {
+		MallProduct pdt = service.getProductById(id);
+		model.addAttribute("pdt", pdt);
+
+		List<MallCate> dogCate = cateService.selectByAllDogCate();
+		List<MallCate> catCate = cateService.selectByAllCatCate();
+		
+		model.addAttribute("dogCate", dogCate);
+		model.addAttribute("catCate", catCate);
+		
+		return "/mall/mall_pdt_update";
+	}
+	
+	@PostMapping("/mall/product/update")
+	public String updateWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
+		
+		product.setName(new String(request.getParameter("name").getBytes("8859_1"), "utf-8"));
+		product.setContent(new String(request.getParameter("content").getBytes("8859_1"), "utf-8"));
+		product.setDeliveryKind(new String(request.getParameter("deliveryKind").getBytes("8859_1"), "utf-8"));
+		
+		System.out.println(product);
+		System.out.println(thumbFile.getOriginalFilename());
+		
+		service.updateMallProduct(product, thumbFile, file, request);
+
+		return "redirect:/admin/mall/product/list";
+	}
+	
+	@GetMapping("/mall/product/delete")
+	public String deleteProduct(@RequestParam int id) {
+		service.deleteMallProduct(id);
+		return "redirect:/admin/mall/product/list";
 	}
 	
 }

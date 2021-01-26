@@ -4,9 +4,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.http.protocol.HttpService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
 
@@ -25,4 +27,12 @@ public interface MallPdtService {
 	List<MallProduct> catProductListByCate(int cate);
 
 	MallProduct getProductById(int id);
+	
+	int deleteMallProduct(int id);
+	
+	List<MallProduct> selectProductByAllPage(Criteria cri);
+	
+	int productCount();
+	
+	int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request);
 }

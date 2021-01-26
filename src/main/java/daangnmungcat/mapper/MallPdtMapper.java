@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
 
@@ -23,6 +24,14 @@ public interface MallPdtMapper {
 	
 	int deleteDogCateProduct(int id);
 	int deleteCatCateProduct(int id);
+	
+	int deleteMallProduct(int id);
+	
+	List<MallProduct> selectProductByAllPage(Criteria cri);
+	
+	int productCount();
+	
+	int updateMallProduct(MallProduct product);
 
 
 }

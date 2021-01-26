@@ -12,7 +12,14 @@ $(function(){
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
 				<li><a href="<%=request.getContextPath()%>/mall/product/${list.id}">
-					<div class="img"><img src="<c:url value="/resources${list.image1}" />"></div>
+					<div class="img">
+						<c:if test="${empty list.image1}">
+						<img src="<%=request.getContextPath() %>/resources/images/no_image.jpg">
+						</c:if>
+						<c:if test="${not empty list.image1}">
+						<img src="<c:url value="/resources${list.image1}" />">
+						</c:if>
+					</div>
 					<div class="txt">
 						<p class="subject">${list.name}</p>
 						<p class="price">${list.price}</p>
