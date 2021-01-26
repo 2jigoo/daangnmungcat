@@ -59,7 +59,8 @@
 		<result column="name" property="name"></result>
 	</resultMap>
 
-<!-- query  -->
+<!-- login -->
+
 	<select id="selectMemberByAll" resultMap="memberResult">
 		<include refid="selectSql"></include>
 	</select>
@@ -102,8 +103,7 @@
 	
 <!-- my page -->	
 	<update id="deleteMember">
-		update member set use_yn = 'n'
-		where id = #{id}
+		update member set use_yn = 'n' where id = #{id}
 	</update>
 	
 	<update id="updateProfilePic">
@@ -172,6 +172,7 @@
 	</select>
 	
 <!-- address -->
+
 	<resultMap type="Address" id="addressResult">
 		<result column="id" property="id"></result>
 		<result column="mem_id" property="memId"></result>

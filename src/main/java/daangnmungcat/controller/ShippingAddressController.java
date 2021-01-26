@@ -21,7 +21,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.service.MemberService;
 
 @RestController
-public class AddressController {
+public class ShippingAddressController {
 		
 	@Autowired
 	private MemberService service;
