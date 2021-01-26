@@ -58,6 +58,28 @@ public class ChatServiceImpl implements ChatService {
 		return myChatList;
 	}
 	
+	@Override
+	public List<Chat> getMyChatsList(int saleId) {
+		List<Chat> myChatList = chatMapper.selectAllChatsBySaleId(saleId);
+		
+		// 채팅목록에 가장 최근 메시지 띄우기
+		for(Chat chat : myChatList) {
+			ChatMessage msg = messageMapper.selectLatestChatMessageByChatId(chat.getId());
+			
+			ArrayList<ChatMessage> msgList = new ArrayList<ChatMessage>();
+			msgList.add(msg);
+			
+			try {
+				chat.setLatestDate(msg.getRegdate());
+			} catch (NullPointerException e) {
+				
+			}
+			chat.setMessages(msgList);
+		}
+		
+		return myChatList;
+	}
+	
 	
 	// 채팅 하나 정보 읽어오기
 	@Override

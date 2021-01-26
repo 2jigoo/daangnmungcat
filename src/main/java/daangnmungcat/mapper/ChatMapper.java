@@ -9,6 +9,7 @@ import daangnmungcat.dto.Chat;
 public interface ChatMapper {
 
 	List<Chat> selectAllChatsByMemberId(String memberId);
+	List<Chat> selectAllChatsBySaleId(@Param("saleId") int saleId);
 	Chat selectChatByChatId(int chatId);
 	Chat selectChatByMemberIdAndSaleId(@Param("memberId")String memberId, @Param("saleId") int saleId);
 	

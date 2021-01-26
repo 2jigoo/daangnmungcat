@@ -71,9 +71,4 @@ public class MemberMapperTest {
 		log.debug(dongne2.toString());
 	}
 	
-	@Test
-	public void insertMember() {
-		Member member = new Member("test2", "1234", "이름", "닉", "test@djfklsdf", "010-5641-5414", new Dongne1(1), new Dongne2(1), "", "");
-		mapper.insertMember(member);
-	}
 }

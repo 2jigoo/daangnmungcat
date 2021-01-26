@@ -33,14 +33,15 @@
 			<param-value>daangnmungcat.config.WebMvcContextConfig</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
-		
 		<multipart-config>
-			<location></location>
 			<max-file-size>20971520</max-file-size>
 			<max-request-size>41943040</max-request-size>
 			<file-size-threshold>20971520</file-size-threshold>
-		</multipart-config>
+	</multipart-config>
 	</servlet>
+	
+
+	
 	<servlet-mapping>
 		<servlet-name>mvc</servlet-name>
 		<url-pattern>/</url-pattern>
@@ -48,32 +49,45 @@
 	
 	
 	<filter>
-		<filter-name>encodingFilter</filter-name>
-		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-		<init-param>
-			<param-name>encoding</param-name>
-			<param-value>UTF-8</param-value>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>
+            org.springframework.web.filter.CharacterEncodingFilter
+	    </filter-class>
+	    <init-param>
+	            <param-name>encoding</param-name>
+	            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+	        <filter-name>encodingFilter</filter-name>
+	        <url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
-	<!-- 업로드 -->
+
+
+	<!-- spring security를 위한 multipart filter 설정-->
 	<filter>
 		<filter-name>MultipartFilter</filter-name>
 		<filter-class>org.springframework.web.multipart.support.MultipartFilter</filter-class>
+		<init-param>
+			<param-name>multipartResolverBeanName</param-name>
+			<param-value>multipartResolver</param-value>
+		</init-param>
 	</filter>
 	<filter-mapping>
 		<filter-name>MultipartFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-
 	
 	<!-- spring security -->
-	<!--  <listener><listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class></listener>
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+	
 	<filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -82,6 +96,7 @@
     <filter-mapping>
           <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
+
 	
 </web-app>

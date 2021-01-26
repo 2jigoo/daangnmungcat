@@ -431,7 +431,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
 				</c:when>
 			</c:choose>
-			<a href="<%=request.getContextPath()%>/goToChat?id=${list.id}">
+			<a href="<%=request.getContextPath()%>/go-to-chat?id=${list.id}">
 				<button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
 			</a>
 		</div>
