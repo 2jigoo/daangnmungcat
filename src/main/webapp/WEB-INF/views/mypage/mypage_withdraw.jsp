@@ -74,11 +74,6 @@ $(document).ready(function(){
 				<td>비밀번호</td> 
 				<td><input type="text" id="w_pwd"></td>
 			</tr>
-
-			<tr>
-				<td>남기실 말씀</td>
-				<td><input type="text" id="w_memo"></td>
-			</tr>
 		</table>
 		<input type="button" value="이전으로" onclick="history.back()">
 		<input type="button" value="탈퇴" id="del">
