@@ -36,7 +36,7 @@
 		$("#chat-loading-btn").click(function() {
 			$.ajax({
 				url: "/daangnmungcat/api/chat/message",
-				type: "post",
+				type: "get",
 				data: {id: chatId, page: ++page},
 				/* beforeSend : function(xhr){xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");}, */
 				dataType: "json",

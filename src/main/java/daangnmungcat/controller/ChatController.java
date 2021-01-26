@@ -45,7 +45,18 @@ public class ChatController {
 		
 		List<Chat> list = chatService.getMyChatsList(loginUser.getId());
 		list.stream().forEach(chat -> log.debug(chat.toString()));
+		model.addAttribute("list", list);
 		
+		return "/chat/mychats";
+	}
+	
+	@GetMapping("/chat/sale/{id}")
+	public String myChatList(@PathVariable("id") int id, Model model, HttpSession session) {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		log.debug("loginUser's ID: " + loginUser.getId());
+		
+		List<Chat> list = chatService.getMyChatsList(id);
+		list.stream().forEach(chat -> log.debug(chat.toString()));
 		model.addAttribute("list", list);
 		
 		return "/chat/mychats";
@@ -68,7 +79,7 @@ public class ChatController {
 	}
 	
 	@ResponseBody
-	@PostMapping("/api/chat/message")
+	@GetMapping("/api/chat/message")
 	public List<ChatMessage> chatList(@RequestParam(value = "id", required = true) int chatId, @RequestParam(value = "page", defaultValue = "1") int page, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
@@ -80,7 +91,7 @@ public class ChatController {
 	}
 	
 	
-	@GetMapping("/goToChat")
+	@GetMapping("/go-to-chat")
 	public String goToChatFromSale(@RequestParam(value = "id") int saleId, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
 		
 		Sale sale = null;
@@ -98,7 +109,7 @@ public class ChatController {
 		
 		// 본인이 작성한 글에 접근했을 때
 		if(sale.getMember().getId().equals(loginUserId)) {
-			return "redirect:/detailList?id=" + saleId;
+			return "redirect:/chat/sale/" + saleId;
 		}
 		
 		Chat chat = chatService.getChatInfoFromSale(loginUserId, saleId);
@@ -112,7 +123,7 @@ public class ChatController {
 	}
 	
 	
-	@PostMapping("/chat/createChat")
+	@PostMapping("/chat/room")
 	@ResponseBody
 	public ResponseEntity<Object> createNewRoom(@RequestBody Sale sale, HttpSession session) {
 		
@@ -152,4 +163,5 @@ public class ChatController {
 		
 		return ResponseEntity.ok(fileName);
 	}
+	
 }
