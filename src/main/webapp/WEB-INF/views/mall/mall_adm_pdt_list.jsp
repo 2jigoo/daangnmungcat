@@ -71,12 +71,12 @@ $(function(){
 		
 		<div class="board_page">
 		    <c:if test="${pageMaker.prev}">
-		    	<p><a href="<%=request.getContextPath()%>/admin/mall/product/list${dongne1Name}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    	<p><a href="<%=request.getContextPath()%>/admin/mall/product/list${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    </c:if> 
 			<ul>
 			
 			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-			  	<li><a href="<%=request.getContextPath()%>/admin/mall/product/list${dongne1Name}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  	<li><a href="<%=request.getContextPath()%>/admin/mall/product/list${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  </c:forEach>
 			</ul>
 			

@@ -68,28 +68,41 @@
 		SELECT a.*
 		  FROM (SELECT rownum AS rnum, b.*
 		  		FROM (<include refid="selectSql" /> ORDER BY mp.ID desc) b) a
-		 WHERE a.rnum BETWEEN #{rowStart} AND ${rowEnd}
+		 WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
 		 ORDER BY a.rnum
 	</select>
 	
 	<select id="selectDogByAll"  resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		WHERE DOG_CATE IS NOT NULL
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" />  WHERE DOG_CATE != 1 AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		 ORDER BY a.rnum
 	</select>
 
 	<select id="selectCatByAll" resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		WHERE CAT_CATE IS NOT NULL
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> WHERE CAT_CATE != 1 AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		 ORDER BY a.rnum
 	</select>
 	
-	<select id="dogProductListByCate" parameterType="Int" resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		where dog_cate = #{dogCate.id}
+	<select id="dogProductListByCate" parameterType="map" resultMap="pdtResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> WHERE dog_cate = #{cateId} AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		 ORDER BY a.rnum
+		
 	</select>
 	
-	<select id="catProductListByCate" parameterType="Int" resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		where cat_cate = #{catCate.id}
+	<select id="catProductListByCate" parameterType="map" resultMap="pdtResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> WHERE cat_cate = #{cateId} AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		 ORDER BY a.rnum
 	</select>	
 	
 	<select id="getProductById" parameterType="Int" resultMap="pdtResult">
@@ -111,6 +124,22 @@
 	
 	<select id="productCount" resultType="int">
 		SELECT count(id) FROM MALL_PDT
+	</select>
+	
+	<select id="productDogCount" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE DOG_CATE != 1 AND SALE_YN = 'Y'
+	</select>
+	
+	<select id="productDogCateCount" parameterType="int" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE DOG_CATE = #{cateId} AND SALE_YN = 'Y'
+	</select>
+	
+	<select id="productCatCount" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE CAT_CATE = #{cateId} AND SALE_YN = 'Y'
+	</select>
+	
+	<select id="productCatCateCount" parameterType="int" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE CAT_CATE = #{cateId} AND SALE_YN = 'Y'
 	</select>
 	
 	<update id="updateMallProduct" parameterType="MallProduct">

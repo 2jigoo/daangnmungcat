@@ -34,6 +34,42 @@ $(function(){
 				</c:if>
 			</ul>
 		</div>
+		<div class="board_page">
+		    <c:if test="${pageMaker.prev}">
+		    	<c:choose>
+		    	<c:when test="${not empty cateId}">
+			    	<p><a href="<%=request.getContextPath()%>/mall/product/list/${kind}/${cateId}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    	</c:when>
+		    	<c:otherwise>
+		    		<p><a href="<%=request.getContextPath()%>/mall/product/list/${kind}${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    	</c:otherwise>
+		    	</c:choose>
+		    </c:if> 
+			<ul>
+			
+			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+		    	<c:choose>
+		    	<c:when test="${not empty cateId}">
+				  	<li><a href="<%=request.getContextPath()%>/mall/product/list/${kind}/${cateId}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+		    	</c:when>
+		    	<c:otherwise>
+				  	<li><a href="<%=request.getContextPath()%>/mall/product/list/${kind}${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  	</c:otherwise>
+			  	</c:choose>
+			  </c:forEach>
+			</ul>
+			
+			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+		    	<c:choose>
+		    	<c:when test="${not empty cateId}">
+				    <p><a href="<%=request.getContextPath()%>/mall/product/list/${kind}/${cateId}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+		    	</c:when>
+		    	<c:otherwise>
+				    <p><a href="<%=request.getContextPath()%>/mall/product/list/${kind}${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			    </c:otherwise>
+			    </c:choose>
+			  </c:if> 
+		</div>
 </div>
 
 

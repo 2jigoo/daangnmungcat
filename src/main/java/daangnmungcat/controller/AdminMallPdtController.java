@@ -21,6 +21,7 @@ public class AdminMallPdtController {
 	@GetMapping("/admin/mall/product/list")
 	public String list(Model model, Criteria cri) {
 		List<MallProduct> list = service.selectProductByAllPage(cri);
+		list.stream().forEach(System.out::println);
 		model.addAttribute("list", list);
 		
 		PageMaker pageMaker = new PageMaker();

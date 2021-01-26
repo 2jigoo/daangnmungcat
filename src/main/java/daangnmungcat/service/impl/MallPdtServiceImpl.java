@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,13 +90,13 @@ public class MallPdtServiceImpl implements MallPdtService {
 	}
 
 	@Override
-	public List<MallProduct> selectDogByAll() {
-		return mapper.selectDogByAll();
+	public List<MallProduct> selectDogByAll(Criteria cri) {
+		return mapper.selectDogByAll(cri);
 	}
 
 	@Override
-	public List<MallProduct> selectCatByAll() {
-		return mapper.selectCatByAll();
+	public List<MallProduct> selectCatByAll(Criteria cri) {
+		return mapper.selectCatByAll(cri);
 	}
 
 	@Override
@@ -109,13 +110,13 @@ public class MallPdtServiceImpl implements MallPdtService {
 	}
 
 	@Override
-	public List<MallProduct> dogProductListByCate(int cate) {
-		return mapper.dogProductListByCate(cate);
+	public List<MallProduct> dogProductListByCate(@Param("cateId") int cateId, @Param("cri") Criteria cri) {
+		return mapper.dogProductListByCate(cateId, cri);
 	}
 
 	@Override
-	public List<MallProduct> catProductListByCate(int cate) {
-		return mapper.catProductListByCate(cate);
+	public List<MallProduct> catProductListByCate(@Param("cateId") int cateId, @Param("cri") Criteria cri) {
+		return mapper.catProductListByCate(cateId, cri);
 	}
 
 	@Override
@@ -192,6 +193,26 @@ public class MallPdtServiceImpl implements MallPdtService {
 		int res = mapper.updateMallProduct(product);
 		
 		return res;
+	}
+
+	@Override
+	public int productDogCount() {
+		return mapper.productDogCount();
+	}
+
+	@Override
+	public int productCatCount() {
+		return mapper.productCatCount();
+	}
+
+	@Override
+	public int productCatCateCount(int cateId) {
+		return mapper.productCatCateCount(cateId);
+	}
+
+	@Override
+	public int productDogCateCount(int cateId) {
+		return mapper.productDogCateCount(cateId);
 	}
 
 }
