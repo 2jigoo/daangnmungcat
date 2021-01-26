@@ -49,5 +49,13 @@
 <update id="updateMallCatCate" parameterType="MallCate">
 	UPDATE MALL_CAT_CATE SET NAME = #{name} WHERE ID = #{id}
 </update>
+
+<delete id="deleteMallDogCate" parameterType="int">
+	DELETE FROM MALL_DOG_CATE WHERE ID = #{id}
+</delete>
+
+<delete id="deleteMallCatCate" parameterType="int">
+	DELETE FROM MALL_CAT_CATE WHERE ID = #{id}
+</delete>
 	
 </mapper>

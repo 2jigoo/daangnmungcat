@@ -36,8 +36,8 @@ public class MallPdtController {
 	
 	@GetMapping("/mall/product/write")
 	public String insertViewProduct(Model model) {
-		List<MallCate> dogCate = service.dogCateList();
-		List<MallCate> catCate = service.catCateList();
+		List<MallCate> dogCate = cateService.selectByAllDogCate();
+		List<MallCate> catCate = cateService.selectByAllCatCate();
 		
 		model.addAttribute("dogCate", dogCate);
 		model.addAttribute("catCate", catCate);
@@ -46,63 +46,15 @@ public class MallPdtController {
 	}
 	
 	@PostMapping("/mall/product/write")
-	public String insertWriteProduct(MultipartHttpServletRequest mtfRequest, HttpServletRequest request) throws UnsupportedEncodingException {
-		// 썸네일 이미지
-		MultipartFile thumbFile = mtfRequest.getFile("thumb_file");
-		// 상세 이미지
-		List<MultipartFile> fileList = mtfRequest.getFiles("file");
+	public String insertWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
 		
-		MallProduct product = new MallProduct();
+		product.setName(new String(request.getParameter("name").getBytes("8859_1"), "utf-8"));
+		product.setContent(new String(request.getParameter("content").getBytes("8859_1"), "utf-8"));
+		product.setDeliveryKind(new String(request.getParameter("deliveryKind").getBytes("8859_1"), "utf-8"));
 		
-		/*String uploadFolder = getFolder(request);
-		System.out.println("uploadPath : "+ uploadFolder);
-		
-		File uploadPath = new File(uploadFolder, getFolder(request));
-		
-		if (!uploadPath.exists()) {
-			uploadPath.mkdirs();
-		}
-		
-		try {
-			thumbFile.transferTo(new File(uploadFolder, thumbFile.getOriginalFilename()));
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		// 상세 이미지 추가
-		for (MultipartFile multipartFile : fileList) {
-			File saveFile = new File(uploadFolder, multipartFile.getOriginalFilename());
-			try {
-				multipartFile.transferTo(saveFile);
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}*/
-
-		product.setDogCate(new MallCate(Integer.parseInt(mtfRequest.getParameter("dogCate")), null));
-		product.setCatCate(new MallCate(Integer.parseInt(mtfRequest.getParameter("catCate")), null));
-		product.setName(new String(mtfRequest.getParameter("name").getBytes("8859_1"), "utf-8"));
-		product.setPrice(Integer.parseInt(mtfRequest.getParameter("price")));
-		product.setContent(new String(mtfRequest.getParameter("content").getBytes("8859_1"), "utf-8"));
-		product.setSaleYn(mtfRequest.getParameter("saleYn"));
-		product.setStock(Integer.parseInt(mtfRequest.getParameter("stock")));
-		product.setDeliveryKind(new String(mtfRequest.getParameter("deliveryKind").getBytes("8859_1"), "utf-8"));
-		product.setDeliveryCondition(Integer.parseInt(mtfRequest.getParameter("deliveryCondition")));
-		product.setDeliveryPrice(Integer.parseInt(mtfRequest.getParameter("deliveryPrice")));
-		
-		
-		service.insertMallProduct(product, thumbFile, fileList, request);
+		service.insertMallProduct(product, thumbFile, file, request);
 		
 		return "/mall/mall_pdt_add";
-	}
-	
-	private String getFolder(HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\product");
-		return path;
 	}
 	
 	//카테고리

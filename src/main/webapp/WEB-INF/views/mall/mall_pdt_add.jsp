@@ -20,7 +20,7 @@ $(function(){
 		}
 	})
 	
-	/*$("#pdt_write_btn").click(function(e){
+	$("#pdt_write_btn").click(function(e){
 		e.preventDefault();
 		
 		if ($("select[name='dogCate']").val() == "" && $("select[name='catCate']").val() == ""){
@@ -65,7 +65,7 @@ $(function(){
 		}
 		
 		$("form[name='pdtWrite']").submit()
-	})*/
+	})
 })
 </script>
 
@@ -74,14 +74,13 @@ $(function(){
 	<h2 id="subTitle">쇼핑몰 상품 추가</h2>
 	<div id="pageCont" class="s-inner">
 		<div class="mall_pdt_write">
-			<form name="pdtWrite" action="<%=request.getContextPath() %>/mall/product/write" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+			<form name="pdtWrite" action="<%=request.getContextPath() %>/mall/product/write" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<ul>
 					<li>
 						<p>멍</p>
 						<div>
-							<select name="dogCate">
-								<option value="">카테고리를 선택해주세요.</option>
+							<select name="dogCate.id">
 								<c:forEach items="${dogCate}" var="list">
 									<option value="${list.id}">${list.name}</option>
 								</c:forEach>
@@ -91,8 +90,7 @@ $(function(){
 					<li>
 						<p>냥</p>
 						<div>
-							<select name="catCate">
-								<option value="">카테고리를 선택해주세요.</option>
+							<select name="catCate.id">
 								<c:forEach items="${catCate}" var="list">
 									<option value="${list.id}">${list.name}</option>
 								</c:forEach>
@@ -155,7 +153,7 @@ $(function(){
 					<li>
 						<p>상품 썸네일 이미지</p>
 						<div>
-							<input multiple="multiple" type="file" name="thumb_file" accept="image/*">
+							<input multiple="multiple" type="file" name="thumbFile" accept="image/*">
 						</div>
 					</li>
 					<li>

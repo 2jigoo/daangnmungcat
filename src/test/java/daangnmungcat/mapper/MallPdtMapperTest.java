@@ -28,7 +28,7 @@ public class MallPdtMapperTest {
 	public void tearDown() throws Exception {
 		System.out.println();
 	}
-
+/*
 	@Test
 	public void testInsertMallProduct() {
 		System.out.println("상품 등록");
@@ -48,5 +48,11 @@ public class MallPdtMapperTest {
 		
 		mapper.insertMallProduct(product);
 	}
-
+*/
+	
+	@Test
+	public void testUpdateDogProduct() {
+		System.out.println("카테고리 수정");
+		mapper.deleteDogCateProduct(2);
+	}
 }

@@ -100,5 +100,13 @@
 		<include refid="whereSql"></include>
 	</select>
 	
+	<update id="deleteDogCateProduct" parameterType="int">
+		UPDATE MALL_PDT SET DOG_CATE = 1 WHERE DOG_CATE = #{id}
+	</update>
+	
+	<update id="deleteCatCateProduct" parameterType="int">
+		UPDATE MALL_PDT SET DOG_CATE = 1 WHERE CAT_CATE = #{id}
+	</update>
+	
 
 </mapper>
