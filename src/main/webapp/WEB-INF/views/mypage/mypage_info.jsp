@@ -126,7 +126,9 @@ $(document).ready(function(){
             		contentType: false, //multipart-form-data로 전송
             		cache: false,
             		success: function(res) {
-            			console.log('변경 완료');
+            			if(res == 1){
+            				alert('프로필 사진이 변경되었습니다.')
+            			}
             		},
             		error: function(request,status,error){
             			alert('에러' + request.status+request.responseText+error);
@@ -140,8 +142,8 @@ $(document).ready(function(){
 	//프로필 사진 삭제 -> default로
 	$('#img_delete').on("click", function(){
 		if (confirm("프로필 사진을 삭제하시겠습니까?") == true){
-			$.get(contextPath +"/profile/get", function(json){
-				if(json == 1){
+			$.get(contextPath +"/profile/get", function(res){
+				if(res == 1){
 					location.reload(true);
 				}
 			});

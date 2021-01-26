@@ -32,7 +32,6 @@ $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	
 	$.get(contextPath +"/member/info", function(member){
-		console.log(member.member.id);
 		id = member.member.id;
 	});
 	
@@ -54,66 +53,85 @@ $(function(){
 	
 	
 	$('#addr_update').on("click", function(){
-		var add = {
-				memId: id,
-				subject: $('#addr_subject').val(),
-				name: $('#addr_name').val(),
-				phone: $('#addr_phone').val(),
-				zipcode: $('#zipcode').val(),
-				address1: $('#address1').val(),
-				address2: $('#address2').val(),
-				memo: $('#addr_memo').val()
-			}
-			console.log(add);
-			
-			if($('#default_addr').is(":checked") == true){
-				if (confirm("입력하신 주소를 기본 배송지로 설정하시겠습니까?") == true){
-					var member = {
-							zipcode: $('#zipcode').val(),
-							address1: $('#address1').val(),
-							address2: $('#address2').val()
-						}
-					console.log(member);
-					$.ajax({
-						url: contextPath + "/member/adddress/post",
-						type: "POST",
-						contentType:"application/json; charset=utf-8",
-						dataType: "json",
-						cache : false,
-						data : JSON.stringify(member),
-						success: function(res) {
-								if(res == 1){
-									alert('기본 주소로 변경완료')
-								}
-						},
-						error: function(request,status,error){
-							alert('에러' + request.status+request.responseText+error);
-						}
-					});
-					
-				}else{
-					return;
+		if($('#addr_subject').val() == ""){
+			alert('배송지명을 입력하세요');
+			return;
+		}else if($('#addr_name').val() == ""){
+			alert('받으실 분을 입력하세요.');
+			return;
+		}else if($('#zipcode').val() == ""){
+			alert('우편번호를 입력하세요');
+			return;
+		}else if($('#address1').val() == ""){
+			alert('주소를 입력하세요');
+			return;
+		}else if($('#addr_phone').val() == ""){
+			alert('전화번호를 입력하세요');
+			return;ㄴ
+		}else if($('#address2').val() == ""){
+			alert('상세주소를 입력하세요');
+			return;
+		}else {
+			var add = {
+					memId: id,
+					subject: $('#addr_subject').val(),
+					name: $('#addr_name').val(),
+					phone: $('#addr_phone').val(),
+					zipcode: $('#zipcode').val(),
+					address1: $('#address1').val(),
+					address2: $('#address2').val(),
+					memo: $('#addr_memo').val()
 				}
-			}
+				
+				
+				if($('#default_addr').is(":checked") == true){
+					if (confirm("입력하신 주소를 기본 배송지로 설정하시겠습니까?") == true){
+						var member = {
+								zipcode: $('#zipcode').val(),
+								address1: $('#address1').val(),
+								address2: $('#address2').val()
+							}
+						
+						$.ajax({
+							url: contextPath + "/member/adddress/post",
+							type: "POST",
+							contentType:"application/json; charset=utf-8",
+							dataType: "json",
+							cache : false,
+							data : JSON.stringify(member),
+							success: function(res) {
+									if(res == 1){
+										alert('기본 주소로 변경완료')
+									}
+							},
+							error: function(request,status,error){
+								alert('에러' + request.status+request.responseText+error);
+							}
+						});
+						
+					}else{
+						return;
+					}
+				}
+			
+				$.ajax({
+					url: contextPath + "/address/post/"+${id},
+					type: "POST",
+					contentType:"application/json; charset=utf-8",
+					dataType: "json",
+					cache : false,
+					data : JSON.stringify(add),
+					success: function() {
+						alert('배송지 수정 완료');
+						opener.document.location.reload(true);
+					},
+					error: function(request,status,error){
+						alert('에러' + request.status+request.responseText+error);
+					}
+				});
+		}
 		
-			$.ajax({
-				url: contextPath + "/address/post/"+${id},
-				type: "POST",
-				contentType:"application/json; charset=utf-8",
-				dataType: "json",
-				cache : false,
-				data : JSON.stringify(add),
-				success: function() {
-					alert('배송지 수정 완료');
-					opener.document.location.reload(true);
-				},
-				error: function(request,status,error){
-					alert('에러' + request.status+request.responseText+error);
-				}
-			});
-			
-	});
-	
+		});
 });
 
 
@@ -122,9 +140,6 @@ function window_close(){
 	opener.document.location.reload(true);
 }
 
-function addr_save(){
-	console.log('추가하기')
-}
 //주소 api
 function execPostCode(){
 	daum.postcode.load(function(){
@@ -184,7 +199,7 @@ function execPostCode(){
 	</tr>
 </table>
 <input type="button" value="취소" id="cancel" onclick="window_close()">
-<input type="button" value="수정" id="addr_update" onclick="addr_save()">
+<input type="button" value="수정" id="addr_update">
 </div>
 </body>
 </html>

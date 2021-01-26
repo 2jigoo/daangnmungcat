@@ -13,6 +13,7 @@ $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	$.get(contextPath +"/address-list", function(list){
 		var datalength = list.length; 
+		
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
@@ -25,6 +26,9 @@ $(document).ready(function(){
 				sCont += '</tr>';
 			}
 			$("#addr").append(sCont);
+		}else if(datalength == 0){
+			var t = '배송지 목록이 없습니다.';
+			$("#txt").append(t);
 		}
 	});
 	
@@ -88,7 +92,7 @@ function execPostCode(){
 	</tr>
 	
 </table>
-
+<p id="txt" style="padding:30px"></p>
    </div>
 
 

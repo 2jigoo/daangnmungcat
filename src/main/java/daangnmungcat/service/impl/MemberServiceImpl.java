@@ -1,13 +1,19 @@
 package daangnmungcat.service.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Address;
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
@@ -100,12 +106,89 @@ public class MemberServiceImpl implements MemberService {
         }
 	}
 
-
+	
 	@Override
-	public int updateProfilePic(Member member) {
+	public int deleteProfilePic( HttpServletRequest request, HttpSession session) {		
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = selectMemberById(loginUser.getId());
+		
+		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
+		System.out.println("delete할 Path:" + dir);
+		
+		File files[] = dir.listFiles();
+		//파일리스트에서 이름 찾아서 지우기
+		for(int i=0; i<files.length; i++) {
+			File file = files[i];
+			String fileName = file.getName();
+			int idx = fileName.lastIndexOf(".");
+			String onlyName = fileName.substring(0, idx);
+		
+			System.out.println("파일목록:" + onlyName);
+			if(onlyName.equals(member.getId())) {
+				file.delete();
+			}
+		}
+		File deletePic = new File(dir, member.getProfilePic());
+		deletePic.delete();
+		String def = "images/default_user_image.png";
+		member.setProfilePic(def);
+		
 		return mapper.updateProfilePic(member);
 	}
 	
+	@Override
+	public int updateProfilePic(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+		Member member = selectMemberById(info.getId());
+		
+		String uploadFolder = getFolder(request);
+		System.out.println("uploadPath:" + uploadFolder);
+		
+		File uploadPath = new File(uploadFolder, getFolder(request));
+		
+		if(!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
+		
+		for(MultipartFile multipartFile : uploadFile) {
+			
+			System.out.println("Upload File Name: " + multipartFile.getOriginalFilename());
+			System.out.println("Upload File Size: " + multipartFile.getSize());
+			
+			String uploadFileName = multipartFile.getOriginalFilename();
+			System.out.println("only file name: " + uploadFileName);
+			
+			//확장자 구하기
+			String exc = uploadFileName.substring(uploadFileName.lastIndexOf(".")+1, uploadFileName.length());
+			
+			//아이디로 파일이름 변경
+			uploadFileName = member.getId() + "." + exc;
+			
+			//랜덤이름
+			//UUID uuid = UUID.randomUUID();
+			//uploadFileName = uuid.toString() + "_" + uploadFileName;
+			
+			File saveFile = new File(uploadFolder, uploadFileName);
+			
+			try {
+				multipartFile.transferTo(saveFile);
+			} catch(Exception e) {
+				e.getMessage();
+			}
+			
+			String path = "upload/profile/"+ member.getId() + "." + exc;
+			member.setProfilePic(path);
+		}
+		
+		return mapper.updateProfilePic(member);
+	}
+	
+	
+	private String getFolder(HttpServletRequest request) {
+		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
+		return path;
+	}
 
 	@Override
 	public int updateProfileText(Member member) {
@@ -162,6 +245,6 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteShippingAddress(String id) {
 		return mapper.deleteAddress(id);
 	}
-	
+
 
 }

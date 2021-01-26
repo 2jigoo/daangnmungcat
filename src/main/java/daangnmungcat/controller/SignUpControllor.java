@@ -48,12 +48,6 @@ public class SignUpControllor {
 		int res = service.idCheck(id);
 		return res;
 	}
-
-//	@GetMapping("/emailCheck/{email}")
-//	public int emailCheck(@PathVariable String email) {
-//		int res = service.emailCheck(email);
-//		return res;
-//	}
 	
 	@PostMapping("/email/post")
 	public int emailCheck(@RequestBody String json) {
