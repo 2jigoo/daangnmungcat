@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -96,7 +97,8 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	//파일업로드
 	@Bean
 	public MultipartResolver multipartResolver() {
-	    StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding("UTF-8");
 	    return resolver;
 	}
 	
@@ -111,5 +113,4 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper));
 	}
 	
-
 }

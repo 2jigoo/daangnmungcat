@@ -14,6 +14,7 @@ import daangnmungcat.dto.Criteria;
 public interface ChatService {
 
 	List<Chat> getMyChatsList(String memberId);
+	List<Chat> getMyChatsList(int saleId);
 	Chat getChatInfo(int chatId);
 	Chat getChatInfoFromSale(String memberId, int saleId);
 	

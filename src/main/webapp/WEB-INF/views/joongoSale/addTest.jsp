@@ -99,7 +99,7 @@ function handleImgs(e) {
 <div id="subContent">
 	<h2 id="subTitle">글쓰기</h2> 	
 	<div id="pageCont" class="s-inner">
-		<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/test/insert" method="post" enctype="multipart/form-data">
+		<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/test/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<article>
 		<table style="width: 800px; table-layout: fixed;">
