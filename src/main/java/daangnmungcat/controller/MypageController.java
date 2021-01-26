@@ -12,11 +12,13 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
@@ -24,6 +26,7 @@ import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
 
 @RestController
+@Controller
 public class MypageController {
 	private static final Log log = LogFactory.getLog(MypageController.class);
 	
@@ -76,14 +79,16 @@ public class MypageController {
 	
 	//멤버 모든 정보
 	@GetMapping("/member/info")
-	public  Map<String, Object> memberInfo(HttpSession session, HttpServletRequest request) throws ParseException {
+	public Map<String, Object> memberInfo(HttpSession session, HttpServletRequest request) throws ParseException {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("member", member);
 		return map;
+
 	}
+	
 	
 	//멤버 정보 수정
 	@PostMapping("/member/info/post")

@@ -60,7 +60,7 @@ public class LoginController {
 //				session.setAttribute("loginUser", member);
 				return "redirect:/";
 			}else if(res == null) {
-				return null;
+				return "/login";
 			}
 		}catch (Exception e) {
 			e.printStackTrace(); // 에러 발생시 확인
