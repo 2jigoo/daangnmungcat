@@ -12,14 +12,14 @@
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 <script>
-//spring security -> ajax post 타입 전송시 필요
-var csrfToken = $("meta[name='_csrf']").attr("content");
-console.log(csrfToken);
-$.ajaxPrefilter(function(options, originalOptions, jqXHR){
-    if (options['type'].toLowerCase() === "post") {
-        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-    }
-});
+	//spring security -> ajax post 타입 전송시 필요
+	var csrfToken = $("meta[name='_csrf']").attr("content");
+	console.log(csrfToken);
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
 </script>
 <script>
 //주소 api
@@ -40,7 +40,7 @@ $(document).ready(function(){
 	
 	var id;
 	var contextPath = "<%=request.getContextPath()%>";
-	$.get(contextPath +"/memberInfo", function(member){
+	$.get(contextPath +"/member/info", function(member){
 		console.log(member.member.id);
 		id = member.member.id;
 	});
@@ -69,9 +69,8 @@ $(document).ready(function(){
 							address1: $('#address1').val(),
 							address2: $('#address2').val()
 						}
-					console.log(member);
 					$.ajax({
-						url: contextPath + "/updateMyAddress",
+						url: contextPath + "/member/adddress/post",
 						type: "POST",
 						contentType:"application/json; charset=utf-8",
 						dataType: "json",
@@ -93,7 +92,7 @@ $(document).ready(function(){
 			}
 		
 			$.ajax({
-				url: contextPath + "/addAddress",
+				url: contextPath + "/address/post",
 				type: "POST",
 				contentType:"application/json; charset=utf-8",
 				dataType: "json",

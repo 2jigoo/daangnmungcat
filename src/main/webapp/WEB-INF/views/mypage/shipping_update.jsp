@@ -31,7 +31,7 @@ $(function(){
 	var id;
 	var contextPath = "<%=request.getContextPath()%>";
 	
-	$.get(contextPath +"/memberInfo", function(member){
+	$.get(contextPath +"/member/info", function(member){
 		console.log(member.member.id);
 		id = member.member.id;
 	});
@@ -41,7 +41,7 @@ $(function(){
 	});
 
 	
-	$.get(contextPath +"/addressInfo/" + ${id}, function(add){
+	$.get(contextPath +"/address/" + ${id}, function(add){
 		$('#addr_subject').attr('value', add.subject);
 		$('#addr_name').attr('value', add.name);
 		$('#zipcode').attr('value', add.zipcode);
@@ -75,7 +75,7 @@ $(function(){
 						}
 					console.log(member);
 					$.ajax({
-						url: contextPath + "/updateMyAddress",
+						url: contextPath + "/member/adddress/post",
 						type: "POST",
 						contentType:"application/json; charset=utf-8",
 						dataType: "json",
@@ -97,7 +97,7 @@ $(function(){
 			}
 		
 			$.ajax({
-				url: contextPath + "/updateShippingAddress/"+${id},
+				url: contextPath + "/address/post/"+${id},
 				type: "POST",
 				contentType:"application/json; charset=utf-8",
 				dataType: "json",

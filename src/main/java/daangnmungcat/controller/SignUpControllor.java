@@ -17,7 +17,6 @@ import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
 
 @RestController
-@Controller
 public class SignUpControllor {
 	private static final Log log = LogFactory.getLog(SignUpControllor.class);
 
@@ -34,7 +33,7 @@ public class SignUpControllor {
 		return ResponseEntity.ok(service.Dongne2List(dongne1));
 	}
 
-	@PostMapping("/submit")
+	@PostMapping("/sign-up")
 	public ResponseEntity<Object> newMember(@RequestBody Member member) {
 		try {
 			return ResponseEntity.ok(service.registerMember(member));
@@ -43,20 +42,26 @@ public class SignUpControllor {
 		}
 
 	}
-
-	@GetMapping("/idCheck/{id}")
+	
+	@GetMapping("/id-check/{id}")
 	public int reIdConfirm(@PathVariable String id) {
 		int res = service.idCheck(id);
 		return res;
 	}
 
-	@GetMapping("/emailCheck/{email}/")
-	public int emailCheck(@PathVariable String email) {
-		int res = service.emailCheck(email);
+//	@GetMapping("/emailCheck/{email}")
+//	public int emailCheck(@PathVariable String email) {
+//		int res = service.emailCheck(email);
+//		return res;
+//	}
+	
+	@PostMapping("/email/post")
+	public int emailCheck(@RequestBody String json) {
+		int res = service.emailCheck(json);
 		return res;
 	}
 
-	@GetMapping("/phoneCheck/{phone}/")
+	@GetMapping("/phone/post/{phone}")
 	public int phoneCheck(@PathVariable String phone) {
 		int res = service.phoneCheck(phone);
 		return res;

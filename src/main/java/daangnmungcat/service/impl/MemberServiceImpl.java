@@ -31,6 +31,12 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectMemberById(String id) {
 		return mapper.selectMemberById(id);
 	}
+	
+	@Override
+	public int deleteMember(String id) {
+		return mapper.deleteMember(id);
+	}
+
 
 	@Override
 	public int registerMember(Member member) {
@@ -156,11 +162,6 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteShippingAddress(String id) {
 		return mapper.deleteAddress(id);
 	}
-
-	
-
-
-
 	
 
 }

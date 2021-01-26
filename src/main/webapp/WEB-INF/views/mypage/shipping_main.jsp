@@ -1,3 +1,5 @@
+<%@page import="daangnmungcat.dto.Address"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
@@ -9,17 +11,35 @@ table {width:800px; margin:0 auto;}
 <script>
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
+	$.get(contextPath +"/address-list", function(list){
+		var datalength = list.length; 
+		if(datalength >= 1){
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<tr><td>' + list[i].subject + '<input type="text" value=' + list[i].id +'></td>' ;
+				sCont += '<td>' + list[i].name + '</td>';
+				sCont += '<td>' + (list[i].zipcode) + ' ' + list[i].address1 + list[i].address2 + '</td>';
+				sCont += '<td>' + list[i].phone + '</td>';
+				sCont += '<td><input type="button" value="수정" id="update_addr" addrId=' + list[i].id;
+				sCont += '> <input type="button" value="삭제" id="delete_addr" addrId=' + list[i].id + '></td>';
+				sCont += '</tr>';
+			}
+			$("#addr").append(sCont);
+		}
+	});
+	
+	
 	
 	$(document).on('click', '[id=update_addr]', function(){
 		var num = $(this).attr('addrId');
-		window.open(contextPath+"/shipping_update?id="+num, "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open(contextPath+"/mypage/shipping_update?id="+num, "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 
 	$(document).on('click', '[id=delete_addr]', function(){
 		var num = $(this).attr('addrId');
-		$.get(contextPath +"/addressInfo/" + num, function(add){
+		$.get(contextPath +"/address/" + num, function(add){
 			if (confirm("["+ add.subject + "] 배송지를 삭제하시겠습니까?") == true){
-				$.get(contextPath +"/deleteShippingAddress/" + num, function(){
+				$.get(contextPath +"/address/get/" + num, function(){
 					location.reload(true);
 				});
 			}else{
@@ -29,10 +49,8 @@ $(document).ready(function(){
 	});
 	
 	$('#add_addr').on("click", function(){
-		window.open(contextPath+"/shipping_popup", "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open(contextPath+"/mypage/shipping_add", "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
-	
-	
 	
 });
 
@@ -61,25 +79,14 @@ function execPostCode(){
 
 
 </script>
-
 <div class="wrapper">
+<h2 id="subTitle">배송지 관리</h2>
 <input type="button" value="배송지추가" id="add_addr">
 <table id="addr">
 	<tr>
 		<td>배송지이름</td> <td>받으실 분</td> <td>주소</td> <td>연락처</td> <td>수정/삭제</td>
 	</tr>
-	<c:forEach var="add" items="${list}">
-		<tr>	
-				<td>${add.subject} <input type="hidden" value="${add.id}"></td>
-				<td>${add.name}</td>
-				<td>(${add.zipcode}) ${add.address1} ${add.address2}</td>
-				<td>${add.phone}</td>
-				<td>
-					<input type="button" value="수정" id="update_addr" addrId="${add.id}">
-					<input type="button" value="삭제" id="delete_addr" addrId="${add.id}">
-				</td>
-		</tr>
-	</c:forEach>
+	
 </table>
 
    </div>

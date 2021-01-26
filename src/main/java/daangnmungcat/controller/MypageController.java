@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,35 +30,38 @@ import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
-
 @Controller
 @RestController
 public class MypageController {
 	private static final Log log = LogFactory.getLog(MypageController.class);
 	
+	//_대신 - 이고 최소화
+	//소문자, 행위는 url에 포함 x
+	//마지막 슬래시 x
+	
 	@Autowired
 	private MemberService service;
 	
-	@GetMapping("/deleteProfile")
+	@GetMapping("/profile/get")
 	public int deleteAjaxPost(HttpServletRequest request, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
 		System.out.println("delete할 Path:" + dir);
-		//File files[] = dir.listFiles();
-		//굿땡큐
-		/*for(int i=0; i<files.length; i++) {
+		File files[] = dir.listFiles();
+		//파일리스트에서 이름 찾아서 지우기
+		for(int i=0; i<files.length; i++) {
 			File file = files[i];
 			String fileName = file.getName();
 			int idx = fileName.lastIndexOf(".");
 			String onlyName = fileName.substring(0, idx);
 		
 			System.out.println("파일목록:" + onlyName);
-			if(onlyName.equals(id)) {
+			if(onlyName.equals(member.getId())) {
 				file.delete();
 			}
-		}*/
+		}
 
 		File deletePic = new File(dir, member.getProfilePic());
 		System.out.println(deletePic.delete());
@@ -74,7 +76,7 @@ public class MypageController {
 	}
 	
 	
-	@PostMapping("/uploadProfile")
+	@PostMapping("/profile/post")
 	public void uploadAjaxPost(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
 		System.out.println("upload profile");
 		int res = 0;
@@ -97,11 +99,8 @@ public class MypageController {
 		
 		for(MultipartFile multipartFile : uploadFile) {
 			
-			System.out.println("--------------------");
 			System.out.println("Upload File Name: " + multipartFile.getOriginalFilename());
 			System.out.println("Upload File Size: " + multipartFile.getSize());
-			
-			System.out.println("loginUser:" + loginUser);
 			
 			String uploadFileName = multipartFile.getOriginalFilename();
 			System.out.println("only file name: " + uploadFileName);
@@ -123,11 +122,8 @@ public class MypageController {
 			}
 			
 			String path = "upload/profile/"+ loginUser.getId() + "." + exc;
-			System.out.println("DB에 넣을 주소: " + path);
 			loginUser.setProfilePic(path);
 			res = service.updateProfilePic(loginUser);
-			System.out.println("프로필 변경 결과:" + res);
-			System.out.println("프로필주소변경후:"+ loginUser.getProfilePic());		
 		}
 	}
 	
@@ -137,7 +133,7 @@ public class MypageController {
 	}
 
 
-	@PostMapping("/updateProfileText")
+	@PostMapping("/profile-text/post")
 	public int updateProfileText(@RequestBody String json, HttpSession session, HttpServletRequest request) throws ParseException {
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
@@ -151,7 +147,7 @@ public class MypageController {
 	}
 	
 	//프로필사진만 가져오기
-	@GetMapping("/myProfilePic")
+	@GetMapping("/member/pic")
 	public Map<String, String> profilePic(HttpSession session, HttpServletRequest request) throws ParseException {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -163,7 +159,7 @@ public class MypageController {
 		
 	}
 	
-	@GetMapping("/memberInfo")
+	@GetMapping("/member/info")
 	public  Map<String, Object> memberInfo(HttpSession session, HttpServletRequest request) throws ParseException {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -172,8 +168,9 @@ public class MypageController {
 		map.put("member", member);
 		return map;
 	}
+
 	
-	@PostMapping("/updateInfo")
+	@PostMapping("/member/info/post")
 	public ResponseEntity<Object> updateMember(@RequestBody Member member) {
 		System.out.println("update member");
 		try {
@@ -184,7 +181,7 @@ public class MypageController {
 
 	}
 	
-	@PostMapping("/updatePhone")
+	@PostMapping("/phone/post")
 	public int updatePhone(@RequestBody String json, HttpSession session, HttpServletRequest request) throws ParseException {
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
@@ -197,7 +194,7 @@ public class MypageController {
 		return res;
 	}
 	
-	@PostMapping("/updatePwd")
+	@PostMapping("/pwd/post")
 	public int updatePwd(@RequestBody String json, HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
@@ -206,15 +203,20 @@ public class MypageController {
 		String pwd = json.toString();
 		loginUser.setPwd(pwd);
 		int res = service.updatePwd(loginUser);
-		System.out.println("비번변경:" + res);
 		return res;
 	}
 	
-	
+	@PostMapping("/withdrawal")
+	public int withdraw(@RequestBody String id, HttpSession session) {
+		int res = service.deleteMember(id);
+		session.invalidate();
+		return res;
+	}
+
 ///////주소	
 	
-	@GetMapping("/myAddress")
-	public List<Address> address(HttpSession session, HttpServletRequest request){
+	@GetMapping("/address-list")
+	public List<Address> address(Model model, HttpSession session, HttpServletRequest request){
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
 		Member loginUser = service.selectMemberById(info.getId());
@@ -223,21 +225,8 @@ public class MypageController {
 		return list;
 	}
 	
-	//string 타입은 페이지 열어주는 역할만 함
-	@RequestMapping("/shipping_address")
-	public ModelAndView model(HttpSession session, HttpServletRequest request) {
-		ModelAndView view = new ModelAndView();
-		view.setViewName("/mypage/shipping_address");
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member loginUser = service.selectMemberById(info.getId());
-		
-		List<Address> list = service.myAddress(loginUser.getId());
-		view.addObject("list", list);
-		return view;
-	}
 	
-	@PostMapping("/addAddress")
+	@PostMapping("/address/post")
 	public ResponseEntity<Object> addAdress(@RequestBody Address address) {
 		try {
 			return ResponseEntity.ok(service.insertAddress(address));
@@ -246,7 +235,7 @@ public class MypageController {
 		}
 	}
 	
-	@PostMapping("/updateMyAddress")
+	@PostMapping("/member/adddress/post")
 	public int updateMyAddress(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
@@ -263,13 +252,13 @@ public class MypageController {
 		return res;
 	}
 	
-	@GetMapping("/addressInfo/{id}")
+	@GetMapping("/address/{id}")
 	public ResponseEntity<Object> addr(@PathVariable String id) {
 		return ResponseEntity.ok(service.getAddress(id));
 
 	}
 	
-	@PostMapping("/updateShippingAddress/{id}")
+	@PostMapping("/address/post/{id}")
 	public ResponseEntity<Object> updateShipping(@PathVariable String id, @RequestBody Map<String, Object> map) {
 		try {
 			Address add = service.getAddress(id);
@@ -287,8 +276,8 @@ public class MypageController {
 		}
 	}
 	
-	@GetMapping("/deleteShippingAddress/{id}")
-	public ResponseEntity<Object> updateShipping(@PathVariable String id) {
+	@GetMapping("/address/get/{id}")
+	public ResponseEntity<Object> deleteShipping(@PathVariable String id) {
 		return ResponseEntity.ok(service.deleteShippingAddress(id));
 	}
 	

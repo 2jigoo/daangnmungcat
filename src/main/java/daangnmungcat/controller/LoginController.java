@@ -36,7 +36,7 @@ public class LoginController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login(HttpSession session) {
-		session.removeAttribute("loginUser");
+		//session.removeAttribute("loginUser");
 		return "/login";
 	}
 	
@@ -59,6 +59,8 @@ public class LoginController {
 				System.out.println("authinfo:" + authInfo);
 //				session.setAttribute("loginUser", member);
 				return "redirect:/";
+			}else if(res == null) {
+				return null;
 			}
 		}catch (Exception e) {
 			e.printStackTrace(); // 에러 발생시 확인

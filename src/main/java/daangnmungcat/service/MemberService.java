@@ -19,6 +19,7 @@ public interface MemberService {
 	List<Dongne1> Dongne1List();
 	List<Dongne2> Dongne2List(@Param("dongne1Id")int dongne1);
 	
+	int deleteMember(String id);
 	int registerMember(Member member);
 	int idCheck(String id);
 	int emailCheck(String email);
@@ -28,8 +29,8 @@ public interface MemberService {
 	int updateProfileText(Member member);
 	int updatePhone(Member member);
 	int updatePwd(Member member);
-	
 	int updateInfo(Member member);
+	
 	
 	//휴대폰인증
 	void certifiedPhoneNumber(String phoneNumber, String cerNum);
@@ -43,5 +44,6 @@ public interface MemberService {
 	Address getAddress(String id);
 	int updateShippingAddress(Address address);
 	int deleteShippingAddress(String id);
+	
 
 }
