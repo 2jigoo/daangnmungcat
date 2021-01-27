@@ -19,7 +19,7 @@ public class SmsController {
 	@Autowired
 	private MemberService service;
 
-	@GetMapping("/sendSMS/{phoneNumber}/")
+	@GetMapping("/send-sms/{phoneNumber}")
 	public String sendNum(@PathVariable String phoneNumber) {
 		Random rand = new Random();
 		String numStr = "";

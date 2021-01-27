@@ -67,6 +67,9 @@ function sendMessage(event) {
 	event.preventDefault();
 	
     var messageContent = messageInput.value.trim();
+    var customFile = $('#customFile').val();
+    
+    if(messageContent || customFile)
     var chatMessage = {
             chat: {id: chatId},
             member: {id: memberId, nickname: memberNickname},
@@ -74,7 +77,7 @@ function sendMessage(event) {
             regdate: dayjs().format("YYYY-MM-DD hh:mm:ss")
         };
     
-    if ($('#customFile').val() != "") {
+    if (customFile != "") {
     	var form = $('#messageForm')[0];
     	var form_data = new FormData(form);
     	
@@ -97,7 +100,6 @@ function sendImage(form_data, chatMessage) {
 		timeout: 600000,
 		success: function(data) {
 			chatMessage.image = data;
-			console.log(chatMessage);
 			sendChatMessage(chatMessage);
 		},
 		error: function(error) {
@@ -108,7 +110,7 @@ function sendImage(form_data, chatMessage) {
 }
 
 function sendChatMessage(chatMessage) {
-	if(messageContent && stompClient) {
+	if(stompClient) {
         stompClient.send('/app/chat/' + chatId + '.sendMessage', {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
@@ -204,14 +206,4 @@ function onMessageReceived(payload) {
     messageArea.scrollTop = messageArea.scrollHeight;
     
     readChat();
-}
-
-
-function getAvatarColor(messageSender) {
-    var hash = 0;
-    for (var i = 0; i < messageSender.length; i++) {
-        hash = 31 * hash + messageSender.charCodeAt(i);
-    }
-    var index = Math.abs(hash % colors.length);
-    return colors[index];
 }

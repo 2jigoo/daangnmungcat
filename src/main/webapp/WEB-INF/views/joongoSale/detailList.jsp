@@ -383,10 +383,10 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 	<a id="section_profile_link" href="#">
 		<div>
 			<div>
-				${list.member.grade } ${list.member.profilePic}
+				${list.member.grade } 
 			</div>
 			<div id="section_profile_img">
-				<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+						<img alt="프로필" src="<%=request.getContextPath() %>/resources/${list.member.profilePic}">
 			</div>
 			<div id="section_profile_left">
 				<div id="nickname" >${list.member.id}</div>
@@ -431,7 +431,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 					<img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
 				</c:when>
 			</c:choose>
-			<a href="<%=request.getContextPath()%>/goToChat?id=${list.id}">
+			<a href="<%=request.getContextPath()%>/go-to-chat?id=${list.id}">
 				<button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
 			</a>
 		</div>

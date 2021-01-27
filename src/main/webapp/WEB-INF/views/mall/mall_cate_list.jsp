@@ -4,6 +4,15 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
+$(function(){
+	$(".mall_cate_list .delete_btn").click(function(){
+		if (confirm("정말 삭제하시겠습니까??") == true){
+		} else{
+		    return false;
+		}
+	})
+	
+})
 </script>
 
 
@@ -18,7 +27,7 @@
 					<p>${list.name}</p>
 					<div>
 						<a href="<%=request.getContextPath()%>/mall/cate/update?cateName=멍&id=${list.id}">수정</a>
-						<a href="#">삭제</a>
+						<a href="<%=request.getContextPath()%>/mall/cate/delete?cateName=멍&id=${list.id}" class="delete_btn">삭제</a>
 					</div>
 				</li>
 			</c:forEach>
@@ -32,8 +41,8 @@
 				<li>
 					<p>${list.name}</p>
 					<div>
-						<a href="<%=request.getContextPath()%>/mall/cate/update?cateName=멍&id=${list.id}">수정</a>
-						<a href="#">삭제</a>
+						<a href="<%=request.getContextPath()%>/mall/cate/update?cateName=냥&id=${list.id}">수정</a>
+						<a href="<%=request.getContextPath()%>/mall/cate/delete?cateName=냥&id=${list.id}" class="delete_btn">삭제</a>
 					</div>
 				</li>
 			</c:forEach>

@@ -72,7 +72,6 @@
 </resultMap>
 
 
-
 <select id="selectJoongoByAll" resultMap="saleResult">
 	<include refid="selectSQL"/>
 </select>
@@ -148,10 +147,12 @@ SELECT count(a.id)
 
 
 <insert id="insertJoongoSale">
+	<selectKey keyProperty="id" resultType="int" order="BEFORE">
+		select sale_seq.nextval from dual
+	</selectKey>
 	INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
-	values(sale_seq.nextval, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
+	values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
 </insert>
-
 
 
 <select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">

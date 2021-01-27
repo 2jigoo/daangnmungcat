@@ -16,4 +16,6 @@ public interface MallCateService {
 	int insertMallCate(String cateName, MallCate mallCate);
 	
 	int updateMallCate(String cateName, MallCate mallCate);
+	
+	int deleteMallCate(String cateName, int id);
 }

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt "%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <html>
@@ -15,8 +15,10 @@
 	
 	<title>당근멍캣</title>
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
-	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/test_page.css" />
+	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/chat_room.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
+	<script src="<c:url value="/resources/js/jquery.form.min.js" />" type="text/javascript" ></script>
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 	<script>
@@ -70,14 +72,14 @@
 		<c:if test="${loginUser eq null}">
 		<ul class="h_util">
 			<li><a href="<c:url value="/login" />">로그인</a></li>
-			<li><a href="<c:url value="/contract" />">회원가입</a></li>
+			<li><a href="<c:url value="/sign/contract" />">회원가입</a></li>
 			<li><a href="#">장바구니</a></li>
 		</ul>
 		</c:if>
 		<c:if test="${loginUser ne null}">
 			<ul class="h_util">
 			<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
-			<li><a href="<c:url value="/mypage" />">마이페이지</a></li>
+			<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 			<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 			<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
 			</ul>

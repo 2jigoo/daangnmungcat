@@ -17,18 +17,7 @@ $(document).ready(function(){
 	var dongne1Id;
 	var dongne2Id;
 	
-	console.log('인증상태:' + $('#certi').val());
-
- 	$.get(contextPath +"/myProfilePic", function(json){
-		console.log(contextPath + "/resources/" +  json.path);
-		if(json.path != null){
-			$('#myPic').prop('src', contextPath +  "/resources/" + json.path);
-		}else {
-			console.log('널')
-		}
-	});
- 	
- 	$.get(contextPath+"/dongne1", function(json){
+	$.get(contextPath+"/dongne1", function(json){
 		var datalength = json.length; 
 		if(datalength >= 1){
 			var sCont = "";
@@ -39,8 +28,13 @@ $(document).ready(function(){
 		}
 	});
 	
-	$.get(contextPath +"/memberInfo", function(member){
-		console.log(member)
+	console.log('인증상태:' + $('#certi').val());
+
+ 	$.get(contextPath +"/member/pic", function(json){
+		$('#myPic').prop('src', contextPath +  "/resources/" + json.path);
+	});
+	
+	$.get(contextPath +"/member/info", function(member){
 		$('#profile_text').text(member.member.profileText);
 		$('#profile_nick').text(member.member.nickname);
 		
@@ -124,7 +118,7 @@ $(document).ready(function(){
             
         	if (confirm("프로필 사진을 변경하시겠습니까?") == true){
             	$.ajax({
-            		url: contextPath + "/uploadProfile",
+            		url: contextPath + "/profile/post",
             		type: "post",
             		enctype: 'multipart/form-data',
             		data: formData,
@@ -132,7 +126,9 @@ $(document).ready(function(){
             		contentType: false, //multipart-form-data로 전송
             		cache: false,
             		success: function(res) {
-            			console.log('변경 완료');
+            			if(res == 1){
+            				alert('프로필 사진이 변경되었습니다.')
+            			}
             		},
             		error: function(request,status,error){
             			alert('에러' + request.status+request.responseText+error);
@@ -146,8 +142,8 @@ $(document).ready(function(){
 	//프로필 사진 삭제 -> default로
 	$('#img_delete').on("click", function(){
 		if (confirm("프로필 사진을 삭제하시겠습니까?") == true){
-			$.get(contextPath +"/deleteProfile", function(json){
-				if(json == 1){
+			$.get(contextPath +"/profile/get", function(res){
+				if(res == 1){
 					location.reload(true);
 				}
 			});
@@ -162,7 +158,7 @@ $(document).ready(function(){
 		console.log(text);
 		if (confirm("프로필 소개를 변경하시겠습니까?") == true){
 			$.ajax({
-				url: contextPath + "/updateProfileText",
+				url: contextPath + "/profile-text/post",
 				type: "POST",
 				contentType:"application/json; charset=utf-8",
 				dataType: "json",
@@ -228,7 +224,7 @@ $(document).ready(function(){
 		console.log(member);
 		
 		$.ajax({
-			url: contextPath + "/updateInfo",
+			url: contextPath + "/member/info/post",
 			type: "POST",
 			contentType:"application/json; charset=utf-8",
 			dataType: "json",
@@ -254,8 +250,8 @@ $(document).ready(function(){
 		   	$('font[name=email_check]').html("이메일 형식에 맞게 작성해주세요.");
 		   	$('input[name=email]').attr("style","border:2px solid red");
 		}else {
-			save = contextPath + "/emailCheck/"+ email + "/";
-			$.get(save, function(res){
+			//save = contextPath + "/emailCheck/"+ email + "/";
+			/* $.get(save, function(res){
 				if(res == 0){
 					$('font[name=email_check]').text('사용가능한 이메일입니다.').attr("style","color:black");
 					$('input[name=email]').prop("status", "1");
@@ -270,7 +266,31 @@ $(document).ready(function(){
 					}
 				}
 				email_status = document.getElementById('email').status;
+			}); */
+
+			$.ajax({
+				url: contextPath + "/email/post",
+				type: "POST",
+				contentType:"application/json; charset=utf-8",
+				dataType: "json",
+				cache : false,
+				data : JSON.stringify(email),
+				success: function(res) {
+					if(res == 0){
+						$('font[name=email_check]').text('사용가능한 이메일입니다.').attr("style","color:black");
+						$('input[name=email]').prop("status", "1");
+					}else{
+						$('font[name=email_check]').text('이미 사용중인 이메일입니다.').attr("style","color:red");
+						$('input[name=email]').attr("style","border:2px solid red");
+						
+						$('input[name=email]').prop("status", "0");
+					}
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
 			});
+			console.log(email_status);
 			
 			$('font[name=email_check]').text('');
 			$('input[name=email]').attr("style","border:1px solid black");
@@ -295,11 +315,7 @@ $(document).ready(function(){
         var certiNum = $('#certiNum').val();
         console.log('체크클릭했을때 인증상태:'+$("#certi").val())
         
-        $.get(contextPath + "/phoneCheck/" + number + "/", function(res){
-    		if(res == 1){
-    			alert('이미 사용중인 폰번호입니다');
-    			return;
-    		}else {
+        $.get(contextPath + "/phone/post/" + number, function(res){
     			alert("인증번호가 발송되었습니다.");
     			
     			$("#certiNum").attr("type", "text");
@@ -307,7 +323,7 @@ $(document).ready(function(){
     	        
     	        $.ajax({
     	        	type:'get',
-    	        	url: contextPath + "/sendSMS/" + number + "/",
+    	        	url: contextPath + "/send-sms/" + number ,
     	       		success: function(json){
     	       			console.log(json);
     	       			$('#certiSubmit').click(function(){
@@ -319,7 +335,7 @@ $(document).ready(function(){
     	       					var phone = $('#phone').val();
     	       					
     	       					$.ajax({
-    	       						url: contextPath + "/updatePhone",
+    	       						url: contextPath + "/phone/post",
     	       						type: "POST",
     	       						contentType:"application/json; charset=utf-8",
     	       						dataType: "json",
@@ -345,7 +361,6 @@ $(document).ready(function(){
     	       			console.log('에러');
     	       		}
     	        })
-    		}
     		
         });
         
@@ -385,7 +400,6 @@ function execPostCode(){
     });
 }
 </script>
-
 <div class="wrapper">
 
 	<h2 id="subTitle">회원정보 변경</h2>

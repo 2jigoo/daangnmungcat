@@ -20,6 +20,11 @@ textarea {
 	height: 200px;
 }
 
+#preview1 > img {
+	width: 160px;
+	height: 160px;
+}
+
 </style>
 <script type="text/javascript">
 $(function(){
@@ -37,26 +42,27 @@ $(function(){
 			for(i=0; i<datalength; i++){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
-			$("select[name=dongne1]").append(sCont);
+			$("select[name='dongne1.id']").append(sCont);
 			//$('#dongne1').val(dong).attr("selected","selected");
 		}
 	});
 	
-	$("select[name=dongne1]").change(function(){
-		$("select[name=dongne2]").find('option').remove();
-		var dong1 = $("select[name=dongne1]").val();
+	$("select[name='dongne1.id']").change(function(){
+		$("select[name='dongne2.id']").find('option').remove();
+		var dong1 = $("select[name='dongne1.id']").val();
 		$.get(contextPath+"/dongne2/"+dong1, function(json){
 			var datalength = json.length; 
 			var sCont = "";
 			for(i=0; i<datalength; i++){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
-			$("select[name=dongne2]").append(sCont);	
+			$("select[name='dongne2.id']").append(sCont);	
 		});
 	});
 	
-	
-	$("input:radio[name=category]").change(function(){
+	/* 
+		//라디오 버튼으로 카테고리 
+		$("input:radio[name=category]").change(function(){
 			if($("input:radio[name=category]:checked").val() == '1'){
 				//alert("강아지 선택");
 				$('#catCate').attr('value','n');
@@ -67,10 +73,10 @@ $(function(){
 			}else{
 				//alert("모두 선택");
 			}
-	});
+	}); */
 	
 	
-	$(".my_location").on("click", function(){z
+	$(".my_location").on("click", function(){
 		navigator.geolocation.getCurrentPosition(success, fail)
 	    
 	    return false;
@@ -87,128 +93,78 @@ $(function(){
 	            $('#priceDiv').fadeIn('fast');
 	        }
 	    });
-	
 	 
-	 $('#insertList').on("click", function(json){
+	 $('#insertList').on("click", function(e){
+		
 		var price = $('#price').val();	
 		 var num = /^[0-9]*$/;
 		 
 		 if($('#title').val() == ""){
 			 alert('제목을 입력해주세요.');
-			 return; 
+			 return false; 
 		 }else if($('#content').val() == ""){
 			 alert('내용을 입력해주세요.');
-			 return;
+			 return false; 
 		 }else if(num.test(price) == false){
 			 alert('가격은 숫자만 입력 가능합니다.');
-			 return;
+			 return false; 
 		 }else if($('#price').val() == ""){
 			 alert('가격을 입력해주세요.');
-		 	return;
+			 return false; 
 		 }else if($('#dongne1').val() == "0"){
 			alert('지역을 선택하세요.');
-			return;
+			return false; 
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
-			return;
+			return false; 
 		}
-
 		 
-		 var newlist = {
-			member : {
-				id : $('#memId').val()
-			},
-			dogCate : $('#dogCate').val(),
-			catCate : $('#catCate').val(),
-			title : $('#title').val(),
-			content : $('#content').val(),
-			price : $('#price').val(),			
-			dongne1: {
-		 		id : $('#dongne1').val()
-		 	},
-		 	dongne2: {
-		 		id : $('#dongne2').val()
-		 	}
-		};
-		 
-		 	//alert(JSON.stringify(newlist));
-		 	
-		 	
+	 });
+	 
+		$('#imgInput').on("change", handleImgs);	
+		
+		function insertBoard(){
+			var formData = new FormData($("#boardForm")[0]);
+			
 			$.ajax({
-				url: contextPath + "/joongoSale/insert",
-				type: "POST",
-				contentType:"application/json; charset=UTF-8",
-				dataType: "json",
-				cache : false,
-				data : JSON.stringify(newlist),
-				beforeSend : function(xhr)
-	            {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-	            },
-				success: function() {
-					alert('완료되었습니다.');
-					window.location.replace(contextPath+"/joongo_list");
+				type : 'post',
+				url : contextPath + "/test/insert",
+				data : formData,
+				processData : false,
+				contentType : false,
+				success : function(html) {
+					alert("파일 업로드하였습니다.");
+					console.log(html);
 				},
-				error: function(request,status,error){
-					alert('에러!!!!' + request.status+request.responseText+error);
+				error : function(error) {
+					alert("파일 업로드에 실패하였습니다.");
+					console.log(error);
+					console.log(error.status);
 				}
 			});
-			console.log(contextPath+"/insert");	
-	 
-	});
-	 
-		//자바스크립트에서 DOM을 가져오기(문서객체모델 가져오기) -> 한번 다 읽고나서 
-		var form = document.forms[0]; //젤 첫번째 form을 dom으로 받겠다.
-		
-		var addFileBtn = document.getElementById("addFileBtn");
-		var delFileBtn = document.getElementById("delFileBtn");
-		var fileArea = document.getElementById("fileArea");
-		var cnt = 1;
-		
-		
-		//업로드input 미리만들지 않고 필요한 만큼 증가
-		$("#addFileBtn").on("click", function() {
-			if (cnt < 10) {
-				cnt++;
-				var element = document.createElement("input");
-				element.type = "file";
-				element.name = "upfile" + cnt;
-				element.id = "upfile" + cnt;
-				var element2 = document.createElement("img");
-				element2.id = "productImg"+cnt;
-				var element3 = document.createElement('div');
-				element3.setAttribute("id", "preview"+cnt);
-
-				fileArea.appendChild(element);
-				fileArea.appendChild(element2);
-				fileArea.appendChild(element3);
-				fileArea.appendChild(document.createElement("br"));
-				
-			} else {
-				alert("파일은 10개까지 추가 가능합니다.");
-			}
- 
-		});
-		
-		$("#delFileBtn").on("click", function() {
-			if (cnt > 1) {
-				cnt--;
-				var inputs = fileArea.getElementsByTagName('input');
-				var imgs = fileArea.getElementsByTagName('img');
-				var divs = fileArea.getElementsByTagName('div');
-				var brArr = fileArea.getElementsByTagName('br');
-				fileArea.removeChild(brArr[brArr.length-1]);
-				fileArea.removeChild(imgs[imgs.length-1]);
-				fileArea.removeChild(divs[divs.length-1]);
-				fileArea.removeChild(inputs[inputs.length-1]);
-			} else {
-				alert("상품 사진 최소 1개는 업로드 필요합니다.");
-			}
-
-		});
-
-		
+		}
 });
+
+function handleImgs(e) {
+	var files = e.target.files;
+	var filesArr = Array.prototype.slice.call(files);
+	var sel_files = [];
+	
+	filesArr.forEach(function(f) {
+		if(!f.type.match("image.*")){
+			alert("확장자는 이미지 확장자만 가능합니다.");
+			return;
+		}
+		sel_files.push(f);
+		var reader = new FileReader();
+		reader.onload = function(e){
+			var img_html = "<img src=\"" + e.target.result + "\" />";
+			$('#preview1').append(img_html);
+		}
+		reader.readAsDataURL(f);
+	});
+	
+}
 
 
 </script>
@@ -216,7 +172,8 @@ $(function(){
 	<h2 id="subTitle">글쓰기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-		<form action="/insert" method="POST">
+<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td width="300px;">아이디</td>
@@ -231,10 +188,10 @@ $(function(){
 				<td>동네</td>
 				<td>
 					<div id="add_location" class="s-inner">
-						<select name="dongne1" id="dongne1">
+						<select name="dongne1.id" id="dongne1">
 							<option value="0">지역을 선택하세요</option>
 						</select> 
-						<select name="dongne2" id="dongne2">
+						<select name="dongne2.id" id="dongne2">
 							<option value="0">동네를 선택하세요</option>
 						</select>
 						<div class="list_location">
@@ -247,13 +204,10 @@ $(function(){
 			</tr>
 			
 			<tr>
-				<td>사진 추가 / 제거 <br>
-					<input type="button" value="파일추가" id="addFileBtn">
-					<input type="button" value="파일제거" id="delFileBtn">
-				</td>
+				<td>사진</td>
 				<td>
 					<div id="fileArea">
-						<input type="file" id="upfile1" name="upfile1" onchange="imageChange()">
+						<input multiple="multiple" type="file" name="file" id="imgInput" />
 						<img id="productImg1">
 						<div id="preview1"></div>
 					</div>
@@ -269,11 +223,11 @@ $(function(){
 						<option value="n">고양이 카테고리 </option>
 						<option value="y"> 모두 포함 </option>
 					</select> -->
-					<input type="radio" name=category id="category" value="1" checked="checked">강아지 카테고리
+					<input type="radio" name="category" id="category" value="1" checked="checked">강아지 카테고리
 					<input type="radio" name="category" id="category" value="2" style="margin-left: 15px;">고양이 카테고리
 					<input type="radio" name="category" id="category" value="3" style="margin-left: 15px;">모두 포함
-					<input type="hidden" name="catCate" value="y" id="catCate">
-					<input type="hidden" name="dogCate" value="y" id="dogCate">
+					<!-- <input type="hidden" name="catCate" value="y" id="catCate">
+					<input type="hidden" name="dogCate" value="y" id="dogCate"> -->
 				</td>
 			</tr>
 			<tr>
@@ -284,7 +238,7 @@ $(function(){
 				<td>가격</td>
 				<td>
 					<div id="priceDiv"><input type="text" name="price" id="price"></div>
-					<input type="checkbox" id="checkFree" name="price" value="0">무료나눔하기
+					<input type="checkbox" id="checkFree" value="0">무료나눔하기
 				</td>
 			<tr>
 			<tr>
@@ -305,7 +259,7 @@ $(function(){
 		 -->	
 		 	<tr>
 				<td colspan="2">
-					<input type="button" id="insertList" value="글 등록하기">
+					<input type="submit" id="insertList" value="글 등록하기">
 				</td>
 			</tr>
 		</table>

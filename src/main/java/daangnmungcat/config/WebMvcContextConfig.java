@@ -12,6 +12,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -68,17 +69,18 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("/test_page").setViewName("chat/test_page");
 		registry.addViewController("/test").setViewName("joongoSale/addList");
 		
-		registry.addViewController("/idCheck").setViewName("sign/idCheck");	
-		registry.addViewController("/contract").setViewName("sign/contract");
-		registry.addViewController("/welcome").setViewName("sign/welcome");
+		registry.addViewController("sign/id_check").setViewName("sign/id_check");	
+		registry.addViewController("sign/contract").setViewName("sign/contract");
+		registry.addViewController("sign/welcome").setViewName("sign/welcome");
 		
-		registry.addViewController("/mypage").setViewName("mypage/mypage_main");
-		registry.addViewController("/mypage_pwd").setViewName("mypage/mypage_pwd");
-		registry.addViewController("/member_info").setViewName("mypage/member_info");
-		registry.addViewController("/member_pwd").setViewName("mypage/member_pwd");
-		registry.addViewController("/shipping_address").setViewName("mypage/shipping_address");
-		registry.addViewController("/shipping_popup").setViewName("mypage/shipping_popup");
-		registry.addViewController("/shipping_update").setViewName("mypage/shipping_update");
+		registry.addViewController("mypage/mypage_main").setViewName("mypage/mypage_main");
+		registry.addViewController("mypage/pwd_confirm").setViewName("mypage/pwd_confirm");
+		registry.addViewController("/mypage/mypage_withdraw").setViewName("/mypage/mypage_withdraw");
+		registry.addViewController("mypage/mypage_info").setViewName("mypage/mypage_info");
+		registry.addViewController("mypage/mypage_pwd").setViewName("mypage/mypage_pwd");
+		registry.addViewController("mypage/shipping_main").setViewName("mypage/shipping_main");
+		registry.addViewController("mypage/shipping_add").setViewName("mypage/shipping_add");
+		registry.addViewController("mypage/shipping_update").setViewName("mypage/shipping_update");
 		
 	}
 	
@@ -95,7 +97,8 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 	//파일업로드
 	@Bean
 	public MultipartResolver multipartResolver() {
-	    StandardServletMultipartResolver resolver = new StandardServletMultipartResolver();
+		CommonsMultipartResolver resolver = new CommonsMultipartResolver();
+		resolver.setDefaultEncoding("UTF-8");
 	    return resolver;
 	}
 	
@@ -110,5 +113,4 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper));
 	}
 	
-
 }

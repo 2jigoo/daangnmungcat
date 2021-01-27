@@ -1,15 +1,28 @@
   
 package daangnmungcat.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+<<<<<<< HEAD
 import daangnmungcat.dto.Criteria;
+=======
+import daangnmungcat.dto.FileForm;
+>>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat
 import daangnmungcat.dto.Sale;
+<<<<<<< HEAD
+=======
+import daangnmungcat.mapper.FileFormMapper;
+>>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.service.JoongoSaleService;
@@ -23,7 +36,10 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	private JoongoSaleMapper mapper;
 	
 	@Autowired
-	private JoongoListMapper lMapper;
+	private JoongoListMapper listMapper;
+	
+	private FileFormMapper FileMapper;
+	
 	
 	@Override
 	public List<Sale> getLists() {
@@ -52,9 +68,16 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 
 
 	@Override
+	public int insertJoongoSale(Sale sale) throws Exception {
+		listMapper.insertJoongoSale(sale);
+		return 1;
+	}
+	
+	
+	@Override
 	public List<Sale> getHeartedList(String memberId, Criteria criteria) {
-		List<Sale> list = lMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
+		List<Sale> list = listMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
 		return list;
 	}
-
+	
 }

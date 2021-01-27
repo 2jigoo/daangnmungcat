@@ -12,7 +12,7 @@ import daangnmungcat.dto.Member;
 public interface MemberMapper {
 	List<Member> selectMemberByAll();
 	Member selectMemberById(String id);
-	
+	int deleteMember(String id);
 	int insertMember(Member member);
 	
 	Integer checkPwd(@Param("id")String id, @Param("pwd")String pwd);
@@ -41,4 +41,5 @@ public interface MemberMapper {
 	int updateMyAddress(Member member);
 	int updateAddress(Address address);
 	int deleteAddress(String id);
+	
 }

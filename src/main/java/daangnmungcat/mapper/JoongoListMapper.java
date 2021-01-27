@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Sale;
 
 public interface JoongoListMapper {
@@ -27,4 +28,5 @@ public interface JoongoListMapper {
 	int insertJoongoSale(Sale sale);
 	
 	List<Sale> selectHeartedJoongoByMemberIdWithPaging(@Param("memberId") String memberId, @Param("cri") Criteria criteria);
+//	int insertFileForm(FileForm FileForm);
 }
