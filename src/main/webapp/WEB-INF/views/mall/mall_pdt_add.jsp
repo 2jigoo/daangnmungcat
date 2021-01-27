@@ -137,9 +137,9 @@ $(function(){
 						<p>배송비 종류</p>
 						<div>
 							<select name="deliveryKind">
-								<option value="조건부 무료배송">조건부 무료배송</option>
-								<option value="무료배송">무료배송</option>
-								<option value="유료배송">유료배송</option>
+								<c:forEach items="${deliveryList}" var="deliveryList">
+									<option value="${deliveryList.name}">${deliveryList.name}</option>
+								</c:forEach>
 							</select>
 						</div>
 					</li>

@@ -9,6 +9,7 @@ DROP SEQUENCE mall_pdt_seq;
 DROP SEQUENCE mall_dog_cate_seq;
 DROP SEQUENCE mall_cat_cate_seq;
 DROP SEQUENCE ORDER_address_seq;
+DROP SEQUENCE mall_delivery_seq;
 
 
 
@@ -71,6 +72,11 @@ INCREMENT BY 1
 MINVALUE 1;
 
 CREATE SEQUENCE ORDER_address_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE mall_delivery_seq
 START WITH 1
 INCREMENT BY 1
 MINVALUE 1;
