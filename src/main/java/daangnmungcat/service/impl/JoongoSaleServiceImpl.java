@@ -3,14 +3,10 @@ package daangnmungcat.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,14 +75,15 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		}
 		
 		//UUID uuid = UUID.randomUUID();
-		int num = ListMapper.nextID();
+//		int num = ListMapper.nextID() -1;
 		int cnt = 1;
 		// 상세 이미지 추가
 			for (MultipartFile multipartFile : fileList) {
 				
 				String uploadFileName = multipartFile.getOriginalFilename();
 				//글 id 붙이기
-				uploadFileName = num + "_" + cnt + "_" + uploadFileName;
+//				uploadFileName = num + "_" + cnt + "_" + uploadFileName;
+				uploadFileName = cnt + "_" + uploadFileName;
 				File saveFile = new File(uploadFolder, uploadFileName);
 				//System.out.println("uploadFileName >> " + uploadFileName);
 				//파일 db저장 

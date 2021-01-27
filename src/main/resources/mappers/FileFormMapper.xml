@@ -23,4 +23,5 @@
 	<include refid="selectFileSQL"></include>
 	where sale_id = #{id}
 </select>
+
 </mapper>
