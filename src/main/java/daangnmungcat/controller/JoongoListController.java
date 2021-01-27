@@ -158,6 +158,8 @@ public class JoongoListController {
 
 	@PostMapping("/joongoSale/insert")
 	public String testtest(HttpSession session,HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] file) throws Exception {
+		request.setCharacterEncoding("UTF-8");
+		
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		switch (category) {
 		case 1:

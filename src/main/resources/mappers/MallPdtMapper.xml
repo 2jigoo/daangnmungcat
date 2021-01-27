@@ -3,27 +3,12 @@
 <mapper namespace="daangnmungcat.mapper.MallPdtMapper">
 
 <sql id="selectSql">
-	select ID, 
-		DOG_CATE, 
-		CAT_CATE, 
-		NAME, 
-		PRICE, 
-		CONTENT, 
-		SALE_YN, 
-		STOCK, 
-		IMAGE1, 
-		IMAGE2, 
-		IMAGE3, 
-		DELIVERY_KIND, 
-		DELIVERY_CONDITION,
-		DELIVERY_PRICE, 
-		REGDATE 
-	from MALL_PDT
+	select mp.ID, DOG_CATE AS DOG_ID, mdc.NAME AS DOG_NAME, CAT_CATE AS CAT_ID, mcc.NAME AS CAT_NAME, mp.NAME, PRICE, CONTENT, SALE_YN, STOCK, IMAGE1, IMAGE2, IMAGE3, DELIVERY_KIND, DELIVERY_CONDITION, DELIVERY_PRICE, REGDATE from MALL_PDT mp LEFT OUTER JOIN MALL_DOG_CATE mdc ON mp.DOG_CATE = mdc.ID LEFT OUTER JOIN MALL_CAT_CATE mcc ON mp.CAT_CATE = mcc.ID
 </sql>
 <sql id="whereSql">
 	<where>
 		<if test="id != null">
-			id = #{id}
+			mp.id = #{id}
 		</if>
 	</where>
 </sql>
@@ -42,9 +27,12 @@
 		<result column="image1" property="image1"></result>
 		<result column="image2" property="image2"></result>
 		<result column="image3" property="image3"></result>
-		<result column="delevery_kind" property="deliveryKind"></result>
-		<result column="delevery_condition" property="deliveryCondition"></result>
-		<result column="delevery_price" property="deliveryPrice"></result>
+		<result column="delivery_kind" property="deliveryKind"></result>
+		<result column="delivery_condition" property="deliveryCondition"></result>
+		<result column="delivery_price" property="deliveryPrice"></result>
+		
+		<association property="dogCate" columnPrefix="DOG_" resultMap="cateResult" />
+		<association property="catCate" columnPrefix="CAT_" resultMap="cateResult" />
 	</resultMap>
 	
 	<resultMap type="MallCate" id="cateResult">
@@ -73,32 +61,90 @@
 	
 	<select id="selectProductByAll" resultMap="pdtResult">
 		<include refid="selectSql"></include>
+		ORDER BY mp.ID
+	</select>
+	
+	<select id="selectProductByAllPage" resultMap="pdtResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		 ORDER BY a.rnum
 	</select>
 	
 	<select id="selectDogByAll"  resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		WHERE DOG_CATE IS NOT NULL
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" />  WHERE DOG_CATE != 1 AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		 ORDER BY a.rnum
 	</select>
 
 	<select id="selectCatByAll" resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		WHERE CAT_CATE IS NOT NULL
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> WHERE CAT_CATE != 1 AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		 ORDER BY a.rnum
 	</select>
 	
-	<select id="dogProductListByCate" parameterType="Int" resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		where dog_cate = #{dogCate.id}
+	<select id="dogProductListByCate" parameterType="map" resultMap="pdtResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> WHERE dog_cate = #{cateId} AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		 ORDER BY a.rnum
+		
 	</select>
 	
-	<select id="catProductListByCate" parameterType="Int" resultMap="pdtResult">
-		<include refid="selectSql"></include>
-		where cat_cate = #{catCate.id}
+	<select id="catProductListByCate" parameterType="map" resultMap="pdtResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (<include refid="selectSql" /> WHERE cat_cate = #{cateId} AND SALE_YN = 'Y' ORDER BY mp.ID desc) b) a
+		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		 ORDER BY a.rnum
 	</select>	
 	
 	<select id="getProductById" parameterType="Int" resultMap="pdtResult">
 		<include refid="selectSql"></include>	
 		<include refid="whereSql"></include>
 	</select>
+	
+	<update id="deleteDogCateProduct" parameterType="int">
+		UPDATE MALL_PDT SET DOG_CATE = 1 WHERE DOG_CATE = #{id}
+	</update>
+	
+	<update id="deleteCatCateProduct" parameterType="int">
+		UPDATE MALL_PDT SET DOG_CATE = 1 WHERE CAT_CATE = #{id}
+	</update>
+	
+	<delete id="deleteMallProduct" parameterType="int">
+		DELETE FROM MALL_PDT WHERE ID = #{id}
+	</delete>
+	
+	<select id="productCount" resultType="int">
+		SELECT count(id) FROM MALL_PDT
+	</select>
+	
+	<select id="productDogCount" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE DOG_CATE != 1 AND SALE_YN = 'Y'
+	</select>
+	
+	<select id="productDogCateCount" parameterType="int" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE DOG_CATE = #{cateId} AND SALE_YN = 'Y'
+	</select>
+	
+	<select id="productCatCount" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE CAT_CATE = #{cateId} AND SALE_YN = 'Y'
+	</select>
+	
+	<select id="productCatCateCount" parameterType="int" resultType="int">
+		SELECT count(id) FROM MALL_PDT WHERE CAT_CATE = #{cateId} AND SALE_YN = 'Y'
+	</select>
+	
+	<update id="updateMallProduct" parameterType="MallProduct">
+		UPDATE MALL_PDT SET DOG_CATE = #{dogCate.id}, CAT_CATE = #{catCate.id}, name = #{name}, PRICE = #{price}, CONTENT = #{content}, SALE_YN = #{saleYn}, STOCK = #{stock}, IMAGE1 = #{image1}, IMAGE2 = #{image2}, IMAGE3 = #{image3}, DELIVERY_KIND = #{deliveryKind}, DELIVERY_CONDITION = #{deliveryCondition}, DELIVERY_PRICE = #{deliveryPrice} WHERE ID = #{id}
+	</update>
 	
 
 </mapper>

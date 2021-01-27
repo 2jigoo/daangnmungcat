@@ -24,8 +24,10 @@ function re_check() {
 	console.log(reid);
 	var url = new URL(window.location.href);
 	var id = url.searchParams.get("id");
-	var pathname = url.pathname; // /daangnmungcat/idCheck
-	$.get(pathname+"/"+reid, function(json){
+	var pathname = url.pathname; // /daangnmungcat/sign/id_check
+	console.log(pathname)
+	var contextPath = "<%=request.getContextPath()%>";
+	$.get(contextPath + "/id-check/"+ reid, function(json){
 		console.log(json);
 		window.location.href = pathname + "?id=" + reid + "&status=" + json;
 	});

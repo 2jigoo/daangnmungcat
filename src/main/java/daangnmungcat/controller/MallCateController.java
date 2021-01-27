@@ -9,12 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.service.MallCateService;
+import daangnmungcat.service.MallPdtService;
 
 @Controller
 public class MallCateController {
@@ -22,10 +24,13 @@ public class MallCateController {
 	@Autowired
 	private MallCateService service;
 	
+	@Autowired
+	private MallPdtService pdtService;
+	
 	@GetMapping("/mall/cate/list")
 	public String listCate(Model model) {
-		List<MallCate> dogCate = service.selectByAllDogCate();
-		List<MallCate> catCate = service.selectByAllCatCate();
+		List<MallCate> dogCate = pdtService.dogCateList();
+		List<MallCate> catCate = pdtService.catCateList();
 		
 		model.addAttribute("dogCate", dogCate);
 		model.addAttribute("catCate", catCate);
@@ -62,5 +67,11 @@ public class MallCateController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
+	}
+	
+	@GetMapping("/mall/cate/delete")
+	public String deleteCate(@RequestParam String cateName, @RequestParam int id) {
+		service.deleteMallCate(cateName, id);
+		return "redirect:/mall/cate/list";
 	}
 }

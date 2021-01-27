@@ -16,4 +16,7 @@ public interface MallCateMapper {
 	
 	int updateMallDogCate(MallCate dogCate);
 	int updateMallCatCate(MallCate catCate);
+	
+	int deleteMallDogCate(int id);
+	int deleteMallCatCate(int id);
 }

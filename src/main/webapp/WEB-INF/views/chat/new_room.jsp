@@ -32,7 +32,7 @@
 			
 			if(isCreated == false) {
 				$.ajax({
-					url: contextPath + "/chat/createChat",
+					url: contextPath + "/chat/room",
 					type: "post",
 					contentType:"application/json;charset=UTF-8",
 					data: JSON.stringify(sale),

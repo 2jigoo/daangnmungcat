@@ -39,6 +39,9 @@ dependencies {
    
    compile group: 'org.springframework', name: 'spring-websocket', version: "${version.spring}"
    compile group: 'org.springframework', name: 'spring-messaging', version: "${version.spring}"
+
+   compile group: 'commons-io', name: 'commons-io', version: '2.6'
+   compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
    
    //spring security 5.2.9없으니께 바꾸지말아주세유
    compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.4.1'

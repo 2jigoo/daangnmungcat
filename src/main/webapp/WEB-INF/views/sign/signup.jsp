@@ -93,7 +93,7 @@ $(document).ready(function(){
 		console.log(newMember);
 		
 		$.ajax({
-			url: contextPath + "/submit",
+			url: contextPath + "/sign-up",
 			type: "POST",
 			contentType:"application/json; charset=utf-8",
 			dataType: "json",
@@ -142,8 +142,9 @@ $(document).ready(function(){
 		   	$('font[name=email_check]').html("이메일 형식에 맞게 작성해주세요.");
 		   	$('input[name=email]').attr("style","border:2px solid red");
 		}else {
-			save = contextPath + "/emailCheck/"+ email + "/";
-			$.get(save, function(res){
+			save = contextPath + "/emailCheck/"+ email ;
+			
+		/* 	$.get(save, function(res){
 				if(res == 0){
 					$('font[name=email_check]').text('사용가능한 이메일입니다.').attr("style","color:black");
 					$('input[name=email]').prop("status", "1");
@@ -154,6 +155,29 @@ $(document).ready(function(){
 					$('input[name=email]').prop("status", "0");
 				}
 				email_status = document.getElementById('email').status;
+			}); */
+			
+			$.ajax({
+				url: contextPath + "/email/post",
+				type: "POST",
+				contentType:"application/json; charset=utf-8",
+				dataType: "json",
+				cache : false,
+				data : JSON.stringify(email),
+				success: function(res) {
+					if(res == 0){
+						$('font[name=email_check]').text('사용가능한 이메일입니다.').attr("style","color:black");
+						$('input[name=email]').prop("status", "1");
+					}else{
+						$('font[name=email_check]').text('이미 사용중인 이메일입니다.').attr("style","color:red");
+						$('input[name=email]').attr("style","border:2px solid red");
+						
+						$('input[name=email]').prop("status", "0");
+					}
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
 			});
 			console.log(email_status);
 			
@@ -179,7 +203,7 @@ $(document).ready(function(){
         	return;
         }
         
-        $.get(contextPath + "/phoneCheck/" + number + "/", function(res){
+        $.get(contextPath + "/phone/post/" + number, function(res){
     		if(res == 1){
     			alert('이미 사용중인 폰번호입니다');
     			return;
@@ -191,7 +215,7 @@ $(document).ready(function(){
     	        
     	        $.ajax({
     	        	type:'get',
-    	        	url: contextPath + "/sendSMS/" + number + "/",
+    	        	url: contextPath + "/send-sms/" + number,
     	       		success: function(json){
     	       			console.log(json);
     	       			$('#certiSubmit').click(function(){
@@ -217,46 +241,10 @@ $(document).ready(function(){
     	    });
     		
         });
-	
-	$('#test').on("click", function(){
-    	
-    	var contextPath = "<%=request.getContextPath()%>";
-        //var file = $('#uploadFile')[0];
-        var formData = new FormData();
-        var file = $("input[name='uploadFile']")[0].files;
-        for(var i=0; i<file.length; i++){
-           console.log(file[i]);
-           formData.append('uploadFile', file[i]);
-        }
-        
-        console.log('file >> ' + file);
-        
-        for(var pair of formData.entries()) {
-              console.log(pair[0]+ ', '+ pair[1]); 
-        }
-    	
-    	$.ajax({
-    		url: contextPath + "/uploadProfile",
-    		type: "post",
-    		enctype: 'multipart/form-data',
-    		data: formData,
-    		processData: false,
-    		contentType: false, //multipart-form-data로 전송
-    		cache: false,
-    		success: function(res) {
-    			console.log(res);
-    			alert('전송');
-    		},
-    		error: function(request,status,error){
-    			alert('에러' + request.status+request.responseText+error);
-    		}
-    	});
-    	
-    });
-        
-    		
     
 });
+
+
 function id_check() {
 	var contextPath = "<%=request.getContextPath()%>";
 	var reg = /^[A-Za-z0-9+]{4,20}$/; 
@@ -267,9 +255,9 @@ function id_check() {
 		alert("아이디는 4자리 이상의 영문자와 숫자만 사용가능합니다.");
 		return;
 	}
-	$.get(contextPath+"/idCheck/"+id, function(json){
+	$.get(contextPath+"/id-check/"+id, function(json){
 		console.log(json);
-		window.open(contextPath+"/idCheck?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open(contextPath+"/sign/id_check?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 }
 

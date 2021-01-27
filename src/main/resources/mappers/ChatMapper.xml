@@ -48,6 +48,12 @@
 		ORDER BY latest_date DESC
 	</select>
 	
+	<select id="selectAllChatsBySaleId" resultMap="chatRes">
+		<include refid="selectSQL" />
+		where sale_id = #{saleId}
+		ORDER BY latest_date DESC
+	</select>
+	
 	<select id="selectChatByChatId" resultMap="chatRes">
 		<include refid="selectSQL" />
 		where id = #{id}
