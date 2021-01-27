@@ -49,9 +49,5 @@ public class MallOrderController {
 //		System.out.println("총: "+ total + "/ 수량: "+ qtt + "/ 제품id" +  pdtId);
 //	}
 	
-	@GetMapping("/pdt/{id}")
-	public MallProduct getPdt(@PathVariable int id) {
-		MallProduct pdt = mService.getProductById(id);
-		return pdt;
-	}
+	
 }
