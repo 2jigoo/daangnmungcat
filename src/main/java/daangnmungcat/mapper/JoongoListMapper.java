@@ -27,4 +27,5 @@ public interface JoongoListMapper {
 	
 	int insertJoongoSale(Sale sale);
 //	int insertFileForm(FileForm FileForm);
+	int nextID();
 }

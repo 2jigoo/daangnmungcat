@@ -146,12 +146,15 @@ SELECT count(a.id)
 </select>
 
 
-<insert id="insertJoongoSale">
+<insert id="insertJoongoSale" parameterType="Sale">
 	<selectKey keyProperty="id" resultType="int" order="BEFORE">
-		select sale_seq.nextval from dual
+		SELECT sale_seq.nextval FROM DUAL
 	</selectKey>
 	INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
 	values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
 </insert>
 
+<select id="nextID" resultType="int">
+	SELECT MAX(id)+1 FROM JOONGO_SALE
+</select>
 </mapper>

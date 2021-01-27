@@ -42,7 +42,7 @@ public class JoongoSaleController {
 	@Autowired
 	private JoongoSaleMapper Smapper;
 
-	@RequestMapping(value = "detailList", method = RequestMethod.GET)
+	@RequestMapping(value = "joongoSale/detailList", method = RequestMethod.GET)
 	public String listById(@RequestParam int id, Model model, HttpSession session, Criteria cri) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
@@ -106,7 +106,7 @@ public class JoongoSaleController {
 				mapper.insertHeart(map);
 				Smapper.inserthearCount(id);
 
-				String textUrl = "detailList?id=" + id;
+				String textUrl = "joongoSale/detailList?id=" + id;
 				model.addAttribute("msg", "찜 처리하였습니다.");
 				model.addAttribute("url", textUrl);
 			}
@@ -124,7 +124,7 @@ public class JoongoSaleController {
 			map.put("memId", loginUser.getId());
 			mapper.deleteHeart(map);
 			Smapper.deletehearCount(id);
-			String textUrl = "detailList?id=" + id;
+			String textUrl = "joongoSale/detailList?id=" + id;
 			model.addAttribute("msg", "찜 해제하였습니다.");
 			model.addAttribute("url", textUrl);
 			return "/joongoSale/alertFrom";

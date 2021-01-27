@@ -2,10 +2,12 @@ package daangnmungcat.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Sale;
 
 @Service
@@ -18,5 +20,5 @@ public interface JoongoSaleService {
 	
 	void JSHits(int id);
 	
-	int insertJoongoSale(Sale sale) throws Exception;	
+	int insertJoongoSale(Sale sale, MultipartFile[] fileList, HttpServletRequest request ) throws Exception;	
 }

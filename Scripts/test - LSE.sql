@@ -116,5 +116,7 @@ SELECT MAX(id)+1 FROM JOONGO_SALE;
 SELECT * FROM JOONGO_IMAGE ;
 SELECT * FROM JOONGO_SALE WHERE id = 1;
 
-
 INSERT INTO JOONGO_IMAGE (id, SALE_ID, IMAGE_NAME )values(sale_img_seq.nextval, 1, '1');
+
+select sale_seq.nextval from dual;
+SELECT * FROM JOONGO_SALE;

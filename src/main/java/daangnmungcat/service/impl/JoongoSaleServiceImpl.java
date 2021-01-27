@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
@@ -59,11 +62,57 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		mapper.JSaleHits(id);
 	}
 
-
 	@Override
-	public int insertJoongoSale(Sale sale) throws Exception {
+	public int insertJoongoSale(Sale sale, MultipartFile[] fileList,
+			HttpServletRequest request) throws Exception {
+		
+		
 		ListMapper.insertJoongoSale(sale);
-		return 1;
+
+		String uploadFolder = getFolder(request);
+		System.out.println("uploadPath:" + uploadFolder);
+		
+		File uploadPath = new File(uploadFolder, getFolder(request));
+		
+		if (!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
+		
+		//UUID uuid = UUID.randomUUID();
+		int num = ListMapper.nextID();
+		int cnt = 1;
+		// 상세 이미지 추가
+			for (MultipartFile multipartFile : fileList) {
+				
+				String uploadFileName = multipartFile.getOriginalFilename();
+				//글 id 붙이기
+				uploadFileName = "/upload/profile/" + num + "_" + cnt + "_" + uploadFileName;
+				File saveFile = new File(uploadFolder, uploadFileName);
+				System.out.println("uploadFileName >> " + uploadFileName);
+				
+				//파일 db저장 
+				FileForm fileForm = new FileForm();
+				fileForm.setSale(sale);
+				fileForm.setFileName(uploadFileName);
+				FileMapper.insertSaleFile(fileForm);
+				System.out.println("fileForm >> " + fileForm);
+
+				try {
+					multipartFile.transferTo(saveFile);
+					cnt++;
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		return 0;
 	}
-	
+
+	private String getFolder(HttpServletRequest request) {
+		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\joongosale");
+		return path;
+	}
+
 }

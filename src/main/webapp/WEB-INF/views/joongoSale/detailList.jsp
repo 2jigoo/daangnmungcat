@@ -162,7 +162,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-		
+	
 	/* 글쓴 시간 가져오기
 	var inDate = document.getElementById('regdate').innerHTML;
 	
