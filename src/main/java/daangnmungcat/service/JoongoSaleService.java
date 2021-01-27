@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Sale;
 
 @Service
@@ -21,4 +22,6 @@ public interface JoongoSaleService {
 	void JSHits(int id);
 	
 	int insertJoongoSale(Sale sale, MultipartFile[] fileList, HttpServletRequest request ) throws Exception;	
+
+	List<FileForm> selectImgPath(@Param("id")int id);
 }

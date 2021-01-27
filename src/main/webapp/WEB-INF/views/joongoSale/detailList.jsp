@@ -157,6 +157,17 @@
 				.product_list > li:nth-child(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
 				.product_list .img {height:40vw;}
 			}
+			
+			
+			.swiper-slide {
+				height: 400px;
+			}
+
+			.swiper-slide img {
+				width: 100%;
+				height: 400px;
+			}
+			
 	
 </style>
 <script type="text/javascript">
@@ -278,6 +289,23 @@ $(document).ready(function(){
 		})
 	});
 	
+		
+	   var swiper = new Swiper('.swiper-container', {
+		      slidesPerView: 1, // 보일 갯수
+		      spaceBetween: 30, // 이미지 간 간격(px)
+		      // 도트
+		      pagination: { 
+		         el: '.swiper-pagination',
+		         clickable: true,
+		      },
+		      // 좌우 화살표
+		      navigation: {
+		         nextEl: '.swiper-button-next',
+		         prevEl: '.swiper-button-prev',
+		      },
+		   });
+
+	
 	
 });
 
@@ -373,12 +401,24 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 <div id="article">
 <c:forEach items="${list}" var="list">
 <input id ="id" type="hidden" value="${list.member.id }"> 
+
 <section id="section_img">
-	<div class="img_slider">
-		<img src="<c:url value="/resources/images/sProduct_img1.png" />" id="section_div_img">
-		${list.thumImg }
+	<div class="swiper-container">
+   		<div class="swiper-wrapper">
+	     	<c:forEach items="${flist }" var="flist">
+			 <div class="swiper-slide"><img alt="프로필" src="<%=request.getContextPath() %>/resources/${flist.fileName}"></div>
+			</c:forEach>
+   		</div>
+	   <!-- 도트 -->
+	   <div class="swiper-pagination"></div>
+	   
+	   <!-- 좌우 화살표 -->
+	   <div class="swiper-button-next"></div>
+	   <div class="swiper-button-prev"></div>
 	</div>
+        	
 </section>
+
 <section id="section_profile">
 	<a id="section_profile_link" href="#">
 		<div>
@@ -456,7 +496,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 			<li>
 						
 						 <c:if test="${param.id ne mlist.id }">
-						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}">
+						<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
 						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>
