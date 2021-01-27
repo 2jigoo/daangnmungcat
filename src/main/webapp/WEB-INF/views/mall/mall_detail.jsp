@@ -1,15 +1,50 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
-<style>
-.wrapper {padding:50px;}
-.detail_img {}
-.detail_info {}
-</style>
+
 <script>
-$(function(){
+$(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
+
+	
+	$('#od_qtt').on('keyup', function(){
+		var price = ${pdt.price};
+		var qtt = $('#od_qtt').val();
+		var total = price * qtt; 
+		$('#od_price').html(total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
+		$('#price').attr('value', total);
+		
+	});
+	
+	$('.down').on('click', function(){
+		var price = ${pdt.price};
+		var qtt = $('#od_qtt').val();
+		var total = price * qtt; 
+		$('#od_price').html(total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
+		$('#price').attr('value', total);
+	});
+	
+	$('.up').on('click', function(){
+		var price = ${pdt.price};
+		var qtt = $('#od_qtt').val();
+		var total = price * qtt; 
+		$('#od_price').html(total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
+		$('#price').attr('value', total);
+	});
+	
+	$('#order_btn').on('click', function(){
+		var total = $('#price').val();
+		var qtt = $('#od_qtt').val();
+		var id = ${pdt.id}
+		console.log('total: ' + total);
+		console.log('qtt: ' + qtt);
+		console.log('id: ' + id);
+	});
+	
+	
 });
+
+
 </script>
 
 <div id="subContent">
@@ -41,17 +76,19 @@ $(function(){
 						<p>수량</p>
 						<div>
 							<p class="down"><span class="text_hidden">감소</span></p>
-							<input type="text" value="1">
+							<input type="text" value="1" id="od_qtt">
 							<p class="up"><span class="text_hidden">증가</span></p>
 						</div>
 					</div>
 					<div class="totalPrice">
 						<p>총 금액</p>
-						<p><span><fmt:formatNumber value="${pdt.price}"/></span> 원</p>
+						<p><span id="od_price"><fmt:formatNumber value="${pdt.price}" /></span> 원</p>
+						<!-- format ','때문에 hidden으로 저장함 -->
+						<p><input type="text" value="${pdt.price}" id="price" onchange="comma(${pdt.price})"></p>
 					</div>
 					<ul class="btn">
 						<li><a href="#">장바구니</a></li>
-						<li><a href="#">바로구매</a></li>
+						<li><a href="#" id="order_btn">바로구매</a></li>
 					</ul>
 				</div>
 			</div>
