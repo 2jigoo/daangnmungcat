@@ -22,9 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallCate;
+import daangnmungcat.dto.MallDelivery;
 import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.service.MallCateService;
+import daangnmungcat.service.MallDeliveryService;
 import daangnmungcat.service.MallPdtService;
 
 @Controller
@@ -34,15 +36,20 @@ public class MallPdtController {
 	private MallCateService cateService;
 	
 	@Autowired
+	private MallDeliveryService deliveryService;
+	
+	@Autowired
 	private MallPdtService service;
 	
 	@GetMapping("/mall/product/write")
 	public String insertViewProduct(Model model) {
 		List<MallCate> dogCate = cateService.selectByAllDogCate();
 		List<MallCate> catCate = cateService.selectByAllCatCate();
+		List<MallDelivery> deliveryList = deliveryService.selectDeliveryByAll();
 		
 		model.addAttribute("dogCate", dogCate);
 		model.addAttribute("catCate", catCate);
+		model.addAttribute("deliveryList", deliveryList);
 		
 		return "/mall/mall_pdt_add";
 	}

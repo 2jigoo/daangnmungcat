@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
@@ -50,6 +51,8 @@ public class JoongoSaleController {
 			List<Sale> list = service.getListsById(id);
 			String memId = list.get(0).getMember().getId();
 			List<Sale> mlist = service.getListByMemID(memId);
+			List<FileForm> flist = service.selectImgPath(id);
+			model.addAttribute("flist", flist);
 			model.addAttribute("list", list);
 				if (mlist.size() == 1) {
 					model.addAttribute("emptylist", 1);
@@ -63,6 +66,8 @@ public class JoongoSaleController {
 			List<Sale> list = service.getListsById(id);
 			String memId = list.get(0).getMember().getId();
 			List<Sale> mlist = service.getListByMemID(memId);
+			List<FileForm> flist = service.selectImgPath(id);
+			model.addAttribute("flist", flist);
 			model.addAttribute("list", list);
 				if (mlist.size() == 1) {
 					model.addAttribute("emptylist", 1);
