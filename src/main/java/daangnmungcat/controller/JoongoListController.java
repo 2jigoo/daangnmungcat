@@ -173,8 +173,7 @@ public class JoongoListController {
 			sale.setCatCate("y");
 			break;
 		}
-		
-		System.out.println("왓나?");
+
 		System.out.println(sale);
 		for(MultipartFile f : file) {
 			System.out.println(f.getOriginalFilename());

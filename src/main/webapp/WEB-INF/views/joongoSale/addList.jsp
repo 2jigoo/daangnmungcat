@@ -172,7 +172,7 @@ function handleImgs(e) {
 	<h2 id="subTitle">글쓰기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
