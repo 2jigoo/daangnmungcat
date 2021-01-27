@@ -35,10 +35,30 @@ $(document).ready(function(){
 	$('#order_btn').on('click', function(){
 		var total = $('#price').val();
 		var qtt = $('#od_qtt').val();
-		var id = ${pdt.id}
+		var id = ${pdt.id};
 		console.log('total: ' + total);
 		console.log('qtt: ' + qtt);
 		console.log('id: ' + id);
+		var info = {
+			total_price: total,
+			quantity: qtt,
+			m_id : id
+			}
+		
+		$.ajax({
+			url: contextPath + "/pre-order",
+			type: "post",
+			contentType:"application/json; charset=utf-8",
+			dataType: "text", //json200에러뜰때 text로
+			cache : false,
+			data : JSON.stringify(info),
+			success: function() {
+				console.log('이동')
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+			}
+		});
 	});
 	
 	
@@ -88,7 +108,7 @@ $(document).ready(function(){
 					</div>
 					<ul class="btn">
 						<li><a href="#">장바구니</a></li>
-						<li><a href="#" id="order_btn">바로구매</a></li>
+						<li><a href="<c:url value="/mall/mall_pre_order" />" id="order_btn">바로구매</a></li>
 					</ul>
 				</div>
 			</div>

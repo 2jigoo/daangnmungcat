@@ -182,4 +182,6 @@ public class MallPdtController {
 		return "redirect:/admin/mall/product/list";
 	}
 	
+	
+	
 }
