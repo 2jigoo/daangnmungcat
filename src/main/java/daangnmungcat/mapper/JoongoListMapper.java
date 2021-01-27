@@ -25,4 +25,6 @@ public interface JoongoListMapper {
 	int listCount2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	
 	int insertJoongoSale(Sale sale);
+	
+	List<Sale> selectHeartedJoongoByMemberIdWithPaging(@Param("memberId") String memberId, @Param("cri") Criteria criteria);
 }

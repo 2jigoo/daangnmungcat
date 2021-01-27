@@ -119,15 +119,27 @@ public class JoongoSaleController {
 	@GetMapping("/heartNo")
 	public String heartNo(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("id", id);
-			map.put("memId", loginUser.getId());
-			mapper.deleteHeart(map);
-			Smapper.deletehearCount(id);
-			String textUrl = "detailList?id=" + id;
-			model.addAttribute("msg", "찜 해제하였습니다.");
-			model.addAttribute("url", textUrl);
-			return "/joongoSale/alertFrom";
-		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("memId", loginUser.getId());
+		mapper.deleteHeart(map);
+		Smapper.deletehearCount(id);
+		String textUrl = "detailList?id=" + id;
+		model.addAttribute("msg", "찜 해제하였습니다.");
+		model.addAttribute("url", textUrl);
+		return "/joongoSale/alertFrom";
 	}
-
+	
+	
+	@GetMapping("/joongo/heart")
+	public String heartedList(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		
+		Criteria criteria = new Criteria(page, 20);
+		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
+		model.addAttribute("list", list);
+		
+		return "/joongoSale/heart";
+	}
+	
+}

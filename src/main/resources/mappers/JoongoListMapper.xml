@@ -154,4 +154,43 @@ SELECT count(a.id)
 
 
 
+<select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">
+	SELECT a.*
+	FROM (
+		SELECT rownum AS rnum, b.*
+		FROM (
+			SELECT
+				js.ID,
+				js.MEM_ID,
+				nickname	as mem_nickname,
+				grade		as mem_grade,
+				DOG_CATE,
+				CAT_CATE,
+				TITLE,
+				CONTENT,
+				PRICE,
+				d1.ID		AS dongne1_id,
+				d1.NAME		AS dongne1_name,
+				d2.ID		AS dongne2_id,
+				BUY_MEM_ID,
+				SALE_STATE,
+				REGDATE,
+				REDATE,
+				HITS,
+				CHAT_COUNT,
+				HEART_COUNT,
+				h.mem_id		as heart_mem_id,
+				h.regdate		as heart_regdate
+	  		FROM JOONGO_SALE js
+	  			LEFT OUTER JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+	  			LEFT OUTER JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	  			LEFT OUTER JOIN MEMBER m On js.mem_id = m.id
+	  			LEFT OUTER JOIN joongo_heart h ON js.id = h.sale_id
+	  		WHERE h.mem_id = #{memberId}
+	  		ORDER BY h.regdate desc
+	  	) b
+	) a
+	WHERE a.rnum BETWEEN #{criteria.rowStart} AND #{criteria.rowEnd}
+	ORDER BY a.rnum
+</select>
 </mapper>
