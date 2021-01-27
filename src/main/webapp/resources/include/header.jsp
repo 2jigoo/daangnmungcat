@@ -21,6 +21,8 @@
 	<script src="<c:url value="/resources/js/jquery.form.min.js" />" type="text/javascript" ></script>
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
+	<script src="<c:url value="/resources/js/swiper.min.js" />" type="text/javascript" ></script>
+	
 	<script>
 	$(document).ready(function(){
 		//spring security -> ajax post 타입 전송시 필요
