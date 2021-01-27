@@ -88,14 +88,13 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				//글 id 붙이기
 				uploadFileName = num + "_" + cnt + "_" + uploadFileName;
 				File saveFile = new File(uploadFolder, uploadFileName);
-				System.out.println("uploadFileName >> " + uploadFileName);
+				//System.out.println("uploadFileName >> " + uploadFileName);
 				//파일 db저장 
 				FileForm fileForm = new FileForm();
 				fileForm.setSale(sale);
 				fileForm.setFileName("upload/joongosale/"+uploadFileName);
 				FileMapper.insertSaleFile(fileForm);
-				System.out.println("fileForm >> " + fileForm);
-
+				//System.out.println("fileForm >> " + fileForm);
 				try {
 					multipartFile.transferTo(saveFile);
 					cnt++;
@@ -105,7 +104,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("sale >> " +sale);
 		return 0;
 	}
 

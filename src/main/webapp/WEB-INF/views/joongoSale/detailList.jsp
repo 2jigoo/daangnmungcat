@@ -157,8 +157,17 @@
 				.product_list > li:nth-child(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
 				.product_list .img {height:40vw;}
 			}
-	
-	
+			
+			
+			.swiper-slide {
+				height: 400px;
+			}
+
+			.swiper-slide img {
+				width: 100%;
+				height: 400px;
+			}
+			
 	
 </style>
 <script type="text/javascript">
@@ -281,16 +290,21 @@ $(document).ready(function(){
 	});
 	
 		
-	   $('.bxslider').bxSlider({
-	        auto: true, // 자동으로 애니메이션 시작
-	        speed: 500,  // 애니메이션 속도
-	        pause: 5000,  // 애니메이션 유지 시간 (1000은 1초)
-	        mode: 'horizontal', // 슬라이드 모드 ('fade', 'horizontal', 'vertical' 이 있음)
-	        autoControls: true, // 시작 및 중지버튼 보여짐
-	        pager: true, // 페이지 표시 보여짐
-	        captions: true, // 이미지 위에 텍스트를 넣을 수 있음
-	    });
-		
+	   var swiper = new Swiper('.swiper-container', {
+		      slidesPerView: 1, // 보일 갯수
+		      spaceBetween: 30, // 이미지 간 간격(px)
+		      // 도트
+		      pagination: { 
+		         el: '.swiper-pagination',
+		         clickable: true,
+		      },
+		      // 좌우 화살표
+		      navigation: {
+		         nextEl: '.swiper-button-next',
+		         prevEl: '.swiper-button-prev',
+		      },
+		   });
+
 	
 	
 });
@@ -389,10 +403,20 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 <input id ="id" type="hidden" value="${list.member.id }"> 
 
 <section id="section_img">
-        	<c:forEach items="${flist }" var="flist">
-				 <div><img alt="프로필" src="<%=request.getContextPath() %>/resources/${flist.fileName}"></div>
+	<div class="swiper-container">
+   		<div class="swiper-wrapper">
+	     	<c:forEach items="${flist }" var="flist">
+			 <div class="swiper-slide"><img alt="프로필" src="<%=request.getContextPath() %>/resources/${flist.fileName}"></div>
 			</c:forEach>
-    </div>
+   		</div>
+	   <!-- 도트 -->
+	   <div class="swiper-pagination"></div>
+	   
+	   <!-- 좌우 화살표 -->
+	   <div class="swiper-button-next"></div>
+	   <div class="swiper-button-prev"></div>
+	</div>
+        	
 </section>
 
 <section id="section_profile">
