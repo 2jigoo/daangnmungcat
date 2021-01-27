@@ -158,6 +158,8 @@
 				.product_list .img {height:40vw;}
 			}
 	
+	
+	
 </style>
 <script type="text/javascript">
 
@@ -278,6 +280,18 @@ $(document).ready(function(){
 		})
 	});
 	
+		
+	   $('.bxslider').bxSlider({
+	        auto: true, // 자동으로 애니메이션 시작
+	        speed: 500,  // 애니메이션 속도
+	        pause: 5000,  // 애니메이션 유지 시간 (1000은 1초)
+	        mode: 'horizontal', // 슬라이드 모드 ('fade', 'horizontal', 'vertical' 이 있음)
+	        autoControls: true, // 시작 및 중지버튼 보여짐
+	        pager: true, // 페이지 표시 보여짐
+	        captions: true, // 이미지 위에 텍스트를 넣을 수 있음
+	    });
+		
+	
 	
 });
 
@@ -373,12 +387,14 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 <div id="article">
 <c:forEach items="${list}" var="list">
 <input id ="id" type="hidden" value="${list.member.id }"> 
+
 <section id="section_img">
-	<div class="img_slider">
-		<img src="<c:url value="/resources/images/sProduct_img1.png" />" id="section_div_img">
-		${list.thumImg }
-	</div>
+        	<c:forEach items="${flist }" var="flist">
+				 <div><img alt="프로필" src="<%=request.getContextPath() %>/resources/${flist.fileName}"></div>
+			</c:forEach>
+    </div>
 </section>
+
 <section id="section_profile">
 	<a id="section_profile_link" href="#">
 		<div>
@@ -456,7 +472,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 			<li>
 						
 						 <c:if test="${param.id ne mlist.id }">
-						<a href="<%=request.getContextPath()%>/detailList?id=${mlist.id}">
+						<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
 						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="section_txt">
 				<%-- 		<p>${mlist.id }</p> --%>
