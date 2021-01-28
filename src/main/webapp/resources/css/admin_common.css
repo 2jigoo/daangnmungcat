@@ -46,5 +46,10 @@
 .mall_pdt_write input[type="submit"] {display:block; float:right; margin-top:20px; padding:0 30px; color:#fff; height:45px; background:#3457bb; border:0;}
 
 
+.adm_joongo_ico {overflow:hidden; margin:5px 0 0 0; padding:0;}
+.adm_joongo_ico li {float:left; margin:0 10px 0 0; font-size:0.7em; list-style:none;}
+.adm_joongo_ico li.heart {background:url(../images/ico_heart.png) no-repeat left center; padding-left:15px;}
+.adm_joongo_ico li.chat {background:url(../images/ico_chat.png) no-repeat left center; padding-left:22px;}
+
 .history_back_btn {display:inline-block; margin-top:20px; padding:0 30px; color:#fff; line-height:45px; font-family:'S-CoreDream'; background:#808080; text-decoration:none !important;}
 .history_back_btn:hover {color:#fff;}

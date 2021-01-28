@@ -28,9 +28,9 @@ $(function(){
 	<div class="card-body">
 		<table class="adm_table_style1">
 			<colgroup>
-				<col width="13%">
-				<col width="28%">
-				<col width="28%">
+				<col width="10%">
+				<col width="29.5%">
+				<col width="29.5%">
 				<col width="11%">
 				<col width="10%">
 				<col width="10%">
