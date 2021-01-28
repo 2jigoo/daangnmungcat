@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
@@ -42,7 +43,7 @@ public class JoongoSaleController {
 	@Autowired
 	private JoongoSaleMapper Smapper;
 
-	@RequestMapping(value = "detailList", method = RequestMethod.GET)
+	@RequestMapping(value = "joongoSale/detailList", method = RequestMethod.GET)
 	public String listById(@RequestParam int id, Model model, HttpSession session, Criteria cri) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		if (loginUser == null) {
@@ -50,6 +51,8 @@ public class JoongoSaleController {
 			List<Sale> list = service.getListsById(id);
 			String memId = list.get(0).getMember().getId();
 			List<Sale> mlist = service.getListByMemID(memId);
+			List<FileForm> flist = service.selectImgPath(id);
+			model.addAttribute("flist", flist);
 			model.addAttribute("list", list);
 				if (mlist.size() == 1) {
 					model.addAttribute("emptylist", 1);
@@ -63,6 +66,8 @@ public class JoongoSaleController {
 			List<Sale> list = service.getListsById(id);
 			String memId = list.get(0).getMember().getId();
 			List<Sale> mlist = service.getListByMemID(memId);
+			List<FileForm> flist = service.selectImgPath(id);
+			model.addAttribute("flist", flist);
 			model.addAttribute("list", list);
 				if (mlist.size() == 1) {
 					model.addAttribute("emptylist", 1);
@@ -106,7 +111,7 @@ public class JoongoSaleController {
 				mapper.insertHeart(map);
 				Smapper.inserthearCount(id);
 
-				String textUrl = "detailList?id=" + id;
+				String textUrl = "joongoSale/detailList?id=" + id;
 				model.addAttribute("msg", "찜 처리하였습니다.");
 				model.addAttribute("url", textUrl);
 			}
@@ -119,6 +124,7 @@ public class JoongoSaleController {
 	@GetMapping("/heartNo")
 	public String heartNo(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+<<<<<<< HEAD
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		map.put("memId", loginUser.getId());
@@ -128,6 +134,18 @@ public class JoongoSaleController {
 		model.addAttribute("msg", "찜 해제하였습니다.");
 		model.addAttribute("url", textUrl);
 		return "/joongoSale/alertFrom";
+=======
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("id", id);
+			map.put("memId", loginUser.getId());
+			mapper.deleteHeart(map);
+			Smapper.deletehearCount(id);
+			String textUrl = "joongoSale/detailList?id=" + id;
+			model.addAttribute("msg", "찜 해제하였습니다.");
+			model.addAttribute("url", textUrl);
+			return "/joongoSale/alertFrom";
+		}
+>>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat
 	}
 	
 	

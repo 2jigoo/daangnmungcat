@@ -33,6 +33,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.mapper.FileFormMapper;
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.service.GpsToAddressService;
 import daangnmungcat.service.JoongoSaleService;
@@ -50,7 +51,7 @@ public class JoongoListController {
 
 	@Autowired
 	private JoongoSaleService s;
-	
+
 	@GetMapping("/joongo_list")
 	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -157,7 +158,7 @@ public class JoongoListController {
 	}
 
 	@PostMapping("/joongoSale/insert")
-	public String testtest(HttpSession session,HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] file) throws Exception {
+	public String testtest(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -175,18 +176,14 @@ public class JoongoListController {
 			sale.setCatCate("y");
 			break;
 		}
-		
-		System.out.println("왓나?");
-		System.out.println(sale);
-		for(MultipartFile f : file) {
-			System.out.println(f.getOriginalFilename());
-		}
+
 		sale.setMember(new Member(loginUser.getId()));
-//		s.insertJoongoSale(sale);
-//		System.out.println("service 후");
-//		System.out.println(sale);
-		
-		return null;
+		s.insertJoongoSale(sale, fileList, request);
+		int id = sale.getId();
+		String textUrl = "detailList?id=" + id;
+		model.addAttribute("msg", "등록되었습니다.");
+		model.addAttribute("url", textUrl);
+		return "/joongoSale/alertFrom";
 	}
 	
 }

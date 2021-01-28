@@ -212,8 +212,8 @@ $(function(){
 		<div>
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
-				<li><a href="<%=request.getContextPath()%>/detailList?id=${list.id}">
-					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
+				<li><a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${list.id}">
+					<div class="img"><img src="<%=request.getContextPath() %>/resources/${list.thumImg}"></div>
 					<div class="txt">
 						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>

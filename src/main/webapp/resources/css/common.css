@@ -276,6 +276,50 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .mall_adm_list table img {width:100%;}
 
 
+.product_detail .detail_info {width:100%; overflow:hidden;}
+.product_detail .detail_info .img_box {float:left; width:50%;}
+.product_detail .detail_info .img_box img {max-width:100%;}
+.product_detail .detail_info .txt_box {float:right; width:calc(50% - 30px)}
+.product_detail .detail_info .txt_box .name {font-size:2em; font-weight:600; line-height:1.2em;}
+.product_detail .detail_info .txt_box .content {font-size:1em; line-height:1.6em; margin-top:5px;}
+.product_detail .detail_info .txt_box dl {width:100%; border-top:1px  solid #ddd; border-bottom:1px solid #ddd; overflow:hidden; padding:10px; margin:20px 0;}
+.product_detail .detail_info .txt_box dl dt, .product_detail .detail_info .txt_box dl dd {font-size:0.93em; line-height:1.7em; padding:5px 0;}
+.product_detail .detail_info .txt_box dl dt {float:left; width:130px;}
+.product_detail .detail_info .txt_box dl dd {float:left; width:calc(100% - 130px)}
+.product_detail .detail_info .txt_box .length {padding:0 10px; overflow:hidden;}
+.product_detail .detail_info .txt_box .length p {float:left;}
+.product_detail .detail_info .txt_box .length div {float:right; overflow:hidden;}
+.product_detail .detail_info .txt_box .length div input {float:left; width:50px; height:30px; border-radius:0; border:0; border-top:1px solid #ccc; border-bottom:1px solid #ccc; text-align:center;}
+.product_detail .detail_info .txt_box .length div p {width:30px; height:30px; border:1px solid #ccc; cursor:pointer; background-repeat:no-repeat; background-position:center center;}
+.product_detail .detail_info .txt_box .length div p.down {background-image:url(../images/ico_down.png);}
+.product_detail .detail_info .txt_box .length div p.up {background-image:url(../images/ico_up.png)}
+.product_detail .detail_info .txt_box .totalPrice {width:100%; margin-top:20px; border:1px solid #ddd; background:#f9f9f9; padding:15px; display:table;}
+.product_detail .detail_info .txt_box .totalPrice p {display:table-cell; vertical-align:middle;}
+.product_detail .detail_info .txt_box .totalPrice p:last-child {text-align:right;}
+.product_detail .detail_info .txt_box .totalPrice p span {font-size:1.6em; font-weight:600; color:#ff7e15; letter-spacing:-0.05em;}
+.product_detail .detail_info .txt_box .btn {width:100%; overflow:hidden; margin-top:40px;}
+.product_detail .detail_info .txt_box .btn li {float:left; width:calc(50% - 5px)}
+.product_detail .detail_info .txt_box .btn li:last-child {float:right;}
+.product_detail .detail_info .txt_box .btn li a {display:block; width:100%; line-height:63px; border:1px solid #ff7e15; font-size:1.25em; font-weight:500; color:#ff7e15; text-align:center;}
+.product_detail .detail_info .txt_box .btn li:last-child a {background:#ff7e15; color:#fff;}
+.product_detail .detail_view {margin-top:80px; border-top:1px solid #ddd; padding-top:50px;}
+.product_detail .detail_view img {max-width:100%; text-align:center;}
+
+@media screen and (max-width:1024px){
+	.product_detail .detail_info .img_box {width:45%}
+	.product_detail .detail_info .txt_box {width:calc(55% - 30px)}
+	.product_detail .detail_info .txt_box .btn li a {line-height:55px; font-size:1.125em;}
+}
+
+@media screen and (max-width:767px){
+	.product_detail .detail_info .img_box {float:none; width:100%;}
+	.product_detail .detail_info .txt_box {float:none; width:100%; margin-top:30px;}
+	.product_detail .detail_info .txt_box .btn li {width:calc(50% - 2.5px)}
+	.product_detail .detail_info .txt_box .btn li a {line-height:50px; font-size:1em;}
+	.product_detail .detail_view {margin-top:50px;}
+}
+
+
 /* swiper */
 /**
  * Swiper 5.3.0

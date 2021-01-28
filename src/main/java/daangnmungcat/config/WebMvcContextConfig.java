@@ -67,7 +67,6 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		System.out.println("addViewControllers 호출");
 		registry.addViewController("/").setViewName("main");
 		registry.addViewController("/test_page").setViewName("chat/test_page");
-		registry.addViewController("/test").setViewName("joongoSale/addList");
 		
 		registry.addViewController("sign/id_check").setViewName("sign/id_check");	
 		registry.addViewController("sign/contract").setViewName("sign/contract");
@@ -84,6 +83,7 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		
 		registry.addViewController("admin/main").setViewName("admin/main");
 		
+		registry.addViewController("mall/mall_pre_order").setViewName("mall/mall_pre_order");
 	}
 	
 	/*

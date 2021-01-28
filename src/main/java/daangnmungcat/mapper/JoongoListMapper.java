@@ -29,4 +29,6 @@ public interface JoongoListMapper {
 	
 	List<Sale> selectHeartedJoongoByMemberIdWithPaging(@Param("memberId") String memberId, @Param("criteria") Criteria criteria);
 //	int insertFileForm(FileForm FileForm);
+	int nextID();
+	
 }

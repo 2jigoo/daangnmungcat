@@ -1,8 +1,5 @@
 package daangnmungcat.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,10 +13,8 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-@JsonInclude(Include.NON_DEFAULT)
-public class FileForm {
-	private Sale sale;
+public class MallDelivery {
 	private int id;
-	private String fileName;
-	private String thumName;
+	private String name;
+	private int price;
 }
