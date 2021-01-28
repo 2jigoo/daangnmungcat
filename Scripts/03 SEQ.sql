@@ -10,8 +10,6 @@ DROP SEQUENCE mall_dog_cate_seq;
 DROP SEQUENCE mall_cat_cate_seq;
 DROP SEQUENCE ORDER_address_seq;
 
-
-
 CREATE SEQUENCE dongne1_seq
 START WITH 1
 INCREMENT BY 1

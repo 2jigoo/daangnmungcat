@@ -79,18 +79,24 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		int cnt = 1;
 		// 상세 이미지 추가
 			for (MultipartFile multipartFile : fileList) {
-				
 				String uploadFileName = multipartFile.getOriginalFilename();
-				//글 id 붙이기
-//				uploadFileName = num + "_" + cnt + "_" + uploadFileName;
 				uploadFileName = cnt + "_" + uploadFileName;
+					
+				String thumFileName = "1_"+multipartFile.getOriginalFilename();
 				File saveFile = new File(uploadFolder, uploadFileName);
-				//System.out.println("uploadFileName >> " + uploadFileName);
+
 				//파일 db저장 
 				FileForm fileForm = new FileForm();
 				fileForm.setSale(sale);
 				fileForm.setFileName("upload/joongosale/"+uploadFileName);
+				
+				//첫번째 등록사진이라면
+				if(uploadFileName.equals(thumFileName) == true) { 
+					fileForm.setThumName("upload/joongosale/"+uploadFileName);
+				}
+				
 				FileMapper.insertSaleFile(fileForm);
+				
 				//System.out.println("fileForm >> " + fileForm);
 				try {
 					multipartFile.transferTo(saveFile);

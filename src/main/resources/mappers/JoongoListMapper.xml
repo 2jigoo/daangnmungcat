@@ -34,6 +34,7 @@
 	<result column="chat_count" property="chatCount"/>
 	<!-- <result column="is_heart" property="isHeart"/> -->
 	<result column="heart_count" property="heartCount"/>
+	<result column="thum_name" property="thumImg"/>
 	
 	<association property="dongne1" resultMap="dongne1Result"/>
 	<association property="dongne2" resultMap="dongne2Result"/>
@@ -89,8 +90,8 @@
 <select id="selectJoongoByAllPage" resultMap="saleResult">
 SELECT a.*
   FROM (SELECT rownum AS rnum, b.*
-  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
-  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID ORDER BY js.id desc) b) a
+  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name
+FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID INNER JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID ORDER BY js.id DESC) b) a
  WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
  ORDER BY a.rnum
 </select>
