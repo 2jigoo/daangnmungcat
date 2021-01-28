@@ -62,11 +62,11 @@ public class JoongoSaleController {
 				sale.setHearted(true);
 			}
 			
+		}
 			model.addAttribute("sale", sale);
 			model.addAttribute("flist", flist);
 			model.addAttribute("mlist", mlist);
 //			list.stream().forEach(System.out::println);
-		}
 		
 		// 댓글
 		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(id, cri);
