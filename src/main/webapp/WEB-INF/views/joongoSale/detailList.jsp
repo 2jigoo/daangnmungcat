@@ -129,7 +129,7 @@
 			.section_goods_cl > li {float:left;  margin-right:20px;}
 			.section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
 			.section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
-			.section_goods_cl .section_img img {max-width:100%; max-height:100%;}
+			.section_goods_cl .section_img img {max-width: 100%; max-height: 100%; min-width: 100%; min-height: 100%;}
 			.section_goods_cl .section_txt {position:relative; color:#111;}
 			.section_goods_cl .section_txt ul {position:absolute; right:0; top:0;}
 			.section_goods_cl .section_txt ul li {float:left; margin-left:10px; font-size:0.7em;}
@@ -478,52 +478,46 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 			</a>
 		</div>
 	</section>
+		<section id="section_goods">
+			<div id="product_list">
+				<ul class="section_goods_cl">
+					<c:if test="${emptylist eq 1}">
+						<p>이 판매자의 다른 중고 상품이 없습니다.</p>
+					</c:if>
 
-	<section id="section_goods">
-		
-		<div id = "product_list">
-		<ul class="section_goods_cl">
-		
-		
-		<c:if test = "${emptylist eq 1}">
-				<p>이 판매자의 다른 중고 상품이 없습니다.</p>
-		</c:if>
-		
-		<c:if test = "${emptylist ne 1}" >	
-				<p>이 판매자의 다른 중고상품들 입니다.</p>
-		<c:forEach items="${mlist }" var="mlist">
+					<c:if test="${emptylist ne 1}">
+						<p>이 판매자의 다른 중고상품들 입니다.</p>
+					<c:forEach items="${mlist }" var="mlist">
 						<!--원글 id랑 mlist.id랑 같으면 mlist.안보이게 하기 -->
 						<c:if test="${param.id eq mlist.id }">
 						</c:if>
-			<li>
-						
-						 <c:if test="${param.id ne mlist.id }">
-						<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
-						<div class="section_img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
-					<div class="section_txt">
-				<%-- 		<p>${mlist.id }</p> --%>
-						<p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
-						<p class="section_subject">${mlist.title}</p>
-						<p class="section_price">
-							<span>
-								<c:if test="${mlist.price eq 0 }" >무료 나눔</c:if>
-								<c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
-							</span>
-						</p>
-						<ul>
-							<li class="section_heart">${mlist.heartCount}</li>
-							<li class="section_chat">${mlist.chatCount}</li>
-						</ul>
-					</div>	
-						</a>	
+						<li><c:if test="${param.id ne mlist.id }">
+							<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
+							<div class="section_img">
+								<img src="<%=request.getContextPath() %>/resources/${mlist.thumImg}">
+							</div>
+							<div class="section_txt">
+								<p class="section_location">${mlist.dongne1.name}
+									${mlist.dongne2.name}</p>
+								<p class="section_subject">${mlist.title}</p>
+								<p class="section_price">
+									<span> <c:if test="${mlist.price eq 0 }">무료 나눔</c:if>
+										<c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
+									</span>
+								</p>
+								<ul>
+									<li class="section_heart">${mlist.heartCount}</li>
+									<li class="section_chat">${mlist.chatCount}</li>
+								</ul>
+							</div>
+							</a>
+							</c:if></li>
+					</c:forEach>
 					</c:if>
-			</li>
-			</c:forEach>
-			</c:if>
-		</ul>
-		</div>
-	</section>
-</c:forEach>
+				</ul>
+			</div>
+		</section>
+		</c:forEach>
 
 <div class="joongo_comment s-inner" id="joongo_comment">
 	<p class="tit">댓글</p>
