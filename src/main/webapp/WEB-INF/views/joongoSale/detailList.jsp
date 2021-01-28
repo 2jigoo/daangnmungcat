@@ -431,8 +431,15 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
                </div>
                <div id="section_profile_left">
                   <div id="nickname" >${sale.member.id}</div>
-                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>
-               </div>      
+                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}
+               		<c:if test="${loginUser.getId() eq sale.member.id}">
+						<div id="btns">
+							<a href="<%=request.getContextPath()%>/joongoSale/modify">수정</a>
+							<a href="<%=request.getContextPath()%>/joongoSale/delete">삭제</a>
+						</div>
+					</c:if>	
+				  </div>	
+               </div>
             </div>
          </a>
       </section>
