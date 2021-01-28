@@ -1,22 +1,19 @@
-  
 package daangnmungcat.service.impl;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.mapper.FileFormMapper;
@@ -33,10 +30,11 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	private JoongoSaleMapper mapper;
 	
 	@Autowired
-	private FileFormMapper FileMapper;
+	private JoongoListMapper listMapper;
 	
 	@Autowired
-	private JoongoListMapper ListMapper;
+	private FileFormMapper fileMapper;
+	
 	
 	@Override
 	public List<Sale> getLists() {
@@ -46,10 +44,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 	@Override
-	public List<Sale> getListsById(int id) {
-		List<Sale> list = mapper.selectJoonSaleById(id);
+	@Transactional
+	public Sale getSaleById(int id) {
 		JSHits(id);
-		return list;
+		Sale sale = mapper.selectJoongoSaleById(id);
+		//이미지들 구해와서 set
+		return sale;
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public int insertJoongoSale(Sale sale, MultipartFile[] fileList,
 			HttpServletRequest request) throws Exception {
 		
-		ListMapper.insertJoongoSale(sale);
+		int res = listMapper.insertJoongoSale(sale);
 
 		String uploadFolder = getFolder(request);
 		System.out.println("uploadPath:" + uploadFolder);
@@ -79,32 +79,45 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		}
 		
 		//UUID uuid = UUID.randomUUID();
-		int num = ListMapper.nextID();
+//		int num = ListMapper.nextID() -1;
 		int cnt = 1;
+		
 		// 상세 이미지 추가
-			for (MultipartFile multipartFile : fileList) {
+		for (MultipartFile multipartFile : fileList) {
+			String uploadFileName = multipartFile.getOriginalFilename();
+			uploadFileName = cnt + "_" + uploadFileName;
 				
-				String uploadFileName = multipartFile.getOriginalFilename();
-				//글 id 붙이기
-				uploadFileName = num + "_" + cnt + "_" + uploadFileName;
-				File saveFile = new File(uploadFolder, uploadFileName);
-				//System.out.println("uploadFileName >> " + uploadFileName);
-				//파일 db저장 
-				FileForm fileForm = new FileForm();
-				fileForm.setSale(sale);
-				fileForm.setFileName("upload/joongosale/"+uploadFileName);
-				FileMapper.insertSaleFile(fileForm);
-				//System.out.println("fileForm >> " + fileForm);
-				try {
-					multipartFile.transferTo(saveFile);
-					cnt++;
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+			String thumFileName = "1_"+multipartFile.getOriginalFilename();
+			File saveFile = new File(uploadFolder, uploadFileName);
+
+			//파일 db저장 
+			FileForm fileForm = new FileForm();
+			fileForm.setSale(sale);
+			fileForm.setFileName("upload/joongosale/"+uploadFileName);
+			
+			//첫번째 등록사진이라면
+			if(uploadFileName.equals(thumFileName) == true) { 
+				fileForm.setThumName("upload/joongosale/"+uploadFileName);
 			}
-		return 0;
+			
+			res += fileMapper.insertSaleFile(fileForm);
+			
+			//System.out.println("fileForm >> " + fileForm);
+			try {
+				multipartFile.transferTo(saveFile);
+				cnt++;
+			} catch (IllegalStateException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if(res != (fileList.length + 1)) {
+			throw new RuntimeException(); // 업로드 갯수 불일치
+		}
+		
+		return res;
 	}
 
 	private String getFolder(HttpServletRequest request) {
@@ -112,11 +125,18 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return path;
 	}
 
-	@Override
+		
 	public List<FileForm> selectImgPath(int id) {
-		List<FileForm> fileForm= FileMapper.selectImgPath(id);
+		List<FileForm> fileForm = fileMapper.selectImgPath(id);
 		System.out.println(fileForm);
 		return fileForm;
+	}
+	
+	
+	@Override
+	public List<Sale> getHeartedList(String memberId, Criteria criteria) {
+		List<Sale> list = listMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
+		return list;
 	}
 
 }

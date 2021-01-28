@@ -9,6 +9,7 @@
 	<id column="id" property="id"></id>
 	<result column="sale_id" property="sale.id"/>
 	<result column="image_name" property="fileName"/>
+	<result column="thum_name" property="thumName"/>
 </resultMap>
 
 
@@ -16,11 +17,12 @@
 	<selectKey resultType="int" keyProperty="id" order="BEFORE">
 		select sale_img_seq.nextval from dual
 	</selectKey>
-	insert into joongo_image values(#{id}, #{sale.id}, #{fileName})
+	insert into joongo_image values(#{id}, #{sale.id}, #{fileName}, #{thumName})
 </insert>
 
 <select id="selectImgPath" resultMap="fileFormResult">
 	<include refid="selectFileSQL"></include>
 	where sale_id = #{id}
 </select>
+
 </mapper>

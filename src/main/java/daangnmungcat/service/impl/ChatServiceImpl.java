@@ -35,7 +35,7 @@ public class ChatServiceImpl implements ChatService {
 	@Autowired
 	private ChatMessageMapper messageMapper;
 	
-	// 내 채팅목록 얻어오기
+	// 나의 모든 채팅목록 얻어오기
 	@Override
 	public List<Chat> getMyChatsList(String memberId) {
 		List<Chat> myChatList = chatMapper.selectAllChatsByMemberId(memberId);
@@ -47,17 +47,13 @@ public class ChatServiceImpl implements ChatService {
 			ArrayList<ChatMessage> msgList = new ArrayList<ChatMessage>();
 			msgList.add(msg);
 			
-			try {
-				chat.setLatestDate(msg.getRegdate());
-			} catch (NullPointerException e) {
-				
-			}
 			chat.setMessages(msgList);
 		}
 		
 		return myChatList;
 	}
 	
+	// 해당 내 판매글에 대한 채팅목록 얻어오기
 	@Override
 	public List<Chat> getMyChatsList(int saleId) {
 		List<Chat> myChatList = chatMapper.selectAllChatsBySaleId(saleId);
@@ -69,11 +65,6 @@ public class ChatServiceImpl implements ChatService {
 			ArrayList<ChatMessage> msgList = new ArrayList<ChatMessage>();
 			msgList.add(msg);
 			
-			try {
-				chat.setLatestDate(msg.getRegdate());
-			} catch (NullPointerException e) {
-				
-			}
 			chat.setMessages(msgList);
 		}
 		
@@ -136,12 +127,14 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 메시지 보내기
 	@Override
+	@Transactional
 	public int sendMessage(Chat chat, ChatMessage message) {
 		int res = 0;
 		if(chat.getId() == 0) {
 			res = chatMapper.insertChat(chat);
 		}
 		res += messageMapper.insertChatMessage(message);
+		res += chatMapper.updateChatLatestDate(message);
 		
 		return res;
 	}

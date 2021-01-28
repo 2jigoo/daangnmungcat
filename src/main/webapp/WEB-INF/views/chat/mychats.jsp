@@ -26,9 +26,10 @@ $(document).ready(function(){
 });
 </script>
 
-<div>
-	<article>
-		<div id="article">
+<div id="subContent">
+	<h2 id="subTitle">내 채팅 목록</h2>
+	<div id="pageCont" class="s-inner" style="width: 800px;">
+		<article>
 			<c:forEach  var="chat" items="${list }" >
 				<c:if test="${chat.sale.member.id eq loginUser.id }">
 					<c:set var="you" value="${chat.buyer }" />
@@ -73,7 +74,7 @@ $(document).ready(function(){
 				<td><javatime:format value="${chat.latestDate }" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 				<td><javatime:format value="${chat.messages[0].regdate }" pattern="yyyy-MM-dd HH:mm:ss" /></td>
 			</tr> --%>
-		</div>
-	</article>
+		</article>
+	</div>
 </div>
 <jsp:include page="/resources/include/footer.jsp"/>
