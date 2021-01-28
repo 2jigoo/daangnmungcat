@@ -191,8 +191,9 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .product_list .txt ul li.chat {background:url(../images/ico_chat.png) no-repeat left center; padding-left:22px;}
 .product_list .location {font-size:0.85em;}
 .product_list .subject {font-size:1.125em; font-weight:500;}
-.product_list .price {font-size:0.93em; margin-top:10px; padding-top:10px; border-top:1px solid #ddd; text-align:right; letter-spacing:-0.05em;}
+.product_list .price {font-size:0.93em; margin-top:10px; padding-top:10px; border-top:1px solid #ddd; text-align:right; letter-spacing:-0.05em; overflow:hidden;}
 .product_list .price span {font-size:1.5em; font-weight:600;}
+.product_list .price span:first-child {font-size:0.93em; float:left; font-weight:400; margin-top:9px;}
 
 @media screen and (max-width:1199px){
 	.product_list.s-inner {width:100%;}
