@@ -12,13 +12,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
+import daangnmungcat.dto.Member;
 import daangnmungcat.service.CartService;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
+@Log4j2
 public class CartController {
 
 	@Autowired
@@ -52,9 +56,29 @@ public class CartController {
 		return ResponseEntity.ok(list);
 	}
 	
-	@PostMapping("/mall/cart/{id}")
+	@PostMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Cart> addCartItem(@PathVariable int id,HttpSession session) {
+	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpSession session) {
+		
+		int res = 0;
+		
+		try {
+			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			cart.setMember(new Member(loginUser.getId()));
+			res = cartService.addCartItem(cart);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		log.info(cart.toString());
+		return ResponseEntity.ok(res);
+		
+	}
+	
+	@GetMapping("/mall/cart/{id}")
+	@ResponseBody
+	public ResponseEntity<Cart> getCartItem(@PathVariable int id, @RequestBody Cart cart, HttpSession session) {
 		
 		Cart gotCart = null;
 		
