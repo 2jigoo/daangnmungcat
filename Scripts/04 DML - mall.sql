@@ -17,7 +17,6 @@ INSERT INTO MALL_DELIVERY VALUES(mall_delivery_seq.nextval, '조건부 무료배
 INSERT INTO MALL_DELIVERY VALUES(mall_delivery_seq.nextval, '무료배송', 0);
 INSERT INTO MALL_DELIVERY VALUES(mall_delivery_seq.nextval, '유료배송', 3000);
 
-
 INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 2, NULL, '네츄럴코어', 13000, '네츄럴코어 사료입니다.', 'Y', 100, NULL, NULL, NULL, '조건부 무료배송', 50000, 3000, sysdate);
 INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 2, NULL, '로얄캐닌', 23000, NULL, 'Y', 100, NULL, NULL, NULL, '무료배송', NULL, NULL, sysdate);
 INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, NULL, 3, '모래 2kg', 33000, '모래입니다.', 'Y', 100, NULL, NULL, NULL, '조건부 무료배송', 50000, 3000, sysdate);

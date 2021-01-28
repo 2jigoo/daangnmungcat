@@ -20,3 +20,28 @@ AS SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as do
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
 	JOIN MEMBER m ON s.MEM_ID = m.id;
 
+
+CREATE OR REPLACE VIEW CHAT_LIST_VIEW 
+AS
+SELECT
+	C.id			AS id,
+	C.sale_id		AS sale_id,
+	S.MEM_ID 		AS sale_mem_id,
+	SM.nickname		AS sale_mem_nickname,
+	SM.grade		AS sale_mem_grade,
+	S.title			AS sale_title,
+	S.dongne2_id	AS sale_dongne2_id,
+	S.sale_state	AS sale_sale_state,
+	C.buy_mem_id	AS buy_mem_id,
+	BM.nickname		AS buy_mem_nickname,
+	C.regdate		AS regdate,
+	C.latest_date	AS latest_date
+FROM JOONGO_CHAT C
+	LEFT OUTER JOIN JOONGO_SALE S ON (C.SALE_ID = S.ID)
+	LEFT OUTER JOIN MEMBER SM ON (S.MEM_ID = SM.id)
+	LEFT OUTER JOIN MEMBER BM ON (C.BUY_MEM_ID = BM.id);
+
+
+CREATE OR REPLACE VIEW mall_pdt_view AS
+SELECT p.ID, d.NAME, c.NAME AS cat_cate_name, p.NAME AS pname, p.PRICE, p.CONTENT, p.SALE_YN, p.STOCK, p.IMAGE1, p.IMAGE2, p.IMAGE3, p.DELIVERY_KIND, p.DELIVERY_CONDITION, p.DELIVERY_PRICE, p.REGDATE 
+FROM MALL_PDT p LEFT OUTER JOIN mall_dog_cate d ON d.ID = p.DOG_CATE LEFT OUTER JOIN MALL_CAT_CATE c ON c.ID = p.CAT_CATE;

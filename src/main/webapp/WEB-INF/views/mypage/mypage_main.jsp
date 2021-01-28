@@ -18,7 +18,7 @@ $(document).ready(function(){
 		<th>회원정보</th> <th>거래정보</th> <th>쇼핑정보</th> <th>커뮤니티</th>
 	</tr>
 	<tr>
-		<td><a href="<c:url value="/mypage/pwd_confirm" />">회원정보 변경</a></td> <td>내 채팅목록</td> <td>장바구니</td> <td>내 게시물</td>
+		<td><a href="<c:url value="/mypage/pwd_confirm" />">회원정보 변경</a></td> <td>내 채팅목록</td> <td><a href="<c:url value="/mall/cart/list"/>">장바구니</a></td> <td>내 게시물</td>
 	</tr>
 	<tr>
 		<td><a href="<c:url value="/mypage/mypage_pwd" />">비밀번호 변경</a></td> <td>내 판매글</td> <td>주문내역</td> <td>내 댓글</td>
