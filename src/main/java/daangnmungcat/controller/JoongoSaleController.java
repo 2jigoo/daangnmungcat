@@ -63,10 +63,10 @@ public class JoongoSaleController {
 			}
 			
 		}
-			model.addAttribute("sale", sale);
-			model.addAttribute("flist", flist);
-			model.addAttribute("mlist", mlist);
-//			list.stream().forEach(System.out::println);
+//		list.stream().forEach(System.out::println);
+		model.addAttribute("sale", sale);
+		model.addAttribute("flist", flist);
+		model.addAttribute("mlist", mlist);
 		
 		// 댓글
 		List<SaleComment> commentList = commentService.selectJoongoCommentByAllPage(id, cri);

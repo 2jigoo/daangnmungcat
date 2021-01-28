@@ -129,7 +129,7 @@
          .section_goods_cl > li {float:left;  margin-right:20px;}
          .section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
          .section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
-         .section_goods_cl .section_img img {max-width:100%; max-height:100%; min-width:100%; min-height: 100% }
+         .section_goods_cl .section_img img {max-width:100%; max-height:100%;  }
          .section_goods_cl .section_txt {position:relative; color:#111;}
          .section_goods_cl .section_txt ul {position:absolute; right:0; top:0;}
          .section_goods_cl .section_txt ul li {float:left; margin-left:10px; font-size:0.7em;}
