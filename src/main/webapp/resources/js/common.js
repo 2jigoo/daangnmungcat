@@ -25,6 +25,48 @@ $(document).ready(function(){
     $(".history_back_btn").click(function(){
     	window.history.back();
     })
+    
+    // 상품 detail
+    var price = $(".product_detail .detail_info .txt_box .totalPrice p:last span").text().replace(",","");
+    $(".product_detail .detail_info .txt_box .length div p.up").click(function(){
+        var num = $(".product_detail .detail_info .txt_box .length div input").val();
+
+        if (num == 9999){
+            alert("최대 구매수량은 9999 입니다.")
+            return false;
+        }
+
+        $(".product_detail .detail_info .txt_box .length div input").val(++num);
+        var totalPrice = price * num;
+        $(".product_detail .detail_info .txt_box .totalPrice p:last span").text(totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    })
+
+    $(".product_detail .detail_info .txt_box .length div p.down").click(function(){
+        var num = $(".product_detail .detail_info .txt_box .length div input").val();
+
+        if (num == 1){
+            alert("최소 구매수량은 1 입니다.")
+            return false;
+        }
+
+        $(".product_detail .detail_info .txt_box .length div input").val(--num);
+        var totalPrice = price * num;
+        $(".product_detail .detail_info .txt_box .totalPrice p:last span").text(totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    })
+
+    $(".product_detail .detail_info .txt_box .length div input").keyup(function(event){
+        $(this).val( $(this).val().replace(/[^0-9]/gi,"") );
+        if ($(this).val() < 1 || $(this).val() > 9999){
+            alert("수량은 1에서 9999 사이의 값으로 입력해 주세요.")
+            $(this).val("1")
+            $(".product_detail .detail_info .txt_box .totalPrice p:last span").text(price)
+            return false;
+        }
+
+        var num = $(this).val();
+        var totalPrice = price * num;
+        $(".product_detail .detail_info .txt_box .totalPrice p:last span").text(totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    })
 })
 
 //현재 시간이랑 글 쓴 시간 비교

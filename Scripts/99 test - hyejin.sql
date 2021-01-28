@@ -32,6 +32,7 @@ INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, null, 1, '네츄럴코어', 13
 INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 2, null, '네츄럴코어', 13000, '네츄럴코어 사료입니다.', 'y', 100, NULL, NULL, NULL, 1, 50000, 3000, sysdate);
 INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 3, 3, '네츄럴코어', 13000, '네츄럴코어 사료입니다.', 'y', 100, NULL, NULL, NULL, 1, 50000, 3000, sysdate);
 INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, null, 4, '네츄럴코어', 13000, '네츄럴코어 사료입니다.', 'y', 100, NULL, NULL, NULL, 1, 50000, 3000, sysdate);
+INSERT INTO MALL_PDT VALUES(mall_pdt_seq.nextval, 1, 1, '네츄럴코어', 13000, '추가했따ㅏㅏㅏㅏㅏ.', 'n', 100, NULL, NULL, NULL, 1, 50000, 3000, sysdate);
 
 SELECT * FROM mall_pdt WHERE DOG_CATE IS NOT NULL;
 SELECT * FROM mall_pdt WHERE CAT_CATE IS NOT NULL;
