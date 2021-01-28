@@ -10,6 +10,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
@@ -43,10 +44,11 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 	@Override
-	public List<Sale> getListsById(int id) {
-		List<Sale> list = mapper.selectJoonSaleById(id);
+	@Transactional
+	public Sale getSaleById(int id) {
 		JSHits(id);
-		return list;
+		Sale sale = mapper.selectJoongoSaleById(id);
+		return sale;
 	}
 
 	@Override

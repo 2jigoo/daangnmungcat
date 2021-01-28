@@ -61,7 +61,7 @@
 </select>
 
 
-<select id="selectJoonSaleById" resultMap="saleResult" parameterType="int">
+<select id="selectJoongoSaleById" resultMap="saleResult" parameterType="int">
 	<include refid="viewSQL"></include>
 	<include refid="whereSQL"></include>
 </select>

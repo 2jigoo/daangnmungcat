@@ -101,7 +101,7 @@ public class ChatController {
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			loginUserId = loginUser.getId();
-			sale = saleService.getListsById(saleId).get(0);
+			sale = saleService.getSaleById(saleId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "redirect:/joongo_list";
