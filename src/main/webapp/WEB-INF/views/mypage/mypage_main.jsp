@@ -27,7 +27,7 @@ $(document).ready(function(){
 		<td><a href="<c:url value="/mypage/shipping_main" />">배송지 관리</a></td> <td>내 댓글</td> <td>상품 후기</td> <td></td>
 	</tr>
 	<tr>
-		<td><a href="<c:url value="/mypage/mypage_withdraw" />">회원 탈퇴</a></td> <td>찜리스트</td> <td>찜리스트</td> <td></td>
+		<td><a href="<c:url value="/mypage/mypage_withdraw" />">회원 탈퇴</a></td> <td><a href="<c:url value="/joongo/heart"/>">찜 목록</a></td> <td>찜리스트</td> <td></td>
 	</tr>
 	<tr>
 		<td></td> <td>거래후기</td> <td>마일리지</td> <td></td>

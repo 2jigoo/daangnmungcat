@@ -137,9 +137,10 @@ public class JoongoSaleController {
 		
 		Criteria criteria = new Criteria(page, 20);
 		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
+		list.forEach(sale -> log.debug(sale.toString()));
 		model.addAttribute("list", list);
 		
-		return "/joongoSale/heart";
+		return "/joongoSale/sale_hearted_list";
 	}
 	
 }

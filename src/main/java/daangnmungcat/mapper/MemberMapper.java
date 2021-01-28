@@ -5,12 +5,15 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import daangnmungcat.dto.Address;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
 
 public interface MemberMapper {
 	List<Member> selectMemberByAll();
+	List<Member> selectMemberByConditionWithPaging(@Param("member") Member member, @Param("criteria") Criteria criteria);
+	
 	Member selectMemberById(String id);
 	int deleteMember(String id);
 	int insertMember(Member member);

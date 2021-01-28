@@ -38,4 +38,5 @@ public class MemberController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
+	
 }

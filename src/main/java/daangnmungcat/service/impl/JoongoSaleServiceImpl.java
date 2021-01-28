@@ -1,28 +1,16 @@
   
 package daangnmungcat.service.impl;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-<<<<<<< HEAD
 import daangnmungcat.dto.Criteria;
-=======
-import daangnmungcat.dto.FileForm;
->>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat
 import daangnmungcat.dto.Sale;
-<<<<<<< HEAD
-=======
 import daangnmungcat.mapper.FileFormMapper;
->>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.service.JoongoSaleService;

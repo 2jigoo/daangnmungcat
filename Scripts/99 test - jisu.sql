@@ -118,3 +118,24 @@ FROM
 ) c LEFT OUTER JOIN MEMBER m ON (c.mem_id = m.id)
 WHERE rn >= 1 and rn <= 10
 ORDER BY rn desc;
+
+SELECT a.*
+FROM 
+	(
+		SELECT
+			rownum AS rn,
+			m.id, pwd, m.name, nickname, email, phone,
+			m.DONGNE1 AS dongne1_id,
+			d1.name AS dongne1_name,
+			m.dongne2 AS dongne2_id,
+			d2.name AS dongne2_name,
+			grade, profile_pic, profile_text, regdate, birthday,
+			zipcode, address1, address2, mileage, use_yn
+		FROM MEMBER m
+			LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+			LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
+		WHERE
+			m.name LIKE '%유%'
+		ORDER BY regdate
+	) a
+WHERE rn BETWEEN 1 AND 10;

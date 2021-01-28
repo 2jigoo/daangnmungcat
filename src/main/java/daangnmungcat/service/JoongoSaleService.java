@@ -5,11 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD
 import daangnmungcat.dto.Criteria;
-=======
-import daangnmungcat.dto.FileForm;
->>>>>>> branch 'master' of https://github.com/ssuktteok/daangnmungcat
 import daangnmungcat.dto.Sale;
 
 @Service
