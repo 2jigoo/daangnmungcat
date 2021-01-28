@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,6 +20,12 @@
 
     <!-- Custom styles for this template-->
     <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
+    
+    <link href="/resources/css/admin_common.css" rel="stylesheet">
+    
+    
+	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
+	<script src="<c:url value="/resources/js/admin_common.js" />" type="text/javascript" ></script>
 </head>
 <body id="page-top">
 
@@ -98,8 +106,8 @@
                 </a>
                 <div id="collapseMall" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="#">카테고리 관리</a>
-                        <a class="collapse-item" href="#">상품 관리</a>
+                        <a class="collapse-item" href="/admin/category/list">카테고리 관리</a>
+                        <a class="collapse-item" href="/admin/product/list">상품 관리</a>
                         <a class="collapse-item" href="#">주문 관리</a>
                         <a class="collapse-item" href="#">배송 관리</a>
                         <a class="collapse-item" href="#">마일리지 관리</a>

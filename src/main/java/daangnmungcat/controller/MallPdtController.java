@@ -1,7 +1,5 @@
 package daangnmungcat.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -12,12 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.Criteria;
@@ -51,14 +47,14 @@ public class MallPdtController {
 		model.addAttribute("catCate", catCate);
 		model.addAttribute("deliveryList", deliveryList);
 		
-		return "/mall/mall_pdt_add";
+		return "/admin/product/product_write";
 	}
 	
 	@PostMapping("/mall/product/write")
 	public String insertWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
 		service.insertMallProduct(product, thumbFile, file, request);
 
-		return "redirect:/admin/mall/product/list";
+		return "redirect:/admin/product/list";
 	}
 	
 	//카테고리
@@ -153,33 +149,6 @@ public class MallPdtController {
 		view.addObject("pdt", pdt);
 		view.setViewName("/mall/mall_detail");
 		return view;
-	}
-	
-	@GetMapping("/mall/product/update")
-	public String updateViewProduct(Model model, @RequestParam int id) {
-		MallProduct pdt = service.getProductById(id);
-		model.addAttribute("pdt", pdt);
-
-		List<MallCate> dogCate = cateService.selectByAllDogCate();
-		List<MallCate> catCate = cateService.selectByAllCatCate();
-		
-		model.addAttribute("dogCate", dogCate);
-		model.addAttribute("catCate", catCate);
-		
-		return "/mall/mall_pdt_update";
-	}
-	
-	@PostMapping("/mall/product/update")
-	public String updateWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
-		service.updateMallProduct(product, thumbFile, file, request);
-
-		return "redirect:/admin/mall/product/list";
-	}
-	
-	@GetMapping("/mall/product/delete")
-	public String deleteProduct(@RequestParam int id) {
-		service.deleteMallProduct(id);
-		return "redirect:/admin/mall/product/list";
 	}
 	
 	

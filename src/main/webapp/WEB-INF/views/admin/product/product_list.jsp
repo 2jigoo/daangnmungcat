@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	
-	$(".mall_adm_list .delete_btn").click(function(){
+	$(".delete_btn").click(function(){
 		if (confirm("정말 삭제하시겠습니까??") == true){
 		} else{
 		    return false;
@@ -13,11 +13,20 @@ $(function(){
 	})
 });
 </script>
-<div id="subContent">
-	<h2 id="subTitle">${name}</h2>
-	<div id="pageCont" class="s-inner mall_adm_list">
-		<a href="<%=request.getContextPath() %>/mall/product/write" class="write_btn">상품등록</a>
-		<table>
+
+<div class="card shadow mb-4">
+	<div class="card-header py-2">
+		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
+			<div class="mt-2 float-left">상품 리스트</div>
+			<button id="addNew" class="btn btn-success btn-sm" onclick="location.href='/admin/product/write' " style="float: right;">상품 등록</button>
+			<!-- <button id="deselectAll" class="btn btn-outline-secondary btn-sm" style="float: right;  margin-right: 10px;">선택해제</button>
+			<button id="selectAll" class="btn btn-secondary btn-sm" style="float: right;  margin-right: 10px;">전체선택</button>
+           	<button id="deleteSelected"class="btn btn-danger btn-sm" style="float: right; margin-right: 10px;">예약 취소</button> -->
+		</h6>
+	</div>
+	<!-- card-body -->
+	<div class="card-body">
+		<table class="adm_table_style1">
 			<colgroup>
 				<col width="13%">
 				<col width="28%">
@@ -56,8 +65,8 @@ $(function(){
 					<td class="tc"><fmt:formatNumber value="${list.price}" /> 원</td>
 					<td rowspan="2"  class="tc">${list.saleYn}</td>
 					<td rowspan="2">
-						<a href="<%=request.getContextPath() %>/mall/product/update?id=${list.id}">수정</a>
-						<a href="<%=request.getContextPath() %>/mall/product/delete?id=${list.id}" class="delete_btn">삭제</a>
+						<a href="<%=request.getContextPath() %>/admin/product/update?id=${list.id}">수정</a>
+						<a href="<%=request.getContextPath() %>/admin/product/delete?id=${list.id}" class="delete_btn">삭제</a>
 						<a href="<%=request.getContextPath() %>/mall/product/${list.id}">보기</a>
 					</td>
 				</tr>
@@ -88,4 +97,4 @@ $(function(){
 </div>
 
 
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/admin/include/footer.jsp" %>
