@@ -48,6 +48,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public Sale getSaleById(int id) {
 		JSHits(id);
 		Sale sale = mapper.selectJoongoSaleById(id);
+		//이미지들 구해와서 set
 		return sale;
 	}
 

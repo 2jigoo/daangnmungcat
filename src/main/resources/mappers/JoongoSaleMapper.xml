@@ -2,11 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.JoongoSaleMapper">
 <sql id="selectSQL">
-	SELECT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+	SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
-	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT , THUM_NAME 
 	FROM JOONGO_SALE s 
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
+	LEFT JOIN (
+		SELECT *
+		FROM JOONGO_IMAGE
+		WHERE THUM_NAME IS NOT null
+	) ji ON s.ID = ji.SALE_ID
 	JOIN MEMBER m ON s.MEM_ID = m.id
 </sql>
 
@@ -16,7 +21,7 @@
 
 <sql id="viewAndRowNumSQL">
 	SELECT rownum, id, MEM_ID, DONGNE1_NAME ,DONGNE2_NAME , grade, PROFILE_PIC , DOG_CATE ,CAT_CATE ,TITLE ,
-	CONTENT ,PRICE ,REGDATE ,REDATE , SALE_STATE ,BUY_MEM_ID ,HITS , CHAT_COUNT,HEART_COUNT 
+	CONTENT ,PRICE ,REGDATE ,REDATE , SALE_STATE ,BUY_MEM_ID ,HITS , CHAT_COUNT,HEART_COUNT, thum_name
 	FROM (SELECT * from SALE_VIEW ORDER BY regdate DESC )
 </sql>
 
@@ -54,6 +59,7 @@
 	<result column="HITS" property="hits"/>
 	<result column="CHAT_COUNT" property="chatCount"/>
 	<result column="HEART_COUNT" property="heartCount"/>
+	<result column="THUM_NAME" property="thumImg"/>
 </resultMap>
 
 <select id="selectJoongoSaleByAll" resultMap="saleResult">
