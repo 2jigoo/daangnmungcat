@@ -47,7 +47,7 @@ public class Sale {
 	
 	private int hits;
 	private int chatCount;
-	private String isHeart;
+	private boolean hearted;
 	private int heartCount;
 	
 	private String thumImg;

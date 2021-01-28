@@ -79,6 +79,12 @@
 		WHERE chat_id = #{id} and mem_id != #{memberId} and read_yn = 'n'
 	</update>
 	
+	<update id="updateChatLatestDate" parameterType="ChatMessage">
+		UPDATE JOONGO_CHAT
+		SET latest_date = #{regdate}
+		WHERE id = #{chat.id}
+	</update>
+	
 	<delete id="deleteChat" parameterType="Chat">
 		delete from JOONGO_CHAT where id = #{id}
 	</delete>

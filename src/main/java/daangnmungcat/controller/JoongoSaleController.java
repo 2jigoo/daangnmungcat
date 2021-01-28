@@ -46,40 +46,26 @@ public class JoongoSaleController {
 	@RequestMapping(value = "joongoSale/detailList", method = RequestMethod.GET)
 	public String listById(@RequestParam int id, Model model, HttpSession session, Criteria cri) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		if (loginUser == null) {
-			// 무조건 하트 0으로 설정
-			List<Sale> list = service.getListsById(id);
-			String memId = list.get(0).getMember().getId();
-			List<Sale> mlist = service.getListByMemID(memId);
-			List<FileForm> flist = service.selectImgPath(id);
-			model.addAttribute("flist", flist);
-			model.addAttribute("list", list);
-				if (mlist.size() == 1) {
-					model.addAttribute("emptylist", 1);
-				}
-//		list.stream().forEach(System.out::println);
-			service.JSHits(id);
-			list.get(0).setHits(list.get(0).getHits()+1);
-			model.addAttribute("mlist", mlist);
-			model.addAttribute("isLiked", 1);
-		} else {
-			List<Sale> list = service.getListsById(id);
-			String memId = list.get(0).getMember().getId();
-			List<Sale> mlist = service.getListByMemID(memId);
-			List<FileForm> flist = service.selectImgPath(id);
-			model.addAttribute("flist", flist);
-			model.addAttribute("list", list);
-				if (mlist.size() == 1) {
-					model.addAttribute("emptylist", 1);
-				}
-			model.addAttribute("mlist", mlist);
+		
+		Sale sale = service.getSaleById(id);
+		String memId = sale.getMember().getId();
+		
+		List<Sale> mlist = service.getListByMemID(memId);
+		List<FileForm> flist = service.selectImgPath(id);
+		
+		if (loginUser != null) {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("id", id);
 			map.put("memId", loginUser.getId());
-				if (mapper.countHeart(map) == 0) {
-	//				System.out.println("좋아요안되있는상태");
-					model.addAttribute("isLiked", 1);
-				}
+			
+			if(mapper.countHeart(map) != 0) {
+				sale.setHearted(true);
+			}
+			
+			model.addAttribute("sale", sale);
+			model.addAttribute("flist", flist);
+			model.addAttribute("mlist", mlist);
+//			list.stream().forEach(System.out::println);
 		}
 		
 		// 댓글
@@ -111,7 +97,7 @@ public class JoongoSaleController {
 				mapper.insertHeart(map);
 				Smapper.inserthearCount(id);
 
-				String textUrl = "joongoSale/detailList?id=" + id;
+				String textUrl = "/joongoSale/detailList?id=" + id;
 				model.addAttribute("msg", "찜 처리하였습니다.");
 				model.addAttribute("url", textUrl);
 			}
@@ -124,15 +110,28 @@ public class JoongoSaleController {
 	@GetMapping("/heartNo")
 	public String heartNo(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("id", id);
-			map.put("memId", loginUser.getId());
-			mapper.deleteHeart(map);
-			Smapper.deletehearCount(id);
-			String textUrl = "joongoSale/detailList?id=" + id;
-			model.addAttribute("msg", "찜 해제하였습니다.");
-			model.addAttribute("url", textUrl);
-			return "/joongoSale/alertFrom";
-		}
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("id", id);
+		map.put("memId", loginUser.getId());
+		mapper.deleteHeart(map);
+		Smapper.deletehearCount(id);
+		String textUrl = "/joongoSale/detailList?id=" + id;
+		model.addAttribute("msg", "찜 해제하였습니다.");
+		model.addAttribute("url", textUrl);
+		return "/joongoSale/alertFrom";
 	}
-
+	
+	
+	@GetMapping("/joongo/heart/list")
+	public String heartedList(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		
+		Criteria criteria = new Criteria(page, 20);
+		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
+		list.forEach(sale -> log.debug(sale.toString()));
+		model.addAttribute("list", list);
+		
+		return "/joongoSale/sale_hearted_list";
+	}
+	
+}

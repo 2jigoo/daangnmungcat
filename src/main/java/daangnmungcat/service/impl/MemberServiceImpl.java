@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Address;
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
@@ -33,6 +34,11 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.selectMemberByAll();
 	}
 
+	@Override
+	public List<Member> getList(Member member, Criteria criteria) {
+		return mapper.selectMemberByConditionWithPaging(member, criteria);
+	}
+	
 	@Override
 	public Member selectMemberById(String id) {
 		return mapper.selectMemberById(id);
