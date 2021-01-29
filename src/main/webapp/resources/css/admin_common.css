@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+@font-face {font-family: 'S-CoreDream'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff'); font-weight:400; font-style: normal;}
+@font-face {font-family: 'S-CoreDream'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff') format('woff'); font-weight:500; font-style: normal;}
+@font-face {font-family: 'S-CoreDream'; src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff') format('woff'); font-weight:600; font-style: normal;}
+
+
+.tc {text-align:center;}
+
+.fr {float:right;}
+
+.ml5 {margin-left:5px;}
+
+.adm_table_style1 {width:100%; border-collapse:collapse; font-family:'S-CoreDream'; color:#353535;}
+.adm_table_style1 thead th {background:#404d69; color:#fff; text-align:center; border:1px solid rgba(255,255,255,0.1); padding:10px;}
+.adm_table_style1 tbody td {border:1px solid #ddd; padding:10px;}
+.adm_table_style1 tbody td a {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
+.adm_table_style1 img {width:100%;}
+
+.board_page {text-align:center; margin-top:50px;}
+.board_page ul {display:inline-block;}
+.board_page > p, .board_page ul li {display:inline-block; vertical-align:top; line-height:30px; border:1px solid #ccc; padding:0 10px; font-size:0.93em;}
+.board_page ul li a {text-decoration:none !important; color:#353535; font-family:'S-CoreDream'}
+
+.mall_cate_list .tit {font-size:1.5em; color:#111; font-weight:500; font-family:'S-CoreDream'}
+
+.mall_cate_write {width:100%; overflow:hidden; font-family:'S-CoreDream'}
+.mall_cate_write select {float:left; display:block; width:10%; height:45px; border-radius:0; border:1px solid #ccc;}
+.mall_cate_write input[type="text"] {float:left; display:block; width:calc(80% - 10px); height:45px; border-radius:0; border:1px solid #ccc; margin:0 5px;}
+.mall_cate_write input[type="submit"] {float:left; display:block; width:10%; height:45px; border-radius:0; border:0; background:#2c4fb5; color:#fff;}
+
+.mall_cate_update {width:100%; overflow:hidden; font-family:'S-CoreDream'}
+.mall_cate_update input[type="text"] {float:left; display:block; width:calc(90% - 5px); height:45px; border-radius:0; border:1px solid #ccc; margin-right:5px;}
+.mall_cate_update input[type="submit"] {float:left; display:block; width:10%; height:45px; border-radius:0; border:0; background:#2c4fb5; color:#fff;}
+
+.mall_pdt_write {font-family:'S-CoreDream'; width:100%; overflow:hidden;}
+.mall_pdt_write ul, .mall_pdt_write ul li {margin:0; padding:0;}
+.mall_pdt_write ul li {display:table; width:100%; margin-top:-1px;}
+.mall_pdt_write ul li:first-child {margin-top:0;}
+.mall_pdt_write ul li > p, .mall_pdt_write ul li > div {display:table-cell; vertical-align:middle; border:1px solid #ddd; padding:10px;}
+.mall_pdt_write ul li > p {width:15%; text-align:center; background:#f7f7f7;}
+.mall_pdt_write ul li > div {width:85%; border-left:0;}
+.mall_pdt_write ul li select, .mall_pdt_write ul li input[type="text"], .mall_pdt_write ul li textarea {display:block; width:500px; max-width:100%; height:45px; border-radius:0; border:1px solid #ddd;}
+.mall_pdt_write ul li textarea {height:200px; resize:none;}
+.mall_pdt_write ul li input[type="file"] {display:block; margin:3px 0;}
+.mall_pdt_write input[type="submit"] {display:block; float:right; margin-top:20px; padding:0 30px; color:#fff; height:45px; background:#3457bb; border:0;}
+
+
+.adm_joongo_ico {overflow:hidden; margin:5px 0 0 0; padding:0;}
+.adm_joongo_ico li {float:left; margin:0 10px 0 0; font-size:0.7em; list-style:none;}
+.adm_joongo_ico li.heart {background:url(../images/ico_heart.png) no-repeat left center; padding-left:15px;}
+.adm_joongo_ico li.chat {background:url(../images/ico_chat.png) no-repeat left center; padding-left:22px;}
+
+.history_back_btn {display:inline-block; margin-top:20px; padding:0 30px; color:#fff; line-height:45px; font-family:'S-CoreDream'; background:#808080; text-decoration:none !important;}
+.history_back_btn:hover {color:#fff;}

@@ -1,6 +1,10 @@
 package daangnmungcat.dto;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +24,8 @@ public class Heart {
 	private int id;
 	private Member member;
 	private Sale sale;
-	private Date regdate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+	private LocalDateTime regdate;
 	private int cnt;
 }

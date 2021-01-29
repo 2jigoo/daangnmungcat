@@ -3,9 +3,12 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
+var product_id;
+
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 
+	product_id = ${pdt.id};
 	
 	$('#od_qtt').on('keyup', function(){
 		var price = ${pdt.price};
@@ -61,8 +64,37 @@ $(document).ready(function(){
 		});
 	});
 	
-	
 });
+
+
+//카트에 추가하기
+function addCart() {
+	var cart = {
+			product: {id: product_id},
+			quantity: $('#od_qtt').val()
+	}
+	
+	console.log(cart);
+	
+	$.ajax({
+		url: "/mall/cart",
+		type: "post",
+		contentType:"application/json; charset=utf-8",
+		dataType: "text",
+		cache : false,
+		data : JSON.stringify(cart),
+		success: function(res) {
+			var confirm_res = confirm("장바구니에 담았습니다. 장바구니로 이동하겠습니까?");
+			if(confirm_res == true) {
+				location.href = "/mall/cart/list";
+			}
+		},
+		error: function(error){
+			alert('장바구니에 담는 데 실패했습니다.');
+			console.log(error);
+		}
+	});
+}
 
 
 </script>
@@ -76,6 +108,7 @@ $(document).ready(function(){
 					<c:if test="${not empty pdt.image1}"><img src="<c:url value="/resources${pdt.image1}" />"></c:if>
 				</div>
 				<div class="txt_box">
+					<input type="hidden" value="${pdt.id }" name="id" id="pdt_id">
 					<p class="name">${pdt.name}</p>
 					<p class="content">${pdt.content}</p>
 					<dl>
@@ -96,7 +129,7 @@ $(document).ready(function(){
 						<p>수량</p>
 						<div>
 							<p class="down"><span class="text_hidden">감소</span></p>
-							<input type="text" value="1" id="od_qtt">
+							<input type="text" value="1" id="od_qtt" name="quantity">
 							<p class="up"><span class="text_hidden">증가</span></p>
 						</div>
 					</div>
@@ -107,7 +140,7 @@ $(document).ready(function(){
 						<p><input type="text" value="${pdt.price}" id="price" onchange="comma(${pdt.price})"></p>
 					</div>
 					<ul class="btn">
-						<li><a href="#">장바구니</a></li>
+						<li><a href="#" onclick="addCart()">장바구니</a></li>
 						<li><a href="<c:url value="/mall/mall_pre_order" />" id="order_btn">바로구매</a></li>
 					</ul>
 				</div>

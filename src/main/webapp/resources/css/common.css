@@ -270,11 +270,6 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .comment_write textarea:focus {outline:none;}
 .comment_write .btn {float:right; display:block; width:140px; height:100px; border-radius:0; border:0; background:#ff7e15; padding-left:0; font-size:1.125em; color:#fff; font-family:'S-CoreDream'; cursor:pointer;}
 
-.mall_adm_list table {width:100%; border-collapse:collapse;}
-.mall_adm_list table thead th {background:#404d69; color:#fff; text-align:center; border:1px solid rgba(255,255,255,0.1); padding:10px;}
-.mall_adm_list table tbody td {border:1px solid #ddd; padding:10px;}
-.mall_adm_list table tbody td a {display:block;}
-.mall_adm_list table img {width:100%;}
 
 
 .product_detail .detail_info {width:100%; overflow:hidden;}

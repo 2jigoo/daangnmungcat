@@ -9,41 +9,44 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @JsonInclude(Include.NON_DEFAULT)
-public class MallProduct {
+public class Cart {
+
 	private int id;
-	private MallCate dogCate;
-	private MallCate catCate;
-	private String name;
-	private int price;
-	private String content;
-	private String saleYn;
-	private int stock;
-	private String image1;
-	private String image2;
-	private String image3;
-	private String deliveryKind;
-	private int deliveryCondition;
-	private int deliveryPrice;
+	private Member member;
+	private MallProduct product;
+	private int quantity;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime regdate;
+	
+	// 해당 상품 * 수량 = 금액(amount)
+	private int amount;
 
-	public MallProduct(int id) {
+	public Cart(int id) {
 		this.id = id;
+	}
+	
+	public Cart(Member member, MallProduct product) {
+		this.member = member;
+		this.product = product;
+	}
+	public Cart(int id, Member member, MallProduct product, int quantity) {
+		this.id = id;
+		this.member = member;
+		this.product = product;
+		this.quantity = quantity;
 	}
 	
 }
