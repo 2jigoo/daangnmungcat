@@ -1,4 +1,4 @@
-package daangnmungcat.controller;
+package daangnmungcat.controller.admin;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +18,7 @@ import daangnmungcat.service.MallCateService;
 import daangnmungcat.service.MallPdtService;
 
 @Controller
-public class MallCateController {
+public class AdminMallCateController {
 	
 	@Autowired
 	private MallCateService service;
@@ -27,7 +26,7 @@ public class MallCateController {
 	@Autowired
 	private MallPdtService pdtService;
 	
-	@GetMapping("/mall/cate/list")
+	@GetMapping("/admin/category/list")
 	public String listCate(Model model) {
 		List<MallCate> dogCate = pdtService.dogCateList();
 		List<MallCate> catCate = pdtService.catCateList();
@@ -35,15 +34,15 @@ public class MallCateController {
 		model.addAttribute("dogCate", dogCate);
 		model.addAttribute("catCate", catCate);
 		
-		return "/mall/mall_cate_list";
+		return "/admin/category/cate_list";
 	}
 	
-	@GetMapping("/mall/cate/write")
+	@GetMapping("/admin/category/write")
 	public String insertViewCate() {
-		return "/mall/mall_cate_add";
+		return "/admin/category/cate_write";
 	}
 	
-	@PostMapping("/mall/cate/write")
+	@PostMapping("/admin/category/write")
 	public ResponseEntity<Object> insertWriteCate(@RequestBody Map<String, String> cate){
 		try {
 			return ResponseEntity.ok(service.insertMallCate(cate.get("cateName"), new MallCate(0, cate.get("name"))));
@@ -52,15 +51,15 @@ public class MallCateController {
 		}
 	}
 	
-	@GetMapping("/mall/cate/update")
+	@GetMapping("/admin/category/update")
 	public String updateViewCate(@RequestParam String cateName, @RequestParam int id, Model model) {
 		MallCate item = service.selectByIdCate(cateName, id);
 		model.addAttribute("item", item);
 		
-		return "/mall/mall_cate_update";
+		return "/admin/category/cate_update";
 	}
 	
-	@PostMapping("/mall/cate/update")
+	@PostMapping("/admin/category/update")
 	public ResponseEntity<Object> updateWriteCate(@RequestBody Map<String, String> cate){
 		try {
 			return ResponseEntity.ok(service.updateMallCate(cate.get("cateName"), new MallCate(Integer.parseInt(cate.get("id")), cate.get("name"))));
@@ -69,9 +68,10 @@ public class MallCateController {
 		}
 	}
 	
-	@GetMapping("/mall/cate/delete")
+	@GetMapping("/admin/category/delete")
 	public String deleteCate(@RequestParam String cateName, @RequestParam int id) {
 		service.deleteMallCate(cateName, id);
-		return "redirect:/mall/cate/list";
+		return "redirect:/admin/category/list";
 	}
+
 }

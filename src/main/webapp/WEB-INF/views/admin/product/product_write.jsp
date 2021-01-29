@@ -1,24 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 
 <script>
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
-	
-	$("select[name='deliveryKind']").change(function(){
-		if ($(this).val() == "무료배송"){
-			$("input[name='deliveryCondition']").val("0").attr("disabled", true);
-			$("input[name='deliveryPrice']").val("0").attr("disabled", true);
-		} else if ($(this).val() == "유료배송"){
-			$("input[name='deliveryCondition']").val("0").attr("disabled", true);
-			$("input[name='deliveryPrice']").val("").attr("disabled", false);
-		} else {
-			$("input[name='deliveryCondition']").val("").attr("disabled", false);
-			$("input[name='deliveryPrice']").val("").attr("disabled", false);
-		}
-	})
 	
 	$("#pdt_write_btn").click(function(e){
 		e.preventDefault();
@@ -72,14 +59,32 @@ $(function(){
 		$("form[name='pdtWrite']").submit()
 	})
 })
+
+$(document).on("change", "select[name='deliveryKind']", function(){
+	if ($(this).val() == "무료배송"){
+		$("input[name='deliveryCondition']").val("0").attr("disabled", true);
+		$("input[name='deliveryPrice']").val("0").attr("disabled", true);
+	} else if ($(this).val() == "유료배송"){
+		$("input[name='deliveryCondition']").val("0").attr("disabled", true);
+		$("input[name='deliveryPrice']").val("").attr("disabled", false);
+	} else {
+		$("input[name='deliveryCondition']").val("").attr("disabled", false);
+		$("input[name='deliveryPrice']").val("").attr("disabled", false);
+	}
+})
 </script>
 
 
-<div id="subContent">
-	<h2 id="subTitle">쇼핑몰 상품 추가</h2>
-	<div id="pageCont" class="s-inner">
+<div class="card shadow mb-4">
+	<div class="card-header py-2">
+		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
+			<div class="mt-2 float-left">상품 추가</div>
+		</h6>
+	</div>
+	<!-- card-body -->
+	<div class="card-body">
 		<div class="mall_pdt_write">
-			<form name="pdtWrite" action="<%=request.getContextPath() %>/mall/product/write" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+			<form name="pdtWrite" action="/admin/product/write" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<ul>
 					<li>
@@ -170,10 +175,11 @@ $(function(){
 					</li>
 				</ul>
 				
+				<a href="#" class="history_back_btn fr ml5">목록</a>
 				<input type="submit" id="pdt_write_btn" value="전송">
 			</form>
 		</div>
 	</div>
 </div>
 
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/admin/include/footer.jsp" %>

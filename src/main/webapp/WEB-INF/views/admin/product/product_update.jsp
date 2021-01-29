@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 
 <script>
 $(function(){
@@ -10,6 +10,13 @@ $(function(){
 	$("select[name='dogCate.id']").val(${pdt.dogCate.id}).prop("selected", true)
 	$("select[name='catCate.id']").val(${pdt.catCate.id}).prop("selected", true)
 	$("select[name='deliveryKind']").val("${pdt.deliveryKind}").prop("selected", true)
+	
+	if ($("select[name='deliveryKind']").val() == "무료배송"){
+		$("input[name='deliveryCondition']").attr("disabled", true);
+		$("input[name='deliveryPrice']").attr("disabled", true);
+	} else if ($("select[name='deliveryKind']").val() == "유료배송"){
+		$("input[name='deliveryCondition']").attr("disabled", true);
+	}
 	
 	$("input[name='saleYn']:radio[value='${pdt.saleYn}']").prop('checked', true)
 	
@@ -81,11 +88,17 @@ $(function(){
 })
 </script>
 
-<div id="subContent">
-	<h2 id="subTitle">쇼핑몰 상품 추가</h2>
-	<div id="pageCont" class="s-inner">
+
+<div class="card shadow mb-4">
+	<div class="card-header py-2">
+		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
+			<div class="mt-2 float-left">상품 수정</div>
+		</h6>
+	</div>
+	<!-- card-body -->
+	<div class="card-body mall_adm_list">
 		<div class="mall_pdt_write">
-			<form name="pdtWrite" action="<%=request.getContextPath() %>/mall/product/update" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+			<form name="pdtWrite" action="/admin/product/update" method="post" enctype="multipart/form-data" accept-charset="utf-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<input type="hidden" name="id" value="${pdt.id}">
 				<ul>
@@ -144,9 +157,9 @@ $(function(){
 						<p>배송비 종류</p>
 						<div>
 							<select name="deliveryKind">
-								<option value="조건부 무료배송">조건부 무료배송</option>
-								<option value="무료배송">무료배송</option>
-								<option value="유료배송">유료배송</option>
+								<c:forEach items="${deliveryList}" var="deliveryList">
+									<option value="${deliveryList.name}">${deliveryList.name}</option>
+								</c:forEach>
 							</select>
 						</div>
 					</li>
@@ -180,11 +193,11 @@ $(function(){
 					</li>
 				</ul>
 				
+				<a href="#" class="history_back_btn fr ml5">목록</a>
 				<input type="submit" id="pdt_update_btn" value="수정">
-				<a href="#" class="history_back_btn">목록</a>
 			</form>
 		</div>
 	</div>
 </div>
 
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/admin/include/footer.jsp" %>

@@ -27,4 +27,7 @@ public interface JoongoSaleService {
 	
 	// 해당 회원의 페이징된 찜 목록
 	List<Sale> getHeartedList(String memberId, Criteria criteria);
+	
+	List<Sale> selectJoongoByAllPage(Criteria cri);
+	int listCount();
 }

@@ -30,6 +30,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	private JoongoSaleMapper mapper;
 	
 	@Autowired
+	private JoongoListMapper joongoListMapper;
+	
+	@Autowired
 	private JoongoListMapper listMapper;
 	
 	@Autowired
@@ -137,6 +140,16 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public List<Sale> getHeartedList(String memberId, Criteria criteria) {
 		List<Sale> list = listMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
 		return list;
+	}
+
+	@Override
+	public List<Sale> selectJoongoByAllPage(Criteria cri) {
+		return joongoListMapper.selectJoongoByAllPage(cri);
+	}
+
+	@Override
+	public int listCount() {
+		return joongoListMapper.listCount();
 	}
 
 }
