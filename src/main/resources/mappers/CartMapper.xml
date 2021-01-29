@@ -52,7 +52,7 @@
 	<update id="updateCartItem" parameterType="Cart">
 		UPDATE mall_cart
 		SET
-			quantity = #{quantity.id},
+			quantity = #{quantity},
 			regdate = sysdate
 		WHERE id = #{id}
 	</update>

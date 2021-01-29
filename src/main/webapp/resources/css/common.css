@@ -423,3 +423,23 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 	.list_location .my_location {line-height:35px;}
 	.list_location > div select {width:140px; height:35px;}
 }
+
+
+
+/* mall - cart */
+
+.cart_table {width:100%; border-collapse:collapse; font-family:'S-CoreDream'; color:#353535;}
+.cart_table thead th {background:#404d69; color:#fff; text-align:center; border:1px solid rgba(255,255,255,0.1); padding:10px;}
+.cart_table tbody td {border:1px solid #ddd; padding:10px; text-align:center;}
+.cart_table tbody td:nth-child(3) {text-align:left !important; padding:0px 20px;}
+.cart_table tbody td a {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
+
+.cart_thumb img {width: 100px;}
+.cart_table .qtt {text-align:center; margin-top: 6px;}
+.cart_table .qtt div {overflow:hidden; display:inline-block;}
+.cart_table .qtt div input {float:left; width:50px; height:30px; border-radius:0; border:0; border-top:1px solid #ccc; border-bottom:1px solid #ccc; text-align:center;}
+.cart_table .qtt div p {float:left; width:30px; height:30px; border:1px solid #ccc; cursor:pointer; background-repeat:no-repeat; background-position:center center;}
+.cart_table .qtt div p.down {background-image:url(../images/ico_down.png);}
+.cart_table .qtt div p.up {background-image:url(../images/ico_up.png)}
+
+.cart_table .delete_btn {cursor: pointer; color: crimson;}
