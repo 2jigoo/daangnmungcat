@@ -126,7 +126,9 @@
    /* section_goods 부분 */
 
          .section_goods_cl {overflow:hidden;}
-         .section_goods_cl > li {float:left;  margin-right:20px;}
+         .section_goods_cl > li {float:left; width:calc(25% - 15px); margin-right:20px;}
+		.section_goods_cl > li:nth-of-type(4n) {margin-right:0;}
+		.section_goods_cl > li:nth-of-type(4) ~ li {margin-top:40px;}
          .section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
          .section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
          .section_goods_cl .section_img img {max-width:100%; max-height:100%;  }
@@ -153,8 +155,8 @@
          
          @media screen and (max-width:767px){
             .product_list > li {width:calc(50% - 5px); margin-right:10px;}
-            .product_list > li:nth-child(even) {margin-right:0;}
-            .product_list > li:nth-child(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
+            .product_list > li:nth-of-type(even) {margin-right:0;}
+            .product_list > li:nth-of-type(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
             .product_list .img {height:40vw;}
          }
          
