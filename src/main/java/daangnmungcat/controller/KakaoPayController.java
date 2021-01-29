@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.KakaoPayApprovalVO;
+import daangnmungcat.dto.Member;
 import daangnmungcat.service.KakaoPayService;
+import daangnmungcat.service.MemberService;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -25,22 +28,29 @@ import lombok.extern.log4j.Log4j2;
 public class KakaoPayController {
 	
 	@Autowired
+	private MemberService memberService;
+	
+	@Autowired
 	private KakaoPayService service;
 	
 	@GetMapping("/kakao-pay")
 	public void kakaoGet(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
-		System.out.println("kakao-pay get");
+
 	}
 	
 	@PostMapping("/kakao-pay")
 	public String kakaoPost(HttpServletRequest request, HttpSession session) {
-		log.info("kakao post..................");
+		log.info("kakao - post");
+		session = request.getSession();
+		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+		Member loginUser = memberService.selectMemberById(info.getId());
 		
 		request.setAttribute("pdt_id", "pdt_id");
 		request.setAttribute("pdt_name", "pdt_name");
 		request.setAttribute("pdt_qtt", "pdt_qtt");
 		request.setAttribute("total", "total");
-		request.setAttribute("mem_id","mem_id");
+		request.setAttribute("mem_id", "mem_id");
+		System.out.println("loginUser:" + loginUser.getId());
 		
 		return "redirect:" + service.kakaoPayReady(request,session);
 	}
@@ -48,7 +58,7 @@ public class KakaoPayController {
 	@GetMapping("/kakaoPaySuccess")
 	public ModelAndView kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model, HttpServletRequest request, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
-		log.info("kakaoPaySuccess get............................................");
+		log.info("kakaoPaySuccess - get");
 		log.info("kakaoPaySuccess pg_token : " + pg_token);
 		
 		mv.setViewName("/mall/pay_success");

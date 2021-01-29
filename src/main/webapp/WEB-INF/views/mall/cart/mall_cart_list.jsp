@@ -4,7 +4,7 @@
 <script>
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
-
+	
 	/* $('#order_btn').on('click', function(){
 		var total = $('#price').val();
 		var qtt = $('#od_qtt').val();
@@ -130,7 +130,7 @@ function deleteCartItem(cart_id) {
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
-			<form action="#" method="get">
+			<form action="/pre-order/" method="post">
 				<table class="cart_table">
 					<colgroup>
 						<col width="60px">

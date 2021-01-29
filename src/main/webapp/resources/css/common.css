@@ -443,3 +443,17 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 .cart_table .qtt div p.up {background-image:url(../images/ico_up.png)}
 
 .cart_table .delete_btn {cursor: pointer; color: crimson;}
+
+
+/* mall - pre-order */
+.pre-order {width:100%; margin:0 auto; padding:30px;}
+.pre_order_table {width:80%; margin:0 auto; text-align:center;}
+.pre_order_table tbody input {width:70px; text-align:center; border:none; font-family:'S-CoreDream'; font-weight:400;}
+#pdt_name, #deli_price, #deli_kind, #deli_condition {width:150px;}
+.pre_order_btn {text-align:center}
+.pre_order_box { margin:0 auto; width:100%; text-align:center; padding:30px; }
+.pre_order_box .box1 {float:left; padding:20px;}
+.pre_order_box .box2 {float:left; padding:20px;}
+.pre_order_box .box3 {float:left;  padding:20px;}
+.pre_order_info {clear:both}
+.pre_order_btn {text-align:center; padding:20px;}

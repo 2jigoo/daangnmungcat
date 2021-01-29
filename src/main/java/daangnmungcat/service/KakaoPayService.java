@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import daangnmungcat.dto.KakaoPayApprovalVO;
 
 public interface KakaoPayService {
+	
 	String kakaoPayReady(HttpServletRequest request, HttpSession session);
+	
 	KakaoPayApprovalVO kakaoPayInfo(String pg_token, HttpServletRequest request, HttpSession session);
 }
