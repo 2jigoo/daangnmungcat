@@ -17,6 +17,8 @@ public interface JoongoListMapper {
 	
 	List<Sale> selectJoongoByDongne2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2, @Param("cri") Criteria cri);
 	
+	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
+	
 	//insertForm용
 	List<Sale> selectDongne1ByAll(@Param("dongne1") String dongne1);
 	List<Sale> selectDongne2ByAll(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
