@@ -41,8 +41,8 @@ public class JoongoSaleMapperTest {
 	@Test
 	public void test02SelectJoonSaleById() {
 		int id = 2;
-		List<Sale> list = mapper.selectJoonSaleById(id);
-		list.stream().forEach(System.out::println);
+		Sale sale = mapper.selectJoongoSaleById(id);
+		System.out.println(sale);
 	}
 
 	@Test

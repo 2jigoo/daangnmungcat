@@ -21,6 +21,5 @@ public class FileForm {
 	private Sale sale;
 	private int id;
 	private String fileName;
-	private String filePath;
-	private String fileNameKey;
+	private String thumName;
 }

@@ -118,3 +118,67 @@ FROM
 ) c LEFT OUTER JOIN MEMBER m ON (c.mem_id = m.id)
 WHERE rn >= 1 and rn <= 10
 ORDER BY rn desc;
+
+SELECT a.*
+FROM 
+	(
+		SELECT
+			rownum AS rn,
+			m.id, pwd, m.name, nickname, email, phone,
+			m.DONGNE1 AS dongne1_id,
+			d1.name AS dongne1_name,
+			m.dongne2 AS dongne2_id,
+			d2.name AS dongne2_name,
+			grade, profile_pic, profile_text, regdate, birthday,
+			zipcode, address1, address2, mileage, use_yn
+		FROM MEMBER m
+			LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+			LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
+		WHERE
+			m.name LIKE '%유%'
+		ORDER BY regdate
+	) a
+WHERE rn BETWEEN 1 AND 10;
+
+SELECT * FROM JOONGO_IMAGE ji ;
+
+ALTER TABLE joongo_image
+ADD thum_name varchar2(255);
+
+SELECT a.*
+	FROM (SELECT rownum AS rnum, b.*
+  		FROM (
+  			SELECT
+  				DISTINCT js.ID,
+  				MEM_ID,
+  				DOG_CATE,
+  				CAT_CATE,
+  				TITLE,
+  				CONTENT,
+  				PRICE,
+  				d1.ID AS DONGNE1ID,
+  				d1.NAME AS DONGNE1NAME,
+  				d2.ID AS DONGNE2ID,
+  				d2.NAME AS DONGNE2NAME,
+  				BUY_MEM_ID,
+  				SALE_STATE,
+  				REGDATE,
+  				REDATE,
+  				HITS,
+  				CHAT_COUNT,
+  				HEART_COUNT,
+  				thum_name
+			FROM JOONGO_SALE js
+				LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+				LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+				LEFT JOIN JOONGO_IMAGE ji ON ji.SALE_ID = js.ID
+				ORDER BY js.id DESC)
+			b) a
+	WHERE a.rnum BETWEEN 1 AND 20
+	ORDER BY a.rnum;
+
+SELECT * FROM JOONGO_sale;
+SELECT * FROM JOONGO_IMAGE ji;
+
+SELECT * FROM MALL_CART ;
+		

@@ -16,7 +16,7 @@ var colors = [
 function connect() {
     // username = document.querySelector('#name').value.trim();
 	
-    var socket = new SockJS('/daangnmungcat/ws');
+    var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, onConnected, onError);
@@ -39,7 +39,7 @@ function onConnected() {
 }
 
 function connect_for_new() {
-	var socket = new SockJS('/daangnmungcat/ws');
+	var socket = new SockJS('/ws');
 	stompClient = Stomp.over(socket);
 	
 	stompClient.connect({}, onConnected_for_new(), onError);

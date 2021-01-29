@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Address;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
@@ -17,6 +18,7 @@ import daangnmungcat.dto.Member;
 @Service
 public interface MemberService {
 	List<Member> selectMemberByAll();
+	List<Member> getList(Member member, Criteria criteria);
 	Member selectMemberById(@Param("id")String id);
 	Integer checkPwd(@Param("id")String id, @Param("pwd")String pwd);
 	

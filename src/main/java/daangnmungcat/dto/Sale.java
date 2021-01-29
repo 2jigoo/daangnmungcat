@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -40,14 +41,17 @@ public class Sale {
 	private SaleState saleState;
 	
 	
-	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
-	private LocalDateTime regdate;	
-	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+	private LocalDateTime regdate;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime redate;
 	
 	private int hits;
 	private int chatCount;
-	private String isHeart;
+	private boolean hearted;
 	private int heartCount;
 	
 	private String thumImg;

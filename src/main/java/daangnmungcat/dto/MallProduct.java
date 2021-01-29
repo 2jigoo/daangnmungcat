@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -38,6 +39,11 @@ public class MallProduct {
 	private int deliveryPrice;
 	
 	@DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime regdate;
+
+	public MallProduct(int id) {
+		this.id = id;
+	}
 	
 }

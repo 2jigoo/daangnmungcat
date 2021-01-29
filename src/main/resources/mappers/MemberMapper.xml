@@ -65,6 +65,10 @@
 		<include refid="selectSql"></include>
 	</select>
 	
+	<select id="selectMemberByConditionWithPaging" resultMap="memberResult">
+		<include refid="selectSql"></include>
+	</select>
+	
 	<select id="selectMemberById" resultMap="memberResult">
 		<include refid="selectSql"></include>
 		<include refid="whereSql"></include>

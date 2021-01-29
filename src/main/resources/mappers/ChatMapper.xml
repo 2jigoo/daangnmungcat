@@ -34,7 +34,7 @@
 		<result property="regdate" column="regdate" />
 		<result property="latestDate" column="latest_date" />
 		
-		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" />
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" fetchType="lazy" />
 		<association property="buyer" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	
@@ -77,6 +77,12 @@
 		UPDATE JOONGO_CHAT_MSG
 		SET read_yn = 'y'
 		WHERE chat_id = #{id} and mem_id != #{memberId} and read_yn = 'n'
+	</update>
+	
+	<update id="updateChatLatestDate" parameterType="ChatMessage">
+		UPDATE JOONGO_CHAT
+		SET latest_date = #{regdate}
+		WHERE id = #{chat.id}
 	</update>
 	
 	<delete id="deleteChat" parameterType="Chat">

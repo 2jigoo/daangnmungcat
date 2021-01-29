@@ -33,6 +33,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.mapper.FileFormMapper;
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.service.GpsToAddressService;
 import daangnmungcat.service.JoongoSaleService;
@@ -50,7 +51,7 @@ public class JoongoListController {
 
 	@Autowired
 	private JoongoSaleService s;
-	
+
 	@GetMapping("/joongo_list")
 	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -68,6 +69,8 @@ public class JoongoListController {
 	
 	@GetMapping("/joongo_list/all")
 	public String listAll(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
+		System.out.println(cri);
+		
 		List<Sale> list = mapper.selectJoongoByAllPage(cri);
 		System.out.println(list);
 		model.addAttribute("list", list);

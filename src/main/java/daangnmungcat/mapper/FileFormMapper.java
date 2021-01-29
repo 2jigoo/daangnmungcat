@@ -12,4 +12,5 @@ public interface FileFormMapper {
 	int insertSaleFile(FileForm fileForm);
 	
 	List<FileForm> selectImgPath(@Param("id")int id);
+	
 }

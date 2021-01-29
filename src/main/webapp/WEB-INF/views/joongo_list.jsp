@@ -213,14 +213,17 @@ $(function(){
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
 				<li><a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${list.id}">
-					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
+					<div class="img"><img src="<%=request.getContextPath() %>/resources/${list.thumImg}"></div>
 					<div class="txt">
 						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>
-						<p class="price"><span>
-							<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
-							<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>
-						</span></p>
+						<p class="price">
+							<span>${list.saleState.label}</span>
+							<span>
+								<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
+								<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>
+							</span>
+						</p>
 						<ul>
 							<li class="heart">${list.heartCount}</li>
 							<li class="chat">${list.chatCount}</li>
