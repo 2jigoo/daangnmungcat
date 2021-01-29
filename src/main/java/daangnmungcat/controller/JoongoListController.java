@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.JSONObject;
@@ -158,7 +159,27 @@ public class JoongoListController {
 	public ResponseEntity<Object> dongne2(@PathVariable int dongne1) {
 		return ResponseEntity.ok(service.Dongne2List(dongne1));
 	}
-
+	
+	//update용  
+	@GetMapping("/joongoSale/modify")
+	public String updateForm(@RequestParam int id, Model model, HttpSession session) {
+		Sale sale = s.getSaleById(id);
+		model.addAttribute(sale);
+		return "joongoSale/sale_update";
+	}
+	
+	//update용  -> 동네1 선택
+	@GetMapping("/joongoSale/modify/dongne1")
+	public ResponseEntity<Object> dongne1Modify() {
+		return ResponseEntity.ok(service.Dongne1List());
+	}
+	
+	//update용 -> 동네2선택 후
+	@GetMapping("joongoSale/modify/dongne2/{dongne1}")
+	public ResponseEntity<Object> dongne2Modify(@PathVariable int dongne1) {
+		return ResponseEntity.ok(service.Dongne2List(dongne1));
+	}
+	
 	@PostMapping("/joongoSale/insert")
 	public String testtest(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
 		request.setCharacterEncoding("UTF-8");

@@ -59,6 +59,7 @@
        display: inline-grid;
          margin-left: 10px;
    }
+   
 
    #section_profile #section_profile_left #nickname {
           font-size: 15px;
@@ -112,7 +113,6 @@
    
    .lastTime {
       display: inline-block;
-      color: #992124;
    }
    
    #product_list {
@@ -126,7 +126,9 @@
    /* section_goods 부분 */
 
          .section_goods_cl {overflow:hidden;}
-         .section_goods_cl > li {float:left;  margin-right:20px;}
+         .section_goods_cl > li {float:left; width:calc(25% - 15px); margin-right:20px;}
+		.section_goods_cl > li:nth-of-type(4n) {margin-right:0;}
+		.section_goods_cl > li:nth-of-type(4) ~ li {margin-top:40px;}
          .section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
          .section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
          .section_goods_cl .section_img img {max-width:100%; max-height:100%;  }
@@ -153,12 +155,33 @@
          
          @media screen and (max-width:767px){
             .product_list > li {width:calc(50% - 5px); margin-right:10px;}
-            .product_list > li:nth-child(even) {margin-right:0;}
-            .product_list > li:nth-child(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
+            .product_list > li:nth-of-type(even) {margin-right:0;}
+            .product_list > li:nth-of-type(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
             .product_list .img {height:40vw;}
          }
          
+         #description_title  a{
+         	float: right;
+         	padding-right: 10px;
+		    line-height: 40px;
+		    margin-left: 5px;
+		    padding: 0 10px;
+		    background: #353535;
+		    color: #fff;
+		    border-radius: 4px;
+		    font-size: 0.5em;
+         }
          
+       	 #description_title #delBtn {
+		    background: #ff7e15;;
+         }
+         
+         #description_title  {
+         	margin-right: 150px;
+         }
+         
+         
+         /* 이미지 슬라이드 */
          .swiper-slide {
             height: 400px;
          }
@@ -170,29 +193,31 @@
              min-height: 80%;
          }
          
+         
    
 </style>
 <script type="text/javascript">
 
 $(document).ready(function(){
-   
-   /* 글쓴 시간 가져오기
-   var inDate = document.getElementById('regdate').innerHTML;
-   
-   // KST를 빼면 new Date()에서 시간 읽는 거 가능해진다..
-   afterStr = inDate.split('KST');
-   var testDate = afterStr[0]+afterStr[1];
-   var writeNow = new Date(testDate);
-   
-    */
-   
-   // timeBefore(writeNow) : writeNow - 변환할 날짜 객체
-   //var timeBeforeRes = timeBefore(writeNow);
-   //document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
-   
-   var regdate = document.getElementById('regdate').innerHTML;
-   var writeNow = dayjs(regdate).toDate();
-   document.getElementsByClassName("lastTime")[0].innerHTML = timeBefore(writeNow);
+	   
+	   /* 글쓴 시간 가져오기
+	   var inDate = document.getElementById('regdate').innerHTML;
+	   
+	   // KST를 빼면 new Date()에서 시간 읽는 거 가능해진다..
+	   afterStr = inDate.split('KST');
+	   var testDate = afterStr[0]+afterStr[1];
+	   var writeNow = new Date(testDate);
+	   
+	    */
+	   
+	   // timeBefore(writeNow) : writeNow - 변환할 날짜 객체
+	   //var timeBeforeRes = timeBefore(writeNow);
+	   //document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
+	   
+	   var regdate = document.getElementById('regdate').innerHTML;
+	   var writeNow = dayjs(regdate).toDate();
+	   document.getElementsByClassName("lastTime")[0].innerHTML = timeBefore(writeNow);
+	   
    
    // 댓글 쓰기
    var contextPath = "<%=request.getContextPath()%>";
@@ -431,20 +456,27 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
                </div>
                <div id="section_profile_left">
                   <div id="nickname" >${sale.member.id}</div>
-                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>
-               </div>      
+                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>	
+               </div>
             </div>
          </a>
       </section>
       
       <section id="section_description">
-         <h1 id="description_title">${sale.title }</h1>
+         <div id="description_title"><span>${sale.title }</span>
+         <span>	
+         	<c:if test="${loginUser.getId() eq sale.member.id}">
+         		<a href="<%=request.getContextPath()%>/joongoSale/modify?id=${sale.id}">수정</a>
+				<a id="delBtn" href="<%=request.getContextPath()%>/joongoSale/delete?id=${sale.id}">삭제</a>
+			</c:if>
+		</span>
+         </div> 
          <div id="description_sub">
             <c:if test="${sale.dogCate == 'y'}">강아지 카테고리</c:if>
             <c:if test="${sale.dogCate == 'n'}"></c:if>
             <c:if test="${sale.catCate == 'y'}">고양이 카테고리</c:if>
             <c:if test="${sale.catCate == 'n'}"></c:if> 
-            · <div class="lastTime"></div> <div class="regdate" id="regdate">${sale.regdate }</div> 
+            · <div class="lastTime"></div> <span style="color:#992124;"> · ${sale.saleState.label }</span><div class="regdate" id="regdate">${sale.regdate }></div> 
          </div>
          <h2>
             <c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
@@ -479,7 +511,6 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
       </section>
       
       <section id="section_goods">
-         
          <div id = "product_list">
             <ul class="section_goods_cl">
             
@@ -546,7 +577,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
                   </c:if>
                   <pre class="content">${commentList.content}</pre>
                   <div class="info">
-                     <p class="date">${commentList.regdate}</p>
+                     <p class="date">${commentList.regdate}</p> 
                      <ul>
                         <li class="comment_btn">답글쓰기</li>
                         <c:if test="${loginUser.id == commentList.member.id}">

@@ -43,8 +43,8 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name='dongne1.id']").append(sCont);
-			//$('#dongne1').val(dong).attr("selected","selected");
 		}
+			//$('#dongne1').val(dong).attr("selected","selected");
 	});
 	
 	$("select[name='dongne1.id']").change(function(){
@@ -60,22 +60,27 @@ $(function(){
 		});
 	});
 	
-	/* 
+	$("select[name='saleState]").change(function(){
+		//$("${sale.saleState}")
+	});
+	
+	
 		//라디오 버튼으로 카테고리 
-		$("input:radio[name=category]").change(function(){
-			if($("input:radio[name=category]:checked").val() == '1'){
-				//alert("강아지 선택");
-				$('#catCate').attr('value','n');
-			}else if($("input:radio[name=category]:checked").val() == '2'){
-				//alert("고양이 선택");
-				$('#catCate').attr('value','y');
-				$('#dogCate').attr('value','n');
-			}else{
-				//alert("모두 선택");
+		$(document).ready(function(){
+			if("${sale.dogCate}" == "y"){
+				if("${sale.catCate}" == "y"){
+					$("input[name='category'][value='3']").prop('checked', true);
+				}else{
+				$("input[name='category'][value='1']").prop('checked', true);
+				}
+			}else if("${sale.dogCate}" == "n" ){
+				$("input[name='category'][value='2']").prop('checked', true);
 			}
-	}); */
+			});
 	
-	
+		
+		
+		
 	$(".my_location").on("click", function(){
 		navigator.geolocation.getCurrentPosition(success, fail)
 	    
@@ -169,12 +174,19 @@ function handleImgs(e) {
 
 </script>
 <div id="subContent">
-	<h2 id="subTitle">글쓰기</h2> 	
+	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
 <form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table style="width: 800px; table-layout: fixed;">
+			<tr>
+				<td>
+					<select name="saleState">
+						<option value="0">판매상태를 선택하세요</option>
+					</select>
+				</td>
+			</tr>
 			<tr>
 				<td width="300px;">아이디</td>
 				<td width="500px;">
@@ -188,7 +200,7 @@ function handleImgs(e) {
 				<td>동네</td>
 				<td>
 					<div id="add_location" class="s-inner">
-						<select name="dongne1.id" id="dongne1">
+						<select name="dongne1.id" id="dongne1" >
 							<option value="0">지역을 선택하세요</option>
 						</select> 
 						<select name="dongne2.id" id="dongne2">
@@ -223,7 +235,7 @@ function handleImgs(e) {
 						<option value="n">고양이 카테고리 </option>
 						<option value="y"> 모두 포함 </option>
 					</select> -->
-					<input type="radio" name="category" id="category" value="1" checked="checked">강아지 카테고리
+					<input type="radio" name="category" id="category" value="1" >강아지 카테고리
 					<input type="radio" name="category" id="category" value="2" style="margin-left: 15px;">고양이 카테고리
 					<input type="radio" name="category" id="category" value="3" style="margin-left: 15px;">모두 포함
 					<!-- <input type="hidden" name="catCate" value="y" id="catCate">
@@ -232,31 +244,20 @@ function handleImgs(e) {
 			</tr>
 			<tr>
 				<td>제목(상품명)</td>
-				<td><input type="text" name="title" id="title" style="width: 100%"></td>
+				<td><input type="text" name="title" id="title" style="width: 100%" value="${sale.title }"></td>
 			</tr>
 			<tr>
 				<td>가격</td>
 				<td>
-					<div id="priceDiv"><input type="text" name="price" id="price"></div>
+					<div id="priceDiv"><input type="text" name="price" id="price" value="${sale.price }"></div>
 					<input type="checkbox" id="checkFree" value="0">무료나눔하기
 				</td>
 			<tr>
 			<tr>
 				<td>내용</td>
-				<td><textarea class="content" name="content" id="content"></textarea>
+				<td><textarea class="content" name="content" id="content">${sale.content }</textarea>
 			</tr>
 			
-		<!-- 	<tr>
-				<td></td>
-				<td>
-					<select>
-						<option>판매상태</option>
-						<option>판매중</option>		
-					</select>
-					
-				</td>
-			</tr>
-		 -->	
 		 	<tr>
 				<td colspan="2">
 					<input type="submit" id="insertList" value="글 등록하기">
