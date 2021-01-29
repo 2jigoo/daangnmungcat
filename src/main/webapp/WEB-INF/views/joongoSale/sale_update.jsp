@@ -60,13 +60,27 @@ $(function(){
 		});
 	});
 	
-	$("select[name='saleState]").change(function(){
-		//$("${sale.saleState}")
-	});
-	
-	
-		//라디오 버튼으로 카테고리 
 		$(document).ready(function(){
+
+		alert("안녕");	
+		//판매상태 
+		var obj  ={
+				"1" : "판매중",
+				"2" : "예약중",
+				"3" : "판매 완료"
+			} 
+		alert(obj[Object.keys(obj)[0]]);
+		var stateCont = "";
+		for(i=1; i<4; i++){
+			stateCont += '<option value="' + i + '">' + obj[Object.keys(obj)[i-1]] + '</option>';
+		}
+		$("select[name='saleState']").append(stateCont);
+		$('#saleState').val(${sale.saleState.code}).attr("selected","selected");
+		
+		
+		
+		
+		//라디오 버튼으로 카테고리 
 			if("${sale.dogCate}" == "y"){
 				if("${sale.catCate}" == "y"){
 					$("input[name='category'][value='3']").prop('checked', true);
@@ -76,7 +90,7 @@ $(function(){
 			}else if("${sale.dogCate}" == "n" ){
 				$("input[name='category'][value='2']").prop('checked', true);
 			}
-			});
+		});
 	
 		
 		
@@ -122,8 +136,7 @@ $(function(){
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
-		}
-		 
+		} 
 	 });
 	 
 		$('#imgInput').on("change", handleImgs);	
@@ -182,8 +195,7 @@ function handleImgs(e) {
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td>
-					<select name="saleState">
-						<option value="0">판매상태를 선택하세요</option>
+					<select name="saleState" id="saleState">
 					</select>
 				</td>
 			</tr>
