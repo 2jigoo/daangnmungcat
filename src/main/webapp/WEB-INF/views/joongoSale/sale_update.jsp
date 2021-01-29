@@ -25,9 +25,16 @@ textarea {
 	height: 160px;
 }
 
+#preview2 > img {
+	width: 160px;
+	height: 160px;
+	float: left;
+}
+
 </style>
 <script type="text/javascript">
 $(function(){
+
 	var contextPath = "<%=request.getContextPath()%>";
 		var dong = document.getElementById("dongName").value
 		var nae = document.getElementById("naeName").value
@@ -47,6 +54,7 @@ $(function(){
 			//$('#dongne1').val(dong).attr("selected","selected");
 	});
 	
+
 	$("select[name='dongne1.id']").change(function(){
 		$("select[name='dongne2.id']").find('option').remove();
 		var dong1 = $("select[name='dongne1.id']").val();
@@ -60,24 +68,31 @@ $(function(){
 		});
 	});
 	
+
+	$("select[name='saleState']").change(function(){
+		var state = $("select[name='saleState']").val();
+		if(state == 3){
+			alert("3");
+			$('#hidden').css({
+			   display: ""
+			});
+		}
+	});
+	
 		$(document).ready(function(){
 
-		alert("안녕");	
-		//판매상태 
+			//판매상태 
 		var obj  ={
 				"1" : "판매중",
 				"2" : "예약중",
 				"3" : "판매 완료"
 			} 
-		alert(obj[Object.keys(obj)[0]]);
 		var stateCont = "";
 		for(i=1; i<4; i++){
 			stateCont += '<option value="' + i + '">' + obj[Object.keys(obj)[i-1]] + '</option>';
 		}
 		$("select[name='saleState']").append(stateCont);
 		$('#saleState').val(${sale.saleState.code}).attr("selected","selected");
-		
-		
 		
 		
 		//라디오 버튼으로 카테고리 
@@ -90,6 +105,7 @@ $(function(){
 			}else if("${sale.dogCate}" == "n" ){
 				$("input[name='category'][value='2']").prop('checked', true);
 			}
+		
 		});
 	
 		
@@ -113,7 +129,7 @@ $(function(){
 	        }
 	    });
 	 
-	 $('#insertList').on("click", function(e){
+	 $('#update').on("click", function(e){
 		
 		var price = $('#price').val();	
 		 var num = /^[0-9]*$/;
@@ -141,7 +157,7 @@ $(function(){
 	 
 		$('#imgInput').on("change", handleImgs);	
 		
-		function insertBoard(){
+		function updateBoard(){
 			var formData = new FormData($("#boardForm")[0]);
 			
 			$.ajax({
@@ -168,6 +184,7 @@ function handleImgs(e) {
 	var filesArr = Array.prototype.slice.call(files);
 	var sel_files = [];
 	
+	var index=0;
 	filesArr.forEach(function(f) {
 		if(!f.type.match("image.*")){
 			alert("확장자는 이미지 확장자만 가능합니다.");
@@ -178,6 +195,7 @@ function handleImgs(e) {
 		reader.onload = function(e){
 			var img_html = "<img src=\"" + e.target.result + "\" />";
 			$('#preview1').append(img_html);
+			index++;
 		}
 		reader.readAsDataURL(f);
 	});
@@ -185,18 +203,20 @@ function handleImgs(e) {
 }
 
 
+
 </script>
 <div id="subContent">
 	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form id="boardForm" name="boardForm" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td>
 					<select name="saleState" id="saleState">
 					</select>
+					<a id="hidden" style="display:none;" href="거래후기" onclick="window.open(this.href, '_blank', 'width=가로사이즈px,height=세로사이즈px,toolbars=no,scrollbars=no'); return false;">거래후기 남기기</a>
 				</td>
 			</tr>
 			<tr>
@@ -232,8 +252,10 @@ function handleImgs(e) {
 				<td>
 					<div id="fileArea">
 						<input multiple="multiple" type="file" name="file" id="imgInput" />
-						<img id="productImg1">
 						<div id="preview1"></div>
+					<c:forEach items="${flist }" var="flist">
+						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+					</c:forEach>
 					</div>
 				</td>
 			</tr>
@@ -272,7 +294,7 @@ function handleImgs(e) {
 			
 		 	<tr>
 				<td colspan="2">
-					<input type="submit" id="insertList" value="글 등록하기">
+					<input type="submit" id="update" value="글 수정하기">
 				</td>
 			</tr>
 		</table>

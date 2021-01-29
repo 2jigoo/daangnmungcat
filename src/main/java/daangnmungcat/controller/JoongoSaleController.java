@@ -97,7 +97,7 @@ public class JoongoSaleController {
 				mapper.insertHeart(map);
 				Smapper.inserthearCount(id);
 
-				String textUrl = "/joongoSale/detailList?id=" + id;
+				String textUrl = "/daangnmungcat/joongoSale/detailList?id=" + id;
 				model.addAttribute("msg", "찜 처리하였습니다.");
 				model.addAttribute("url", textUrl);
 			}
@@ -115,7 +115,7 @@ public class JoongoSaleController {
 		map.put("memId", loginUser.getId());
 		mapper.deleteHeart(map);
 		Smapper.deletehearCount(id);
-		String textUrl = "/joongoSale/detailList?id=" + id;
+		String textUrl = "/daangnmungcat/joongoSale/detailList?id=" + id;
 		model.addAttribute("msg", "찜 해제하였습니다.");
 		model.addAttribute("url", textUrl);
 		return "/joongoSale/alertFrom";

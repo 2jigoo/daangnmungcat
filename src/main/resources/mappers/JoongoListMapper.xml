@@ -155,6 +155,12 @@
 		values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
 	</insert>
 	
+	<update id="updateJoongoSale" parameterType="Sale">
+		UPDATE JOONGO_SALE SET 
+		DOG_CATE = #{dogCate}, CAT_CATE = #{catCate}, TITLE= #{title}, CONTENT = #{content}, PRICE = #{price},  DONGNE1_ID = #{dongne1.id},
+		  DONGNE2_ID = #{dongne2.id}, SALE_STATE = #{saleState}, REGDATE = #{REGDATE} WHERE ID = #{id} 
+	</update>
+	
 	<select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">
 		SELECT a.*
 		FROM (

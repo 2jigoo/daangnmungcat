@@ -125,7 +125,6 @@ $(function(){
 		
 		function insertBoard(){
 			var formData = new FormData($("#boardForm")[0]);
-			
 			$.ajax({
 				type : 'post',
 				url : contextPath + "/test/insert",

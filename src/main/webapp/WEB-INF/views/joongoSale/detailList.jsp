@@ -118,6 +118,10 @@
    #product_list {
    }
    
+   #section_goods {
+	padding-right: 10%;
+   }
+   
    .go_to_chat_btn {
       width: 80%;
       cursor: pointer;
@@ -466,7 +470,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
          <div id="description_title"><span>${sale.title }</span>
          <span>	
          	<c:if test="${loginUser.getId() eq sale.member.id}">
-         		<a href="<%=request.getContextPath()%>/joongoSale/modify?id=${sale.id}">수정</a>
+         		<a href="<%=request.getContextPath()%>/joongoSale/modiList?id=${sale.id}">수정</a>
 				<a id="delBtn" href="<%=request.getContextPath()%>/joongoSale/delete?id=${sale.id}">삭제</a>
 			</c:if>
 		</span>

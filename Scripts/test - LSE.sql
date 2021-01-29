@@ -164,3 +164,6 @@ SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME
 
 SELECT * FROM SALE_VIEW ;
 SELECT * FROM JOONGO_IMAGE ji  ;
+SELECT * FROM JOONGO_REVIEW ;
+
+INSERT INTO joongo_review values(#{id},)

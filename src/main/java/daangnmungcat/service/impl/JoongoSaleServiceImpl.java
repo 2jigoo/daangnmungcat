@@ -152,4 +152,11 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return joongoListMapper.listCount();
 	}
 
+	@Override
+	public int updateJoongoSale(Sale sale) {
+		return 0;
+	}
+	
+	
+
 }
