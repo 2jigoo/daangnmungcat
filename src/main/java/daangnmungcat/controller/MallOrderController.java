@@ -29,9 +29,9 @@ public class MallOrderController {
 	
 	@PostMapping("/pre-order")
 	public void orderCheck(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member loginUser = service.selectMemberById(info.getId());
+//		session = request.getSession();
+//		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+//		Member loginUser = service.selectMemberById(info.getId());
 		session.setAttribute("total", map.get("total_price"));
 		session.setAttribute("qtt", map.get("quantity"));
 		MallProduct pdt = mService.getProductById(Integer.parseInt(map.get("m_id").toString()));
