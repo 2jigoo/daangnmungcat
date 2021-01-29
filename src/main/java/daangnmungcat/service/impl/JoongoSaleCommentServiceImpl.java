@@ -43,4 +43,14 @@ public class JoongoSaleCommentServiceImpl implements JoongoSaleCommentService {
 		return mapper.updateComment(saleComment);
 	}
 
+	@Override
+	public List<SaleComment> selectJoongoCommentByAllPage2(Criteria cri) {
+		return mapper.selectJoongoCommentByAllPage2(cri);
+	}
+
+	@Override
+	public int commentCount2() {
+		return mapper.commentCount2();
+	}
+
 }

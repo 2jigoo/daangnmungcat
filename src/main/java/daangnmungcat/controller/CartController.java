@@ -69,9 +69,16 @@ public class CartController {
 		// product.id, quantity 넘어옴
 		
 		int res = 0;
+		AuthInfo loginUser = null;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			loginUser = (AuthInfo) session.getAttribute("loginUser");
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+		
+		try {
 			cart.setMember(new Member(loginUser.getId()));
 			log.info(loginUser.getId().toString());
 			log.info(cart.toString());

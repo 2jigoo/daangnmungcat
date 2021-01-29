@@ -25,11 +25,12 @@ public class CartServiceImpl implements CartService {
 	public List<Cart> getCart(String memberId) {
 		List<Cart> list = cartMapper.selectCartByMemberId(memberId);
 		
-		if(!memberId.equals(list.get(0).getMember().getId())) {
-			throw new RuntimeException();
+		try {
+		list.forEach(cart -> log.info(cart.toString()));
+		} catch(IndexOutOfBoundsException e) {
+			log.info("cart list is empty!");
 		}
 		
-		list.forEach(cart -> log.info(cart.toString()));
 		return list;
 	}
 
@@ -39,7 +40,11 @@ public class CartServiceImpl implements CartService {
 	public Cart getCartItem(int id) {
 		Cart cart = cartMapper.selectCartItem(new Cart(id));
 		
-		log.info(cart.toString());
+		try {
+			log.info(cart.toString());
+		} catch(NullPointerException e) {
+			log.info("cart item is null!");
+		}
 		return cart;
 	}
 	
@@ -47,12 +52,16 @@ public class CartServiceImpl implements CartService {
 	public Cart getCartItem(String memberId, int productId) {
 		Cart cart = cartMapper.selectCartItem(new Cart(new Member(memberId), new MallProduct(productId)));
 		
-		// 조회를 원하는 회원과 불일치하면
-		if(!memberId.equals(cart.getMember().getId())) {
-			throw new RuntimeException();
+		try {
+			log.info(cart.toString());
+			// 조회를 원하는 회원과 불일치하면
+			if(!memberId.equals(cart.getMember().getId())) {
+				throw new RuntimeException();
+			}
+		} catch(NullPointerException e) {
+			log.info("cart item is null!");
 		}
 		
-		log.info(cart.toString());
 		return cart;
 	}
 

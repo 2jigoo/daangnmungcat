@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,6 @@ public class AdminMallPdtController {
 	@GetMapping("/admin/product/list")
 	public String list(Model model, Criteria cri) {
 		List<MallProduct> list = service.selectProductByAllPage(cri);
-		list.stream().forEach(System.out::println);
 		model.addAttribute("list", list);
 		
 		PageMaker pageMaker = new PageMaker();

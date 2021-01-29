@@ -5,10 +5,75 @@
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	
+	$.get(contextPath+"/dongne1", function(json){
+		console.log(json)
+		var datalength = json.length; 
+		if(datalength >= 1){
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne1]").append(sCont);
+		}
+	});
+	
+	
+	$("select[name=dongne1]").change(function(){
+		$("select[name=dongne2]").find('option').remove();
+		var dong1 = $("select[name=dongne1]").val();
+		$.get(contextPath+"/dongne2/"+dong1, function(json){
+			var datalength = json.length; 
+			var sCont = "";
+			for(i=0; i<datalength; i++){
+				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
+			}
+			$("select[name=dongne2]").append(sCont);	
+		});
+	});
+	
 	$(".delete_btn").click(function(){
 		if (confirm("정말 삭제하시겠습니까??") == true){
 		} else{
 		    return false;
+		}
+	})
+	
+	$("#searchBtn").click(function(){
+		if ($("select[name='where']").val() == ""){
+			alert("검색 기준을 선택해주세요.")
+			return false;
+		} else if ($("input[name='query']").val() == ""){
+			if ($("select[name='where']").val() == "address"){
+				if ($("select[name='dongne1']").val() == "0"){
+					alert("동네를 선택해주세요.")
+					return false;
+				} else {
+					window.location = "/admin/joongo/list?dongne1="+$("select[name=dongne1] option:checked").text()+"&dongne2="+$("select[name=dongne2] option:checked").text()+"";
+				}
+			} else if ($("select[name='where']").val() == "category") {
+				window.location = "/admin/joongo/list?"+$("select[name='where']").val()+"="+$("select[name='cate']").val()+"";
+			} else {
+				alert("검색 내용을 입력해주세요.")
+				return false;
+			}
+		} else {
+			window.location = "/admin/joongo/list?"+$("select[name='where']").val()+"="+$("input[name='query']").val()+"";
+		}
+	})
+	
+	$("select[name='where']").change(function(){
+		if($(this).val() == "address"){
+			$(".sch_txt").hide()
+			$(".sch_select").show()
+			$(".sch_select2").hide()
+		} else if($(this).val() == "category"){
+			$(".sch_txt").hide()
+			$(".sch_select").hide()
+			$(".sch_select2").show()
+		} else {
+			$(".sch_txt").show()
+			$(".sch_select").hide()
+			$(".sch_select2").hide()
 		}
 	})
 });
@@ -22,6 +87,37 @@ $(function(){
 	</div>
 	<!-- card-body -->
 	<div class="card-body">
+		<div class="col-sm-12 col-md-6 p-0">
+			<div>
+				<select class="custom-select custom-select-sm" name="where" style="width: 100px;">
+					<option value="">기준</option>
+					<option value="name">상품명</option>
+					<option value="category">카테고리</option>
+					<option value="id">아이디</option>
+					<option value="address">동네</option>
+				</select>
+				<label class="sch_txt">
+					<input type="search" class="form-control form-control-sm" name="query">
+				</label>
+				<div class="sch_select" style="display:none">
+					<select name="dongne1" id="dongne1" class="custom-select custom-select-sm">
+						<option value="0">지역을 선택하세요</option>
+					</select> 
+					<select name="dongne2" id="dongne2" class="custom-select custom-select-sm">
+						<option value="0">동네를 선택하세요</option>
+					</select>
+				</div>
+				<div class="sch_select2" style="display:none">
+					<select name="cate" class="custom-select custom-select-sm">
+						<option value="멍">멍</option>
+						<option value="냥">냥</option>
+						<option value="모두">모두</option>
+					</select>
+				</div>
+				<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
+			</div>
+		</div>
+		
 		<table class="adm_table_style1">
 			<colgroup>
 				<col width="10%">

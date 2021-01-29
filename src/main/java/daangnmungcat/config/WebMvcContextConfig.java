@@ -8,12 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -115,5 +116,20 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 				.simpleDateFormat("yyyy-MM-dd HH:mm:ss").build();
 		converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper));
 	}
+
+
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedOrigins("http://localhost:8080")
+				.allowedMethods(
+				    	HttpMethod.GET.name(),
+				    	HttpMethod.HEAD.name(),
+				    	HttpMethod.POST.name(),
+				    	HttpMethod.PUT.name(),
+				    	HttpMethod.DELETE.name());
+	}
+	
+	
 	
 }

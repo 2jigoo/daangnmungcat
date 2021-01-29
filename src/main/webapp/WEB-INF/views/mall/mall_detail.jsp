@@ -46,7 +46,7 @@ $(document).ready(function(){
 			total_price: total,
 			quantity: qtt,
 			m_id : id
-			}
+		}
 		
 		$.ajax({
 			url: contextPath + "/pre-order",
@@ -90,7 +90,6 @@ function addCart() {
 			}
 		},
 		error: function(error){
-			alert('장바구니에 담는 데 실패했습니다.');
 			console.log(error);
 		}
 	});

@@ -30,4 +30,6 @@ public interface JoongoSaleService {
 	
 	List<Sale> selectJoongoByAllPage(Criteria cri);
 	int listCount();
+
+	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
 }

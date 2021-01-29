@@ -50,7 +50,9 @@
 								<div class="input-group-prepend">
 									<label class="input-group-text">~</label>
 								</div>
+								<div class="input-group-prepend">
 									<input type="text" class="form-control" id="endDate" name="endDate" style="width: 120px;" placeholder="종료일">
+								</div>
 							</div>
 							<button type="submit" class="form-control btn-primary btn-sm" id="dateBtn">조회</button>
 						</div>
