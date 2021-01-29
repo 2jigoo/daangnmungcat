@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -29,6 +31,7 @@ public class CartController {
 	CartService cartService;
 	
 	
+	// 장바구니 목록
 	@GetMapping("/mall/cart/list")
 	public String cart(HttpSession session, Model model) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -39,6 +42,8 @@ public class CartController {
 		return "/mall/cart/mall_cart_list";
 	}
 	
+	
+	// 장바구니 목록 json
 	@GetMapping("/mall/cart")
 	@ResponseBody
 	public ResponseEntity<List<Cart>> cart(HttpSession session) {
@@ -56,9 +61,12 @@ public class CartController {
 		return ResponseEntity.ok(list);
 	}
 	
+	
+	// 장바구니 추가
 	@PostMapping("/mall/cart")
 	@ResponseBody
 	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpSession session) {
+		// product.id, quantity 넘어옴
 		
 		int res = 0;
 		
@@ -76,22 +84,59 @@ public class CartController {
 		
 	}
 	
+	// 장바구니 상품 하나 정보 얻어오기
+	// 필요한지는 모르겠음
 	@GetMapping("/mall/cart/{id}")
 	@ResponseBody
-	public ResponseEntity<Cart> getCartItem(@PathVariable int id, @RequestBody Cart cart, HttpSession session) {
-		
-		Cart gotCart = null;
+	public ResponseEntity<Cart> getCartItem(@PathVariable("id") int productId, HttpSession session) {
+		Cart cart = null;
 		
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-			gotCart = cartService.getCartItem(id, loginUser.getId());
+			cart = cartService.getCartItem(loginUser.getId(), productId);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
-		return ResponseEntity.ok(gotCart);
+		return ResponseEntity.ok(cart);
 		
+	}
+	
+	
+	@PutMapping("/mall/cart")
+	@ResponseBody
+	public ResponseEntity<Object> modifyCartItem(@RequestBody Cart cart, HttpSession session) {
+		int res = 0;
+		
+		try {
+			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			cart.setMember(new Member(loginUser.getId()));
+			res = cartService.modifyQuantity(cart);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(res);
+	}
+	
+	
+	@DeleteMapping("/mall/cart")
+	@ResponseBody
+	public ResponseEntity<Object> deleteCartItem(@RequestBody Cart cart, HttpSession session) {
+		int res = 0;
+		
+		try {
+			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+			cart.setMember(new Member(loginUser.getId()));
+			res = cartService.deleteCartItem(cart);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(res);
 	}
 	
 }

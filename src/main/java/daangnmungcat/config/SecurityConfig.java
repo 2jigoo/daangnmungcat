@@ -1,18 +1,15 @@
 package daangnmungcat.config;
 
-import java.security.AuthProvider;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import daangnmungcat.handler.LoginSuccessHandler;
 
@@ -28,6 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
 			.antMatchers("/member").access("hasRole('ROLE_MEMBER')");
 		
+		http.cors().configurationSource(corsConfigurationSource());
 		//admin access denined -> login page로 이동하여 로그인
 		//loginPage("뷰이름").loginProcessingUrl("경로");
 		http.formLogin().loginPage("/login").loginProcessingUrl("/sample/login");
@@ -50,5 +48,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationSuccessHandler loginSuccessHandler() {
 		return new LoginSuccessHandler();
 	}
+	
+	
+	// CORS 허용 적용
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+	
 	
 }

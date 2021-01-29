@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
@@ -7,7 +6,7 @@ $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 
 	
-	$('#od_qtt').on('keyup', function(){
+	/* $('#od_qtt').on('keyup', function(){
 		var price = ${pdt.price};
 		var qtt = $('#od_qtt').val();
 		var total = price * qtt; 
@@ -30,9 +29,9 @@ $(document).ready(function(){
 		var total = price * qtt; 
 		$('#od_price').html(total.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
 		$('#price').attr('value', total);
-	});
+	}); */
 	
-	$('#order_btn').on('click', function(){
+	/* $('#order_btn').on('click', function(){
 		var total = $('#price').val();
 		var qtt = $('#od_qtt').val();
 		var id = ${pdt.id};
@@ -59,11 +58,28 @@ $(document).ready(function(){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		});
-	});
+	}); */
 	
 	
 });
 
+
+function deleteCartItem(cart_id) {
+	$.ajax({
+		url: "/mall/cart",
+		type: "delete",
+		contentType:"application/json; charset=utf-8",
+		dataType: "text", //json200에러뜰때 text로
+		cache : false,
+		data : JSON.stringify({id: cart_id}),
+		success: function(data) {
+			console.log(data);
+		},
+		error: function(error){
+			console.log(error);
+		}
+	});
+}
 
 </script>
 
@@ -79,6 +95,7 @@ $(document).ready(function(){
 					<th>수량</th>
 					<th>합계</th>
 					<th>배송비</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -118,6 +135,9 @@ $(document).ready(function(){
 							<c:if test="${cart.product.deliveryKind eq '유료배송'}">
 								<br><fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
 							</c:if>
+						</td>
+						<td>
+							<button cart-no="${cart.id }" onclick="deleteCartItem(${cart.id})">삭제</button>
 						</td>
 					</tr>		
 				</c:forEach>	

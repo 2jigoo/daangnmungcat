@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@JsonInclude(Include.NON_DEFAULT)
 public class Cart {
 
 	private int id;
@@ -31,12 +34,14 @@ public class Cart {
 	// 해당 상품 * 수량 = 금액(amount)
 	private int amount;
 
-	
-	public Cart(int id, Member member) {
+	public Cart(int id) {
 		this.id = id;
-		this.member = member;
 	}
 	
+	public Cart(Member member, MallProduct product) {
+		this.member = member;
+		this.product = product;
+	}
 	public Cart(int id, Member member, MallProduct product, int quantity) {
 		this.id = id;
 		this.member = member;

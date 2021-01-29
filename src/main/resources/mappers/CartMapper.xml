@@ -21,27 +21,24 @@
 	</sql>
 
 	<sql id="whereSQL">
-		<where>
-			<if test="member.id != null">and member_id = #{member.id}</if>
-			<if test="id != null">and id = #{id}</if>
-		</where>
-	</sql>
-	
-	<sql id="updateSQL">
-		<set>
-			quantity = #{quantity.id}
-			and regdate = sysdate
-		</set>
+		where id = #{id}
 	</sql>
 	
 	<select id="selectCartByMemberId" resultMap="cartRes">
-		<include refid="selectSimpleSQL"></include>
-		where member_id = #{memberId}
+		<include refid="selectSimpleSQL" />
+		WHERE member_id = #{memberId}
+		ORDER BY REGDATE DESC
 	</select>
 	
-	<select id="selectCartItemById" resultMap="cartRes">
-		<include refid="selectSimpleSQL"></include>
-		where id = #{id}
+	<select id="selectCartItem" resultMap="cartRes">
+		<include refid="selectSimpleSQL" />
+		<choose>
+			<when test="id != 0">WHERE id = #{id}</when>
+			<otherwise>
+				WHERE member_id = #{member.id}
+					AND product_id = #{product.id}
+			</otherwise>
+		</choose>
 	</select>
 	
 	<insert id="insertCartItem" parameterType="Cart">
@@ -51,4 +48,18 @@
 		INSERT INTO MALL_CART(id, member_id, product_id, quantity, regdate)
 		VALUES(#{id}, #{member.id}, #{product.id}, #{quantity}, sysdate)
 	</insert>
+	
+	<update id="updateCartItem" parameterType="Cart">
+		UPDATE mall_cart
+		SET
+			quantity = #{quantity.id},
+			regdate = sysdate
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteCartItem" parameterType="Cart">
+		DELETE
+		FROM mall_cart
+		WHERE id = #{id}
+	</delete>
 </mapper>

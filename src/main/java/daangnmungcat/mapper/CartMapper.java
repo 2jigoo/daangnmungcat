@@ -6,8 +6,8 @@ import daangnmungcat.dto.Cart;
 
 public interface CartMapper {
 
-	Cart selectCartItemById(int id);
 	List<Cart> selectCartByMemberId(String memberId);
+	Cart selectCartItem(Cart cart);
 	
 	int insertCartItem(Cart cart);
 	int updateCartItem(Cart cart);
