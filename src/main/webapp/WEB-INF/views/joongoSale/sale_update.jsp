@@ -43,8 +43,8 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name='dongne1.id']").append(sCont);
-			//$('#dongne1').val(dong).attr("selected","selected");
 		}
+			//$('#dongne1').val(dong).attr("selected","selected");
 	});
 	
 	$("select[name='dongne1.id']").change(function(){
@@ -58,6 +58,10 @@ $(function(){
 			}
 			$("select[name='dongne2.id']").append(sCont);	
 		});
+	});
+	
+	$("select[name='saleState]").change(function(){
+		//$("${sale.saleState}")
 	});
 	
 	
@@ -170,12 +174,19 @@ function handleImgs(e) {
 
 </script>
 <div id="subContent">
-	<h2 id="subTitle">글쓰기</h2> 	
+	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
 <form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table style="width: 800px; table-layout: fixed;">
+			<tr>
+				<td>
+					<select name="saleState">
+						<option value="0">판매상태를 선택하세요</option>
+					</select>
+				</td>
+			</tr>
 			<tr>
 				<td width="300px;">아이디</td>
 				<td width="500px;">
@@ -189,7 +200,7 @@ function handleImgs(e) {
 				<td>동네</td>
 				<td>
 					<div id="add_location" class="s-inner">
-						<select name="dongne1.id" id="dongne1">
+						<select name="dongne1.id" id="dongne1" >
 							<option value="0">지역을 선택하세요</option>
 						</select> 
 						<select name="dongne2.id" id="dongne2">
@@ -244,20 +255,9 @@ function handleImgs(e) {
 			<tr>
 			<tr>
 				<td>내용</td>
-				<td><textarea class="content" name="content" id="content" value="${sale.content }"></textarea>
+				<td><textarea class="content" name="content" id="content">${sale.content }</textarea>
 			</tr>
 			
-		<!-- 	<tr>
-				<td></td>
-				<td>
-					<select>
-						<option>판매상태</option>
-						<option>판매중</option>		
-					</select>
-					
-				</td>
-			</tr>
-		 -->	
 		 	<tr>
 				<td colspan="2">
 					<input type="submit" id="insertList" value="글 등록하기">
