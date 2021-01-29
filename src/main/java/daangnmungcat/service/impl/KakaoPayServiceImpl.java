@@ -35,6 +35,7 @@ private static final String HOST = "https://kapi.kakao.com";
     
 	
     private KakaoPayReadyVO kakaoPayReadyVO;
+    private KakaoPayApprovalVO kakaoPayApprovalVo;
     
     @Autowired
     private MemberService service;
@@ -43,14 +44,14 @@ private static final String HOST = "https://kapi.kakao.com";
     	
     	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
-		System.out.println("member:" + member);
+	
     	
         RestTemplate restTemplate = new RestTemplate();
         
         // 서버로 요청할 Header
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "KakaoAK " + "64eac7ea0faa7f908904ee07ec3f2a67");
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
        // System.out.println("map: "+ map);
@@ -58,8 +59,8 @@ private static final String HOST = "https://kapi.kakao.com";
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", request.getParameter("pdt_id").trim());
-        params.add("partner_user_id", request.getParameter("mem_id"));
+        params.add("partner_order_id", "1");
+        params.add("partner_user_id",  request.getParameter("mem_id"));
         params.add("item_name", request.getParameter("pdt_name"));
         params.add("quantity", request.getParameter("pdt_qtt"));
         params.add("total_amount", request.getParameter("total"));
@@ -77,12 +78,11 @@ private static final String HOST = "https://kapi.kakao.com";
            
             log.info("" + kakaoPayReadyVO);
             request.setAttribute("body", kakaoPayReadyVO);
-            
             request.setAttribute("pdt_id", request.getParameter("pdt_id").trim());
     		request.setAttribute("pdt_name", request.getParameter("pdt_name").trim());
     		request.setAttribute("pdt_qtt", request.getParameter("pdt_qtt").trim());
     		request.setAttribute("total", request.getParameter("total").trim());
-    		request.setAttribute("mem_id",request.getParameter("mem_id").trim());
+    		request.setAttribute("mem_id", request.getParameter("mem_id"));
             
             return kakaoPayReadyVO.getNext_redirect_pc_url();
  
@@ -99,7 +99,10 @@ private static final String HOST = "https://kapi.kakao.com";
         
     }
     
-    public KakaoPayApprovalVO kakaoPayInfo(String pg_token, HttpServletRequest request) {
+    public KakaoPayApprovalVO kakaoPayInfo(String pg_token, HttpServletRequest request, HttpSession session) {
+    	
+    	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
     	
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");
@@ -109,7 +112,7 @@ private static final String HOST = "https://kapi.kakao.com";
         // 서버로 요청할 Header
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "KakaoAK " + "64eac7ea0faa7f908904ee07ec3f2a67");
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
        
@@ -117,10 +120,10 @@ private static final String HOST = "https://kapi.kakao.com";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoPayReadyVO.getTid());
-        params.add("partner_order_id", (String) request.getAttribute("pdt_id").toString().trim());
-        params.add("partner_user_id", (String) request.getAttribute("mem_id"));
+        params.add("partner_order_id", "1");
+        params.add("partner_user_id", member.getId());
         params.add("pg_token", pg_token);
-        params.add("total_amount",  (String) request.getAttribute("total"));
+        params.add("total_amount", (String) request.getAttribute("total"));
         
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
        

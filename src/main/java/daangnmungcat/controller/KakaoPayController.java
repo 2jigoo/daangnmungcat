@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.service.KakaoPayService;
@@ -28,7 +29,7 @@ public class KakaoPayController {
 	
 	@GetMapping("/kakao-pay")
 	public void kakaoGet(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
-		
+		System.out.println("kakao-pay get");
 	}
 	
 	@PostMapping("/kakao-pay")
@@ -45,12 +46,15 @@ public class KakaoPayController {
 	}
 	
 	@GetMapping("/kakaoPaySuccess")
-	public String kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model, HttpServletRequest request) {
+	public ModelAndView kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model, HttpServletRequest request, HttpSession session) {
+		ModelAndView mv = new ModelAndView();
 		log.info("kakaoPaySuccess get............................................");
 		log.info("kakaoPaySuccess pg_token : " + pg_token);
-		System.out.println(service.kakaoPayInfo(pg_token, request));
-		return "/mall/pay_success";
 		
+		mv.setViewName("/mall/pay_success");
+		mv.addObject("info", service.kakaoPayInfo(pg_token, request, session));
+  
+		return mv;
 	}
 	
 	
