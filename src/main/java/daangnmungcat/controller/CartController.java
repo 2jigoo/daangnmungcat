@@ -73,6 +73,8 @@ public class CartController {
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			cart.setMember(new Member(loginUser.getId()));
+			log.info(loginUser.getId().toString());
+			log.info(cart.toString());
 			res = cartService.addCartItem(cart);
 		} catch(Exception e) {
 			e.printStackTrace();
