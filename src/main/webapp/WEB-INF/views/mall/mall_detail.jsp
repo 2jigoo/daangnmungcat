@@ -80,19 +80,22 @@ function addCart() {
 		url: "/mall/cart",
 		type: "post",
 		contentType:"application/json; charset=utf-8",
-		dataType: "text", //json200에러뜰때 text로
+		dataType: "text",
 		cache : false,
 		data : JSON.stringify(cart),
-		success: function() {
-			alert("장바구니에 담았습니다.");
-			location.href = "/mall/cart/list";
+		success: function(res) {
+			var confirm_res = confirm("장바구니에 담았습니다. 장바구니로 이동하겠습니까?");
+			if(confirm_res == true) {
+				location.href = "/mall/cart/list";
+			}
 		},
 		error: function(error){
-			alert('에러' + error);
+			alert('장바구니에 담는 데 실패했습니다.');
 			console.log(error);
 		}
 	});
 }
+
 
 </script>
 
