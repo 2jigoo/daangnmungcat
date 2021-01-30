@@ -49,7 +49,7 @@ $(document).ready(function(){
 		}
 		
 		$.ajax({
-			url: contextPath + "/pre-order",
+			url: contextPath + "/mall/pre-order",
 			type: "post",
 			contentType:"application/json; charset=utf-8",
 			dataType: "text", //json200에러뜰때 text로

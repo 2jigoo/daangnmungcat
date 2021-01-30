@@ -5,21 +5,11 @@
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	
-	/* $('#order_btn').on('click', function(){
-		var total = $('#price').val();
-		var qtt = $('#od_qtt').val();
-		var id = ${pdt.id};
-		console.log('total: ' + total);
-		console.log('qtt: ' + qtt);
-		console.log('id: ' + id);
-		var info = {
-			total_price: total,
-			quantity: qtt,
-			m_id : id
-			}
+	 $('#order_btn').on('click', function(){
+		var arr = new Array()
 		
 		$.ajax({
-			url: contextPath + "/pre-order",
+			url: contextPath + "/pre-order/" + arr,
 			type: "post",
 			contentType:"application/json; charset=utf-8",
 			dataType: "text", //json200에러뜰때 text로
@@ -32,7 +22,7 @@ $(document).ready(function(){
 				alert('에러' + request.status+request.responseText+error);
 			}
 		});
-	}); */
+	});
 	
     $(".qtt div p.up").click(function(){
 		var price = $(this).closest("tr").find(".price").attr("value");
@@ -130,7 +120,7 @@ function deleteCartItem(cart_id) {
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
-			<form action="/pre-order/" method="post">
+			<form action="/mall/pre-order" method="post">
 				<table class="cart_table">
 					<colgroup>
 						<col width="60px">

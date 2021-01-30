@@ -1,6 +1,7 @@
 package daangnmungcat.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
+import daangnmungcat.service.CartService;
 import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 
@@ -26,9 +28,12 @@ public class MallOrderController {
 	private MemberService service;
 	
 	@Autowired
+	private CartService cartService;
+	
+	@Autowired
 	private MallPdtService mService;
 	
-	@PostMapping("/pre-order")
+	@PostMapping("/mall/pre-order")
 	public void orderCheck(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
 
 		String total = map.get("total_price").toString();
@@ -41,7 +46,7 @@ public class MallOrderController {
 		session.setAttribute("pdt_name", pdt.getName());
 	}
 	
-	@GetMapping("/pre-order")
+	@GetMapping("/mall/pre-order")
 	public Map<String, Object> orderPage(HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
@@ -54,6 +59,15 @@ public class MallOrderController {
 		map.put("member", info);
 		return map;
 	}
+	
+//	@GetMapping("/mall/pre-order")
+//	public List<MallProduct> cartSelectPdt(@PathVariable Integer[] id, HttpSession session, HttpServletRequest request){
+//		session = request.getSession();
+//		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+//		Member loginUser = service.selectMemberById(info.getId());
+//		
+//		//List<MallProduct> list = cartService.getCartItem(loginUser.getId(), productId);
+//	}
 	
 	
 }

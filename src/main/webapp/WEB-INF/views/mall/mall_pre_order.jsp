@@ -5,7 +5,7 @@
 <script>
 $(document).ready(function(){
 	
-	$.get("/pre-order", function(json){
+	$.get("/mall/pre-order", function(json){
 		var total = json.total;
 		var qtt = json.qtt;
 		var pdt = json.pdt;
