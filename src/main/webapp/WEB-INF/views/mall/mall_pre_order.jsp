@@ -1,39 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script>
 $(document).ready(function(){
-	
-	$.get("/mall/pre-order", function(json){
-		var total = json.total;
-		var qtt = json.qtt;
-		var pdt = json.pdt;
-		var mem = json.member;
-		if(pdt.image1 != null){
-			$('#pdt_img').attr('src', 'resources'+pdt.image1);
-		}	
-		$('#mem_id').attr('value', mem.id);
-		$('#pdt_id').attr('value', pdt.id);
-		$('#pdt_name').attr('value', pdt.name);
-		$('#pdt_qtt').attr('value', qtt);
-		$('#pdt_price').attr('value', pdt.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-		$('#mile').attr('value', pdt.price * 0.01);
-		$('#total_price').attr('value', total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
-		$('#total').attr('value', total);
-		$('#deli_kind').attr('value', pdt.deliveryKind);
-		
-		if(pdt.deliveryCondition != null){
-			$('#deli_condition').attr('value', '(' + pdt.deliveryCondition.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원 이상)');	
-		}
-		if(pdt.deliveryPrice != null){
-			$('#deli_price').attr('value', pdt.deliveryPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '원');	
-		}
-		
-	});
+
 });
 
 </script>
+
 <div class="pre_order">
 <h3 style="text-align:center; padding:20px">주문서 작성 / 결제 </h3>
 <form method="post" id="form" action="/kakao-pay" enctype="multipart/form-data" accept-charset="utf-8">
@@ -60,47 +36,50 @@ $(document).ready(function(){
 			</tr>
 		</thead>
 		<tbody>
+		<c:forEach var="cart" items="${cart}" varStatus="status">
 			<tr>
 				<td><img id="pdt_img" src="/resources/images/no_image.jpg" width="100%"></td>
 				<td>
-					<input type="hidden" id="pdt_id" name="pdt_id"  readonly>
-					<input type="hidden" id="mem_id" name="mem_id" readonly>
-					<input type="text" id="pdt_name" name="pdt_name" readonly>
+					<input type="hidden" id="pdt_id" name="pdt_id" value="${cart.product.id}">
+					${cart.product.name}
 				</td>
-				<td><input type="text" id="pdt_qtt" name="pdt_qtt" readonly></td>
-				<td><input type="text" id="pdt_price" name="pdt_price" readonly></td>
-				<td><input type="text" id="mile" name="mile" readonly></td>
+				<td>${cart.quantity }</td>
+				<td><span class="price" value="${cart.product.price }">${cart.product.price}</span></td>
+				<td><fmt:formatNumber value="${cart.product.price * 0.01}" /></td>
+				<td>${cart.product.price * cart.quantity}</td>
 				<td>
-					<input type="text" id="total_price" name="total_price" readonly>
-					<input type="hidden" id="total" name="total" readonly> <!-- 넘어가는 total price -->
-				</td>
-				<td>
-					<input type="text" id="deli_price" name="deli_price" readonly><br>
-					<input type="text" id="deli_kind" name="deli_kind" readonly><br>
-					<input type="text" id="deli_condition" name="deli_condition" readonly>
+					${cart.product.deliveryKind}
+					<c:if test="${cart.product.deliveryKind eq '조건부 무료배송'}">
+						<br><span class="cart_price"><fmt:formatNumber value="${cart.product.deliveryPrice}"/></span>원
+						<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매)
+					</c:if>
+					<c:if test="${cart.product.deliveryKind eq '유료배송'}">
+						<br><span class="cart_price"><fmt:formatNumber value="${cart.product.deliveryPrice}"/></span>원
+					</c:if>
 				</td>
 			</tr>
+		</c:forEach>
 			</tbody>
 		</table>
 
 	<div class="pre_order_box">
 		<div class="box1">
-		총 #개의 상품금액 <br>
-		###원
+			총 ${size}개의 상품금액 <br>
+			<span class="">${total}원</span> 
 		</div>
 		<div class="box2">
 		배송비<br>
-		###원
+		${delivery}
 		</div>
 		<div class="box3">
 		합계 <br>
-		####원<br>
-		적립예정 마일리지: ##원
+		${final_price}원<br>
+		적립예정 마일리지: <fmt:formatNumber value="${mileage}" />원
 		</div>
 	</div>
 	<div class="pre_order_btn">
 		<div class="pre_order_info"></div>
-		<input type="submit" value="결제" id="order_btn">
+		<input type="submit" value="결제" id="order_btn" onclick="location.href='/mall/mall_pre_order'">
 	</div>
 	</form>
 </div>

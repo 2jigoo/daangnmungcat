@@ -2,27 +2,17 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
+function check(){
+	if($('input:checkbox[name=id]:checked').length < 1 ){
+		alert('주문하실 상품을 선택하세요.');
+	} else {
+		$('#form').submit();
+	}
+}
+
 $(document).ready(function(){
-	var contextPath = "<%=request.getContextPath()%>";
 	
-	 $('#order_btn').on('click', function(){
-		var arr = new Array()
-		
-		$.ajax({
-			url: contextPath + "/pre-order/" + arr,
-			type: "post",
-			contentType:"application/json; charset=utf-8",
-			dataType: "text", //json200에러뜰때 text로
-			cache : false,
-			data : JSON.stringify(info),
-			success: function() {
-				console.log('이동')
-			},
-			error: function(request,status,error){
-				alert('에러' + request.status+request.responseText+error);
-			}
-		});
-	});
+	var contextPath = "<%=request.getContextPath()%>";
 	
     $(".qtt div p.up").click(function(){
 		var price = $(this).closest("tr").find(".price").attr("value");
@@ -120,7 +110,8 @@ function deleteCartItem(cart_id) {
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
-			<form action="/mall/pre-order" method="post">
+			<form action="/mall/pre-order" method="post" id="form">
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<table class="cart_table">
 					<colgroup>
 						<col width="60px">
@@ -189,7 +180,7 @@ function deleteCartItem(cart_id) {
 						</c:forEach>
 					</tbody>
 				</table>
-				<input type="submit" value="주문하기">
+				<input type="button" value="주문하기" onclick="check(); return false;">
 			</form>
 		</c:if>	
 	</div>

@@ -80,15 +80,15 @@ public class CartController {
 		
 		try {
 			cart.setMember(new Member(loginUser.getId()));
-			log.info(loginUser.getId().toString());
-			log.info(cart.toString());
+			//log.info(loginUser.getId().toString());
+			//log.info(cart.toString());
 			res = cartService.addCartItem(cart);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
-		log.info(cart.toString());
+		//log.info(cart.toString());
 		return ResponseEntity.ok(res);
 		
 	}
