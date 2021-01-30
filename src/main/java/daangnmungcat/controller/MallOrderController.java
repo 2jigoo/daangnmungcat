@@ -11,18 +11,15 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
-import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
-import daangnmungcat.dto.Order;
-import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.service.CartService;
 import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
@@ -43,7 +40,8 @@ public class MallOrderController {
 	
 	@Autowired
 	private MallPdtService mService;
-	
+
+
 	/*
 	@PostMapping("/mall/pre-order")
 	public void orderCheck(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
@@ -64,7 +62,6 @@ public class MallOrderController {
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
 		Member loginUser = service.selectMemberById(info.getId());
 		
-		Map<String, Object> map = new HashMap<>();
 		String[] id = request.getParameterValues("id");
 		System.out.println("전달받은 id:" + Arrays.toString(id));
 		List<Cart> cartList = new ArrayList<Cart>();

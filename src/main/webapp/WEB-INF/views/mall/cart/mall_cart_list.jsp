@@ -2,17 +2,14 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
-function check(){
-	if($('input:checkbox[name=id]:checked').length < 1 ){
-		alert('주문하실 상품을 선택하세요.');
-	} else {
-		$('#form').submit();
-	}
-}
-
 $(document).ready(function(){
 	
-	var contextPath = "<%=request.getContextPath()%>";
+	$("#selectAll").on("change", function(e){
+		var checked = $(this).prop("checked");
+		$(".ckbox").prop("checked", checked);
+	});
+
+	$("#selectAll").trigger("click");
 	
     $(".qtt div p.up").click(function(){
 		var price = $(this).closest("tr").find(".price").attr("value");
@@ -71,18 +68,52 @@ $(document).ready(function(){
         amount_span.attr("value", amount);
         amount_span.text(amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     });
+    
+    
+    $(".modify_quantity").click(function(){
+    	
+    	var cart_id = $(this).attr("cart-id");
+    	
+        var quantity_span = $(this).closest("tr").find(".quantity");
+        var quantity_before = quantity_span.attr("quantity");
+		var quantity = Number(quantity_span.val());
+		
+		console.log(cart_id);
+		console.log(quantity);
+		 
+		if(quantity_before == quantity) {
+			alert("수량을 변경 후 눌러주세요.");
+		} else {
+			$.ajax({
+				url: "/mall/cart",
+				type: "PUT",
+				contentType:"application/json; charset=utf-8",
+				dataType: "text",
+				cache : false,
+				data : JSON.stringify({id: cart_id, quantity: quantity}),
+				success: function(data) {
+					location.reload();
+				},
+				error: function(error){
+					alert("에러 발생");
+					console.log(error);
+				}
+			}); 
+		}
+		
+    });
 });
 
-$(function() {
-	$("#selectAll").on("change", function(e){
-		var checked = $(this).prop("checked");
-		$(".ckbox").prop("checked", checked);
-	});
-})
+function check(){
+	if($('input:checkbox[name=id]:checked').length < 1 ){
+		alert('주문하실 상품을 선택하세요.');
+	} else {
+		$('#form').submit();
+	}
+}
 
 
 function deleteCartItem(cart_id) {
-	
 	if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
 		$.ajax({
 			url: "/mall/cart",
@@ -100,7 +131,7 @@ function deleteCartItem(cart_id) {
 			}
 		});
 	}
-}
+};
 
 </script>
 
@@ -110,6 +141,7 @@ function deleteCartItem(cart_id) {
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
+
 			<form action="/mall/pre-order" method="post" id="form">
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<table class="cart_table">
@@ -148,10 +180,11 @@ function deleteCartItem(cart_id) {
 									<div class="qtt">
 										<div>
 											<p class="down"><span class="text_hidden">감소</span></p>
-											<input type="text" class="quantity" value="${cart.quantity }" >
+											<input type="text" class="quantity" value="${cart.quantity }" quantity="${cart.quantity }">
 											<p class="up"><span class="text_hidden">증가</span></p>
 										</div>
 									</div>
+									<a href="#" class="modify_quantity" cart-id="${cart.id }">변경</a>
 								</td>
 								<td>
 								
@@ -180,7 +213,8 @@ function deleteCartItem(cart_id) {
 						</c:forEach>
 					</tbody>
 				</table>
-				<input type="button" value="주문하기" onclick="check(); return false;">
+				<input type="submit" id="order_btn" value="주문하기">
+				<input type="submit" id="order_test_btn" value="주문하기(테스트)">
 			</form>
 		</c:if>	
 	</div>
