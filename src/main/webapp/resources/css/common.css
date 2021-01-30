@@ -73,20 +73,25 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 
 /* header */
 #header {width:100%; position:relative; z-index:300;}
-#header > div {height:90px; position:relative; padding-top:25px;}
+#header > div {height:110px; position:relative; padding-top:35px;}
 
-#logo {line-height:90px; font-size:3em; position:absolute; left:0; top:0;}
+#logo {line-height:110px; font-size:3em; position:absolute; left:0; top:0;}
 
 #header .h_search {width:460px; height:40px; margin:0 auto; position:relative;}
 #header .h_search .text {display:block; width:calc(100% - 40px); height:100%; border:1px solid #ccc; border-right:0;}
 #header .h_search .btn {display:block; width:40px; height:100%; background:#ff7e15 url(../images/ico_search.png) no-repeat center center; position:absolute; right:0; top:0; font-size:0; border:0; cursor:pointer;}
 #header .h_search_btn {display:none; width:28px; height:28px; border-radius:50%; background:#ff7e15 url(../images/ico_search.png) no-repeat center center; background-size:cover; cursor:pointer; position:absolute; left:2.5%; top:14px;}
 
-#header .h_util {position:absolute; right:0; top:0; overflow:hidden;}
+#header .h_util_wrap {position:absolute; right:0; top:12px; overflow:hidden;}
+#header .h_util {overflow:hidden; float:right; margin-bottom:12px;}
 #header .h_util li {float:left;}
 #header .h_util li:before {content:''; display:inline-block; width:1px; height:10px; background:#ccc; margin:0 10px;}
 #header .h_util li:first-child:before {display:none;}
-#header .h_util li a {font-size:0.9em; color:#595959; line-height:90px;}
+#header .h_util li a {font-size:0.75em; color:#595959; }
+#header .h_util2 {overflow:hidden; clear:both;}
+#header .h_util2 li {float:left; margin-left:20px; text-align:center;}
+#header .h_util2 li a {font-size:0.75em;}
+#header .h_util2 li a span {display:block;}
 
 #gnb {width:100%; background:#ff7e15;}
 #gnb > div {display:none;}
@@ -121,7 +126,7 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 	#header .h_search.on {display:block;}
 	#header .h_search_btn {display:block;}
 
-	#header .h_util {display:none;}
+	#header .h_util_wrap {display:none;}
 
 	#gnb {width:280px; height:100%; position:fixed; right:-280px; top:0; background:#fff; transition:right 0.6s;}
 	#gnb > div {display:block; width:100%; border-bottom:1px solid rgba(0,0,0,0.1); padding:0 3%;}
@@ -130,10 +135,14 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 	#gnb > div ul li:before {content:''; display:inline-block; width:1px; height:10px; background:#ccc; margin:0 10px;}
 	#gnb > div ul li:first-child:before {display:none;}
 	#gnb > div ul li a {font-size:0.83em; line-height:55px;}
+	#gnb > ul {height:auto;}
 	#gnb > ul > li {float:none; width:100%; text-align:left;}
 	#gnb > ul > li > a {font-size:1em; color:#111; border-bottom:1px solid #ddd; padding:0 10px;}
 	#gnb > ul > li > ul {position:relative; top:0;}
 	#gnb > ul > li > ul > li > a {font-size:0.93em; padding:0 10px; background:#f7f7f7; border:0; border-bottom:1px solid #eee;}
+	#gnb > div:last-child {border-bottom:0; overflow:hidden; margin-top:10px;}
+	#gnb > div:last-child ul {float:right;}
+	#gnb > div:last-child ul li a {line-height:2em;}
 
 	#menuToggle {display:block;}
 
