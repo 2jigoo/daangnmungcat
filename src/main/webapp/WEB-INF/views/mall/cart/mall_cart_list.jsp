@@ -2,10 +2,67 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
+$(function() {
+	$("#selectAll").on("change", function(e){
+		var checked = $(this).prop("checked");
+		$(".ckbox").prop("checked", checked);
+	});
+});
+
+
+function deleteCartItem(cart_id) {
+	if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
+		$.ajax({
+			url: "/mall/cart",
+			type: "DELETE",
+			contentType:"application/json; charset=utf-8",
+			dataType: "text",
+			cache : false,
+			data : JSON.stringify({id: cart_id}),
+			success: function(data) {
+				location.reload();
+			},
+			error: function(error){
+				alert("에러 발생");
+				console.log(error);
+			}
+		});
+	}
+};
+
+
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
+
+	$("#selectAll").trigger("click");
 	
-	/* $('#order_btn').on('click', function(){
+	/* 
+	$('#order_btn').on('click', function(e){
+		e.preventDefault();
+		
+		var cartForm = $("#cartForm").serialize();
+		console.log(cartForm);
+	
+		$.ajax({
+			url: "/pre-order",
+			type: "get",
+			dataType: "application/json;", //json200 에러 뜰 때 text로
+			cache : false,
+			data : cartForm,
+			success: function() {
+				console.log('이동');
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+				console.log(request);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	});
+	 */
+	
+	 /* $('#order_btn').on('click', function(){
 		var total = $('#price').val();
 		var qtt = $('#od_qtt').val();
 		var id = ${pdt.id};
@@ -33,6 +90,7 @@ $(document).ready(function(){
 			}
 		});
 	}); */
+	
 	
     $(".qtt div p.up").click(function(){
 		var price = $(this).closest("tr").find(".price").attr("value");
@@ -91,36 +149,41 @@ $(document).ready(function(){
         amount_span.attr("value", amount);
         amount_span.text(amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     });
+    
+    
+    $(".modify_quantity").click(function(){
+    	
+    	var cart_id = $(this).attr("cart-id");
+    	
+        var quantity_span = $(this).closest("tr").find(".quantity");
+        var quantity_before = quantity_span.attr("quantity");
+		var quantity = Number(quantity_span.val());
+		
+		console.log(cart_id);
+		console.log(quantity);
+		 
+		if(quantity_before == quantity) {
+			alert("수량을 변경 후 눌러주세요.");
+		} else {
+			$.ajax({
+				url: "/mall/cart",
+				type: "PUT",
+				contentType:"application/json; charset=utf-8",
+				dataType: "text",
+				cache : false,
+				data : JSON.stringify({id: cart_id, quantity: quantity}),
+				success: function(data) {
+					location.reload();
+				},
+				error: function(error){
+					alert("에러 발생");
+					console.log(error);
+				}
+			}); 
+		}
+		
+    });
 });
-
-$(function() {
-	$("#selectAll").on("change", function(e){
-		var checked = $(this).prop("checked");
-		$(".ckbox").prop("checked", checked);
-	});
-})
-
-
-function deleteCartItem(cart_id) {
-	
-	if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
-		$.ajax({
-			url: "/mall/cart",
-			type: "DELETE",
-			contentType:"application/json; charset=utf-8",
-			dataType: "text",
-			cache : false,
-			data : JSON.stringify({id: cart_id}),
-			success: function(data) {
-				location.reload();
-			},
-			error: function(error){
-				alert("에러 발생");
-				console.log(error);
-			}
-		});
-	}
-}
 
 </script>
 
@@ -130,7 +193,7 @@ function deleteCartItem(cart_id) {
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
-			<form action="/pre-order/" method="post">
+			<form action="/pre-order" method="post" id="cartForm">
 				<table class="cart_table">
 					<colgroup>
 						<col width="60px">
@@ -167,10 +230,11 @@ function deleteCartItem(cart_id) {
 									<div class="qtt">
 										<div>
 											<p class="down"><span class="text_hidden">감소</span></p>
-											<input type="text" class="quantity" value="${cart.quantity }" >
+											<input type="text" class="quantity" value="${cart.quantity }" quantity="${cart.quantity }">
 											<p class="up"><span class="text_hidden">증가</span></p>
 										</div>
 									</div>
+									<a href="#" class="modify_quantity" cart-id="${cart.id }">변경</a>
 								</td>
 								<td>
 								
@@ -199,7 +263,8 @@ function deleteCartItem(cart_id) {
 						</c:forEach>
 					</tbody>
 				</table>
-				<input type="submit" value="주문하기">
+				<input type="submit" id="order_btn" value="주문하기">
+				<input type="submit" id="order_test_btn" value="주문하기(테스트)">
 			</form>
 		</c:if>	
 	</div>

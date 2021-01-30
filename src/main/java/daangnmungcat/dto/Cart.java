@@ -33,7 +33,8 @@ public class Cart {
 	
 	// 해당 상품 * 수량 = 금액(amount)
 	private int amount;
-
+	
+	
 	public Cart(int id) {
 		this.id = id;
 	}
@@ -48,5 +49,5 @@ public class Cart {
 		this.product = product;
 		this.quantity = quantity;
 	}
-	
+
 }
