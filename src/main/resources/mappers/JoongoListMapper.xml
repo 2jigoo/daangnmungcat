@@ -120,6 +120,22 @@
 		WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2} -->
 	</select>
 	
+	<select id="selectJoongoBySearch" parameterType="map" resultMap="saleResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+		  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID 
+		  <where>
+		  	<if test="sale.title != null">and title LIKE '%'||#{sale.title}||'%' </if>
+		  	<if test="sale.dogCate != null">and dog_cate = #{sale.dogCate} </if>
+		  	<if test="sale.catCate != null">and cat_cate = #{sale.catCate} </if>
+		  	<if test="sale.member != null">and mem_id LIKE '%'||#{sale.member.id}||'%' </if>
+		  	<if test="sale.dongne1 != null">and d1.NAME = #{sale.dongne1.name} </if>
+		  	<if test="sale.dongne2 != null">AND d2.NAME = #{sale.dongne2.name} </if>
+		  </where>) b) a
+		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		ORDER BY a.rnum
+	</select>
 	
 	
 	<select id="listCount" parameterType="map" resultType="int">

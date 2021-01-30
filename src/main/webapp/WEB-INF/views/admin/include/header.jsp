@@ -84,7 +84,7 @@
                 <div id="collapseJoongo" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="/admin/joongo/list">상품 관리</a>
-                        <a class="collapse-item" href="#">댓글 관리</a>
+                        <a class="collapse-item" href="/admin/comment/list">댓글 관리</a>
                         <a class="collapse-item" href="#">채팅 관리</a>
                         <a class="collapse-item" href="#">후기 관리</a>
                     </div>

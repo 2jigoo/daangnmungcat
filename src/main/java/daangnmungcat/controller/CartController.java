@@ -1,5 +1,6 @@
 package daangnmungcat.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -61,7 +62,6 @@ public class CartController {
 		return ResponseEntity.ok(list);
 	}
 	
-	
 	// 장바구니 추가
 	@PostMapping("/mall/cart")
 	@ResponseBody
@@ -80,6 +80,8 @@ public class CartController {
 		
 		try {
 			cart.setMember(new Member(loginUser.getId()));
+			log.info(loginUser.getId().toString());
+			log.info(cart.toString());
 			res = cartService.addCartItem(cart);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -90,6 +92,45 @@ public class CartController {
 		return ResponseEntity.ok(res);
 		
 	}
+	
+	
+	/*
+	// 장바구니 추가
+	@PostMapping("/mall/cart")
+	@ResponseBody
+	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpSession session) {
+		// product.id, quantity 넘어옴
+		
+		int res = 0;
+		AuthInfo loginUser = null;
+		
+		loginUser = (AuthInfo) session.getAttribute("loginUser");
+		try {
+			if(loginUser == null) {
+				List<Cart> cartList = (List<Cart>) session.getAttribute("cartList");
+				if(cartList == null) {
+					cartList = new ArrayList<Cart>();
+				} else {
+	//					Cart alreadyCart = cartList.stream().filter(cart -> cart.getProduct().getId() == cart.getProduct().getId()).to;
+				}
+	//				session.setAttribute(, value);
+			} else {
+				cart.setMember(new Member(loginUser.getId()));
+				log.info(loginUser.getId().toString());
+				log.info(cart.toString());
+				res = cartService.addCartItem(cart);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		log.info(cart.toString());
+		return ResponseEntity.ok(res);
+		
+	}
+	*/
+	
 	
 	// 장바구니 상품 하나 정보 얻어오기
 	// 필요한지는 모르겠음
@@ -119,6 +160,7 @@ public class CartController {
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			cart.setMember(new Member(loginUser.getId()));
+			log.debug("modify: id - " + cart.getId() + ", quantity: " + cart.getQuantity());
 			res = cartService.modifyQuantity(cart);
 		} catch(Exception e) {
 			e.printStackTrace();

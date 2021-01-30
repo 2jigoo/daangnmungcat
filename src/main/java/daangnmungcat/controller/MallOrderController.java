@@ -2,6 +2,7 @@ package daangnmungcat.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,18 +39,32 @@ public class MallOrderController {
 	
 	@PostMapping("/pre-order")
 	public void orderCheck(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member loginUser = service.selectMemberById(info.getId());
-		session.setAttribute("total", map.get("total_price"));
-		session.setAttribute("qtt", map.get("quantity"));
+
+		String total = map.get("total_price").toString();
+		String qtt = map.get("quantity").toString();
 		MallProduct pdt = mService.getProductById(Integer.parseInt(map.get("m_id").toString()));
+		session.setAttribute("total", total);
+		session.setAttribute("qtt", qtt);
 		session.setAttribute("pdt", pdt);
-		
-		// 카트 세션에 set X DB 이용 중
+		session.setAttribute("pdt_id", pdt.getId());
+		session.setAttribute("pdt_name", pdt.getName());
 	}
 	
 	@GetMapping("/pre-order")
+	public Map<String, Object> orderPage(HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+		Member loginUser = service.selectMemberById(info.getId());
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("total",session.getAttribute("total"));
+		map.put("qtt",  session.getAttribute("qtt"));
+		map.put("pdt", session.getAttribute("pdt"));
+		map.put("member", info);
+		return map;
+	}
+	
+	@GetMapping("/pre-order-test")
 	public String orderPage(Model model, Cart[] cartList, HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");

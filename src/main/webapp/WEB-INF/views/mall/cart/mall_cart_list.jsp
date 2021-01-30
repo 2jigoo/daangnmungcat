@@ -36,12 +36,13 @@ $(document).ready(function(){
 
 	$("#selectAll").trigger("click");
 	
+	/* 
 	$('#order_btn').on('click', function(e){
 		e.preventDefault();
 		
 		var cartForm = $("#cartForm").serialize();
 		console.log(cartForm);
-		
+	
 		$.ajax({
 			url: "/pre-order",
 			type: "get",
@@ -59,6 +60,37 @@ $(document).ready(function(){
 			}
 		});
 	});
+	 */
+	
+	 /* $('#order_btn').on('click', function(){
+		var total = $('#price').val();
+		var qtt = $('#od_qtt').val();
+		var id = ${pdt.id};
+		console.log('total: ' + total);
+		console.log('qtt: ' + qtt);
+		console.log('id: ' + id);
+		var info = {
+			total_price: total,
+			quantity: qtt,
+			m_id : id
+			}
+		
+		$.ajax({
+			url: contextPath + "/pre-order",
+			type: "post",
+			contentType:"application/json; charset=utf-8",
+			dataType: "text", //json200에러뜰때 text로
+			cache : false,
+			data : JSON.stringify(info),
+			success: function() {
+				console.log('이동')
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+			}
+		});
+	}); */
+	
 	
     $(".qtt div p.up").click(function(){
 		var price = $(this).closest("tr").find(".price").attr("value");
@@ -117,6 +149,40 @@ $(document).ready(function(){
         amount_span.attr("value", amount);
         amount_span.text(amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     });
+    
+    
+    $(".modify_quantity").click(function(){
+    	
+    	var cart_id = $(this).attr("cart-id");
+    	
+        var quantity_span = $(this).closest("tr").find(".quantity");
+        var quantity_before = quantity_span.attr("quantity");
+		var quantity = Number(quantity_span.val());
+		
+		console.log(cart_id);
+		console.log(quantity);
+		 
+		if(quantity_before == quantity) {
+			alert("수량을 변경 후 눌러주세요.");
+		} else {
+			$.ajax({
+				url: "/mall/cart",
+				type: "PUT",
+				contentType:"application/json; charset=utf-8",
+				dataType: "text",
+				cache : false,
+				data : JSON.stringify({id: cart_id, quantity: quantity}),
+				success: function(data) {
+					location.reload();
+				},
+				error: function(error){
+					alert("에러 발생");
+					console.log(error);
+				}
+			}); 
+		}
+		
+    });
 });
 
 </script>
@@ -127,7 +193,7 @@ $(document).ready(function(){
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
-			<form action="#" method="get" id="cartForm">
+			<form action="/pre-order" method="post" id="cartForm">
 				<table class="cart_table">
 					<colgroup>
 						<col width="60px">
@@ -151,7 +217,7 @@ $(document).ready(function(){
 					<tbody>
 						<c:forEach var="cart" items="${list }">
 							<tr>
-								<td><input type="checkbox" class="ckbox" name="id" value="${cart.product.id }"></td>
+								<td><input type="checkbox" class="ckbox" name="id" value="${cart.id }"></td>
 								<td class="cart_thumb">
 									<div product-id="${cart.product.id}">
 										<c:if test="${cart.product.image1 eq null}"><img src="/resources/images/no_image.jpg"></c:if>
@@ -164,10 +230,11 @@ $(document).ready(function(){
 									<div class="qtt">
 										<div>
 											<p class="down"><span class="text_hidden">감소</span></p>
-											<input type="text" class="quantity" value="${cart.quantity }" >
+											<input type="text" class="quantity" value="${cart.quantity }" quantity="${cart.quantity }">
 											<p class="up"><span class="text_hidden">증가</span></p>
 										</div>
 									</div>
+									<a href="#" class="modify_quantity" cart-id="${cart.id }">변경</a>
 								</td>
 								<td>
 								
@@ -197,6 +264,7 @@ $(document).ready(function(){
 					</tbody>
 				</table>
 				<input type="submit" id="order_btn" value="주문하기">
+				<input type="submit" id="order_test_btn" value="주문하기(테스트)">
 			</form>
 		</c:if>	
 	</div>
