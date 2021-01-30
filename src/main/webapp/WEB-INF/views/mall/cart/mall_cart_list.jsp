@@ -154,7 +154,7 @@ function deleteCartItem(cart_id) {
 					<tbody>
 						<c:forEach var="cart" items="${list }">
 							<tr>
-								<td><input type="checkbox" class="ckbox" name="id" value="${cart.product.id }"></td>
+								<td><input type="checkbox" class="ckbox" name="id" value="${cart.id }"></td>
 								<td class="cart_thumb">
 									<div product-id="${cart.product.id}">
 										<c:if test="${cart.product.image1 eq null}"><img src="/resources/images/no_image.jpg"></c:if>
