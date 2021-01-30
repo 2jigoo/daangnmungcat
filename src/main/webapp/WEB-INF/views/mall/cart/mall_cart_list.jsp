@@ -2,37 +2,63 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 <script>
+$(function() {
+	$("#selectAll").on("change", function(e){
+		var checked = $(this).prop("checked");
+		$(".ckbox").prop("checked", checked);
+	});
+});
+
+
+function deleteCartItem(cart_id) {
+	if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
+		$.ajax({
+			url: "/mall/cart",
+			type: "DELETE",
+			contentType:"application/json; charset=utf-8",
+			dataType: "text",
+			cache : false,
+			data : JSON.stringify({id: cart_id}),
+			success: function(data) {
+				location.reload();
+			},
+			error: function(error){
+				alert("에러 발생");
+				console.log(error);
+			}
+		});
+	}
+};
+
+
 $(document).ready(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 
-	/* $('#order_btn').on('click', function(){
-		var total = $('#price').val();
-		var qtt = $('#od_qtt').val();
-		var id = ${pdt.id};
-		console.log('total: ' + total);
-		console.log('qtt: ' + qtt);
-		console.log('id: ' + id);
-		var info = {
-			total_price: total,
-			quantity: qtt,
-			m_id : id
-			}
+	$("#selectAll").trigger("click");
+	
+	$('#order_btn').on('click', function(e){
+		e.preventDefault();
+		
+		var cartForm = $("#cartForm").serialize();
+		console.log(cartForm);
 		
 		$.ajax({
-			url: contextPath + "/pre-order",
-			type: "post",
-			contentType:"application/json; charset=utf-8",
-			dataType: "text", //json200에러뜰때 text로
+			url: "/pre-order",
+			type: "get",
+			dataType: "application/json;", //json200 에러 뜰 때 text로
 			cache : false,
-			data : JSON.stringify(info),
+			data : cartForm,
 			success: function() {
-				console.log('이동')
+				console.log('이동');
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
+				console.log(request);
+				console.log(status);
+				console.log(error);
 			}
 		});
-	}); */
+	});
 	
     $(".qtt div p.up").click(function(){
 		var price = $(this).closest("tr").find(".price").attr("value");
@@ -93,35 +119,6 @@ $(document).ready(function(){
     });
 });
 
-$(function() {
-	$("#selectAll").on("change", function(e){
-		var checked = $(this).prop("checked");
-		$(".ckbox").prop("checked", checked);
-	});
-})
-
-
-function deleteCartItem(cart_id) {
-	
-	if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
-		$.ajax({
-			url: "/mall/cart",
-			type: "DELETE",
-			contentType:"application/json; charset=utf-8",
-			dataType: "text",
-			cache : false,
-			data : JSON.stringify({id: cart_id}),
-			success: function(data) {
-				location.reload();
-			},
-			error: function(error){
-				alert("에러 발생");
-				console.log(error);
-			}
-		});
-	}
-}
-
 </script>
 
 <div id="subContent">
@@ -130,7 +127,7 @@ function deleteCartItem(cart_id) {
 			장바구니가 비었습니다.
 		</c:if>
 		<c:if test="${not empty list}">
-			<form action="#" method="get">
+			<form action="#" method="get" id="cartForm">
 				<table class="cart_table">
 					<colgroup>
 						<col width="60px">
@@ -199,7 +196,7 @@ function deleteCartItem(cart_id) {
 						</c:forEach>
 					</tbody>
 				</table>
-				<input type="submit" value="주문하기">
+				<input type="submit" id="order_btn" value="주문하기">
 			</form>
 		</c:if>	
 	</div>
