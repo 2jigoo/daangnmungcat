@@ -78,7 +78,6 @@ $(function(){
 	})
 });
 </script>
-
 <div class="card shadow mb-4">
 	<div class="card-header py-2">
 		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
