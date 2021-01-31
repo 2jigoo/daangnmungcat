@@ -460,9 +460,10 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 .pre_order_table tbody input {width:70px; text-align:center; border:none; font-family:'S-CoreDream'; font-weight:400;}
 #pdt_name, #deli_price, #deli_kind, #deli_condition {width:150px;}
 .pre_order_btn {text-align:center}
-.pre_order_box { margin:0 auto; width:100%; text-align:center; padding:30px; }
-.pre_order_box .box1 {float:left; padding:20px;}
-.pre_order_box .box2 {float:left; padding:20px;}
-.pre_order_box .box3 {float:left;  padding:20px;}
-.pre_order_info {clear:both}
+.pre_order_box {margin:0 auto; width:700px; padding:30px; overflow:hidden;}
+.box1, .box2, .box3 { text-align:center; width:25%; margin:0 auto; float:left;  display: inline-block;}
+.pre_order_mem_info {clear:both}
 .pre_order_btn {text-align:center; padding:20px;}
+.pre_order_mem_info {width:80%; margin:0 auto; padding:20px;}
+.pre_order_deli_info {width:80%; margin:0 auto; padding:20px; }
+.pre_order_pay_info {width:80%; margin:0 auto; padding:20px;}

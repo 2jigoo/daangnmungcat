@@ -3,8 +3,8 @@
 <%@ include file="/resources/include/header.jsp" %>
 
 
-${info}
-
+${info}<br>
+${list}<br>
 카카오페이 결제가 정상적으로 완료되었습니다.
  
 결제일시:     [[${info.approved_at}]]<br/>
@@ -13,6 +13,7 @@ ${info}
 상품수량:    [[${info.quantity}]]<br/>
 결제금액:    [[${info.amount.total}]]<br/>
 결제방법:    [[${info.payment_method_type}]]<br/>
+
  
 
 <jsp:include page="/resources/include/footer.jsp"/>

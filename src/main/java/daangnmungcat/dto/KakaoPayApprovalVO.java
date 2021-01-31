@@ -1,5 +1,6 @@
 package daangnmungcat.dto;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import lombok.Data;
@@ -14,5 +15,5 @@ public class KakaoPayApprovalVO {
     private String item_name, item_code, payload;
     private Integer quantity, tax_free_amount, vat_amount;
     private Date created_at, approved_at;
-    
+
 }

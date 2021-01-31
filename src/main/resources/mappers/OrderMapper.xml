@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.OrderMapper">
+
+	<!-- resultMap -->
+	<resultMap type="Order" id="orderRes">
+		<id property="id" column="id"></id>
+		<result property="member.id" column="mem_id"></result>
+		<result property="member.name" column="mem_name"></result>
+		<result property="member.email" column="mem_email"></result>
+		<result property="member.phone" column="mem_phone"></result>
+		<result property="zipcode" column="zipcode"></result>
+		<result property="address1" column="address1"></result>
+		<result property="address2" column="address2"></result>
+		<result property="addPhone" column="address_phone"></result>
+		<result property="addMemo" column="address_memo"></result>
+		<result property="totalPrice" column="total_price"></result>
+		<result property="usedMileage" column="used_mileage"></result>
+		<result property="finalPrice" column="final_price"></result>
+		<result property="plusMileage" column="plus_mileage"></result>
+		<result property="deliveryPrice" column="delivery_price"></result>
+		<result property="addDeliveryPrice" column="add_delivery_price"></result>
+		<result property="cancelPrice" column="cancel_price"></result>
+		<result property="returnPrice" column="return_price"></result>
+		<result property="payId" column="pay_id"></result>
+		<result property="payDate" column="regdate"></result>
+		<result property="state" column="state"></result>
+
+		<association property="member"
+			resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+		<association property="details" resultMap="odRes" />
+	</resultMap>
+
+	<resultMap type="OrderDetail" id="odRes">
+		<id property="id" column="id"></id>
+		<result property="orderId" column="order_id" />
+		<result property="member.id" column="mem_id"></result>
+		<result property="cart.product.id" column="pdt_id" />
+		<result property="cart.quantity" column="quantity" />
+		<result property="cart.product.price" column="price" />
+		<result property="totalPrice" column="total_price" />
+
+		<association property="member"
+			resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+		<association property="cart"
+			resultMap="daangnmungcat.mapper.CartMapper.cartRes" />
+	</resultMap>
+
+
+	<!-- sql -->
+	<sql id="orderSql">
+		SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ZIPCODE,
+		ADDRESS1, ADDRESS2, ADDRESS_PHONE, ADDRESS_MEMO, TOTAL_PRICE,
+		USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE,
+		ADD_DELIVERY_PRICE, PAY_ID, REGDATE, CANCEL_PRICE, RETURN_PRICE,
+		STATE
+	</sql>
+	<sql id="odSql">
+		SELECT ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE FROM
+		mall_order_detail
+	</sql>
+
+	<!-- query -->
+
+	<select id="getOrderDetail">
+		<include refid="odSql"></include>
+		where order_id = #{orderId}
+	</select>
+
+	<select id="nextOrderNo" resultType="int">
+		SELECT max(id)+1 FROM mall_order
+	</select>
+
+	<insert id="insertOrderDetail">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT mall_order_detail_seq.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO mall_order_detail(ID, MEM_ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) 
+		VALUES (#{id}, #{member.id}, #{orderId}, #{cart.product.id}, #{cart.quantity}, #{cart.product.price}, #{totalPrice})
+		
+	</insert>
+</mapper>
