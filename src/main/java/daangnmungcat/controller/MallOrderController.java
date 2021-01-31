@@ -96,18 +96,17 @@ public class MallOrderController {
 		int total = 0;
 		int delivery = 0;
 		int final_price = 0;
-		double mile = 0;
+		int mile = 0;
 		
 		for(Cart c: cartList) {
 			total += c.getProduct().getPrice() * c.getQuantity();
 			delivery += c.getProduct().getDeliveryPrice();
-			mile = total * 0.01;
+			mile = (int) (total * 0.01);
 			final_price = total + delivery;
 		}
-
-		int nextNo = orderService.nextOrderNo();
 		
-		mv.addObject("orderNo", nextNo);
+		int nextOrderNo = orderService.nextOrderNo();
+		
 		mv.addObject("delivery", delivery);
 		mv.addObject("total", total);
 		mv.addObject("final_price", final_price);
@@ -116,40 +115,15 @@ public class MallOrderController {
 		mv.addObject("cart", cartList);
 		mv.addObject("member", loginUser);
 		mv.setViewName("/mall/order/mall_pre_order");
+		System.out.println(final_price);
 		
-		/*
-		//다음 주문번호
-		int nextNo = orderService.nextOrderNo();
-		System.out.println("다음번호:" + nextNo);
+		//결제시 detail로 받을 cartlist -> paySuccess
+		session.setAttribute("cart", cartList);
+		session.setAttribute("deli", delivery);
+		session.setAttribute("total", total);
+		session.setAttribute("final_price", final_price);
+		session.setAttribute("plus_mile", mile);
 		
-		int total = 0;
-		int res = 0;
-		
-		//주문할 리스트 -> detail에 추가
-		List<OrderDetail> detailList = new ArrayList<OrderDetail>();
-		
-		for(Cart c: cartList) {
-			detailList.add(new OrderDetail(c));	
-			total = c.getProduct().getPrice() * c.getQuantity();
-			
-			OrderDetail od = new OrderDetail();
-			od.setOrderId(nextNo);
-			od.setCart(c);
-			od.setMember(loginUser);
-			od.setTotalPrice(total);
-			res = orderService.insertOrderDetail(od);
-			System.out.println("total:" + total);
-		}
-		
-		System.out.println("detail insert:" + res);
-		
-		Order order = new Order();
-		order.setId(nextNo);
-		order.setMember(loginUser);
-		
-		System.out.println(detailList);
-		
-		*/
 		return mv;
 	}
 	

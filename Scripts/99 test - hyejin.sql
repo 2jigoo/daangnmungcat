@@ -83,6 +83,7 @@ INSERT INTO mall_order VALUES(mall_order_seq.nextval, 'test', 'sd', 'sd', 'sd', 
 SELECT mall_order_detail_seq.nextval FROM DUAL;
 INSERT INTO mall_order_detail(ID, mem_id, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES (80, 'test', 6,  2, 2, 1000, 2000);
 SELECT max(id)+1 FROM mall_order;
+SELECT max(id)+1 FROM MALL_PAYMENT ;
 SELECT * FROM MALL_ORDER_DETAIL ORDER BY id;
 DELETE FROM mall_order_detail;
 
@@ -93,3 +94,13 @@ UPDATE mall_cart SET QUANTITY = 2 WHERE MEMBER_ID = 'test';
 SELECT * FROM MALL_DELIVERY;
 
 SELECT * FROM MALL_PDT;
+SELECT * FROM MALL_PAYMENT;
+SELECT * FROM mall_order;
+SELECT * FROM mall_order_Detail ORDER BY id;
+
+SELECT * FROM mall_order_detail ORDER BY id;
+INSERT INTO MALL_ORDER_DETAIL values(4, 1, 'test', 4, 2, 2000, 2000);
+
+SELECT mall_payment_seq.nextval FROM DUAL;
+SELECT nvl(max(id)+1, 1) AS next FROM MALL_PAYMENT;
+SELECT nvl(max(id)+1, 1) AS next FROM MALL_ORDER_detail;

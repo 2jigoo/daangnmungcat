@@ -40,7 +40,7 @@ $(document).ready(function(){
 			$('#final_price').text(${final_price} - use);
 			$('input[name=final]').prop('value', ${final_price} - use);
 		}else {
-			$('#use_mileage').prop('value', "");
+			$('#use_mileage').prop('value', "0");
 			$('#final_price').text(${final_price});
 			$('input[name=final]').prop('value', ${final_price});
 			
@@ -191,7 +191,7 @@ ${id_arr}
 				</tr>
 				<tr>
 					<td>받으실 분</td> 
-					<td><input type="text" value="${member.name}" id="order_name"></td> 
+					<td><input type="text" value="${member.name}" id="order_name" name="add_name"></td> 
 				</tr>
 				<tr>
 					<td>받으실 곳</td> 
@@ -200,20 +200,20 @@ ${id_arr}
 						<input type="button" value="우편번호 검색" id="add_btn">
 						<br>
 						<input type="text" value="${member.address1}" id="address1" name="address1">
-						<input type="text" value="${member.address2}" id="address2" name="zipcode">
+						<input type="text" value="${member.address2}" id="address2" name="address2">
 					</td> 
 				</tr>
 				<tr>
 					<td>받는 분 일반 전화</td> 
-					<td><input type="text" id="order_number"></td> 
+					<td><input type="text" id="phone1" name="phone1"></td> 
 				</tr>
 				<tr>
 					<td>받는 분 휴대폰</td> 
-					<td><input type="text" value="${member.phone}" id="order_phone"></td> 
+					<td><input type="text" value="${member.phone}" id="phone2" name="phone2"></td> 
 				</tr>
 				<tr>
 					<td>남기실 말씀</td> 
-					<td><input type="text" id="order_memo"></td> 
+					<td><input type="text" id="order_memo" name="order_memo"></td> 
 				</tr>
 			</table>
 	</div>
@@ -235,7 +235,7 @@ ${id_arr}
 			</tr>
 			<tr>
 				<td>마일리지 사용</td>
-				<td><input type="text" id="use_mileage">
+				<td><input type="text" id="use_mileage" name="use_mileage" value="0">
 				<input type="checkbox" id="mile_chk">전액 사용하기 (보유 마일리지:${member.mileage}원)
 				<input type="hidden" value="${member.mileage}" id="mem_mile"></td>
 			</tr>

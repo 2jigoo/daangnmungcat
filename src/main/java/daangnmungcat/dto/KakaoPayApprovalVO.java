@@ -3,8 +3,20 @@ package daangnmungcat.dto;
 import java.util.ArrayList;
 import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
 @Data
 public class KakaoPayApprovalVO {
     //response
@@ -15,5 +27,13 @@ public class KakaoPayApprovalVO {
     private String item_name, item_code, payload;
     private Integer quantity, tax_free_amount, vat_amount;
     private Date created_at, approved_at;
+	
+    public KakaoPayApprovalVO(String tid) {
+		this.tid = tid;
+	}
+	
+    
+    
+    
 
 }

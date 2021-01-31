@@ -126,10 +126,12 @@ CREATE TABLE MALL_ORDER (
 	mem_name VARCHAR2(36) NOT NULL, /* 회원이름 */
 	mem_email VARCHAR2(50) NOT NULL, /* 회원이메일 */
 	mem_phone VARCHAR2(20) NOT NULL, /* 회원연락처 */
+	address_name VARCHAR2(20) NOT NULL, /* 받는 사람 */
 	zipcode NUMBER(5) NOT NULL, /* 우편번호 */
 	address1 VARCHAR2(255) NOT NULL, /* 배송주소 */
 	address2 VARCHAR2(255) NOT NULL, /* 배송상세주소 */
-	address_phone VARCHAR2(20) NOT NULL, /* 배송연락처 */
+	address_phone1 VARCHAR2(20), /* 배송연락처1 */
+	address_phone2 VARCHAR2(20) NOT NULL, /* 배송연락처2 */
 	address_memo VARCHAR2(1500), /* 배송메모 */
 	total_price NUMBER(10) NOT NULL, /* 총가격 */
 	used_mileage NUMBER(10) NOT NULL, /* 마일리지사용금액 */
@@ -138,10 +140,10 @@ CREATE TABLE MALL_ORDER (
 	delivery_price NUMBER(10) NOT NULL, /* 배송비 */
 	add_delivery_price NUMBER(10), /* 추가배송비 */
 	pay_id NUMBER(12) NOT NULL, /* 결제번호 */
-	regdate DATE NOT NULL, 
+	regdate DATE DEFAULT SYSDATE, 
 	cancel_price NUMBER(10), /* 취소금액 */
 	return_price NUMBER(10), /* 반품/품절금액 */
-	state CHAR(1) NOT NULL /* 주문상태 */
+	state CHAR(1) DEFAULT 'y' /* 주문상태 */
 );
 
 CREATE UNIQUE INDEX PK_MALL_ORDER
@@ -209,7 +211,7 @@ CREATE TABLE MALL_PAYMENT (
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
 	order_id NUMBER(12) NOT NULL, /* 주문서아이디 */
 	pay_price NUMBER(10) NOT NULL, /* 결제금액 */
-	pay_date DATE NOT NULL, /* 결제일시 */
+	pay_date DATE DEFAULT SYSDATE, /* 결제일시 */
 	pay_type VARCHAR2(1500) NOT NULL, /* 결제방법 */
 	pay_quantity NUMBER(12) NOT NULL /* 수량 */
 );

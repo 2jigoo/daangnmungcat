@@ -27,8 +27,10 @@ import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.dto.KakaoPayReadyVO;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Payment;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.OrderService;
 import lombok.extern.java.Log;
 
 @Service
@@ -36,12 +38,15 @@ import lombok.extern.java.Log;
 public class KakaoPayServiceImpl implements KakaoPayService {
 private static final String HOST = "https://kapi.kakao.com";
     
-	
+	@Autowired
+	private OrderService orderService;
+
+	@Autowired
+	private MemberService service;
+
     private KakaoPayReadyVO kakaoPayReadyVO;
     private KakaoPayApprovalVO kakaoPayApprovalVo;
     
-    @Autowired
-    private MemberService service;
     
     public String kakaoPayReady(HttpServletRequest request, HttpSession session) {
     	
@@ -56,15 +61,23 @@ private static final String HOST = "https://kapi.kakao.com";
         headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
-       // System.out.println("map: "+ map);
         int qtt = Integer.parseInt(request.getParameter("pdt_qtt"));
+        int nextPayNo = orderService.nextPayNo(); 
         
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", request.getParameter("order_no"));
+        params.add("partner_order_id", String.valueOf(nextPayNo));
         params.add("partner_user_id",  request.getParameter("mem_id"));
-        params.add("item_name", request.getParameter("first_pdt") + " 외 " +(qtt-1) + "건");
+        
+        String name;
+        if(qtt <= 1) {
+        	name = request.getParameter("first_pdt");
+        }else {
+        	name = request.getParameter("first_pdt") + " 외 " +(qtt-1) + "건";
+        }
+        
+        params.add("item_name", name);
         params.add("quantity", request.getParameter("pdt_qtt"));
         params.add("total_amount", request.getParameter("final"));
         params.add("tax_free_amount", "0"); //비과세금액
@@ -118,12 +131,12 @@ private static final String HOST = "https://kapi.kakao.com";
         headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
-       
+        int nextPayNo = orderService.nextPayNo(); 
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoPayReadyVO.getTid());
-        params.add("partner_order_id", (String) session.getAttribute("order_no"));
+        params.add("partner_order_id", String.valueOf(nextPayNo));
         params.add("partner_user_id", (String) session.getAttribute("mem_id"));
         params.add("pg_token", pg_token);
         params.add("total_amount", session.getAttribute("final_price").toString());
@@ -134,7 +147,6 @@ private static final String HOST = "https://kapi.kakao.com";
         try {
         	KakaoPayApprovalVO kakaoPayApprovalVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVO.class);
             log.info("" + kakaoPayApprovalVO);
-            
             
             return kakaoPayApprovalVO;
         

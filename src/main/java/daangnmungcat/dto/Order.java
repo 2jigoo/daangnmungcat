@@ -21,10 +21,12 @@ public class Order {
 	private int id; 
 	private Member member;
 	private List<OrderDetail> details;
+	private String addName;
 	private int zipcode;
 	private String address1;
 	private String address2;
-	private String addPhone; 
+	private String addPhone1; 
+	private String addPhone2; 
 	private String addMemo;
 	private int totalPrice;
 	private int usedMileage;

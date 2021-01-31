@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
+import daangnmungcat.dto.Payment;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.OrderService;
 
@@ -37,6 +38,18 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public int nextOrderNo() {
 		return mapper.nextOrderNo();
+	}
+
+	@Override
+	public int nextPayNo() {
+		// TODO Auto-generated method stub
+		return mapper.nextPayNo();
+	}
+
+	@Override
+	public int insertPayment(Payment pay) {
+		// TODO Auto-generated method stub
+		return mapper.insertPayment(pay);
 	}
 
 }

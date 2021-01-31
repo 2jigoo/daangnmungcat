@@ -9,10 +9,12 @@
 		<result property="member.name" column="mem_name"></result>
 		<result property="member.email" column="mem_email"></result>
 		<result property="member.phone" column="mem_phone"></result>
+		<result property="addName" column="address_name"></result>
 		<result property="zipcode" column="zipcode"></result>
 		<result property="address1" column="address1"></result>
 		<result property="address2" column="address2"></result>
-		<result property="addPhone" column="address_phone"></result>
+		<result property="addPhone1" column="address_phone1"></result>
+		<result property="addPhone2" column="address_phone2"></result>
 		<result property="addMemo" column="address_memo"></result>
 		<result property="totalPrice" column="total_price"></result>
 		<result property="usedMileage" column="used_mileage"></result>
@@ -68,7 +70,11 @@
 	</select>
 
 	<select id="nextOrderNo" resultType="int">
-		SELECT max(id)+1 FROM mall_order
+		SELECT nvl(max(id)+1, 1) FROM mall_order
+	</select>
+	
+	<select id="nextPayNo" resultType="int">
+		SELECT nvl(max(id)+1, 1) FROM MALL_PAYMENT
 	</select>
 
 	<insert id="insertOrderDetail">
@@ -78,5 +84,24 @@
 		INSERT INTO mall_order_detail(ID, MEM_ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) 
 		VALUES (#{id}, #{member.id}, #{orderId}, #{cart.product.id}, #{cart.quantity}, #{cart.product.price}, #{totalPrice})
 		
+	</insert>
+	<insert id="insertOrder">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT mall_order_seq.nextval FROM DUAL
+		</selectKey>
+		insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
+			ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
+			TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, PAY_ID)
+		values (#{id}, #{member.id}, #{member.name}, #{member.email}, #{member.phone}, #{addName},
+			#{zipcode}, #{address1}, #{address2}, #{addPhone1}, #{addPhone2}, #{addMemo}, 
+			#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{payId} ) 
+	</insert>
+	
+	<insert id="insertPayment">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT mall_payment_seq.nextval FROM DUAL
+		</selectKey>
+		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
+		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
 	</insert>
 </mapper>

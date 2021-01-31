@@ -13,7 +13,7 @@ DROP SEQUENCE mall_delivery_seq;
 DROP SEQUENCE mall_cart_seq;
 DROP SEQUENCE mall_order_seq;
 DROP SEQUENCE mall_order_detail_seq;
-DROP SEQUENCE payment_seq;
+DROP SEQUENCE mall_payment_seq;
 
 
 CREATE SEQUENCE dongne1_seq
@@ -99,7 +99,7 @@ START WITH 1
 INCREMENT BY 1
 MINVALUE 1;
 
-CREATE SEQUENCE payment_seq
+CREATE SEQUENCE  mall_payment_seq
 START WITH 1
 INCREMENT BY 1
 MINVALUE 1;
