@@ -208,7 +208,7 @@
 		where id = #{id}
 	</update>
 	
-	<select id="getAddress" resultMap="addressResult">
+	<select id="getAddress" resultMap="addressResult" >
 		select * from order_address where id = #{id} order by id
 	</select>
 	

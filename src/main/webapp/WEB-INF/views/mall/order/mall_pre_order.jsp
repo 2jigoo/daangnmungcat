@@ -1,3 +1,5 @@
+<%@page import="daangnmungcat.dto.AuthInfo"%>
+<%@page import="daangnmungcat.service.MileageService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="/resources/include/header.jsp" %>
@@ -74,17 +76,17 @@ function check(a){
 }
 
 </script>
-${id_arr}
+
 <div class="pre_order">
 <h3 style="text-align:center; padding:20px">주문서 작성 / 결제 </h3>
 <form method="post" id="form" action="/kakao-pay" enctype="multipart/form-data" accept-charset="utf-8">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<!-- 넘어가는 data -->
-	<input type="text" name="order_no" value="${orderNo}">
 	<input type="text" name="first_pdt" value="${cart.get(0).product.name}"> <!-- 첫번째 -->
 	<input type="text" name="pdt_qtt" value="${size}"> <!-- 주문개수 -->
 	<input type="text" name="final">
 	<input type="text" name="mem_id" value="${member.id}">
+	<input type="text" name="total_qtt" value="${total_qtt}">
 	
 	<table class="pre_order_table">
 		<colgroup>

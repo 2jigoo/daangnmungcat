@@ -46,9 +46,6 @@ public class LoginController {
 		Integer res = service.checkPwd(member.getId(), member.getPwd());
 		HttpSession session = null;
 		
-		System.out.println("member: " + member);
-		System.out.println("res: " + res);
-		
 		try {
 			session = request.getSession();
 			if (res == 1) {

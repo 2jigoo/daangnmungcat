@@ -31,6 +31,7 @@ import daangnmungcat.service.CartService;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
 import lombok.extern.log4j.Log4j2;
 
@@ -39,10 +40,16 @@ import lombok.extern.log4j.Log4j2;
 public class KakaoPayController {
 	
 	@Autowired
+	private MemberService memberService;
+	
+	@Autowired
 	private KakaoPayService kakaoService;
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private MileageService mileService;
 	
 	@GetMapping("/kakao-pay")
 	public void kakaoGet(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
@@ -52,6 +59,8 @@ public class KakaoPayController {
 	@PostMapping("/kakao-pay")
 	public String kakaoPost(HttpServletRequest request, HttpSession session) {
 		log.info("kakao - post");
+		
+		
 		return "redirect:" + kakaoService.kakaoPayReady(request,session);
 	}
 	
@@ -62,6 +71,7 @@ public class KakaoPayController {
 		log.info("kakaoPaySuccess pg_token : " + pg_token);
 		
 		KakaoPayApprovalVO kakao = kakaoService.kakaoPayInfo(pg_token, request, session);
+		log.info("kakaoPaySuccess - kakao:" + kakao);
 		//결제, 주문상세 , 주문, payment, 멤버마일리지, 마일리지사용내역 테이블 트랜잭션처리
 		orderService.orderTransaction(kakao, request, session);
 		

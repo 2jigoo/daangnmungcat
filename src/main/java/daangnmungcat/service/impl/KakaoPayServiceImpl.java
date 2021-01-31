@@ -63,6 +63,7 @@ private static final String HOST = "https://kapi.kakao.com";
 		String phone2 = request.getParameter("phone2");
 		String memo = request.getParameter("order_memo");
 		String usedMile = request.getParameter("use_mileage");
+		String totalQtt = request.getParameter("total_qtt");
 		
 		//session에 담아서 전송
 		List<String> list = new ArrayList<String>();
@@ -79,6 +80,7 @@ private static final String HOST = "https://kapi.kakao.com";
 		session.setAttribute("phone2", phone2);
 		session.setAttribute("memo", memo);
 		session.setAttribute("usedMile", usedMile);
+		session.setAttribute("total_qtt", totalQtt);
 		
         RestTemplate restTemplate = new RestTemplate();
         
@@ -105,7 +107,7 @@ private static final String HOST = "https://kapi.kakao.com";
         }
         
         params.add("item_name", name);
-        params.add("quantity", request.getParameter("pdt_qtt"));
+        params.add("quantity", request.getParameter("total_qtt"));
         params.add("total_amount", request.getParameter("final"));
         params.add("tax_free_amount", "0"); //비과세금액
         params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
