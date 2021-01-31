@@ -2,6 +2,9 @@ package daangnmungcat.service.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +47,6 @@ private static final String HOST = "https://kapi.kakao.com";
     	
     	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
-	
     	
         RestTemplate restTemplate = new RestTemplate();
         
@@ -55,15 +57,16 @@ private static final String HOST = "https://kapi.kakao.com";
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
        // System.out.println("map: "+ map);
+        int qtt = Integer.parseInt(request.getParameter("pdt_qtt"));
         
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", "1");
+        params.add("partner_order_id", request.getParameter("order_no"));
         params.add("partner_user_id",  request.getParameter("mem_id"));
-        params.add("item_name", request.getParameter("pdt_name"));
+        params.add("item_name", request.getParameter("first_pdt") + " 외 " +(qtt-1) + "건");
         params.add("quantity", request.getParameter("pdt_qtt"));
-        params.add("total_amount", request.getParameter("total"));
+        params.add("total_amount", request.getParameter("final"));
         params.add("tax_free_amount", "0"); //비과세금액
         params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
         params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
@@ -75,15 +78,14 @@ private static final String HOST = "https://kapi.kakao.com";
         try {
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
             kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
-           
-            log.info("" + kakaoPayReadyVO);
-            request.setAttribute("body", kakaoPayReadyVO);
-            request.setAttribute("pdt_id", request.getParameter("pdt_id").trim());
-    		request.setAttribute("pdt_name", request.getParameter("pdt_name").trim());
-    		request.setAttribute("pdt_qtt", request.getParameter("pdt_qtt").trim());
-    		request.setAttribute("total", request.getParameter("total").trim());
-    		request.setAttribute("mem_id", request.getParameter("mem_id"));
             
+            session.setAttribute("order_no", request.getParameter("order_no"));
+            session.setAttribute("mem_id", request.getParameter("mem_id"));
+            session.setAttribute("first_pdt", request.getParameter("first_pdt"));
+            session.setAttribute("pdt_qtt", request.getParameter("pdt_qtt"));
+            session.setAttribute("final_price", request.getParameter("final"));
+            
+            log.info("" + kakaoPayReadyVO);
             return kakaoPayReadyVO.getNext_redirect_pc_url();
  
         } catch (RestClientException e) {
@@ -101,12 +103,13 @@ private static final String HOST = "https://kapi.kakao.com";
     
     public KakaoPayApprovalVO kakaoPayInfo(String pg_token, HttpServletRequest request, HttpSession session) {
     	
-    	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = service.selectMemberById(loginUser.getId());
     	
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");
         
+        AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		
         RestTemplate restTemplate = new RestTemplate();
         
         // 서버로 요청할 Header
@@ -120,16 +123,18 @@ private static final String HOST = "https://kapi.kakao.com";
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoPayReadyVO.getTid());
-        params.add("partner_order_id", "1");
-        params.add("partner_user_id", member.getId());
+        params.add("partner_order_id", (String) session.getAttribute("order_no"));
+        params.add("partner_user_id", (String) session.getAttribute("mem_id"));
         params.add("pg_token", pg_token);
-        params.add("total_amount", (String) request.getAttribute("total"));
+        params.add("total_amount", session.getAttribute("final_price").toString());
+        
         
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
        
         try {
         	KakaoPayApprovalVO kakaoPayApprovalVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVO.class);
             log.info("" + kakaoPayApprovalVO);
+            
             
             return kakaoPayApprovalVO;
         

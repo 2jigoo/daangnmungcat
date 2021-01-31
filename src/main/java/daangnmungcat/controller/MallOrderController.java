@@ -71,7 +71,7 @@ public class MallOrderController {
 		System.out.println(cartList);
 	}
 	
-	
+	//카트에서 선택된 카트리스트
 	@PostMapping("/mall/pre-order")
 	public ModelAndView preOrderList(HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
@@ -81,14 +81,14 @@ public class MallOrderController {
 		ModelAndView mv = new ModelAndView();
 		
 		String[] id = request.getParameterValues("id");
-		System.out.println("전달받은 id:" + Arrays.toString(id));
 		
 		List<Cart> cartList = new ArrayList<Cart>();
 		for(int i=0; i<id.length; i++) {
 			cartList.add(cartService.getCartItem(Integer.parseInt(id[i])));
 			for(Cart cart: cartList) {
+				//조건부일때만 하는걸로 수정해야함
 				if(cart.getProduct().getPrice() * cart.getQuantity() >= 50000) {
-					cart.getProduct().setDeliveryPrice(0);
+					//cart.getProduct().setDeliveryPrice(0);
 				}
 			}
 		}
@@ -104,15 +104,18 @@ public class MallOrderController {
 			mile = total * 0.01;
 			final_price = total + delivery;
 		}
+
+		int nextNo = orderService.nextOrderNo();
 		
-		System.out.println("마일리지:" + mile);
+		mv.addObject("orderNo", nextNo);
 		mv.addObject("delivery", delivery);
 		mv.addObject("total", total);
 		mv.addObject("final_price", final_price);
 		mv.addObject("mileage", mile);
 		mv.addObject("size", cartList.size());
 		mv.addObject("cart", cartList);
-		mv.setViewName("/mall/mall_pre_order");
+		mv.addObject("member", loginUser);
+		mv.setViewName("/mall/order/mall_pre_order");
 		
 		/*
 		//다음 주문번호

@@ -4,6 +4,14 @@
 <script>
 $(document).ready(function(){
 	
+	$('#pre_order').on('click', function(){
+		if($('input:checkbox[name=id]:checked').length == 0){
+			alert('주문하실 상품을 선택하세요.')
+		} else {
+			$('#form').submit();
+		}
+	})
+	
 	$("#selectAll").on("change", function(e){
 		var checked = $(this).prop("checked");
 		$(".ckbox").prop("checked", checked);
@@ -213,8 +221,7 @@ function deleteCartItem(cart_id) {
 						</c:forEach>
 					</tbody>
 				</table>
-				<input type="submit" id="order_btn" value="주문하기">
-				<input type="submit" id="order_test_btn" value="주문하기(테스트)">
+				<input type="button" id="pre_order" value="주문하기">
 			</form>
 		</c:if>	
 	</div>
