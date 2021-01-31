@@ -2,9 +2,12 @@ package daangnmungcat.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Service;
 
-import daangnmungcat.dto.Cart;
+import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
@@ -18,10 +21,12 @@ public interface OrderService {
 	
 	int nextOrderNo();
 	int nextPayNo();
-	
-	int insertOrderDetail(OrderDetail od);
 
 	int insertPayment(Payment pay);
+
+	int insertOrderDetail(OrderDetail orderDetail);
+
+	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
 
 
 

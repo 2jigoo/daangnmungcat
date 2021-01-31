@@ -47,7 +47,8 @@
 		<association property="cart"
 			resultMap="daangnmungcat.mapper.CartMapper.cartRes" />
 	</resultMap>
-
+	
+	
 
 	<!-- sql -->
 	<sql id="orderSql">
@@ -104,4 +105,5 @@
 		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
 		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
 	</insert>
+	
 </mapper>

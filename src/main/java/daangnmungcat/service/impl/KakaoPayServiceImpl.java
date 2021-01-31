@@ -52,7 +52,34 @@ private static final String HOST = "https://kapi.kakao.com";
     	
     	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
-    	
+
+		//주문할거만 담은 새로운 id
+		String[] id = request.getParameterValues("pdt_id");
+		String zipcode = request.getParameter("zipcode");
+		String addname = request.getParameter("add_name");
+		String add1 = request.getParameter("address1");
+		String add2 = request.getParameter("address2");
+		String phone1 = request.getParameter("phone1");
+		String phone2 = request.getParameter("phone2");
+		String memo = request.getParameter("order_memo");
+		String usedMile = request.getParameter("use_mileage");
+		
+		//session에 담아서 전송
+		List<String> list = new ArrayList<String>();
+		for(int i=0; i<id.length; i++) {
+			list.add(i, id[i]);
+		}
+		
+		session.setAttribute("list", list);
+		session.setAttribute("add_name", addname);
+		session.setAttribute("zipcode", zipcode);
+		session.setAttribute("add1", add1);
+		session.setAttribute("add2", add2);
+		session.setAttribute("phone1", phone1);
+		session.setAttribute("phone2", phone2);
+		session.setAttribute("memo", memo);
+		session.setAttribute("usedMile", usedMile);
+		
         RestTemplate restTemplate = new RestTemplate();
         
         // 서버로 요청할 Header
@@ -91,13 +118,7 @@ private static final String HOST = "https://kapi.kakao.com";
         try {
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
             kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
-            
-            session.setAttribute("order_no", request.getParameter("order_no"));
-            session.setAttribute("mem_id", request.getParameter("mem_id"));
-            session.setAttribute("first_pdt", request.getParameter("first_pdt"));
-            session.setAttribute("pdt_qtt", request.getParameter("pdt_qtt"));
-            session.setAttribute("final_price", request.getParameter("final"));
-            
+
             log.info("" + kakaoPayReadyVO);
             return kakaoPayReadyVO.getNext_redirect_pc_url();
  
@@ -108,7 +129,6 @@ private static final String HOST = "https://kapi.kakao.com";
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
         
         return "/pay";
         
@@ -137,7 +157,7 @@ private static final String HOST = "https://kapi.kakao.com";
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoPayReadyVO.getTid());
         params.add("partner_order_id", String.valueOf(nextPayNo));
-        params.add("partner_user_id", (String) session.getAttribute("mem_id"));
+        params.add("partner_user_id", member.getId());
         params.add("pg_token", pg_token);
         params.add("total_amount", session.getAttribute("final_price").toString());
         

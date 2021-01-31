@@ -41,20 +41,6 @@ public class MallOrderController {
 	@Autowired
 	private MallPdtService mService;
 
-
-	/*
-	@PostMapping("/mall/pre-order")
-	public void orderCheck(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
-
-		String total = map.get("total_price").toString();
-		String qtt = map.get("quantity").toString();
-		MallProduct pdt = mService.getProductById(Integer.parseInt(map.get("m_id").toString()));
-		session.setAttribute("total", total);
-		session.setAttribute("qtt", qtt);
-		session.setAttribute("pdt", pdt);
-		session.setAttribute("pdt_id", pdt.getId());
-		session.setAttribute("pdt_name", pdt.getName());
-	} */
 	
 	@GetMapping("/mall/pre-order")
 	public void orderPage(HttpSession session, HttpServletRequest request) {
@@ -104,8 +90,6 @@ public class MallOrderController {
 			mile = (int) (total * 0.01);
 			final_price = total + delivery;
 		}
-		
-		int nextOrderNo = orderService.nextOrderNo();
 		
 		mv.addObject("delivery", delivery);
 		mv.addObject("total", total);

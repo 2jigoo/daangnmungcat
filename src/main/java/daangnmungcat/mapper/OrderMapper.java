@@ -2,6 +2,9 @@ package daangnmungcat.mapper;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
