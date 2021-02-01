@@ -31,10 +31,6 @@ public class Cart {
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 	private LocalDateTime regdate;
 	
-	// 해당 상품 * 수량 = 금액(amount)
-	private int amount;
-	
-	
 	public Cart(int id) {
 		this.id = id;
 	}
@@ -48,6 +44,11 @@ public class Cart {
 		this.member = member;
 		this.product = product;
 		this.quantity = quantity;
+	}
+	
+	/* 비지니스 로직 */
+	public int getAmount() {
+		return this.product.getPrice() * this.quantity;
 	}
 
 }

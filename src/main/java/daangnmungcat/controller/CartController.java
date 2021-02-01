@@ -66,21 +66,22 @@ public class CartController {
 		}
 		
 		// 유료배송 상품이 있는 경우
+		int chargedDeliveryFee = 0;
 		if(hasChargedDelivery == true) {
 			List<Cart> listOfChargedFee = list.stream()
 												.filter(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"))
 												.collect(Collectors.toList());
 			// 모든 유료배송 상품의 합계 배송비
-			int chargedDelivery = 0;
 			for(Cart cart : listOfChargedFee) {
-				chargedDelivery += cart.getQuantity() * cart.getProduct().getDeliveryPrice();
+				chargedDeliveryFee += cart.getQuantity() * cart.getProduct().getDeliveryPrice();
 			}
 			
-			totalDeliveryFee += chargedDelivery;
+			totalDeliveryFee += chargedDeliveryFee;
 		}
 		
-		
 		model.addAttribute("list", list);
+		model.addAttribute("conditionalDeliveryFee", totalDeliveryFee - chargedDeliveryFee);
+		model.addAttribute("chargedDelivery", chargedDeliveryFee);
 		model.addAttribute("totalDeliveryFee", totalDeliveryFee);
 		
 		return "/mall/cart/mall_cart_list";
