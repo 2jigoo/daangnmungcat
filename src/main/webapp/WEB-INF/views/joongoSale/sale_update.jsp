@@ -31,6 +31,9 @@ textarea {
 	float: left;
 }
 
+#hidden{
+	color:#ff7e15;
+}
 </style>
 <script type="text/javascript">
 $(function(){
@@ -72,7 +75,6 @@ $(function(){
 	$("select[name='saleState']").change(function(){
 		var state = $("select[name='saleState']").val();
 		if(state == 3){
-			alert("3");
 			$('#hidden').css({
 			   display: ""
 			});
