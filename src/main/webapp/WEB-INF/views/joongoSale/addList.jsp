@@ -25,6 +25,12 @@ textarea {
 	height: 160px;
 }
 
+#thumFileArea > img {
+	width: 160px;
+	height: 160px;
+}
+
+
 </style>
 <script type="text/javascript">
 $(function(){
@@ -122,6 +128,7 @@ $(function(){
 	 });
 	 
 		$('#imgInput').on("change", handleImgs);	
+
 		
 		function insertBoard(){
 			var formData = new FormData($("#boardForm")[0]);
@@ -165,6 +172,22 @@ function handleImgs(e) {
 	
 }
 
+function handleThumImgs(){
+	var file = document.getElementById("thumImgInput").files[0]
+	if(file){
+		console.log(document.getElementById("thumImgInput").files[0])
+		 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+	    reader.onload = function (e) {
+	    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+	        $('#productImg1').attr('src', e.target.result);
+	        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
+	        //(아래 코드에서 읽어들인 dataURL형식)
+	    }                   
+	    reader.readAsDataURL(document.getElementById("thumImgInput").files[0]);
+	    //File내용을 읽어 dataURL형식의 문자열로 저장
+		}	
+}
+
 
 </script>
 <div id="subContent">
@@ -201,12 +224,21 @@ function handleImgs(e) {
 					</div>
 				</td>
 			</tr>
-			
+			<tr>
+				<td>대표 사진<br>*대표사진은1장만 추가가능</td>
+				<td>
+					<div id="thumFileArea">
+						<input type="file" name="file" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
+						<img id="productImg1">
+						<div id="preview"></div>
+					</div>
+				</td>
+			</tr>
 			<tr>
 				<td>사진</td>
 				<td>
 					<div id="fileArea">
-						<input multiple="multiple" type="file" name="file" id="imgInput" />
+						<input multiple="multiple" type="file" name="file" id="imgInput" accept="image/*"/>
 						<img id="productImg1">
 						<div id="preview1"></div>
 					</div>
