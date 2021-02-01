@@ -186,7 +186,7 @@ CREATE TABLE MALL_MILEAGE (
 	id NUMBER(12) NOT NULL, /* 새 컬럼 */
 	od_id NUMBER(12), /* 상세주문id */
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
-	mileage VARCHAR2(20) NOT NULL, /* 적립및사용금액 */
+	mileage  NUMBER(12) NOT NULL, /* 적립및사용금액 */
 	content VARCHAR2(1500) NOT NULL, /* 적립및사용 내용 */
 	regdate DATE DEFAULT SYSDATE /* 적립일시 */
 );

@@ -170,8 +170,7 @@ SELECT * FROM MALL_MILEAGE;
 
 
 
-INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', 1000, '회원가입', sysdate);
-INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', -500, '테스트', sysdate);
+
 
 SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, m.GRADE, g.NAME AS grade_name, a.name AS dongne1 , b.name AS dongne2, 
 m.profile_pic, m.profile_text, m.regdate, m.ZIPCODE, m.ADDRESS1, m.ADDRESS2, m.USE_YN FROM MEMBER m 
@@ -233,7 +232,6 @@ LEFT OUTER JOIN grade g ON m.GRADE = g.CODE
 
 	
 UPDATE MILEAGE SET mileage = 30000 WHERE id = 'chattest1';
-INSERT INTO MALL_MILEAGE 
 SELECT * FROM MALL_MILEAGE;
 
 SELECT * FROM MEMBER;
@@ -241,7 +239,15 @@ SELECT * FROM MEMBER;
 SELECT * FROM MALL_ORDER ;
 
 SELECT MILEAGE FROM MEMBER WHERE id= 'chattest';
-UPDATE MALL_MILEAGE SET MILEAGE = 2000 WHERE mem_id = 'chattest1';
-SELECT sum(mil) FROM MALL_MILEAGE WHERE mem_id = 'chattest';
+UPDATE MALL_MILEAGE SET MILEAGE = -100 WHERE mem_id = 'chattest1';
+SELECT sum(mileage) FROM MALL_MILEAGE WHERE mem_id = 'chattest2';
 
 SELECT ID, OD_ID, MEM_ID, sum(MILEAGE) AS mileage, CONTENT, REGDATE FROM MALL_MILEAGE WHERE mem_id = 'chattest1';
+
+
+INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', 1000, '회원가입', sysdate);
+INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', -500, '테스트', sysdate);
+DELETE FROM mall_mileage WHERE id =4; 
+SELECT * FROM MALL_MILEAGE ;
+
+
