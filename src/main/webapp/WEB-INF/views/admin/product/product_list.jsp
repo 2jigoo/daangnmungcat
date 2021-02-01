@@ -3,12 +3,23 @@
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
 $(function(){
-	var contextPath = "<%=request.getContextPath()%>";
 	
 	$(".delete_btn").click(function(){
 		if (confirm("정말 삭제하시겠습니까??") == true){
 		} else{
 		    return false;
+		}
+	})
+	
+	$("#searchBtn").click(function(){
+		if ($("select[name='where']").val() == ""){
+			alert("검색 기준을 선택해주세요.")
+			return false;
+		} else if ($("input[name='query']").val() == ""){
+			alert("검색 내용을 입력해주세요.")
+			return false;
+		} else {
+			window.location = "/admin/product/list?"+$("select[name='where']").val()+"="+$("input[name='query']").val()+"";
 		}
 	})
 });
@@ -26,6 +37,20 @@ $(function(){
 	</div>
 	<!-- card-body -->
 	<div class="card-body">
+		<div class="col-sm-12 col-md-6 p-0">
+			<div>
+				<select class="custom-select custom-select-sm" name="where" style="width: 80px;">
+					<option value="">기준</option>
+					<option value="name">상품명</option>
+					<option value="category">카테고리</option>
+				</select>
+				<label>
+					<input type="search" class="form-control form-control-sm" name="query">
+				</label>
+				<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
+			</div>
+		</div>
+	
 		<table class="adm_table_style1">
 			<colgroup>
 				<col width="10%">
@@ -80,17 +105,17 @@ $(function(){
 		
 		<div class="board_page">
 		    <c:if test="${pageMaker.prev}">
-		    	<p><a href="<%=request.getContextPath()%>/admin/mall/product/list${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    	<p><a href="<%=request.getContextPath()%>/admin/product/list${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    </c:if> 
 			<ul>
 			
 			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-			  	<li><a href="<%=request.getContextPath()%>/admin/mall/product/list${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  	<li><a href="<%=request.getContextPath()%>/admin/product/list${pageMaker.makeQuery(idx)}">${idx}</a></li>
 			  </c:forEach>
 			</ul>
 			
 			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-			    <p><a href="<%=request.getContextPath()%>/admin/mall/product/list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			    <p><a href="<%=request.getContextPath()%>/admin/product/list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			  </c:if> 
 		</div>
 	</div>

@@ -14,7 +14,10 @@ public interface JoongoSaleCommentMapper {
 	
 	List<SaleComment> selectJoongoCommentByAllPage(@Param("saleId") int saleId, @Param("cri") Criteria cri);
 	
+	List<SaleComment> selectJoongoCommentByAllPage2(Criteria cri);
+	
 	int commentCount(int saleId);
+	int commentCount2();
 	
 	int deleteComment(int commentId);
 	

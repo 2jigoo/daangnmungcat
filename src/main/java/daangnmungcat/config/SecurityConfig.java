@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/member").access("hasRole('ROLE_MEMBER')");
 		
 		http.cors().configurationSource(corsConfigurationSource());
+		
 		//admin access denined -> login page로 이동하여 로그인
 		//loginPage("뷰이름").loginProcessingUrl("경로");
 		http.formLogin().loginPage("/login").loginProcessingUrl("/sample/login");

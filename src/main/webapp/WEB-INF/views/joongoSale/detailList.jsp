@@ -618,9 +618,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
          </c:forEach>
          
          <div class="comment_write">
-            <c:forEach items="${list}" var="list">
-               <input type="hidden" value="${list.id}" class="comment_sale_id">
-            </c:forEach>
+            <input type="hidden" value="${sale.id}" class="comment_sale_id">
             <input type="hidden" value="${loginUser.id}" class="comment_member_id">
             <textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
             <input type="button" value="등록" class="comment_write_btn btn">

@@ -51,5 +51,9 @@
 .adm_joongo_ico li.heart {background:url(../images/ico_heart.png) no-repeat left center; padding-left:15px;}
 .adm_joongo_ico li.chat {background:url(../images/ico_chat.png) no-repeat left center; padding-left:22px;}
 
+.sch_select, .sch_select2 {display:inline-block; margin-bottom:.5rem}
+.sch_select select {width:160px;}
+.sch_select2 select {width:100px;}
+
 .history_back_btn {display:inline-block; margin-top:20px; padding:0 30px; color:#fff; line-height:45px; font-family:'S-CoreDream'; background:#808080; text-decoration:none !important;}
 .history_back_btn:hover {color:#fff;}

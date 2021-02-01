@@ -32,5 +32,7 @@ public interface JoongoSaleService {
 	
 	int updateJoongoSale(Sale sale);
 	
+	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
 
+	
 }

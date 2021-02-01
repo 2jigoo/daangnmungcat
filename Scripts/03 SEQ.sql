@@ -11,6 +11,11 @@ DROP SEQUENCE mall_cat_cate_seq;
 DROP SEQUENCE ORDER_address_seq;
 DROP SEQUENCE mall_delivery_seq;
 DROP SEQUENCE mall_cart_seq;
+DROP SEQUENCE mall_order_seq;
+DROP SEQUENCE mall_order_detail_seq;
+DROP SEQUENCE mall_payment_seq;
+DROP SEQUENCE mall_mileage_seq;
+
 
 CREATE SEQUENCE dongne1_seq
 START WITH 1
@@ -81,6 +86,26 @@ INCREMENT BY 1
 MINVALUE 1;
 
 CREATE SEQUENCE mall_cart_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE mall_order_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE mall_order_detail_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE  mall_payment_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE mall_mileage_seq
 START WITH 1
 INCREMENT BY 1
 MINVALUE 1;

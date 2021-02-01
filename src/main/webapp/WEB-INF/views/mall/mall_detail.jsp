@@ -46,10 +46,10 @@ $(document).ready(function(){
 			total_price: total,
 			quantity: qtt,
 			m_id : id
-			}
+		}
 		
 		$.ajax({
-			url: contextPath + "/pre-order",
+			url: contextPath + "/mall/pre-order",
 			type: "post",
 			contentType:"application/json; charset=utf-8",
 			dataType: "text", //json200에러뜰때 text로
@@ -90,7 +90,6 @@ function addCart() {
 			}
 		},
 		error: function(error){
-			alert('장바구니에 담는 데 실패했습니다.');
 			console.log(error);
 		}
 	});
