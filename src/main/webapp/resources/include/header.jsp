@@ -123,14 +123,13 @@
 				<ul class="h_util">
 				<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
-				<li><a href="<c:url value="/chat" />">내 채팅</a></li>
 				<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
 				</ul>
 			</c:if>
 			<ul class="h_util2">
 				<li><a href="#"><img src="/resources/images/ico_salesarticle.png"><span>판매글</span></a></li>
-				<li><a href="#"><img src="/resources/images/ico_chatting.png"><span>채팅</span></a></li>
-				<li><a href="#"><img src="/resources/images/ico_cart.png"><span>장바구니</span></a></li>
+				<li><a href="<c:url value="/chat" />"><img src="/resources/images/ico_chatting.png"><span>채팅</span></a></li>
+				<li><a href="<c:url value="/mall/cart/list" />"><img src="/resources/images/ico_cart.png"><span>장바구니</span></a></li>
 				<li><a href="#"><img src="/resources/images/ico_buy.png"><span>구매내역</span></a></li>
 			</ul>
 		</div>
@@ -154,8 +153,7 @@
 			<c:if test="${loginUser ne null}">
 			<ul>
 				<li><a href="#">${loginUser.getId()}님</a></li>
-				<li><a href="#">마이페이지</a></li>
-				<li><a href="<c:url value="/chat" />">내 채팅</a></li>
+				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 			</ul>
 			</c:if>

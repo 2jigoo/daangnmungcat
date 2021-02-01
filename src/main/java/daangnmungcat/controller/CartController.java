@@ -1,7 +1,9 @@
 package daangnmungcat.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
+import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
 import daangnmungcat.service.CartService;
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +41,48 @@ public class CartController {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
 		List<Cart> list = cartService.getCart(loginUser.getId());
+
+		// 총 배송비
+		int totalDeliveryFee = 0;
+		
+		
+		// 무료배송, 유료상품 존재 여부
+		boolean hasFreeDelivery = list.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("무료배송"));
+		boolean hasChargedDelivery = list.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"));
+		
+		// 조건부 무료배송 총 상품금액 합계 구하기
+		List<Cart> listOfConditionalFee = list.stream()
+											.filter(cart -> cart.getProduct().getDeliveryKind().equals("조건부 무료배송"))
+											.collect(Collectors.toList());
+		
+		int totalPriceOfCondiFeePdt = 0;
+		for(Cart cart : listOfConditionalFee) {
+			totalPriceOfCondiFeePdt += cart.getProduct().getPrice() * cart.getQuantity();
+		}
+		
+		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
+		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+			totalDeliveryFee = 3000;
+		}
+		
+		// 유료배송 상품이 있는 경우
+		int chargedDeliveryFee = 0;
+		if(hasChargedDelivery == true) {
+			List<Cart> listOfChargedFee = list.stream()
+												.filter(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"))
+												.collect(Collectors.toList());
+			// 모든 유료배송 상품의 합계 배송비
+			for(Cart cart : listOfChargedFee) {
+				chargedDeliveryFee += cart.getQuantity() * cart.getProduct().getDeliveryPrice();
+			}
+			
+			totalDeliveryFee += chargedDeliveryFee;
+		}
+		
 		model.addAttribute("list", list);
+		model.addAttribute("conditionalDeliveryFee", totalDeliveryFee - chargedDeliveryFee);
+		model.addAttribute("chargedDelivery", chargedDeliveryFee);
+		model.addAttribute("totalDeliveryFee", totalDeliveryFee);
 		
 		return "/mall/cart/mall_cart_list";
 	}

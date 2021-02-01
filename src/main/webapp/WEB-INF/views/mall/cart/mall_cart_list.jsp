@@ -195,7 +195,7 @@ function deleteCartItem(cart_id) {
 									<a href="#" class="modify_quantity" cart-id="${cart.id }">변경</a>
 								</td>
 								<td>
-								
+									<fmt:formatNumber value="${cart.product.price * 0.01}" />점
 								</td>
 								<td>
 									<!-- 백엔드에서 합계 구하는 로직 아직 X -->
@@ -208,18 +208,39 @@ function deleteCartItem(cart_id) {
 									</div> --%>
 								</td>
 								<td>
-									${cart.product.deliveryKind}
-									<c:if test="${cart.product.deliveryKind eq '조건부 무료배송'}">
-										<br><fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
-										<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매)
-									</c:if>
-									<c:if test="${cart.product.deliveryKind eq '유료배송'}">
-										<br><fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
-									</c:if>
+									<c:choose>
+										<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
+											<c:if test="${conditionalDeliveryFee eq 0}">
+												무료배송
+											</c:if>
+											<c:if test="${conditionalDeliveryFee ne 0}">
+												<fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
+											</c:if>
+											<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매 시 무료)
+										</c:when>
+										<c:when test="${cart.product.deliveryKind eq '유료배송' }">
+											개당 ${cart.product.deliveryPrice}원
+										</c:when>
+										<c:otherwise>
+											${cart.product.deliveryKind}
+										</c:otherwise>
+									</c:choose>
 								</td>
 							</tr>		
 						</c:forEach>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="7">
+								<c:if test="${totalDeliveryFee eq 0}">
+									총 결제 금액 : 무료배송
+								</c:if>
+								<c:if test="${totalDeliveryFee ne 0 }">
+									총 결제 금액 : ${totalDeliveryFee }
+								</c:if>
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 				<input type="button" id="pre_order" value="주문하기">
 			</form>
