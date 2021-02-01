@@ -4,24 +4,24 @@
 
 	<sql id="selectSql">
 		SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
+		FROM MALL_MILEAGE
 	</sql>
 	
 <!-- resultMap -->
 	
 	<resultMap type="Mileage" id="mileRes">
 		<id property="id" column="id" />		
-		<result property="order.id" column="od_id" />		
 		<result property="member.id" column="mem_id" />		
 		<result property="mileage" column="mileage" />		
 		<result property="content" column="content" />		
 		<result property="regDate" column="regdate" />		
 		
 		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
-		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" />
+		<association property="orderDetail" columnPrefix="od_" resultMap="daangnmungcat.mapper.OrderMapper.odRes" />
 	</resultMap>
 
 	<update id="updateMemberMileage">
-		UPDATE MEMBER SET MILEAGE = #{mileage} WHERE id = #{id}
+		UPDATE  mall_mileage set mileage = #{mileage} WHERE mem_id = #{member.id}
 	</update>
 	
 	<insert id="insertMilegeInfo">
@@ -29,14 +29,17 @@
 			SELECT mall_mileage_seq.nextval FROM DUAL
 		</selectKey>
 			INSERT INTO MALL_MILEAGE(ID, OD_ID, MEM_ID, MILEAGE, CONTENT)
-			VALUES(#{id}, #{order.id}, #{member.id}, #{mileage}, #{content})
+			VALUES(#{id}, #{orderDetail.id}, #{member.id}, #{mileage}, #{content})
 	</insert>
 	
-	<select id="getMileage" parameterType="string" resultType="int">
-		SELECT MILEAGE FROM MEMBER WHERE id = #{id}
-	</select>
+	<!-- member select할 때 조회해옴 -->
 	
-	<select id="selectMileageInfoById" resultMap="mileRes">
+	<select id="getMileage" parameterType="string" resultType="int">
+		SELECT sum(mileage) as mileage FROM MALL_MILEAGE WHERE mem_id = #{id}
+	</select>
+
+	
+	<select id="selectMileageInfoByMemberId" resultMap="mileRes">
 		<include refid="selectSql"></include>
 		where mem_id = #{member.id}
 	</select>

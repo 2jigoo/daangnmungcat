@@ -22,9 +22,9 @@ import lombok.ToString;
 @ToString
 public class Mileage {
 	private int id; 
-	private Order order;
+	private OrderDetail orderDetail;
 	private Member member;
-	private String mileage;
+	private int mileage;
 	private String content;
 	private LocalDateTime regDate;
 }

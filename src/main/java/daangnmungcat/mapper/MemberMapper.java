@@ -45,4 +45,6 @@ public interface MemberMapper {
 	int updateAddress(Address address);
 	int deleteAddress(String id);
 	
+	int selectMileage(String id);
+	
 }

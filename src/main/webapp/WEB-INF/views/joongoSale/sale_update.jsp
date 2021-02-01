@@ -25,9 +25,19 @@ textarea {
 	height: 160px;
 }
 
+#preview2 > img {
+	width: 160px;
+	height: 160px;
+	float: left;
+}
+
+#hidden{
+	color:#ff7e15;
+}
 </style>
 <script type="text/javascript">
 $(function(){
+
 	var contextPath = "<%=request.getContextPath()%>";
 		var dong = document.getElementById("dongName").value
 		var nae = document.getElementById("naeName").value
@@ -47,6 +57,7 @@ $(function(){
 			//$('#dongne1').val(dong).attr("selected","selected");
 	});
 	
+
 	$("select[name='dongne1.id']").change(function(){
 		$("select[name='dongne2.id']").find('option').remove();
 		var dong1 = $("select[name='dongne1.id']").val();
@@ -60,13 +71,34 @@ $(function(){
 		});
 	});
 	
-	$("select[name='saleState]").change(function(){
-		//$("${sale.saleState}")
+
+	$("select[name='saleState']").change(function(){
+		var state = $("select[name='saleState']").val();
+		if(state == 3){
+			$('#hidden').css({
+			   display: ""
+			});
+		}
 	});
 	
-	
-		//라디오 버튼으로 카테고리 
 		$(document).ready(function(){
+			// 판매상태
+			$.ajax({
+				type : 'get',
+				url : contextPath + "/joongo/sale-state",
+				success : function(list) {
+					console.log(list);
+					loadSaleStatesBox(list);
+				},
+				error : function(error) {
+					console.log(error);
+				}
+			});
+		
+		
+		
+		
+		//라디오 버튼으로 카테고리 
 			if("${sale.dogCate}" == "y"){
 				if("${sale.catCate}" == "y"){
 					$("input[name='category'][value='3']").prop('checked', true);
@@ -76,7 +108,8 @@ $(function(){
 			}else if("${sale.dogCate}" == "n" ){
 				$("input[name='category'][value='2']").prop('checked', true);
 			}
-			});
+		
+		});
 	
 		
 		
@@ -99,62 +132,77 @@ $(function(){
 	        }
 	    });
 	 
-	 $('#insertList').on("click", function(e){
+	 $('#update').on("click", function(e){
+		e.preventDefault();
 		
 		var price = $('#price').val();	
-		 var num = /^[0-9]*$/;
+		var num = /^[0-9]*$/;
 		 
-		 if($('#title').val() == ""){
+		if($('#title').val() == ""){
 			 alert('제목을 입력해주세요.');
 			 return false; 
-		 }else if($('#content').val() == ""){
+		}else if($('#content').val() == ""){
 			 alert('내용을 입력해주세요.');
 			 return false; 
-		 }else if(num.test(price) == false){
+		}else if(num.test(price) == false){
 			 alert('가격은 숫자만 입력 가능합니다.');
 			 return false; 
-		 }else if($('#price').val() == ""){
+		}else if($('#price').val() == ""){
 			 alert('가격을 입력해주세요.');
 			 return false; 
-		 }else if($('#dongne1').val() == "0"){
+		}else if($('#dongne1').val() == "0"){
 			alert('지역을 선택하세요.');
 			return false; 
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
-		}
+		} 
 		 
-	 });
+		updateBoard();
+	});
 	 
-		$('#imgInput').on("change", handleImgs);	
+	$('#imgInput').on("change", handleImgs);	
+	
+	function updateBoard(){
+		var formData = new FormData($("#boardForm")[0]);
 		
-		function insertBoard(){
-			var formData = new FormData($("#boardForm")[0]);
-			
-			$.ajax({
-				type : 'post',
-				url : contextPath + "/test/insert",
-				data : formData,
-				processData : false,
-				contentType : false,
-				success : function(html) {
-					alert("파일 업로드하였습니다.");
-					console.log(html);
-				},
-				error : function(error) {
-					alert("파일 업로드에 실패하였습니다.");
-					console.log(error);
-					console.log(error.status);
-				}
-			});
-		}
+		$.ajax({
+			type : 'post',
+			url : contextPath + "/joongoSale/modify",
+			data : formData,
+			processData : false,
+			contentType : false,
+			success : function(html) {
+				alert("파일 업로드하였습니다.");
+				console.log(html);
+			},
+			error : function(error) {
+				alert("파일 업로드에 실패하였습니다.");
+				console.log(error);
+				console.log(error.status);
+			}
+		});
+	}
 });
+
+function loadSaleStatesBox(list) {
+	var box = '';
+	
+	$.each(list, function(idx, item) {
+		box += '<option value="' + item.code + '">' + item.label + '</option>';
+	});
+	
+	$("select[name='saleState']").append(box);
+	$('#saleState').val("${sale.saleState}").attr("selected", "selected");
+}
+
 
 function handleImgs(e) {
 	var files = e.target.files;
 	var filesArr = Array.prototype.slice.call(files);
 	var sel_files = [];
 	
+	var index=0;
 	filesArr.forEach(function(f) {
 		if(!f.type.match("image.*")){
 			alert("확장자는 이미지 확장자만 가능합니다.");
@@ -165,11 +213,29 @@ function handleImgs(e) {
 		reader.onload = function(e){
 			var img_html = "<img src=\"" + e.target.result + "\" />";
 			$('#preview1').append(img_html);
+			index++;
 		}
 		reader.readAsDataURL(f);
 	});
 	
 }
+
+function handleThumImgs(){
+	var file = document.getElementById("thumImgInput").files[0]
+	if(file){
+		console.log(document.getElementById("thumImgInput").files[0])
+		 var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+	    reader.onload = function (e) {
+	    //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+	        $('#productImg1').attr('src', e.target.result);
+	        //이미지 Tag의 SRC속성에 읽어들인 File내용을 지정
+	        //(아래 코드에서 읽어들인 dataURL형식)
+	    }                   
+	    reader.readAsDataURL(document.getElementById("thumImgInput").files[0]);
+	    //File내용을 읽어 dataURL형식의 문자열로 저장
+		}	
+}
+
 
 
 </script>
@@ -177,14 +243,14 @@ function handleImgs(e) {
 	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-<form id="boardForm" name="boardForm" action="<%=request.getContextPath() %>/joongoSale/insert" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form id="boardForm" name="boardForm" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td>
-					<select name="saleState">
-						<option value="0">판매상태를 선택하세요</option>
+					<select name="saleState" id="saleState">
 					</select>
+					<a id="hidden" style="display:none;" href="거래후기" onclick="window.open(this.href, '_blank', 'width=가로사이즈px,height=세로사이즈px,toolbars=no,scrollbars=no'); return false;">거래후기 남기기</a>
 				</td>
 			</tr>
 			<tr>
@@ -214,14 +280,29 @@ function handleImgs(e) {
 					</div>
 				</td>
 			</tr>
+			<tr>
+				<td>대표 사진<br>*대표사진은1장만 추가가능</td>
+				<td>
+					<div id="thumFileArea">
+						<input type="file" name="file" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
+						<img id="productImg1">
+						<div id="preview"></div>
+							<c:forEach items="${flist }" var="flist" begin="0" end="0">
+						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+						</c:forEach>
+					</div>
+				</td>
+			</tr>
 			
 			<tr>
 				<td>사진</td>
 				<td>
 					<div id="fileArea">
 						<input multiple="multiple" type="file" name="file" id="imgInput" />
-						<img id="productImg1">
 						<div id="preview1"></div>
+					<c:forEach items="${flist }" var="flist" begin="1">
+						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+					</c:forEach>
 					</div>
 				</td>
 			</tr>
@@ -260,7 +341,7 @@ function handleImgs(e) {
 			
 		 	<tr>
 				<td colspan="2">
-					<input type="submit" id="insertList" value="글 등록하기">
+					<input type="submit" id="update" value="글 수정하기">
 				</td>
 			</tr>
 		</table>

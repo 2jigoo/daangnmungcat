@@ -32,7 +32,6 @@ CREATE TABLE MEMBER (
 	zipcode NUMBER(10),
 	address1 varchar2(255),
 	address2 varchar2(255),
-	mileage NUMBER(10) DEFAULT 0,
 	use_yn char(1) DEFAULT 'y'
 )SEGMENT CREATION IMMEDIATE;
 

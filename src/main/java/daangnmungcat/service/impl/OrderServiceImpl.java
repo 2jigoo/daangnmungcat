@@ -142,30 +142,30 @@ public class OrderServiceImpl implements OrderService{
 		System.out.println("사용한 마일리지:" + usedMile);
 		System.out.println("적립 마일리지:" + plus_mile);
 		
-		int mile = mileService.getMileage(loginUser.getId());
+		int mile = loginUser.getMileage();
 		System.out.println("현재마일리지:" + mile);
-		mile += plus_mile;
+//		mile += plus_mile;
 		Mileage plus = new Mileage();
 		plus.setMember(loginUser);
-		plus.setOrder(order);
-		plus.setMileage("+" + plus_mile);
+		plus.setOrderDetail(od);
+		plus.setMileage(plus_mile);
 		plus.setContent("상품 구매 적립");
 		mileService.insertMilegeInfo(plus);
 		
-		mile -= Integer.parseInt(usedMile);
+//		mile -= Integer.parseInt(usedMile);
 		Mileage minus = new Mileage();
 		minus.setMember(loginUser);
-		minus.setOrder(order);
-		minus.setMileage("-" + usedMile);
+		minus.setOrderDetail(od);
+		minus.setMileage(Integer.parseInt("-"+usedMile));
 		minus.setContent("상품 구매 사용");
 		
 		if(!usedMile.equals("0")) {
 			mileService.insertMilegeInfo(minus);
 		}
 		
-		loginUser.setMileage(mile);
-		System.out.println("처리후:" + mile);
-		mileService.updateMemberMileage(loginUser);
+//		loginUser.setMileage(mile);
+//		System.out.println("처리후:" + mile);
+//		mileService.updateMemberMileage(loginUser);
 		
 		log.info("마일리지 set / 내역테이블 insert");
 		

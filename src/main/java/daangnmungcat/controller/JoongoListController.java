@@ -9,12 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,16 +30,15 @@ import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
-import daangnmungcat.exception.DuplicateMemberException;
-import daangnmungcat.mapper.FileFormMapper;
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.service.GpsToAddressService;
 import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.service.MemberService;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
+@Log4j2
 public class JoongoListController {
-	private static final Log log = LogFactory.getLog(JoongoListController.class);
 	
 	@Autowired
 	private JoongoListMapper mapper;
@@ -71,7 +67,6 @@ public class JoongoListController {
 	@GetMapping("/joongo_list/all")
 	public String listAll(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		System.out.println(cri);
-		
 		List<Sale> list = mapper.selectJoongoByAllPage(cri);
 		System.out.println(list);
 		model.addAttribute("list", list);
@@ -161,10 +156,13 @@ public class JoongoListController {
 	}
 	
 	//update용  
-	@GetMapping("/joongoSale/modify")
+	@GetMapping("/joongoSale/modiList")
 	public String updateForm(@RequestParam int id, Model model, HttpSession session) {
 		Sale sale = s.getSaleById(id);
-		model.addAttribute(sale);
+		List<FileForm> flist = s.selectImgPath(id);
+		model.addAttribute("sale", sale);
+		model.addAttribute("flist", flist);
+		
 		return "joongoSale/sale_update";
 	}
 	
@@ -181,7 +179,7 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/insert")
-	public String testtest(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+	public String add(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -207,6 +205,15 @@ public class JoongoListController {
 		model.addAttribute("msg", "등록되었습니다.");
 		model.addAttribute("url", textUrl);
 		return "/joongoSale/alertFrom";
+	}
+	
+	@PostMapping("/joongoSale/modify")
+	public String update(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+		request.setCharacterEncoding("UTF-8");
+		
+		log.info("수정 후 SaleState: " + sale.getSaleState() + sale.getSaleState().getCode() + sale.getSaleState().getLabel());
+	
+		return null;
 	}
 	
 }
