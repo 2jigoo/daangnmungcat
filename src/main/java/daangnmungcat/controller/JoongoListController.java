@@ -68,7 +68,6 @@ public class JoongoListController {
 	@GetMapping("/joongo_list/all")
 	public String listAll(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		System.out.println(cri);
-		
 		List<Sale> list = mapper.selectJoongoByAllPage(cri);
 		System.out.println(list);
 		model.addAttribute("list", list);

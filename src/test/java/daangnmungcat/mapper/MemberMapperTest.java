@@ -71,4 +71,9 @@ public class MemberMapperTest {
 		log.debug(dongne2.toString());
 	}
 	
+	@Test
+	public void selectMember() {
+		Member member = mapper.selectMemberById("chattest1");
+		System.out.println(member);
+	}
 }

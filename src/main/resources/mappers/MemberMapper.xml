@@ -9,7 +9,8 @@
 		dongne2 AS dongne2_id,
 		d2.name AS dongne2_name,
 		grade, profile_pic, profile_text, regdate, birthday,
-		zipcode, address1, address2, mileage, use_yn
+		zipcode, address1, address2, use_yn, 
+		NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
 	FROM MEMBER m
 		LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
 		LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
@@ -215,4 +216,11 @@
 	<delete id="deleteAddress">
 		delete from order_address where id = #{id}
 	</delete>
+	
+<!-- 	<select id="selectMileage" parameterType="String" resultType="int">
+		SELECT sum(mm.mileage) AS mileage
+		FROM MALL_MILEAGE mm
+		GROUP BY mem_id
+		having mem_id = #{id}
+	</select> -->
 </mapper>

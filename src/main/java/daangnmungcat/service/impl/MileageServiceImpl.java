@@ -19,8 +19,8 @@ public class MileageServiceImpl implements MileageService {
 	private MileageMapper mapper;
 	
 	@Override
-	public int updateMemberMileage(Member member) {
-		return mapper.updateMemberMileage(member);
+	public int updateMileage(Mileage mile) {
+		return mapper.updateMileage(mile);
 	}
 
 	@Override
@@ -34,8 +34,7 @@ public class MileageServiceImpl implements MileageService {
 	}
 
 	@Override
-	public List<Mileage> selectMileageInfoById(String id) {
-		return mapper.selectMileageInfoById(id);
+	public List<Mileage> selectMileageInfoByMemberId(String id) {
+		return mapper.selectMileageInfoByMemberId(id);
 	}
-
 }

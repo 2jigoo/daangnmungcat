@@ -179,11 +179,12 @@ LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID
 LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id 
 LEFT OUTER JOIN grade g ON m.GRADE = g.CODE
 
-SELECT sum(mm.MILEAGE), (SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, m.GRADE, g.NAME AS grade_name, a.name AS dongne1 , b.name AS dongne2, 
-m.profile_pic, m.profile_text, m.regdate, m.ZIPCODE, m.ADDRESS1, m.ADDRESS2, m.USE_YN FROM MEMBER m 
+SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, m.GRADE, g.NAME AS grade_name, a.name AS dongne1 , b.name AS dongne2, 
+m.profile_pic, m.profile_text, m.regdate, m.ZIPCODE, m.ADDRESS1, m.ADDRESS2, m.USE_YN, sum(mm.MILEAGE)AS MILEAGE FROM MEMBER m 
 LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID
 LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id 
-LEFT OUTER JOIN grade g ON m.GRADE = g.CODE)FROM MALL_MILEAGE GROUP BY mem_id
+LEFT OUTER JOIN grade g ON m.GRADE = g.CODE
+LEFT OUTER JOIN MALL_MILEAGE mm ON mm.mem_id = m.ID;
 
 
 SELECT * FROM MEMBER;
@@ -201,7 +202,46 @@ SELECT * FROM MEMBER;
 	JOIN MEMBER m ON s.MEM_ID = m.id;
 
 
+
 SELECT * FROM MEMBER;
 SELECT * FROM grade;
 SELECT * FROM MALL_MILEAGE;
 
+SELECT mv.*, FROM MEMBER_VIEW mv;
+
+
+SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, m.GRADE, g.NAME AS grade_name, a.name AS dongne1 , b.name AS dongne2, 
+m.profile_pic, m.profile_text, m.regdate, m.ZIPCODE, m.ADDRESS1, m.ADDRESS2, m.USE_YN, NVL((SELECT sum(mileage) FROM mall_MILEAGE
+GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE FROM MEMBER m 
+LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID
+LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id 
+LEFT OUTER JOIN grade g ON m.GRADE = g.CODE
+
+
+	SELECT
+		m.id, pwd, m.name, nickname, email, phone, grade,
+		DONGNE1 AS dongne1_id,
+		d1.name AS dongne1_name,
+		dongne2 AS dongne2_id,
+		d2.name AS dongne2_name,
+		grade, profile_pic, profile_text, regdate, birthday,
+		zipcode, address1, address2, use_yn, 
+		NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
+	FROM MEMBER m
+		LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+		LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID);
+
+	
+UPDATE MILEAGE SET mileage = 30000 WHERE id = 'chattest1';
+INSERT INTO MALL_MILEAGE 
+SELECT * FROM MALL_MILEAGE;
+
+SELECT * FROM MEMBER;
+
+SELECT * FROM MALL_ORDER ;
+
+SELECT MILEAGE FROM MEMBER WHERE id= 'chattest';
+UPDATE MALL_MILEAGE SET MILEAGE = 2000 WHERE mem_id = 'chattest1';
+SELECT sum(mil) FROM MALL_MILEAGE WHERE mem_id = 'chattest';
+
+SELECT ID, OD_ID, MEM_ID, sum(MILEAGE) AS mileage, CONTENT, REGDATE FROM MALL_MILEAGE WHERE mem_id = 'chattest1';
