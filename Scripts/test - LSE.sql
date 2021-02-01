@@ -147,8 +147,47 @@ SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME
 	LEFT JOIN JOONGO_IMAGE ji ON s.ID = ji.SALE_ID 
 	JOIN MEMBER m ON s.MEM_ID = m.id
 
+
 	
-	
+
+SELECT * FROM SALE_VIEW ;
+SELECT * FROM JOONGO_IMAGE ji  ;
+SELECT * FROM JOONGO_REVIEW ;
+
+INSERT INTO joongo_review values(#{id},)
+
+
+--
+SELECT sum(mm.mileage) FROM MALL_MILEAGE mm JOIN "MEMBER" m ON m.id = mm.mem_id WHERE mem_id = 'chattest1'; 
+SELECT * FROM MEMBER;
+
+UPDATE MEMBER SET MILEAGE = 1000 WHERE id ='chattest1';
+
+SELECT * FROM MEMBER;
+
+SELECT* FROM MEMBER_VIEW;
+SELECT * FROM MALL_MILEAGE;
+
+
+
+INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', 1000, '회원가입', sysdate);
+INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', -500, '테스트', sysdate);
+
+SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, m.GRADE, g.NAME AS grade_name, a.name AS dongne1 , b.name AS dongne2, 
+m.profile_pic, m.profile_text, m.regdate, m.ZIPCODE, m.ADDRESS1, m.ADDRESS2, m.USE_YN FROM MEMBER m 
+LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID
+LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id 
+LEFT OUTER JOIN grade g ON m.GRADE = g.CODE
+
+SELECT sum(mm.MILEAGE), (SELECT m.id, m.pwd, m.name, m.nickname, m.email, m.phone, m.GRADE, g.NAME AS grade_name, a.name AS dongne1 , b.name AS dongne2, 
+m.profile_pic, m.profile_text, m.regdate, m.ZIPCODE, m.ADDRESS1, m.ADDRESS2, m.USE_YN FROM MEMBER m 
+LEFT OUTER JOIN dongne1 a ON m.dongne1 = a.ID
+LEFT OUTER JOIN dongne2 b ON m.dongne2 = b.id 
+LEFT OUTER JOIN grade g ON m.GRADE = g.CODE)FROM MALL_MILEAGE GROUP BY mem_id
+
+
+SELECT * FROM MEMBER;
+
 	SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
 	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT , THUM_NAME 
@@ -160,7 +199,9 @@ SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME
 		WHERE THUM_NAME IS NOT null
 	) ji ON s.ID = ji.SALE_ID
 	JOIN MEMBER m ON s.MEM_ID = m.id;
-	
 
-SELECT * FROM SALE_VIEW ;
-SELECT * FROM JOONGO_IMAGE ji  ;
+
+SELECT * FROM MEMBER;
+SELECT * FROM grade;
+SELECT * FROM MALL_MILEAGE;
+

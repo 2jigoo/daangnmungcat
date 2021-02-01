@@ -153,6 +153,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 	@Override
+	public int updateJoongoSale(Sale sale) {
+		return 0;
+	}
+	
+
+	@Override
 	public List<Sale> selectJoongoBySearch(Sale sale, Criteria cri) {
 		return joongoListMapper.selectJoongoBySearch(sale, cri);
 	}
