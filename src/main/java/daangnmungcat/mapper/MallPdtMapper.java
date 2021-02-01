@@ -36,6 +36,8 @@ public interface MallPdtMapper {
 	int productCatCateCount(int cateId);
 	
 	int updateMallProduct(MallProduct product);
+	
+	List<MallProduct> selectProductBySearch(@Param("product") MallProduct product, @Param("cri") Criteria cri);
 
 
 }

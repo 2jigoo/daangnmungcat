@@ -51,16 +51,11 @@ public class AdminJoongoSaleController {
 					sale.setCatCate("y");
 				}
 			}
-			System.out.println("검색 기준값 sale : "+ sale);
 			
 			list = service.selectJoongoBySearch(sale, cri);
-			System.out.println("검색 결과: ");
-			list.forEach(System.out::println);
 			
 		} else {
 			list = service.selectJoongoByAllPage(cri);
-			System.out.println("검색 결과: ");
-			list.forEach(System.out::println);
 		}
 		model.addAttribute("list", list);
 		

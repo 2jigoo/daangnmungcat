@@ -1,5 +1,7 @@
 package daangnmungcat.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
@@ -12,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import daangnmungcat.config.ContextRoot;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
 
@@ -48,11 +51,21 @@ public class MallPdtMapperTest {
 		
 		mapper.insertMallProduct(product);
 	}
-*/
+
 	
 	@Test
 	public void testUpdateDogProduct() {
 		System.out.println("카테고리 수정");
 		mapper.deleteDogCateProduct(2);
+	}
+	*/
+	
+	@Test
+	public void testSelectProductBySearch() {
+		MallProduct product = new MallProduct();
+		product.setSaleYn("Y");
+		
+		List<MallProduct> list = mapper.selectProductBySearch(product, new Criteria());
+		list.stream().forEach(System.out::println);
 	}
 }

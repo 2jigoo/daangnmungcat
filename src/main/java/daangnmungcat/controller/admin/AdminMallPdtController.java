@@ -1,6 +1,7 @@
 package daangnmungcat.controller.admin;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import antlr.debug.NewLineEvent;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallDelivery;
@@ -36,8 +38,25 @@ public class AdminMallPdtController {
 	private MallPdtService service;
 
 	@GetMapping("/admin/product/list")
-	public String list(Model model, Criteria cri) {
-		List<MallProduct> list = service.selectProductByAllPage(cri);
+	public String list(Model model, Criteria cri, @RequestParam @Nullable String name, @RequestParam @Nullable String category, @RequestParam @Nullable String saleYn) {
+		List<MallProduct> list = new ArrayList<MallProduct>();
+		
+		if (name != null || category != null || saleYn != null) {
+			MallProduct product = new MallProduct();
+			if (name != null) {
+				product.setName(name);
+			}
+			if (category != null) {
+				product.setDogCate(new MallCate(0, category));
+				product.setCatCate(new MallCate(0, category));
+			}
+			if (saleYn != null) {
+				product.setSaleYn(saleYn);
+			}
+			list = service.selectProductBySearch(product, cri);
+		} else {
+			list = service.selectProductByAllPage(cri);
+		}
 		model.addAttribute("list", list);
 		
 		PageMaker pageMaker = new PageMaker();

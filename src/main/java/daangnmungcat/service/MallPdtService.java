@@ -39,4 +39,6 @@ public interface MallPdtService {
 	int productCatCateCount(int cateId);
 	
 	int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request);
+
+	List<MallProduct> selectProductBySearch(@Param("product") MallProduct product, @Param("cri") Criteria cri);
 }

@@ -43,6 +43,7 @@ $(function(){
 					<option value="">기준</option>
 					<option value="name">상품명</option>
 					<option value="category">카테고리</option>
+					<option value="saleYn">판매상태</option>
 				</select>
 				<label>
 					<input type="search" class="form-control form-control-sm" name="query">

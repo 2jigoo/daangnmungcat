@@ -215,4 +215,9 @@ public class MallPdtServiceImpl implements MallPdtService {
 		return mapper.productDogCateCount(cateId);
 	}
 
+	@Override
+	public List<MallProduct> selectProductBySearch(MallProduct product, Criteria cri) {
+		return mapper.selectProductBySearch(product, cri);
+	}
+
 }
