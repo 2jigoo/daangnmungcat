@@ -54,7 +54,7 @@
 	<result column="CONTENT" property="content"/>
 	<result column="regdate" property="regdate"/>
 	<result column="REDATE" property="redate"/>
-	<result column="SALE_STATE" property="saleState" jdbcType="INTEGER" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
+	<result column="SALE_STATE" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 	<result column="BUY_MEM_ID" property="buyMember.id"/>
 	<result column="HITS" property="hits"/>
 	<result column="CHAT_COUNT" property="chatCount"/>

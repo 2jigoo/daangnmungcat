@@ -39,7 +39,6 @@ import lombok.extern.log4j.Log4j2;
 @Controller
 @Log4j2
 public class JoongoListController {
-	private static final Log log = LogFactory.getLog(JoongoListController.class);
 	
 	@Autowired
 	private JoongoListMapper mapper;
@@ -211,6 +210,9 @@ public class JoongoListController {
 	@PostMapping("/joongoSale/modify")
 	public String update(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
 		request.setCharacterEncoding("UTF-8");
+		
+		log.info("수정 후 SaleState: " + sale.getSaleState() + sale.getSaleState().getCode() + sale.getSaleState().getLabel());
+	
 		return null;
 	}
 	

@@ -480,7 +480,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
             <c:if test="${sale.dogCate == 'n'}"></c:if>
             <c:if test="${sale.catCate == 'y'}">고양이 카테고리</c:if>
             <c:if test="${sale.catCate == 'n'}"></c:if> 
-            · <div class="lastTime"></div> <span style="color:#992124;"> · ${sale.saleState.label }</span><div class="regdate" id="regdate">${sale.regdate }></div> 
+            · <div class="lastTime"></div> <span style="color:#992124;"> · ${sale.saleState.label }</span><div class="regdate" id="regdate">${sale.regdate }</div> 
          </div>
          <h2>
             <c:if test="${sale.price eq 0 }" >무료 나눔</c:if>

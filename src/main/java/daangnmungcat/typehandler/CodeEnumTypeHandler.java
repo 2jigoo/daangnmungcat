@@ -21,32 +21,32 @@ public abstract class CodeEnumTypeHandler<E extends Enum<E>> implements TypeHand
 	
 	@Override
 	public void setParameter(PreparedStatement ps, int i, CodeEnum parameter, JdbcType jdbcType) throws SQLException {
-		ps.setInt(i, parameter.getCode());
+		ps.setString(i, parameter.getLabel());
 	}
 
 	@Override
 	public CodeEnum getResult(ResultSet rs, String columnName) throws SQLException {
-		int code = rs.getInt(columnName);
-		return getCodeEnum(code);
+		String label = rs.getString(columnName);
+		return getCodeEnum(label);
 	}
 
 	@Override
 	public CodeEnum getResult(ResultSet rs, int columnIndex) throws SQLException {
-		int code = rs.getInt(columnIndex);
-		return getCodeEnum(code);
+		String label = rs.getString(columnIndex);
+		return getCodeEnum(label);
 	}
 
 	@Override
 	public CodeEnum getResult(CallableStatement cs, int columnIndex) throws SQLException {
-		int code = cs.getInt(columnIndex);
-		return getCodeEnum(code);
+		String label = cs.getString(columnIndex);
+		return getCodeEnum(label);
 	}
 
-	private CodeEnum getCodeEnum(int code) {
+	private CodeEnum getCodeEnum(String label) {
 		try {
 			CodeEnum[] enumConstrants = (CodeEnum[]) type.getEnumConstants();
 			for(CodeEnum codeNum : enumConstrants) {
-				if(codeNum.getCode() == code) {
+				if(codeNum.getLabel().equals(label)) {
 					return codeNum;
 				}
 			}

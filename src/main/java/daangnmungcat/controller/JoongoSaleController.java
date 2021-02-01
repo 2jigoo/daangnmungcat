@@ -13,14 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.FileForm;
-import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleComment;
+import daangnmungcat.dto.SaleState;
 import daangnmungcat.mapper.JoongoHeartMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.service.JoongoSaleCommentService;
@@ -43,12 +44,24 @@ public class JoongoSaleController {
 	@Autowired
 	private JoongoSaleMapper Smapper;
 
+	
+	// 판매상태 종류 얻어오기
+	// {code: "ON_SALE", label: "판매중"}, {code: "RESERVED", label: "예약중"}, {code: "SOLD_OUT", label: "판매 완료"}
+	@GetMapping("/joongo/sale-state")
+	@ResponseBody
+	public List<SaleState> getSaleStates() {
+		return SaleState.saleStateList;
+	}
+	
+	
 	@RequestMapping(value = "joongoSale/detailList", method = RequestMethod.GET)
 	public String listById(@RequestParam int id, Model model, HttpSession session, Criteria cri) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
 		Sale sale = service.getSaleById(id);
 		String memId = sale.getMember().getId();
+		
+		log.info("sale State: " + sale.getSaleState() + ", " + sale.getSaleState().getLabel());
 		
 		List<Sale> mlist = service.getListByMemID(memId);
 		List<FileForm> flist = service.selectImgPath(id);

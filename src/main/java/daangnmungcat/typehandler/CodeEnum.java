@@ -1,5 +1,7 @@
 package daangnmungcat.typehandler;
 
 public interface CodeEnum {
-	int getCode();
+	
+	String getCode();
+	String getLabel();
 }

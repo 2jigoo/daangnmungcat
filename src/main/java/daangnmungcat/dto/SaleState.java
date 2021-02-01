@@ -2,41 +2,52 @@ package daangnmungcat.dto;
 
 import static java.util.stream.Collectors.toMap;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.ibatis.type.MappedTypes;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+
 import daangnmungcat.typehandler.CodeEnum;
 import daangnmungcat.typehandler.CodeEnumTypeHandler;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum SaleState implements CodeEnum {
 
-	ON_SALE(1, "판매중"), RESERVED(2, "예약중"), SOLD_OUT(3, "판매 완료");
+	ON_SALE("판매중"), RESERVED("예약중"), SOLD_OUT("판매 완료");
 	
-	private static final Map<Integer, SaleState> intToEnum =
-			Stream.of(values()).collect(toMap(SaleState::getCode, e -> e));
-	
-	private SaleState(int code, String label) {
-		this.code = code;
-		this.label = label;
-	}
-
-	private int code;
-	@Getter
+	private String code;
 	private String label;
 	
-	@Override
-	public int getCode() {
-		return code;
+	private SaleState(String label) {
+		this.label = label;
 	}
 	
-	public static SaleState fromString(int symbol) {
-		SaleState state = intToEnum.get(symbol);
+	@Override
+	public String getCode() {
+		return name();
+	}
+	
+	@Override
+	public String getLabel() {
+		return label;
+	}
+	
+	private static final Map<String, SaleState> StringToEnum =
+			Stream.of(values()).collect(toMap(SaleState::getLabel, e -> e));
+	
+	public static final List<SaleState> saleStateList = new ArrayList<>(Arrays.asList(values()));
+	
+	public static SaleState fromString(String symbol) {
+		SaleState state = StringToEnum.get(symbol);
 		if(Objects.isNull(state)) {
 			log.error("잘못된 판매상태 타입입니다. ", symbol);
 			throw new IllegalStateException("잘못된 판매상태 타입입니다.");
@@ -51,5 +62,8 @@ public enum SaleState implements CodeEnum {
 			super(SaleState.class);
 		}
 	}
+
+
+
 	
 }

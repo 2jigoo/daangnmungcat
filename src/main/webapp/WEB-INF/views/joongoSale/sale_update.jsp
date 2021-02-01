@@ -82,19 +82,20 @@ $(function(){
 	});
 	
 		$(document).ready(function(){
-
-			//판매상태 
-		var obj  ={
-				"1" : "판매중",
-				"2" : "예약중",
-				"3" : "판매 완료"
-			} 
-		var stateCont = "";
-		for(i=1; i<4; i++){
-			stateCont += '<option value="' + i + '">' + obj[Object.keys(obj)[i-1]] + '</option>';
-		}
-		$("select[name='saleState']").append(stateCont);
-		$('#saleState').val(${sale.saleState.code}).attr("selected","selected");
+			// 판매상태
+			$.ajax({
+				type : 'get',
+				url : contextPath + "/joongo/sale-state",
+				success : function(list) {
+					console.log(list);
+					loadSaleStatesBox(list);
+				},
+				error : function(error) {
+					console.log(error);
+				}
+			});
+		
+		
 		
 		
 		//라디오 버튼으로 카테고리 
@@ -132,54 +133,69 @@ $(function(){
 	    });
 	 
 	 $('#update').on("click", function(e){
+		e.preventDefault();
 		
 		var price = $('#price').val();	
-		 var num = /^[0-9]*$/;
+		var num = /^[0-9]*$/;
 		 
-		 if($('#title').val() == ""){
+		if($('#title').val() == ""){
 			 alert('제목을 입력해주세요.');
 			 return false; 
-		 }else if($('#content').val() == ""){
+		}else if($('#content').val() == ""){
 			 alert('내용을 입력해주세요.');
 			 return false; 
-		 }else if(num.test(price) == false){
+		}else if(num.test(price) == false){
 			 alert('가격은 숫자만 입력 가능합니다.');
 			 return false; 
-		 }else if($('#price').val() == ""){
+		}else if($('#price').val() == ""){
 			 alert('가격을 입력해주세요.');
 			 return false; 
-		 }else if($('#dongne1').val() == "0"){
+		}else if($('#dongne1').val() == "0"){
 			alert('지역을 선택하세요.');
 			return false; 
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
 		} 
-	 });
+		 
+		updateBoard();
+	});
 	 
-		$('#imgInput').on("change", handleImgs);	
+	$('#imgInput').on("change", handleImgs);	
+	
+	function updateBoard(){
+		var formData = new FormData($("#boardForm")[0]);
 		
-		function updateBoard(){
-			var formData = new FormData($("#boardForm")[0]);
-			
-			$.ajax({
-				type : 'post',
-				url : contextPath + "/test/insert",
-				data : formData,
-				processData : false,
-				contentType : false,
-				success : function(html) {
-					alert("파일 업로드하였습니다.");
-					console.log(html);
-				},
-				error : function(error) {
-					alert("파일 업로드에 실패하였습니다.");
-					console.log(error);
-					console.log(error.status);
-				}
-			});
-		}
+		$.ajax({
+			type : 'post',
+			url : contextPath + "/joongoSale/modify",
+			data : formData,
+			processData : false,
+			contentType : false,
+			success : function(html) {
+				alert("파일 업로드하였습니다.");
+				console.log(html);
+			},
+			error : function(error) {
+				alert("파일 업로드에 실패하였습니다.");
+				console.log(error);
+				console.log(error.status);
+			}
+		});
+	}
 });
+
+function loadSaleStatesBox(list) {
+	var box = '';
+	
+	$.each(list, function(idx, item) {
+		box += '<option value="' + item.code + '">' + item.label + '</option>';
+	});
+	
+	$("select[name='saleState']").append(box);
+	$('#saleState').val("${sale.saleState}").attr("selected", "selected");
+}
+
 
 function handleImgs(e) {
 	var files = e.target.files;

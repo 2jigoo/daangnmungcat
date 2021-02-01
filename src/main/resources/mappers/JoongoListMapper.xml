@@ -27,7 +27,7 @@
 		<result column="content" property="content"/>
 		<result column="price" property="price"/>
 		<result column="buy_mem_id" property="buyMember.id"/>
-		<result column="sale_state" property="saleState" jdbcType="INTEGER" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
+		<result column="sale_state" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 		<result column="regdate" property="regdate"/>
 		<result column="redate" property="redate"/>
 		<result column="hits" property="hits"/>
@@ -48,7 +48,7 @@
 		<result column="content" property="content"/>
 		<result column="price" property="price"/>
 		<result column="buy_mem_id" property="buyMember.id"/>
-		<result column="sale_state" property="saleState" jdbcType="INTEGER" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
+		<result column="sale_state" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 		<result column="regdate" property="regdate"/>
 		<result column="redate" property="redate"/>
 		<result column="hits" property="hits"/>
@@ -167,8 +167,8 @@
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT sale_seq.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
-		values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id},1,sysdate,0,0,0)
+		INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
+		values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id}, sysdate, 0, 0, 0)
 	</insert>
 	
 	<update id="updateJoongoSale" parameterType="Sale">
