@@ -16,26 +16,25 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public enum DeliveryKind implements CodeEnum {
 	
-	CONDITIONAL(1, "조건부 무료배송", 3000, 30000),
-	FREE(2, "무료배송", 0, 0),
-	CHARGED(3, "유료배송", 0, 0);
+	CONDITIONAL("조건부 무료배송", 3000, 30000),
+	FREE("무료배송", 0, 0),
+	CHARGED("유료배송", 0, 0);
 	
-	private int code;
-	@Getter private String label;
+	private String code;
+	private String label;
 	@Getter private int price;
 	@Getter private int condition;
 
-	private DeliveryKind(int code, String label, int fee, int condition) {
-		this.code = code;
+	private DeliveryKind(String label, int fee, int condition) {
 		this.label = label;
 		this.price = fee;
 		this.condition = condition;
 	}
 	
-	private static final Map<Integer, DeliveryKind> intToEnum =
-			Stream.of(values()).collect(toMap(DeliveryKind::getCode, e -> e));
+	private static final Map<String, DeliveryKind> intToEnum =
+			Stream.of(values()).collect(toMap(DeliveryKind::getLabel, e -> e));
 	
-	public static DeliveryKind fromString(int symbol) {
+	public static DeliveryKind fromString(String symbol) {
 		DeliveryKind deliveryType = intToEnum.get(symbol);
 		if(Objects.isNull(deliveryType)) {
 			log.error("잘못된 배송유형입니다. ", symbol);
@@ -45,8 +44,13 @@ public enum DeliveryKind implements CodeEnum {
 	}
 	
 	@Override
-	public int getCode() {
-		return code;
+	public String getLabel() {
+		return label;
+	}
+
+	@Override
+	public String getCode() {
+		return name();
 	}
 
 	@MappedTypes(DeliveryKind.class)
