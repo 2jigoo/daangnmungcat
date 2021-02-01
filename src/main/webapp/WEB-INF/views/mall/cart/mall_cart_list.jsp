@@ -208,10 +208,15 @@ function deleteCartItem(cart_id) {
 									</div> --%>
 								</td>
 								<td>
-									${cart.product.deliveryKind}
+									${cart.product.deliveryKind}<br>
+									<c:choose>
+										<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
+																					
+										</c:when>
+									</c:choose>
 									<c:if test="${cart.product.deliveryKind eq '조건부 무료배송'}">
 										<br><fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
-										<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매)
+										<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매 시 무료)
 									</c:if>
 									<c:if test="${cart.product.deliveryKind eq '유료배송'}">
 										<br><fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
@@ -220,6 +225,18 @@ function deleteCartItem(cart_id) {
 							</tr>		
 						</c:forEach>
 					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="7">
+								<c:if test="${totalDeliveryFee eq 0}">
+									총 결제 금액 : 무료배송
+								</c:if>
+								<c:if test="${totalDeliveryFee ne 0 }">
+									총 결제 금액 : ${totalDeliveryFee }
+								</c:if>
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 				<input type="button" id="pre_order" value="주문하기">
 			</form>

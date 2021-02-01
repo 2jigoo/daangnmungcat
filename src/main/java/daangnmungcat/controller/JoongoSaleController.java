@@ -126,10 +126,15 @@ public class JoongoSaleController {
 	public String heartedList(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
+		PageMaker pageMaker = new PageMaker();
 		Criteria criteria = new Criteria(page, 20);
+		pageMaker.setCri(criteria);
+		
 		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
 		list.forEach(sale -> log.debug(sale.toString()));
+		
 		model.addAttribute("list", list);
+		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/joongoSale/sale_hearted_list";
 	}
