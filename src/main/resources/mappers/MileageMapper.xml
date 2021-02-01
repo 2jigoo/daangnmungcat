@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.MileageMapper">
+
+	<sql id="selectSql">
+		SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
+	</sql>
+	
+<!-- resultMap -->
+	
+	<resultMap type="Mileage" id="mileRes">
+		<id property="id" column="id" />		
+		<result property="order.id" column="od_id" />		
+		<result property="member.id" column="mem_id" />		
+		<result property="mileage" column="mileage" />		
+		<result property="content" column="content" />		
+		<result property="regDate" column="regdate" />		
+		
+		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" />
+	</resultMap>
+
+	<update id="updateMemberMileage">
+		UPDATE MEMBER SET MILEAGE = #{mileage} WHERE id = #{id}
+	</update>
+	
+	<insert id="insertMilegeInfo">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT mall_mileage_seq.nextval FROM DUAL
+		</selectKey>
+			INSERT INTO MALL_MILEAGE(ID, OD_ID, MEM_ID, MILEAGE, CONTENT)
+			VALUES(#{id}, #{order.id}, #{member.id}, #{mileage}, #{content})
+	</insert>
+	
+	<select id="getMileage" parameterType="string" resultType="int">
+		SELECT MILEAGE FROM MEMBER WHERE id = #{id}
+	</select>
+	
+	<select id="selectMileageInfoById" resultMap="mileRes">
+		<include refid="selectSql"></include>
+		where mem_id = #{member.id}
+	</select>
+</mapper>

@@ -14,21 +14,29 @@ import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.mapper.OrderMapper;
+import daangnmungcat.service.CartService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Service
 public class OrderServiceImpl implements OrderService{
-
+	
+	@Autowired
+	private CartService cartService;
 	
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private MileageService mileService;
 	
 	@Autowired
 	private OrderMapper mapper;
@@ -43,11 +51,13 @@ public class OrderServiceImpl implements OrderService{
 
 		//pre-order -> 주문한거만 담은 새로운 cartList
 		List<Cart> cartList =  (ArrayList)session.getAttribute("cart");
-		
+		//parameter로 온 것
 		int total = (int) session.getAttribute("total");
 		int deli = (int) session.getAttribute("deli");
 		int final_price = (int) session.getAttribute("final_price");
 		int plus_mile = (int) session.getAttribute("plus_mile");
+		
+		System.out.println("total::" + final_price);
 		
 		//받은 session
 		String name = (String) session.getAttribute("add_name");
@@ -58,6 +68,10 @@ public class OrderServiceImpl implements OrderService{
 		String phone2 = (String) session.getAttribute("phone2");
 		String memo = (String) session.getAttribute("memo");
 		String usedMile = (String) session.getAttribute("usedMile");
+		
+		if(usedMile.equals("")) {
+			usedMile = "0";
+		}
 		
 		//order 다음 번호
 		int nextOrderNo = nextOrderNo();
@@ -102,6 +116,7 @@ public class OrderServiceImpl implements OrderService{
 		//결제정보 얻어오기
 		String pg_token = request.getParameter("pg_token");
 		System.out.println("pg_token: " + pg_token);
+		System.out.println("결제정보:" + kakao);
 		
 		//payment insert
 		Payment pay = new Payment();
@@ -112,13 +127,47 @@ public class OrderServiceImpl implements OrderService{
 		pay.setPayType(kakao.getPayment_method_type());
 		pay.setQuantity(kakao.getQuantity());
 		System.out.println("pay:" + pay);
-		System.out.println("결제정보:" + kakao);
 		mapper.insertPayment(pay);
 		log.info("insert payment..........................................");
+		
+		
+		for(Cart c :cartList) {
+			cartService.deleteCartItem(c);
+		}
+		log.info("주문한 카트아이템만 카트에서 삭제");
 		
 		//멤버 마일리지에서 use_mile 사용 -> 내 마일리지에서 감소/ 사용내역 테이블에 추가
 		//plus mile은 증가 
 		
+		System.out.println("사용한 마일리지:" + usedMile);
+		System.out.println("적립 마일리지:" + plus_mile);
+		
+		int mile = mileService.getMileage(loginUser.getId());
+		System.out.println("현재마일리지:" + mile);
+		mile += plus_mile;
+		Mileage plus = new Mileage();
+		plus.setMember(loginUser);
+		plus.setOrder(order);
+		plus.setMileage("+" + plus_mile);
+		plus.setContent("상품 구매 적립");
+		mileService.insertMilegeInfo(plus);
+		
+		mile -= Integer.parseInt(usedMile);
+		Mileage minus = new Mileage();
+		minus.setMember(loginUser);
+		minus.setOrder(order);
+		minus.setMileage("-" + usedMile);
+		minus.setContent("상품 구매 사용");
+		
+		if(!usedMile.equals("0")) {
+			mileService.insertMilegeInfo(minus);
+		}
+		
+		loginUser.setMileage(mile);
+		System.out.println("처리후:" + mile);
+		mileService.updateMemberMileage(loginUser);
+		
+		log.info("마일리지 set / 내역테이블 insert");
 		
 		log.info("..........end..........");
 	}

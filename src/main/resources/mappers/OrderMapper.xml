@@ -90,12 +90,12 @@
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT mall_order_seq.nextval FROM DUAL
 		</selectKey>
-		insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
-			ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
-			TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, PAY_ID)
-		values (#{id}, #{member.id}, #{member.name}, #{member.email}, #{member.phone}, #{addName},
-			#{zipcode}, #{address1}, #{address2}, #{addPhone1}, #{addPhone2}, #{addMemo}, 
-			#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{payId} ) 
+			insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
+				ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
+				TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, PAY_ID)
+			values (#{id}, #{member.id}, #{member.name}, #{member.email}, #{member.phone}, #{addName},
+				#{zipcode}, #{address1}, #{address2}, #{addPhone1}, #{addPhone2}, #{addMemo}, 
+				#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{payId} ) 
 	</insert>
 	
 	<insert id="insertPayment">

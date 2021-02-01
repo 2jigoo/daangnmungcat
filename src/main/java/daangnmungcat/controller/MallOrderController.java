@@ -83,12 +83,13 @@ public class MallOrderController {
 		int delivery = 0;
 		int final_price = 0;
 		int mile = 0;
-		
+		int total_qtt = 0;
 		for(Cart c: cartList) {
 			total += c.getProduct().getPrice() * c.getQuantity();
 			delivery += c.getProduct().getDeliveryPrice();
 			mile = (int) (total * 0.01);
 			final_price = total + delivery;
+			total_qtt += c.getQuantity();
 		}
 		
 		mv.addObject("delivery", delivery);
@@ -96,6 +97,7 @@ public class MallOrderController {
 		mv.addObject("final_price", final_price);
 		mv.addObject("mileage", mile);
 		mv.addObject("size", cartList.size());
+		mv.addObject("total_qtt", total_qtt);
 		mv.addObject("cart", cartList);
 		mv.addObject("member", loginUser);
 		mv.setViewName("/mall/order/mall_pre_order");
