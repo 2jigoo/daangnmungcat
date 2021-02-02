@@ -19,10 +19,6 @@
 		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 		<association property="orderDetail" columnPrefix="od_" resultMap="daangnmungcat.mapper.OrderMapper.odRes" />
 	</resultMap>
-
-	<update id="updateMemberMileage">
-		UPDATE  mall_mileage set mileage = #{mileage} WHERE mem_id = #{member.id}
-	</update>
 	
 	<insert id="insertMilegeInfo">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">

@@ -31,6 +31,7 @@
 		<association property="member"
 			resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 		<association property="details" resultMap="odRes" />
+		
 	</resultMap>
 
 	<resultMap type="OrderDetail" id="odRes">
@@ -46,6 +47,7 @@
 			resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 		<association property="cart"
 			resultMap="daangnmungcat.mapper.CartMapper.cartRes" />
+		<association property="pdt" resultMap="daangnmungcat.mapper.MallPdtMapper.pdtResult"></association>	
 	</resultMap>
 	
 	
@@ -59,15 +61,24 @@
 		STATE
 	</sql>
 	<sql id="odSql">
-		SELECT ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE FROM
-		mall_order_detail
+		SELECT 
+		od.ID AS od_id, 
+		od.ORDER_ID AS od_oid , 
+		od.MEM_ID AS mem_id, 
+		od.PDT_ID AS PDT_ID , 
+		p.NAME AS pname, 
+		od.QUANTITY AS od_qtt, 
+		od.PRICE AS price, 
+		od.TOTAL_PRICE AS TOTAL_PRICE 
+			FROM MALL_ORDER_DETAIL od
+			LEFT OUTER JOIN mall_pdt p ON p.id = od.PDT_ID
 	</sql>
 
 	<!-- query -->
 
-	<select id="getOrderDetail">
+	<select id="getOrderDetail" resultMap="odRes">
 		<include refid="odSql"></include>
-		where order_id = #{orderId}
+		where od.order_id = #{orderId}
 	</select>
 
 	<select id="nextOrderNo" resultType="int">
@@ -105,5 +116,16 @@
 		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
 		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
 	</insert>
+	
+	<select id="selectOrderById" resultMap="orderRes">
+		SELECT * FROM mall_order where mem_id = #{member.id}
+	</select>
+	
+	<select id="getOrderByNo" resultMap="orderRes">
+		SELECT * FROM mall_order where id = #{id}
+	</select>
+	
+	
+	
 	
 </mapper>

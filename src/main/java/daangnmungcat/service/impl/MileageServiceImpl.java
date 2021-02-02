@@ -19,11 +19,6 @@ public class MileageServiceImpl implements MileageService {
 	private MileageMapper mapper;
 	
 	@Override
-	public int updateMileage(Mileage mile) {
-		return mapper.updateMileage(mile);
-	}
-
-	@Override
 	public int insertMilegeInfo(Mileage mile) {
 		return mapper.insertMilegeInfo(mile);
 	}

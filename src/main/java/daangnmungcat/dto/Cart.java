@@ -46,9 +46,19 @@ public class Cart {
 		this.quantity = quantity;
 	}
 	
+	public Cart(Member member, MallProduct product, int quantity) {
+		super();
+		this.member = member;
+		this.product = product;
+		this.quantity = quantity;
+	}
+	
 	/* 비지니스 로직 */
 	public int getAmount() {
 		return this.product.getPrice() * this.quantity;
 	}
+
+	
+
 
 }

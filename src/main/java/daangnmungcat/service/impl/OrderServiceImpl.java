@@ -51,13 +51,15 @@ public class OrderServiceImpl implements OrderService{
 
 		//pre-order -> 주문한거만 담은 새로운 cartList
 		List<Cart> cartList =  (ArrayList)session.getAttribute("cart");
+		System.out.println(cartList);
+		
 		//parameter로 온 것
 		int total = (int) session.getAttribute("total");
 		int deli = (int) session.getAttribute("deli");
-		int final_price = (int) session.getAttribute("final_price");
-		int plus_mile = (int) session.getAttribute("plus_mile");
 		
-		System.out.println("total::" + final_price);
+		//kakao -> 세션으로
+		String finalPrice = (String) session.getAttribute("final_price");
+		System.out.println("total::" + finalPrice);
 		
 		//받은 session
 		String name = (String) session.getAttribute("add_name");
@@ -68,6 +70,7 @@ public class OrderServiceImpl implements OrderService{
 		String phone2 = (String) session.getAttribute("phone2");
 		String memo = (String) session.getAttribute("memo");
 		String usedMile = (String) session.getAttribute("usedMile");
+		String plus_mile = (String) session.getAttribute("plus_mile");
 		
 		if(usedMile.equals("")) {
 			usedMile = "0";
@@ -84,11 +87,12 @@ public class OrderServiceImpl implements OrderService{
 			detailList.add(new OrderDetail(c));	
 			od.setOrderId(nextOrderNo);
 			od.setCart(c);
+			
 			od.setMember(loginUser);
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
+			mapper.insertOrderDetail(od);
 		}
 		log.info("insert od..........................................");
-		mapper.insertOrderDetail(od);
 		
 		//order insert
 		int nextPayNo = nextPayNo(); 
@@ -106,8 +110,8 @@ public class OrderServiceImpl implements OrderService{
 		order.setAddMemo(memo);
 		order.setTotalPrice(total);
 		order.setUsedMileage(Integer.parseInt(usedMile));
-		order.setFinalPrice(final_price);
-		order.setPlusMileage(plus_mile);
+		order.setFinalPrice(Integer.parseInt(finalPrice));
+		order.setPlusMileage(Integer.parseInt(plus_mile));
 		order.setDeliveryPrice(deli);
 		order.setPayId(nextPayNo);
 		log.info("insert order..........................................");
@@ -136,23 +140,24 @@ public class OrderServiceImpl implements OrderService{
 		}
 		log.info("주문한 카트아이템만 카트에서 삭제");
 		
-		//멤버 마일리지에서 use_mile 사용 -> 내 마일리지에서 감소/ 사용내역 테이블에 추가
-		//plus mile은 증가 
 		
-		System.out.println("사용한 마일리지:" + usedMile);
-		System.out.println("적립 마일리지:" + plus_mile);
+		int myMileage = mileService.getMileage(loginUser.getId());
 		
-		int mile = loginUser.getMileage();
-		System.out.println("현재마일리지:" + mile);
-//		mile += plus_mile;
+		//현재마일리지
+		System.out.println("현재 마일리지" + myMileage);
+		
+		//보유금액 -일때
+		if(usedMile.contains("-")) {
+			usedMile = usedMile.replace("-", "");
+		}
+		
 		Mileage plus = new Mileage();
 		plus.setMember(loginUser);
 		plus.setOrderDetail(od);
-		plus.setMileage(plus_mile);
+		plus.setMileage(Integer.parseInt(plus_mile));
 		plus.setContent("상품 구매 적립");
 		mileService.insertMilegeInfo(plus);
 		
-//		mile -= Integer.parseInt(usedMile);
 		Mileage minus = new Mileage();
 		minus.setMember(loginUser);
 		minus.setOrderDetail(od);
@@ -163,11 +168,13 @@ public class OrderServiceImpl implements OrderService{
 			mileService.insertMilegeInfo(minus);
 		}
 		
-//		loginUser.setMileage(mile);
-//		System.out.println("처리후:" + mile);
-//		mileService.updateMemberMileage(loginUser);
-		
+		int afterMile = mileService.getMileage(loginUser.getId());
+		System.out.println("처리 후 현재마일리지:" + afterMile);
 		log.info("마일리지 set / 내역테이블 insert");
+		
+		session.setAttribute("usedMile", usedMile);
+		session.setAttribute("plusMile", plus_mile);
+		session.setAttribute("delivery", deli);
 		
 		log.info("..........end..........");
 	}
@@ -203,6 +210,17 @@ public class OrderServiceImpl implements OrderService{
 	public int insertPayment(Payment pay) {
 		// TODO Auto-generated method stub
 		return mapper.insertPayment(pay);
+	}
+
+	@Override
+	public List<Order> selectOrderById(String id) {
+		
+		return mapper.selectOrderById(id);
+	}
+
+	@Override
+	public Order getOrderByNo(int id) {
+		return mapper.getOrderByNo(id);
 	}
 
 

@@ -84,6 +84,10 @@ public class CartController {
 		model.addAttribute("chargedDelivery", chargedDeliveryFee);
 		model.addAttribute("totalDeliveryFee", totalDeliveryFee);
 		
+		session.setAttribute("totalDeliveryFee", totalDeliveryFee);
+		session.setAttribute("chargedDelivery", chargedDeliveryFee);
+		session.setAttribute("conditionalDeliveryFee", totalDeliveryFee - chargedDeliveryFee);
+		
 		return "/mall/cart/mall_cart_list";
 	}
 	

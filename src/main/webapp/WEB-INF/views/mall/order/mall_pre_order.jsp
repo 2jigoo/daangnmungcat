@@ -84,9 +84,11 @@ function check(a){
 	<!-- 넘어가는 data -->
 	<input type="text" name="first_pdt" value="${cart.get(0).product.name}"> <!-- 첫번째 -->
 	<input type="text" name="pdt_qtt" value="${size}"> <!-- 주문개수 -->
-	<input type="text" name="final">
-	<input type="text" name="mem_id" value="${member.id}">
-	<input type="text" name="total_qtt" value="${total_qtt}">
+	<input type="text" name="final"> <!-- 최종가격  -->
+	<input type="text" name="mem_id" value="${member.id}"> 
+	<input type="text" name="total_qtt" value="${total_qtt}"> <!-- 총 수량 -->
+	<input type="text" name="plus_mile" value="${mileage}"> <!-- 적립예정 -->
+	
 	
 	<table class="pre_order_table">
 		<colgroup>
@@ -122,14 +124,23 @@ function check(a){
 				<td><fmt:formatNumber value="${cart.product.price * 0.01}" /></td>
 				<td>${cart.product.price * cart.quantity}</td>
 				<td>
-					${cart.product.deliveryKind}
-					<c:if test="${cart.product.deliveryKind eq '조건부 무료배송'}">
-						<br><span class="cart_price"><fmt:formatNumber value="${cart.product.deliveryPrice}"/></span>원
-						<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매)
-					</c:if>
-					<c:if test="${cart.product.deliveryKind eq '유료배송'}">
-						<br><span class="cart_price"><fmt:formatNumber value="${cart.product.deliveryPrice}"/></span>원
-					</c:if>
+					<c:choose>
+						<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
+							<c:if test="${conditionalDeliveryFee eq 0}">
+									무료배송
+							</c:if>
+							<c:if test="${conditionalDeliveryFee ne 0}">
+								<fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
+							</c:if>
+								<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매 시 무료)
+						</c:when>
+						<c:when test="${cart.product.deliveryKind eq '유료배송' }">
+								개당 ${cart.product.deliveryPrice}원
+						</c:when>
+						<c:otherwise>
+								${cart.product.deliveryKind}
+						</c:otherwise>
+					</c:choose>
 				</td>
 			</tr>
 		</c:forEach>
@@ -144,11 +155,11 @@ function check(a){
 		</div>
 		<div class="box2">
 			배송비<br> 
-			${delivery}
+			${totalDeliveryFee}
 		</div>
 		<div class="box3">
 			합계 <br>
-			${final_price}원<br>
+			${total + totalDeliveryFee }원<br>
 			적립예정 마일리지: <fmt:formatNumber value="${mileage}" />원
 		</div>
 	</div>
@@ -229,7 +240,7 @@ function check(a){
 			</tr>
 			<tr>
 				<td>배송비</td>
-				<td><span id="shipping_price">${delivery}</span></td>
+				<td><span id="shipping_price">${totalDeliveryFee}</span></td>
 			</tr>
 			<tr>
 				<td>적립액</td>
@@ -237,9 +248,9 @@ function check(a){
 			</tr>
 			<tr>
 				<td>마일리지 사용</td>
-				<td><input type="text" id="use_mileage" name="use_mileage" value="0">
-				<input type="checkbox" id="mile_chk">전액 사용하기 (보유 마일리지:${member.mileage}원)
-				<input type="hidden" value="${member.mileage}" id="mem_mile"></td>
+				<td><input type="text" id="use_mileage" name="use_mileage" value="">
+				<input type="checkbox" id="mile_chk">전액 사용하기 (보유 마일리지:${memberMileage}원)
+				<input type="hidden" value="${memberMileage}" id="mem_mile"></td>
 			</tr>
 			<tr>
 				<td>최종 결제 금액</td>
