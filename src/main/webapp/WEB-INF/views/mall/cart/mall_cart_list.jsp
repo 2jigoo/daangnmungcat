@@ -150,7 +150,7 @@ function deleteCartItem(cart_id) {
 		</c:if>
 		<c:if test="${not empty list}">
 
-			<form action="/mall/pre-order" method="post" id="form">
+			<form action="/mall/pre-order/list" method="post" id="form">
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<table class="cart_table">
 					<colgroup>

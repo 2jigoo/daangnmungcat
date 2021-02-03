@@ -60,7 +60,6 @@ public class KakaoPayController {
 	public String kakaoPost(HttpServletRequest request, HttpSession session) {
 		log.info("kakao - post");
 		
-		
 		return "redirect:" + kakaoService.kakaoPayReady(request,session);
 	}
 	
@@ -72,15 +71,22 @@ public class KakaoPayController {
 		
 		KakaoPayApprovalVO kakao = kakaoService.kakaoPayInfo(pg_token, request, session);
 		log.info("kakaoPaySuccess - kakao:" + kakao);
-		//결제, 주문상세 , 주문, payment, 멤버마일리지, 마일리지사용내역 테이블 트랜잭션처리
-		orderService.orderTransaction(kakao, request, session);
 		
+		//결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
+		orderService.orderTransaction(kakao, request, session);
 		mv.setViewName("/mall/order/pay_success");
 		mv.addObject("info", kakao);
   
 		return mv;
 	}
 	
+	@GetMapping("/kakaoPayCancel")
+	public String payCancel(Model model) {
+		return "";
+	}
 	
-	
+	@GetMapping("kakaoPaySuccessFail")
+	public String paySuccessFail(Model model) {
+		return "";
+	}
 }

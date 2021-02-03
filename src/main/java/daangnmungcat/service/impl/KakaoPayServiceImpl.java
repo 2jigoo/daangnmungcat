@@ -30,6 +30,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
 import lombok.extern.java.Log;
 
@@ -43,6 +44,9 @@ private static final String HOST = "https://kapi.kakao.com";
 
 	@Autowired
 	private MemberService service;
+	
+	@Autowired
+	private MileageService mileService;
 
     private KakaoPayReadyVO kakaoPayReadyVO;
     private KakaoPayApprovalVO kakaoPayApprovalVo;
@@ -53,6 +57,8 @@ private static final String HOST = "https://kapi.kakao.com";
     	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 
+		int myMileage = mileService.getMileage(loginUser.getId());
+		
 		//주문할거만 담은 새로운 id
 		String[] id = request.getParameterValues("pdt_id");
 		String zipcode = request.getParameter("zipcode");
@@ -64,6 +70,12 @@ private static final String HOST = "https://kapi.kakao.com";
 		String memo = request.getParameter("order_memo");
 		String usedMile = request.getParameter("use_mileage");
 		String totalQtt = request.getParameter("total_qtt");
+		String finalPrice = request.getParameter("final");
+		String plusMile = request.getParameter("plus_mile");
+		
+		if(usedMile == "") {
+			usedMile = "0";
+		}
 		
 		//session에 담아서 전송
 		List<String> list = new ArrayList<String>();
@@ -81,6 +93,8 @@ private static final String HOST = "https://kapi.kakao.com";
 		session.setAttribute("memo", memo);
 		session.setAttribute("usedMile", usedMile);
 		session.setAttribute("total_qtt", totalQtt);
+		session.setAttribute("final_price", finalPrice);
+		session.setAttribute("plus_mile", plusMile);
 		
         RestTemplate restTemplate = new RestTemplate();
         
@@ -107,8 +121,8 @@ private static final String HOST = "https://kapi.kakao.com";
         }
         
         params.add("item_name", name);
-        params.add("quantity", request.getParameter("total_qtt"));
-        params.add("total_amount", request.getParameter("final"));
+        params.add("quantity", totalQtt);
+        params.add("total_amount", finalPrice);
         params.add("tax_free_amount", "0"); //비과세금액
         params.add("approval_url", "http://localhost:8080/kakaoPaySuccess");
         params.add("cancel_url", "http://localhost:8080/kakaoPayCancel");
@@ -145,6 +159,10 @@ private static final String HOST = "https://kapi.kakao.com";
         AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		
+		String finalPrice = (String) session.getAttribute("final_price");
+		String usedMile = (String) session.getAttribute("usedMile");
+		String plus_mile = (String) session.getAttribute("plus_mile");
+		
         RestTemplate restTemplate = new RestTemplate();
         
         // 서버로 요청할 Header
@@ -160,8 +178,10 @@ private static final String HOST = "https://kapi.kakao.com";
         params.add("tid", kakaoPayReadyVO.getTid());
         params.add("partner_order_id", String.valueOf(nextPayNo));
         params.add("partner_user_id", member.getId());
+        params.add("used_mileage", usedMile); 
+        params.add("plus_mileage", plus_mile); 
         params.add("pg_token", pg_token);
-        params.add("total_amount", session.getAttribute("final_price").toString());
+        params.add("total_amount", finalPrice);
         
         
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
