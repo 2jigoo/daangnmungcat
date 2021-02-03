@@ -153,14 +153,14 @@ public class OrderServiceImpl implements OrderService{
 		
 		Mileage plus = new Mileage();
 		plus.setMember(loginUser);
-		plus.setOrderDetail(od);
+		plus.setOrder(order);
 		plus.setMileage(Integer.parseInt(plus_mile));
 		plus.setContent("상품 구매 적립");
 		mileService.insertMilegeInfo(plus);
 		
 		Mileage minus = new Mileage();
 		minus.setMember(loginUser);
-		minus.setOrderDetail(od);
+		minus.setOrder(order);
 		minus.setMileage(Integer.parseInt("-"+usedMile));
 		minus.setContent("상품 구매 사용");
 		

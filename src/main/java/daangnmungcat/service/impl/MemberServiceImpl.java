@@ -18,8 +18,10 @@ import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.mapper.MemberMapper;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import net.nurigo.java_sdk.api.Message;
 import net.nurigo.java_sdk.exceptions.CoolsmsException;
 
@@ -28,6 +30,10 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
+	
+	
+	@Autowired
+	private MileageService mService;
 	
 	@Override
 	public List<Member> selectMemberByAll() {
@@ -52,6 +58,12 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public int registerMember(Member member) {
+		Mileage mile = new Mileage();
+		mile.setMileage(1000);
+		mile.setOrder(null);
+		mile.setContent("회원가입");
+		mile.setMember(member);
+		mService.insertMilegeInfo(mile);
 		return mapper.insertMember(member);
 	}
 
