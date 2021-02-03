@@ -11,8 +11,9 @@ import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
 
 public interface OrderMapper {
-
-
+	
+	List<Order> selectOrderById(String id);
+	Order getOrderByNo(int id);
 	List<OrderDetail> getOrderDetail(int orderNo);
 	
 	int nextOrderNo();

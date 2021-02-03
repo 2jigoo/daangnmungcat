@@ -7,9 +7,7 @@ import daangnmungcat.dto.Mileage;
 
 public interface MileageMapper {
 	
-	int updateMileage(Mileage mile);
 	int getMileage(String id);
-	
 	List<Mileage> selectMileageInfoByMemberId(String id);
 	int insertMilegeInfo(Mileage mile);
 	

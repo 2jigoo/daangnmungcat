@@ -1,6 +1,7 @@
 package daangnmungcat.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +24,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Order;
+import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.service.CartService;
+import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.OrderService;
 
 @RestController
 @Controller
@@ -35,7 +42,16 @@ public class MypageController {
 	//마지막 슬래시 x
 	
 	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
 	private MemberService service;
+	
+	@Autowired
+	private CartService cartService;
+	
+	@Autowired
+	private MallPdtService pdtService;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -135,6 +151,33 @@ public class MypageController {
 		int res = service.deleteMember(id);
 		session.invalidate();
 		return res;
+	}
+	
+	//주문내역
+
+	
+	@GetMapping("/mypage/order_list")
+	public ModelAndView deleteShipping(HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		List<Order> list = orderService.selectOrderById(member.getId());
+		
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.getOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setMember(member);
+				od.setOrderId(o.getId());
+				od.setPdt(pdtService.getProductById(od.getCart().getProduct().getId()));
+			}
+		}
+		System.out.println(list);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.setViewName("/mypage/order_list");
+		return mv;
 	}
 
 }

@@ -109,3 +109,34 @@ INSERT INTO MALL_ORDER_DETAIL values(4, 1, 'test', 4, 2, 2000, 2000);
 SELECT mall_payment_seq.nextval FROM DUAL;
 SELECT nvl(max(id)+1, 1) AS next FROM MALL_PAYMENT;
 SELECT nvl(max(id)+1, 1) AS next FROM MALL_ORDER_detail;
+
+SELECT * FROM MALL_PDT;
+UPDATE mall_pdt SET DELIVERY_CONDITION = 30000 WHERE DELIVERY_CONDITION = 50000;
+
+SELECT * FROM MALL_MILEAGe;
+SELECT sum(mileage) as mileage FROM MALL_MILEAGE WHERE mem_id = 'test';
+INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'test', 1000, '회원가입', sysdate);
+INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'test', -200, '상품구매', sysdate);
+
+
+SELECT * FROM MALL_PAYMENT;
+
+SELECT * FROM mall_order ORDER BY id;
+SELECT * FROM mall_order_Detail WHERE ORDER_ID = 13;
+SELECT * FROM MALL_MILEAGe ORDER BY id;
+SELECT sum(mileage) FROM MALL_MILEAGE WHERE mem_id = 'test';
+
+--580
+SELECT * FROM MALL_MILEAGE WHERE od_id = 7;
+UPDATE MALL_MILEAGE SET MILEAGE = MILEAGE - 30000 * 0.01 
+WHERE CONTENT = '상품 구매 적립' AND OD_ID = 7;
+
+
+SELECT * FROM mall_order where mem_id = 'test';
+
+CREATE OR REPLACE VIEW detail_view AS 
+SELECT od.ID, od.ORDER_ID, od.MEM_ID, od.PDT_ID, p.NAME AS pname, od.QUANTITY, od.PRICE, od.TOTAL_PRICE FROM MALL_ORDER_DETAIL od
+LEFT OUTER JOIN mall_order o ON o.id = od.ORDER_ID
+LEFT OUTER JOIN mall_pdt p ON p.id = od.PDT_ID ORDER BY od.ORDER_ID;
+
+SELECT * FROM detail_view WHERE order_id = 4;

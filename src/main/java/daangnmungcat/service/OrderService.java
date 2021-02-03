@@ -15,6 +15,9 @@ import daangnmungcat.dto.Payment;
 @Service
 public interface OrderService {
 
+	List<Order> selectOrderById(String id);
+	Order getOrderByNo(int id);
+	
 	int insertOrder(Order order);
 	
 	List<OrderDetail> getOrderDetail(int orderNo);

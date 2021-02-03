@@ -150,7 +150,7 @@ function deleteCartItem(cart_id) {
 		</c:if>
 		<c:if test="${not empty list}">
 
-			<form action="/mall/pre-order" method="post" id="form">
+			<form action="/mall/pre-order/list" method="post" id="form">
 			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<table class="cart_table">
 					<colgroup>
@@ -210,10 +210,10 @@ function deleteCartItem(cart_id) {
 								<td>
 									<c:choose>
 										<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
-											<c:if test="${conditionalDeliveryFee eq 0}">
+											<c:if test="${deliveryFee['conditonal'] eq 0}">
 												무료배송
 											</c:if>
-											<c:if test="${conditionalDeliveryFee ne 0}">
+											<c:if test="${deliveryFee['conditonal'] ne 0}">
 												<fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
 											</c:if>
 											<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매 시 무료)
@@ -232,11 +232,11 @@ function deleteCartItem(cart_id) {
 					<tfoot>
 						<tr>
 							<td colspan="7">
-								<c:if test="${totalDeliveryFee eq 0}">
+								<c:if test="${deliveryFee['total'] eq 0}">
 									총 결제 금액 : 무료배송
 								</c:if>
-								<c:if test="${totalDeliveryFee ne 0 }">
-									총 결제 금액 : ${totalDeliveryFee }
+								<c:if test="${deliveryFee['total'] ne 0 }">
+									총 결제 금액 : 배송비 ${deliveryFee['conditional']} 원 / ${deliveryFee['charged']} 원
 								</c:if>
 							</td>
 						</tr>
