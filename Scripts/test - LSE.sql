@@ -60,6 +60,7 @@ SELECT * FROM JOONGO_IMAGE;
 SELECT * FROM MALL_MILEAGE;
 DELETE FROM MEMBER WHERE id = 'chattest3';
 select * from user_sequences;
+SELECT * FROM notice;
 
 
 INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
@@ -250,4 +251,16 @@ INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mile
 DELETE FROM mall_mileage WHERE id =4; 
 SELECT * FROM MALL_MILEAGE ;
 
+SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice; 
 
+
+SELECT * FROM notice;
+INSERT INTO notice (id, title, contents, regdate, notice_yn, notice_file )values(notice_seq.nextval, '제목', '공지 내용', sysdate, 'n', null);
+INSERT INTO notice (id, title, contents, regdate, notice_yn, notice_file )values(notice_seq.nextval, '공지-제목', '공지 내용', sysdate, 'y', null);
+SELECT * FROM notice ORDER BY notice_yn desc;
+
+
+		SELECT count(a.id)
+	  FROM (SELECT rownum AS rnum, b.*
+	  		FROM (SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice
+	  ORDER BY id desc) b) a;

@@ -169,7 +169,7 @@
 				</ul>
 			</li>
 			<li><a href="#">커뮤니티</a></li>
-			<li><a href="#">공지사항</a></li>
+			<li><a href="<c:url value="/notice" />">공지사항</a></li>
 		</ul>
 		<div>
 			<ul>

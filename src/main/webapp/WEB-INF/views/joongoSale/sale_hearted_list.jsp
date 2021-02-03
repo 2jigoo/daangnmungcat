@@ -53,7 +53,7 @@ $(function(){
 			</ul>
 			
 			<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-	    		<p><a href="<%=request.getContextPath()%>/joongo_list/all${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+	    		<p><a href="<%=request.getContextPath()%>/joongo/heart/${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			</c:if> 
 		</div>
 	</div>
