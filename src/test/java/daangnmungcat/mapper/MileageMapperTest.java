@@ -51,7 +51,7 @@ public class MileageMapperTest {
 		String usedMile = "50";
 		Mileage mile = new Mileage();
 		mile.setMember(new Member("chattest2"));
-		mile.setOrderDetail(null);
+		mile.setOrder(null);
 		mile.setMileage(Integer.parseInt("-"+usedMile));
 		mile.setContent("상품 구매 사용");
 		mapper.insertMilegeInfo(mile);

@@ -57,8 +57,8 @@ SELECT * FROM MALL_PDT;
 SELECT * FROM SALE_VIEW ;
 SELECT * FROM dongne_view;
 SELECT * FROM JOONGO_IMAGE;
-
-
+SELECT * FROM MALL_MILEAGE;
+DELETE FROM MEMBER WHERE id = 'chattest3';
 select * from user_sequences;
 
 

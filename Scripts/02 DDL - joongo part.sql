@@ -189,6 +189,19 @@ CREATE TABLE grade(
 ALTER TABLE grade
 ADD CONSTRAINT PK_GRADE PRIMARY KEY (code);
 
+/*공지시항*/
+CREATE TABLE notice(
+	id NUMBER(12) NOT NULL,  /* 번호 */
+	title VARCHAR2(50), /* 제목 */
+	contents VARCHAR2(2000), /* 내용 */
+	regdate DATE NOT NULL, /* 등록일*/
+	notice_yn char(1) DEFAULT 'n', /*공지여부*/
+	notice_file varchar2(1000)	/*첨부파일 경로*/
+);
+
+ALTER TABLE notice
+ADD CONSTRAINT PK_notice PRIMARY KEY (id);
+
 ALTER TABLE MEMBER
 	ADD
 		CONSTRAINT FK_GRADE_TO_MEMBER

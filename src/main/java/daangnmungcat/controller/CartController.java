@@ -1,10 +1,15 @@
 package daangnmungcat.controller;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +28,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
-import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
 import daangnmungcat.service.CartService;
 import lombok.extern.log4j.Log4j2;
@@ -37,28 +42,45 @@ public class CartController {
 	
 	// 장바구니 목록
 	@GetMapping("/mall/cart/list")
-	public String cart(HttpSession session, Model model) {
+	public String cart(@CookieValue(name = "basket_id", required = false) String cookie, HttpSession session, Model model) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		List<Cart> list = null; 
 		
-		List<Cart> list = cartService.getCart(loginUser.getId());
+		if(loginUser == null) {
+			// 비회원
+			if(cookie != null) {
+//				UUID.randomUUID().toString();
+//				list = cartService.getCartForNonmember(cookie);
+			}
+		} else {
+			// 회원
+			list = cartService.getCart(loginUser.getId());
+			
+		}
+		
+		Map<String, Integer> deliveryFee = calculateDeliveryFee(list);
+		
+		model.addAttribute("list", list);
+		model.addAttribute("deliveryFee", deliveryFee);
+		
+		return "/mall/cart/mall_cart_list";
+	}
 
+
+	private Map<String, Integer> calculateDeliveryFee(List<Cart> list) {
+		Map<String, Integer> deliveryFee = new HashMap<>();
+		
 		// 총 배송비
 		int totalDeliveryFee = 0;
-		
 		
 		// 무료배송, 유료상품 존재 여부
 		boolean hasFreeDelivery = list.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("무료배송"));
 		boolean hasChargedDelivery = list.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"));
 		
 		// 조건부 무료배송 총 상품금액 합계 구하기
-		List<Cart> listOfConditionalFee = list.stream()
+		int totalPriceOfCondiFeePdt = list.stream()
 											.filter(cart -> cart.getProduct().getDeliveryKind().equals("조건부 무료배송"))
-											.collect(Collectors.toList());
-		
-		int totalPriceOfCondiFeePdt = 0;
-		for(Cart cart : listOfConditionalFee) {
-			totalPriceOfCondiFeePdt += cart.getProduct().getPrice() * cart.getQuantity();
-		}
+											.collect(Collectors.summingInt(Cart::getAmount));
 		
 		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
 		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
@@ -79,16 +101,13 @@ public class CartController {
 			totalDeliveryFee += chargedDeliveryFee;
 		}
 		
-		model.addAttribute("list", list);
-		model.addAttribute("conditionalDeliveryFee", totalDeliveryFee - chargedDeliveryFee);
-		model.addAttribute("chargedDelivery", chargedDeliveryFee);
-		model.addAttribute("totalDeliveryFee", totalDeliveryFee);
+		System.out.println(totalDeliveryFee + " = " + chargedDeliveryFee + " + " + (totalDeliveryFee - chargedDeliveryFee));
 		
-		session.setAttribute("totalDeliveryFee", totalDeliveryFee);
-		session.setAttribute("chargedDelivery", chargedDeliveryFee);
-		session.setAttribute("conditionalDeliveryFee", totalDeliveryFee - chargedDeliveryFee);
+		deliveryFee.put("total", totalDeliveryFee);
+		deliveryFee.put("conditional", totalDeliveryFee - chargedDeliveryFee);
+		deliveryFee.put("charged", chargedDeliveryFee);
 		
-		return "/mall/cart/mall_cart_list";
+		return deliveryFee;
 	}
 	
 	
@@ -113,32 +132,36 @@ public class CartController {
 	// 장바구니 추가
 	@PostMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpSession session) {
+	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpServletRequest request, HttpSession session) {
 		// product.id, quantity 넘어옴
 		
 		int res = 0;
 		AuthInfo loginUser = null;
 		
-		try {
-			loginUser = (AuthInfo) session.getAttribute("loginUser");
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-		}
+		loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
-		try {
-			cart.setMember(new Member(loginUser.getId()));
-			//log.info(loginUser.getId().toString());
+		if(loginUser == null) {
+			Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("basket_id")).findFirst();
+			cookie.orElseGet(() -> new Cookie("basket_id", UUID.randomUUID().toString()));
+			String basketID = cookie.get().getValue();
+			
+			// basket_id에 관한 메서드들 만들어야 함
+			cartService.addCartItem(cart);
+		} else {
+		
+			try {
+				cart.setMember(new Member(loginUser.getId()));
+				//log.info(loginUser.getId().toString());
+				//log.info(cart.toString());
+				res = cartService.addCartItem(cart);
+			} catch(Exception e) {
+				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			}
 			//log.info(cart.toString());
-			res = cartService.addCartItem(cart);
-		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
-		//log.info(cart.toString());
 		return ResponseEntity.ok(res);
-		
 	}
 	
 	
