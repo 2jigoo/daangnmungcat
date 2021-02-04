@@ -169,7 +169,6 @@ public class MypageController {
 			for(OrderDetail od: odList) {
 				od.setMember(member);
 				od.setOrderId(o.getId());
-				od.setPdt(pdtService.getProductById(od.getCart().getProduct().getId()));
 			}
 		}
 		System.out.println(list);

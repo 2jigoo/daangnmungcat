@@ -122,7 +122,7 @@ INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mile
 SELECT * FROM MALL_PAYMENT;
 
 SELECT * FROM mall_order ORDER BY id;
-SELECT * FROM mall_order_Detail WHERE ORDER_ID = 13;
+SELECT * FROM mall_order_Detail;
 SELECT * FROM MALL_MILEAGe ORDER BY id;
 SELECT sum(mileage) FROM MALL_MILEAGE WHERE mem_id = 'test';
 
@@ -134,9 +134,7 @@ WHERE CONTENT = '상품 구매 적립' AND OD_ID = 7;
 
 SELECT * FROM mall_order where mem_id = 'test';
 
-CREATE OR REPLACE VIEW detail_view AS 
-SELECT od.ID, od.ORDER_ID, od.MEM_ID, od.PDT_ID, p.NAME AS pname, od.QUANTITY, od.PRICE, od.TOTAL_PRICE FROM MALL_ORDER_DETAIL od
-LEFT OUTER JOIN mall_order o ON o.id = od.ORDER_ID
-LEFT OUTER JOIN mall_pdt p ON p.id = od.PDT_ID ORDER BY od.ORDER_ID;
+SELECT od.ID AS od_id, od.ORDER_ID AS od_oid , od.MEM_ID AS mem_id, od.PDT_ID AS PDT_ID , p.NAME AS pname, od.QUANTITY AS od_qtt, od.PRICE AS price, od.TOTAL_PRICE AS TOTAL_PRICE FROM MALL_ORDER_DETAIL od
+LEFT OUTER JOIN mall_pdt p ON p.id = od.PDT_ID WHERE od.ORDER_ID = 5;
 
-SELECT * FROM detail_view WHERE order_id = 4;
+SELECT od_id, od_oid, mem_id, PDT_ID, pname, od_qtt, price, TOTAL_PRICE FROM detail_view;
