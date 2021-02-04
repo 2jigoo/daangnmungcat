@@ -22,6 +22,10 @@
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/swiper.min.js" />" type="text/javascript" ></script>
+	<!-- datepicker -->
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />  
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>  
+	<script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 	
 	<script>
 	$.ajaxSetup({

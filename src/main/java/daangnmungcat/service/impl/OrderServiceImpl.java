@@ -1,7 +1,10 @@
 package daangnmungcat.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -20,6 +23,7 @@ import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
+import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
@@ -37,6 +41,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private MileageService mileService;
+	
+	@Autowired
+	private MallPdtService pdtService;
 	
 	@Autowired
 	private OrderMapper mapper;
@@ -84,15 +91,19 @@ public class OrderServiceImpl implements OrderService{
 		
 		OrderDetail od = new OrderDetail();
 		for(Cart c: cartList) {
-			detailList.add(new OrderDetail(c));	
 			od.setOrderId(nextOrderNo);
-			od.setCart(c);
-			
+			od.setPdt(c.getProduct());
 			od.setMember(loginUser);
+			od.setQuantity(c.getQuantity());
+			System.out.println("quantity" + c.getQuantity());
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
+			detailList.add(od);
 			mapper.insertOrderDetail(od);
 		}
+		System.out.println(detailList);
 		log.info("insert od..........................................");
+		
+		
 		
 		//order insert
 		int nextPayNo = nextPayNo(); 
@@ -134,11 +145,11 @@ public class OrderServiceImpl implements OrderService{
 		mapper.insertPayment(pay);
 		log.info("insert payment..........................................");
 		
-		
-		for(Cart c :cartList) {
-			cartService.deleteCartItem(c);
-		}
-		log.info("주문한 카트아이템만 카트에서 삭제");
+//		
+//		for(Cart c :cartList) {
+//			cartService.deleteCartItem(c);
+//		}
+		//		log.info("주문한 카트아이템만 카트에서 삭제");
 		
 		
 		int myMileage = mileService.getMileage(loginUser.getId());
@@ -221,6 +232,24 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public Order getOrderByNo(int id) {
 		return mapper.getOrderByNo(id);
+	}
+
+	@Override
+	public List<OrderDetail> sortingOrderDetail(int orderId) {
+		// TODO Auto-generated method stub
+		return mapper.sortingOrderDetail(orderId);
+	}
+
+	@Override
+	public List<Order> searchByDate(String start, String end, Member member) {
+		// TODO Auto-generated method stub 
+		return mapper.searchByDate(start, end, member);
+	}
+
+	@Override
+	public List<Order> search(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return mapper.search(map);
 	}
 
 

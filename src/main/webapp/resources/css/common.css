@@ -468,3 +468,14 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 .pre_order_mem_info {width:80%; margin:0 auto; padding:20px;}
 .pre_order_deli_info {width:80%; margin:0 auto; padding:20px; }
 .pre_order_pay_info {width:80%; margin:0 auto; padding:20px;}
+
+
+/* mypage - order_list*/
+#order_list_table {width:70%; margin:0 auto; text-align:center; border-top:1px solid black;}
+#order_list_table tr td {border-top:1px solid black; vertical-align:middle}
+#order_list_table th {padding:20px;}
+.tl {text-align:left;}
+.order_list_img {width:20%; text-align:left; vertical-align:middle }
+.order_list_span {cursor:pointer;}
+.order_list_span:hover {text-decoration:underline}
+.order_list_search_div {width:70%; margin:0 auto; text-align:center; padding:30px;}

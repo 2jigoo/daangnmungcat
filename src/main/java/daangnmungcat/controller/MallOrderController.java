@@ -170,7 +170,44 @@ public class MallOrderController {
 		ModelAndView mv = new ModelAndView();
 		
 		// 총 배송비
-		int totalDeliveryFee = (int) session.getAttribute("totalDeliveryFee");
+				int totalDeliveryFee = 0;
+				
+				
+				// 무료배송, 유료상품 존재 여부
+				boolean hasFreeDelivery = cartList.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("무료배송"));
+				boolean hasChargedDelivery = cartList.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"));
+				
+				// 조건부 무료배송 총 상품금액 합계 구하기
+				List<Cart> listOfConditionalFee = cartList.stream()
+													.filter(cart -> cart.getProduct().getDeliveryKind().equals("조건부 무료배송"))
+													.collect(Collectors.toList());
+				
+				int totalPriceOfCondiFeePdt = 0;
+				for(Cart cart : listOfConditionalFee) {
+					totalPriceOfCondiFeePdt += cart.getProduct().getPrice() * cart.getQuantity();
+				}
+				
+				// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
+				if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+					totalDeliveryFee = 3000;
+				}
+				
+				// 유료배송 상품이 있는 경우
+				int chargedDeliveryFee = 0;
+				if(hasChargedDelivery == true) {
+					List<Cart> listOfChargedFee = cartList.stream()
+														.filter(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"))
+														.collect(Collectors.toList());
+					// 모든 유료배송 상품의 합계 배송비
+					for(Cart cart : listOfChargedFee) {
+						chargedDeliveryFee += cart.getQuantity() * cart.getProduct().getDeliveryPrice();
+						System.out.println(chargedDeliveryFee);
+					}
+					
+					totalDeliveryFee += chargedDeliveryFee;
+					System.out.println("합치면:" + totalDeliveryFee);
+				}
+
 
 		int total = 0;
 		int final_price = 0;
@@ -194,6 +231,7 @@ public class MallOrderController {
 		mv.addObject("total_qtt", total_qtt);
 		mv.addObject("cart", cartList);
 		mv.addObject("memberMileage", myMileage);
+		mv.addObject("totalDeliveryFee", totalDeliveryFee);
 
 		// 결제시 detail로 받을 cartlist -> paySuccess
 		session.setAttribute("cart", cartList);

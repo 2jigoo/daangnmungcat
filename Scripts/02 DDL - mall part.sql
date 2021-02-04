@@ -143,7 +143,7 @@ CREATE TABLE MALL_ORDER (
 	regdate DATE DEFAULT SYSDATE, 
 	cancel_price NUMBER(10), /* 취소금액 */
 	return_price NUMBER(10), /* 반품/품절금액 */
-	state CHAR(1) DEFAULT 'y' /* 주문상태 */
+	state VARCHAR2(20) DEFAULT '결제완료' /* 주문상태 */
 );
 
 CREATE UNIQUE INDEX PK_MALL_ORDER
