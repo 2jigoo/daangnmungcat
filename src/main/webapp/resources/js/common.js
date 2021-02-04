@@ -67,6 +67,13 @@ $(document).ready(function(){
         var totalPrice = price * num;
         $(".product_detail .detail_info .txt_box .totalPrice p:last span").text(totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     })
+    
+    $(".star_box .star").click(function(){
+		$(".star_box .star").removeClass("on")
+		for (var i = 0; i <= $(this).index(); i++){
+			$(".star_box .star:eq("+ i +")").addClass("on")
+		}
+	})
 })
 
 //현재 시간이랑 글 쓴 시간 비교

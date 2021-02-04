@@ -324,6 +324,34 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 	.product_detail .detail_view {margin-top:50px;}
 }
 
+.joongo_review {width:100%; overflow:hidden;}
+.joongo_review ul li {display:table; width:100%; margin-top:-1px;}
+.joongo_review ul li:first-child {margin-top:0;}
+.joongo_review ul li > p, .joongo_review ul li > div {display:table-cell; vertical-align:middle; border:1px solid #ddd; padding:10px;}
+.joongo_review ul li > p {width:15%; text-align:center; background:#f7f7f7;}
+.joongo_review ul li > div {width:85%; border-left:0;}
+.joongo_review ul li textarea {display:block; max-width:500px; width:100%; height:200px; border-radius:0; border:1px solid #ddd; resize:none;}
+.joongo_review .product {width:100%; overflow:hidden;}
+.joongo_review .product .img {float:left; width:150px; border:1px solid #ddd;}
+.joongo_review .product .img img {width:100%}
+.joongo_review .product .txt {float:left; width:calc(100% - 170px); margin-left:20px; overflow:hidden;}
+.joongo_review .star_box {display:inline-block; overflow:hidden;}
+.joongo_review .star_box .star {float:left; display:block; width:8.5px; height:17px; background-image:url(/resources/images/ico_star.png); background-repeat:no-repeat; cursor:pointer;}
+.joongo_review .star_box .star.star_left {background-position:left center;}
+.joongo_review .star_box .star.star_right {background-position:right center;}
+.joongo_review .star_box .star.on {background-image:url(/resources/images/ico_star_on.png)}
+.joongo_review .star_box + p {display:inline-block; margin-left:15px;}
+.joongo_review .btn {float:right; font-size:1em; line-height:35px; padding:0 10px; color:#fff; background:#ff7e15; border:0; cursor:pointer; margin-left:5px; border-radius:5px; margin-top:10px; font-family:'S-CoreDream'}
+.joongo_review .btn.history_back_btn {background:#111}
+
+@media screen and (max-width:767px){
+	.joongo_review ul li {margin-top:2%}
+	.joongo_review ul li > p, .joongo_review ul li > div {display:block; width:100% !important;}
+	.joongo_review ul li > div {border-left:1px solid #ddd; border-top:0;}
+	.joongo_review .product .img {width:100px;}
+	.joongo_review .product .txt {width:calc(100% - 115px); margin-left:15px;}
+}
+
 
 /* swiper */
 /**
