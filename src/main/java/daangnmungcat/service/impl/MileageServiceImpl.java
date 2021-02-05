@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.mapper.MileageMapper;
@@ -32,4 +33,15 @@ public class MileageServiceImpl implements MileageService {
 	public List<Mileage> selectMileageInfoByMemberId(String id) {
 		return mapper.selectMileageInfoByMemberId(id);
 	}
+
+	@Override
+	public int listCount() {
+		return mapper.listCount();
+	}
+
+	@Override
+	public List<Mileage> selectMileageByAll(Criteria cri) {
+		return mapper.selectMileageByAll(cri);
+	}
+
 }

@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Notice;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.mapper.NoticeMapper;
+import daangnmungcat.service.MileageService;
 import lombok.extern.log4j.Log4j2;
 
 @Controller
@@ -25,6 +29,9 @@ public class NoticeController {
 	
 	@Autowired
 	private NoticeMapper mapper;
+	
+	@Autowired
+	private MileageService mService;
 	
 	@GetMapping("/notice")
 	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {

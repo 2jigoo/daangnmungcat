@@ -11,14 +11,12 @@
 	
 	<resultMap type="Mileage" id="mileRes">
 		<id property="id" column="id" />		
-		<result property="member.id" column="mem_id" />	
-		<result property="order.id" column="od_id" />			
 		<result property="mileage" column="mileage" />		
 		<result property="content" column="content" />		
 		<result property="regDate" column="regdate" />		
 		
-		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
-		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" />
+		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" columnPrefix="MEM_"/>
+		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" columnPrefix="OD_"/>
 	</resultMap>
 	
 	<insert id="insertMilegeInfo">
@@ -40,4 +38,20 @@
 		<include refid="selectSql"></include>
 		where mem_id = #{member.id}
 	</select>
+	
+	<select id="listCount" parameterType="map" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ROWNUM, ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
+		FROM MALL_MILEAGE )B)A
+	</select>
+	
+	<select id="selectMileageByAll" resultMap="mileRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE FROM MALL_MILEAGE ORDER BY id desc  )B)A
+			WHERE A.RNUM BETWEEN #{rowStart} AND #{rowEnd}
+			ORDER BY A.RNUM	
+	</select>
+	
 </mapper>

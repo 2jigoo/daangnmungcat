@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
-
+<script type="text/javascript">
+</script>
 <div id="subContent">
 	<h2 id="subTitle">중고</h2>
 	<div id="pageCont" class="s-inner">
@@ -16,9 +17,9 @@
 				<p class="tit">${notice.title }</p>
 				<p class="date">${notice.regdate }</p>
 				<p>${notice.contents }</p>
-				<c:if test="${not empty notice.noticeFile }">
-				<p><img src="<%=request.getContextPath() %>/resources/${notice.noticeFile}">
-				</p></c:if>
+				<c:if test="${not empty notice.noticeFile}">
+						<img src="<%=request.getContextPath() %>/resources/${notice.noticeFile}">
+				</c:if>
 			</div>
 		</div>
 	</div>
