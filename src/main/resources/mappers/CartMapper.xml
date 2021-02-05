@@ -30,6 +30,12 @@
 		ORDER BY REGDATE DESC
 	</select>
 	
+	<select id="selectCartByBasketId" resultMap="cartRes">
+		<include refid="selectSimpleSQL" />
+		WHERE basket_id = #{basketId}
+		ORDER BY REGDATE DESC
+	</select>
+	
 	<select id="selectCartItem" resultMap="cartRes">
 		<include refid="selectSimpleSQL" />
 		<choose>
@@ -45,8 +51,8 @@
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT mall_cart_seq.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO MALL_CART(id, member_id, product_id, quantity, regdate)
-		VALUES(#{id}, #{member.id}, #{product.id}, #{quantity}, sysdate)
+		INSERT INTO MALL_CART(id, member_id, basket_id, product_id, quantity, regdate)
+		VALUES(#{id}, #{member.id}, #{basketId}, #{product.id}, #{quantity}, sysdate)
 	</insert>
 	
 	<update id="updateCartItem" parameterType="Cart">

@@ -10,9 +10,11 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,13 +46,14 @@ public class CartController {
 	@GetMapping("/mall/cart/list")
 	public String cart(@CookieValue(name = "basket_id", required = false) String cookie, HttpSession session, Model model) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		List<Cart> list = null; 
+		List<Cart> list = null;
+		Map<String, Integer> deliveryFee = null;
 		
 		if(loginUser == null) {
 			// 비회원
+			System.out.println("cookie: " + cookie);
 			if(cookie != null) {
-//				UUID.randomUUID().toString();
-//				list = cartService.getCartForNonmember(cookie);
+				list = cartService.getCartForNonmember(cookie);
 			}
 		} else {
 			// 회원
@@ -58,7 +61,9 @@ public class CartController {
 			
 		}
 		
-		Map<String, Integer> deliveryFee = calculateDeliveryFee(list);
+		if (list != null) {
+			 deliveryFee = calculateDeliveryFee(list);
+		}
 		
 		model.addAttribute("list", list);
 		model.addAttribute("deliveryFee", deliveryFee);
@@ -132,7 +137,7 @@ public class CartController {
 	// 장바구니 추가
 	@PostMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpServletRequest request, HttpSession session) {
+	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		// product.id, quantity 넘어옴
 		
 		int res = 0;
@@ -141,24 +146,26 @@ public class CartController {
 		loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
 		if(loginUser == null) {
-			Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("basket_id")).findFirst();
-			cookie.orElseGet(() -> new Cookie("basket_id", UUID.randomUUID().toString()));
-			String basketID = cookie.get().getValue();
+			Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("basket_id")).findAny();
+			Cookie c = cookie.orElseGet(() -> new Cookie("basket_id", UUID.randomUUID().toString()));
+			c.setMaxAge(7*24*60*60);
+			c.setPath("/mall");
 			
-			// basket_id에 관한 메서드들 만들어야 함
+			String basketID = c.getValue();
+			log.info("baketId: " + basketID);
+			
+			cart.setBasketId(basketID);
 			cartService.addCartItem(cart);
+			
+			response.addCookie(c);
 		} else {
-		
 			try {
 				cart.setMember(new Member(loginUser.getId()));
-				//log.info(loginUser.getId().toString());
-				//log.info(cart.toString());
 				res = cartService.addCartItem(cart);
 			} catch(Exception e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.CONFLICT).build();
 			}
-			//log.info(cart.toString());
 		}
 		
 		return ResponseEntity.ok(res);
@@ -230,7 +237,7 @@ public class CartController {
 		
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-			cart.setMember(new Member(loginUser.getId()));
+//			cart.setMember(new Member(loginUser.getId()));
 			log.debug("modify: id - " + cart.getId() + ", quantity: " + cart.getQuantity());
 			res = cartService.modifyQuantity(cart);
 		} catch(Exception e) {
@@ -249,7 +256,7 @@ public class CartController {
 		
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-			cart.setMember(new Member(loginUser.getId()));
+//			cart.setMember(new Member(loginUser.getId()));
 			res = cartService.deleteCartItem(cart);
 		} catch(Exception e) {
 			e.printStackTrace();

@@ -7,6 +7,7 @@ import daangnmungcat.dto.Cart;
 public interface CartService {
 
 	List<Cart> getCart(String memberId);
+	List<Cart> getCartForNonmember(String basketId);
 	Cart getCartItem(int id);
 	Cart getCartItem(String memberId, int productId);
 	

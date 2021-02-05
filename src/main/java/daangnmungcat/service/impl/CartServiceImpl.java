@@ -33,6 +33,21 @@ public class CartServiceImpl implements CartService {
 		
 		return list;
 	}
+	
+	
+	@Override
+	public List<Cart> getCartForNonmember(String basketId) {
+		List<Cart> list = cartMapper.selectCartByBasketId(basketId);
+		
+		try {
+			list.forEach(cart -> log.info(cart.toString()));
+		} catch(IndexOutOfBoundsException e) {
+			log.info("cart list is empty!");
+		}
+		
+		return list;
+	}
+	
 
 	// 본인 식별 가능: id / member.id & product.id
 	// 해당 회원의 장바구니 상품 하나 조회
