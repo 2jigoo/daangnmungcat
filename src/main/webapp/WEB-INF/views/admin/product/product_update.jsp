@@ -21,15 +21,20 @@ $(function(){
 	$("input[name='saleYn']:radio[value='${pdt.saleYn}']").prop('checked', true)
 	
 	$("select[name='deliveryKind']").change(function(){
+		var idx = $("select[name='deliveryKind'] option").index($("select[name='deliveryKind'] option:selected"))
+		
+		if (idx == 0){
+			$("input[name='deliveryPrice']").val("${deliveryList.get(0).price}")
+		} else if (idx == 1){
+			$("input[name='deliveryPrice']").val("${deliveryList.get(1).price}")
+		} else {
+			$("input[name='deliveryPrice']").val("${deliveryList.get(2).price}")
+		}
+		
 		if ($(this).val() == "무료배송"){
 			$("input[name='deliveryCondition']").val("0").attr("disabled", true);
-			$("input[name='deliveryPrice']").val("0").attr("disabled", true);
-		} else if ($(this).val() == "유료배송"){
-			$("input[name='deliveryCondition']").val("0").attr("disabled", true);
-			$("input[name='deliveryPrice']").val("").attr("disabled", false);
 		} else {
 			$("input[name='deliveryCondition']").val("").attr("disabled", false);
-			$("input[name='deliveryPrice']").val("").attr("disabled", false);
 		}
 	})
 	
@@ -172,7 +177,7 @@ $(function(){
 					<li>
 						<p>배송비</p>
 						<div>
-							<input type="text" name="deliveryPrice" value="${pdt.deliveryPrice}">
+							<input type="text" name="deliveryPrice" value="${pdt.deliveryPrice}" disabled="disabled">
 						</div>
 					</li>
 					<li>

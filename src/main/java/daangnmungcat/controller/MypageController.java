@@ -1,5 +1,8 @@
 package daangnmungcat.controller;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,10 +30,12 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
 import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.OrderService;
+import oracle.net.aso.m;
 
 @RestController
 @Controller
@@ -52,6 +57,9 @@ public class MypageController {
 	
 	@Autowired
 	private MallPdtService pdtService;
+	
+	@Autowired
+	private OrderMapper mapper;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -161,20 +169,42 @@ public class MypageController {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
-		List<Order> list = orderService.selectOrderById(member.getId());
 		
+		List<Order> list = orderService.selectOrderById(member.getId());
 		for(Order o: list) {
-			List<OrderDetail> odList = orderService.getOrderDetail(o.getId());
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
 			for(OrderDetail od: odList) {
-				od.setMember(member);
 				od.setOrderId(o.getId());
-				od.setPdt(pdtService.getProductById(od.getCart().getProduct().getId()));
+			}
+		}
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("list", list);
+		mv.setViewName("/mypage/order_list");
+		return mv;
+	}
+	
+	@GetMapping("/mypage/order_list/start={start}&end={end}")
+	public ModelAndView searchOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		System.out.println(start +"/"+ end);
+		
+		List<Order> list = orderService.searchByDate(start, end, member);
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
 			}
 		}
 		System.out.println(list);
-		
+	
 		ModelAndView mv = new ModelAndView();
+		
 		mv.addObject("list", list);
 		mv.setViewName("/mypage/order_list");
 		return mv;

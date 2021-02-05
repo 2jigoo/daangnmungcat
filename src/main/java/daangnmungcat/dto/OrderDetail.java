@@ -1,7 +1,5 @@
 package daangnmungcat.dto;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -23,15 +21,10 @@ public class OrderDetail {
 	private int id;
 	private int orderId; 
 	private Member member;
-	private MallProduct pdt; // 상품 정보 
-	private Cart cart; 
+	private MallProduct pdt; 
+	private int quantity;
 	private int totalPrice;
-	
-	public OrderDetail(Cart cart) {
-		this.cart = cart;
-	}
-	
-	
+	private int partcnt;
 }
 
 
