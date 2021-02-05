@@ -12,6 +12,7 @@ public interface CartService {
 	Cart getCartItem(String memberId, int productId);
 	
 	int addCartItem(Cart cart);
+	int moveToMember(String basketId, String memberId);
 	int modifyQuantity(Cart cart);
 	int deleteCartItem(Cart cart);
 }

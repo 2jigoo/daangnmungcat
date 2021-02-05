@@ -150,7 +150,7 @@ public class CartController {
 			Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("basket_id")).findAny();
 			Cookie c = cookie.orElseGet(() -> new Cookie("basket_id", UUID.randomUUID().toString()));
 			c.setMaxAge(7*24*60*60);
-			c.setPath("/mall");
+			c.setPath("/");
 			
 			String basketID = c.getValue();
 			log.info("baketId: " + basketID);

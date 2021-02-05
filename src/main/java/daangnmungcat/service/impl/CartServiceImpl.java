@@ -100,6 +100,12 @@ public class CartServiceImpl implements CartService {
 	
 	
 	@Override
+	public int moveToMember(String basketId, String memberId) {
+		int res = cartMapper.updateCartItemFromBasektIdToMember(basketId, memberId);
+		return res;
+	}
+	
+	@Override
 	public int modifyQuantity(Cart cart) {
 		int res = cartMapper.updateCartItem(cart);
 		return res;

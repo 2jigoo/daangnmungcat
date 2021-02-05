@@ -181,4 +181,14 @@ SELECT * FROM JOONGO_sale;
 SELECT * FROM JOONGO_IMAGE ji;
 
 SELECT * FROM MALL_DELIVERY md ;
-SELECT * FROM MALL_CART mc ;
+
+SELECT * FROM mall_cart;
+
+SELECT
+	CASE
+		WHEN trunc(mc.regdate) + 7 <= trunc(sysdate) THEN '7일 지남'
+		ELSE to_char(regdate, 'MM-DD')
+	END regdate
+FROM MALL_CART mc ;
+
+

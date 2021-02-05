@@ -62,6 +62,14 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="updateCartItemFromBasektIdToMember">
+		UPDATE mall_cart
+		SET
+			member_id = #{memberId},
+			basket_id = NULL
+		WHERE basket_id = #{basketId}
+	</update>
+	
 	<delete id="deleteCartItem" parameterType="Cart">
 		DELETE
 		FROM mall_cart
