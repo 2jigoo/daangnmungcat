@@ -99,7 +99,7 @@ $(function(){
 				<li>
 					<p>상품평점</p>
 					<div>
-						<div class="star_box">
+						<div class="star_box star_box_click">
 							<span class="star star_left"></span>
 							<span class="star star_right"></span>
 							

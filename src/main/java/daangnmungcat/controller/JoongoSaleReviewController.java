@@ -1,5 +1,7 @@
 package daangnmungcat.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleReview;
 import daangnmungcat.service.JoongoSaleReviewService;
 import daangnmungcat.service.JoongoSaleService;
+import daangnmungcat.service.MemberService;
 
 @Controller
 public class JoongoSaleReviewController {
@@ -24,6 +28,23 @@ public class JoongoSaleReviewController {
 	
 	@Autowired
 	private JoongoSaleService saleService;
+	
+	@Autowired
+	private MemberService memberService;
+	
+	@GetMapping("/joongo/review/list")
+	public String listReive(Model model, @RequestParam @Nullable String memId) {
+		if (memId != null) {
+			List<SaleReview> list = service.selectJoongoReviewBySaleMemId(memId);
+			Member saleMember = memberService.selectMemberById(memId);
+			int countMemId = service.countMemId(memId);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("saleMember", saleMember);
+			model.addAttribute("countMemId", countMemId);
+		}
+		return "joongoSale/review_list";
+	}
 	
 	@GetMapping("/joongo/review/write")
 	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId) {

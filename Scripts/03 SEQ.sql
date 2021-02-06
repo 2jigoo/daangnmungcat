@@ -16,6 +16,7 @@ DROP SEQUENCE mall_order_detail_seq;
 DROP SEQUENCE mall_payment_seq;
 DROP SEQUENCE mall_mileage_seq;
 DROP SEQUENCE joongo_review_seq;
+DROP SEQUENCE sale_img_seq;
 
 
 CREATE SEQUENCE dongne1_seq

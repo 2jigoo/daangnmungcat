@@ -1,5 +1,7 @@
 package daangnmungcat.service.impl;
 
+import java.util.List;
+
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,16 @@ public class JoongoSaleReviewServiceImpl implements daangnmungcat.service.Joongo
 	private JoongoSaleReviewMapper mapper;
 
 	@Override
+	public List<SaleReview> selectJoongoReviewByAll() {
+		return mapper.selectJoongoReviewByAll();
+	}
+
+	@Override
+	public List<SaleReview> selectJoongoReviewBySaleMemId(String memId) {
+		return mapper.selectJoongoReviewBySaleMemId(memId);
+	}
+
+	@Override
 	public int insertJoongoSaleReview(SaleReview review) {
 		return mapper.insertJoongoSaleReview(review);
 	}
@@ -24,6 +36,11 @@ public class JoongoSaleReviewServiceImpl implements daangnmungcat.service.Joongo
 	@Override
 	public SaleReview selectJoongoReviewBySaleId(int saleId) {
 		return mapper.selectJoongoReviewBySaleId(saleId);
+	}
+
+	@Override
+	public int countMemId(String memId) {
+		return mapper.countMemId(memId);
 	}
 
 }
