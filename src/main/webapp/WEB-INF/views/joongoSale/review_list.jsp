@@ -5,6 +5,32 @@
 
 <script>
 $(function(){
+	$(".review_delete").click(function(){
+		if (confirm("정말 삭제하시겠습니까?") == true){
+			var deleteReview = {
+		    	id : $(this).data("id"),
+		    }
+			
+			$.ajax({
+	         type: "post",
+	         url : "/joongo/review/delete",
+	         contentType : "application/json; charset=utf-8",
+	         cache : false,
+	         dataType : "json",
+	         data : JSON.stringify(deleteReview),
+	         beforeSend : function(xhr){
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	         },
+	         success:function(){
+	            alert("리뷰가 삭제됐습니다.");
+	            location.reload();
+	         },
+	         error: function(request,status,error){
+	            alert('에러' + request.status+request.responseText+error);
+	         }
+	      })
+		}
+	})
 })
 </script>
 
@@ -59,8 +85,8 @@ $(function(){
 				   <p class="date">${list.regdate }</p>
 				   <c:if test="${loginUser.id == list.buyMember.id }">
 				   <ul>
-				      <li><a href="#">수정</a></li>
-				      <li><a href="#">삭제</a></li>
+				      <li><a href="/joongo/review/update?id=${list.id}">수정</a></li>
+				      <li><a class="review_delete" data-id="${list.id}">삭제</a></li>
 				   </ul>
 				   </c:if>
 				</div>

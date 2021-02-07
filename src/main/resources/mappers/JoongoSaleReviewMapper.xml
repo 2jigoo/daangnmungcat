@@ -27,6 +27,10 @@
 	<select id="selectJoongoReviewBySaleId" resultMap="reviewResult">
 		<include refid="selectSQL" /> WHERE SALE_ID = #{saleId}
 	</select>
+	
+	<select id="selectJoongoReviewById" resultMap="reviewResult">
+		<include refid="selectSQL" /> WHERE ID = #{id}
+	</select>
 
 	<insert id="insertJoongoSaleReview" parameterType="SaleReview">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
@@ -34,6 +38,14 @@
 		</selectKey>
 		INSERT INTO JOONGO_REVIEW(ID, SALE_ID, BUY_MEM_ID, RATING, CONTENT) VALUES(#{id}, #{sale.id}, #{buyMember.id}, #{rating}, #{content})
 	</insert>
+	
+	<update id="updateJoongoSaleReview" parameterType="SaleReview">
+		UPDATE JOONGO_REVIEW SET RATING = #{rating}, CONTENT = #{content} WHERE ID = #{id}
+	</update>
+	
+	<delete id="deleteJoongoSaleReview" parameterType="int">
+		DELETE FROM JOONGO_REVIEW WHERE ID = #{id}
+	</delete>
 	
 	<select id="countMemId" resultType="int">
 		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW WHERE SALE_MEM_ID = #{memId}

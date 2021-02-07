@@ -61,10 +61,39 @@ public class JoongoSaleReviewController {
 	
 	@PostMapping("/joongo/review/write")
 	public ResponseEntity<Object> insertJoongoReview(@RequestBody SaleReview review){
-		System.out.println("review : "+ review);
-		
 		try {
 			return ResponseEntity.ok(service.insertJoongoSaleReview(review));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	@GetMapping("/joongo/review/update")
+	public String updateViewJoongoReview(Model model, @RequestParam @Nullable String id) {
+		if (id != null) {
+			SaleReview review = service.selectJoongoReviewById(Integer.parseInt(id));
+			model.addAttribute("review", review);
+			
+			Sale sale = saleService.getSaleById(review.getSale().getId());
+			model.addAttribute("sale", sale);
+		}
+		
+		return "joongoSale/review_update";
+	}
+	
+	@PostMapping("/joongo/review/update")
+	public ResponseEntity<Object> updateJoongoReview(@RequestBody SaleReview review) {
+		try {
+			return ResponseEntity.ok(service.updateJoongoSaleReview(review));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	@PostMapping("/joongo/review/delete")
+	public ResponseEntity<Object> deleteJoongoReview(@RequestBody SaleReview review) {
+		try {
+			return ResponseEntity.ok(service.deleteJoongoSaleReview(review.getId()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
