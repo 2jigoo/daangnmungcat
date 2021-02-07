@@ -147,12 +147,6 @@ public class OrderServiceImpl implements OrderService{
 		mapper.insertPayment(pay);
 		log.info("insert payment..........................................");
 		
-//		
-//		for(Cart c :cartList) {
-//			cartService.deleteCartItem(c);
-//		}
-		//		log.info("주문한 카트아이템만 카트에서 삭제");
-		
 		
 		int myMileage = mileService.getMileage(loginUser.getId());
 		

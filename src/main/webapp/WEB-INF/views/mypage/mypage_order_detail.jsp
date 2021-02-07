@@ -21,7 +21,7 @@ $(document).ready(function(){
 
 <div class="wrapper">
 <h2 id="subTitle">주문 상세내역</h2>
-<table id="order_list_table">
+	<table id="order_list_table">
 		<colgroup>
 			<col width="200px">
 			<col width="400px">
@@ -63,36 +63,44 @@ $(document).ready(function(){
             			</c:if>
             			<td class="tl" >
 							<div class="order_img_wrapper">
-									<c:if test="${od.pdt.image1 eq null}"><img src="/resources/images/no_image.jpg" class="order_list_img"></c:if>
-									<c:if test="${od.pdt.image1 ne null}"><img src="/resources${od.pdt.image1}" class="order_list_img"></c:if>
-								<span style="margin-left:30px;">${od.pdt.name}</span></div>
+									<c:if test="${od.pdt.image1 eq null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
+									<c:if test="${od.pdt.image1 ne null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources${od.pdt.image1}" class="order_list_img"></a></c:if>
+								<span style="margin-left:30px; line-height:100px"><a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a></span></div>
 							
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
-						<td>${order.state}</td>
+						<td>${od.orderState.label}</td>
 						
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-            					<fmt:formatNumber value="${order.finalPrice}"/></td>
+            					<fmt:formatNumber value="${order.finalPrice}"/>
+            					<br>
+            					<input type="button" value="주문취소">
+            				</td>
+            					
 						</c:if>
 						<c:if test="${od.partcnt == 1}">
             				<td class="final_price">
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-	            		<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<br>
+								<input type="button" value="주문취소">
+            				
             				</td>
+            				
             			</c:if>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 	
-	<div class="order_detail_info">
-		<h4>주문자 정보</h4>
-		<table class="order_detail">
+<div class="order_detail_info_div">
+		<span class="tableTitle">주문자 정보</span>
+		<table class="order_detail_table">
 			<tr>
 				<td>주문자 정보</td>
 				<td>${order.member.name}</td>
@@ -115,8 +123,8 @@ $(document).ready(function(){
 			
 		</table>
 	
-	<h4>배송지 정보</h4>
-		<table  class="order_detail">
+		<span class="tableTitle">배송지 정보</span>
+		<table  class="order_detail_table">
 				<tr>
 					<td>받으시는 분</td>
 					<td>${order.addName }</td>
@@ -138,29 +146,30 @@ $(document).ready(function(){
 				</tr>
 		</table>
 	
-	<h4>결제 정보</h4>
-		<table  class="order_detail">
+		<span class="tableTitle">결제 정보</span>
+		<table  class="order_detail_table">
 			<tr>
 				<td>상품 합계 금액</td>
-				<td>${order.totalPrice}</td>
+				<td><fmt:formatNumber value="${order.totalPrice}"/></td>
 			</tr>
 			<tr>
 				<td>배송비</td>
-				<td>${order.deliveryPrice}</td>
+				<td><fmt:formatNumber value="${order.deliveryPrice}"/></td>
 			</tr>
 			<tr>
 				<td>총 결제 금액</td>
-				<td>${order.finalPrice}</td>
+				<td><fmt:formatNumber value="${order.finalPrice}"/></td>
 			</tr>
 			<tr>
+				<td>마일리지</td>
 				<td>
-					적립된 마일리지 : ${order.plusMileage}<br> 
-					사용한 마일리지 : ${order.usedMileage}
+					적립된 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
+					사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
 				</td>
 			</tr>
 		</table>
+	<input type="button" value="목록으로" onclick='location.href="/mypage/mypage_order_list"' >
 	</div>
-	
 </div>
 
 

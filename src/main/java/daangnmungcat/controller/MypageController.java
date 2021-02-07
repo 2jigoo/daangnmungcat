@@ -2,6 +2,7 @@ package daangnmungcat.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,14 +10,18 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.Response;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.parser.ParseException;
+import org.springframework.asm.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,10 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
+import daangnmungcat.dto.Sale;
+import daangnmungcat.dto.SaleState;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
@@ -169,6 +178,7 @@ public class MypageController {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		
+		
 		List<Order> list = orderService.selectOrderById(member.getId());
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
@@ -178,7 +188,6 @@ public class MypageController {
 			}
 		}
 		
-		System.out.println(list);
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
@@ -186,7 +195,7 @@ public class MypageController {
 		return mv;
 	}
 	
-	@GetMapping("/mypage/mypage_order_list/start={start}&end={end}")
+	@GetMapping("/mypage/mypage_order_list/start={start}/end={end}")
 	public ModelAndView searchOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -211,8 +220,11 @@ public class MypageController {
 	}
 	
 	@GetMapping("/mypage/mypage_order_list/{id}")
-	public ModelAndView getOrderNo(@PathVariable int id) {
-		System.out.println("id:"+ id);
+	public ModelAndView getOrderNo(@PathVariable int id, HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		
 		Order order = orderService.getOrderByNo(id);
 		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
 		order.setDetails(odList);
@@ -220,10 +232,12 @@ public class MypageController {
 			od.setOrderId(order.getId());
 		}
 		ModelAndView mv = new ModelAndView();
+		System.out.println(order);
 		
 		mv.addObject("order", order);
 		mv.setViewName("/mypage/mypage_order_detail");
 		return mv;
 	}
-
+	
+	
 }
