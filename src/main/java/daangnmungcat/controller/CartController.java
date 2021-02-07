@@ -162,12 +162,6 @@ public class CartController {
 			response.addCookie(c);
 		} else {
 			try {
-				Enumeration<String> s = session.getAttributeNames();
-				System.out.println("세션에 어트리뷰트");
-				while(s.hasMoreElements()) {
-					String attr = s.nextElement().toString();
-					System.out.println(attr);
-				}
 				cart.setMember(new Member(loginUser.getId()));
 				res = cartService.addCartItem(cart);
 			} catch(Exception e) {
