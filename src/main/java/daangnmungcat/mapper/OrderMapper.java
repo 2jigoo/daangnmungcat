@@ -33,5 +33,4 @@ public interface OrderMapper {
 	List<OrderDetail> sortingOrderDetail(int orderId);
 	
 	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("member")Member member);
-	List<Order> search(Map<String, Object> map);
 }

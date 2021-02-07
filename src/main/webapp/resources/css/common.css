@@ -526,10 +526,18 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 
 /* mypage - order_list*/
 #order_list_table {width:70%; margin:0 auto; text-align:center; border-top:1px solid black;}
-#order_list_table tr td {border-top:1px solid black; vertical-align:middle}
-#order_list_table th {padding:20px;}
+#order_list_table tr td { border-bottom:1px solid black; vertical-align:middle;}
+#order_list_table th {padding:20px; border-bottom:1px solid black;}
+.order_num {border-right:1px solid black;}
+.final_price {border-left: 1px solid black;}
 .tl {text-align:left;}
-.order_list_img {width:20%; text-align:left; vertical-align:middle }
+.order_list_img {width:25%; text-align:left; vertical-align:middle }
 .order_list_span {cursor:pointer;}
 .order_list_span:hover {text-decoration:underline}
 .order_list_search_div {width:70%; margin:0 auto; text-align:center; padding:30px;}
+.order_img_wrapper {display: inline-block; over-flow: hidden; vertical-align:middle }
+
+/* mypage - order_detail */
+.order_detail {width:70%; margin:0 auto;}
+.order_detail tr td:nth-child(1) {width:20%;}
+.order_detail_info {width:70%; margin:0 auto;}

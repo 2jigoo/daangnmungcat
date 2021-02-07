@@ -161,10 +161,9 @@ public class MypageController {
 		return res;
 	}
 	
-	//주문내역
-
+//주문내역 mv
 	
-	@GetMapping("/mypage/order_list")
+	@GetMapping("/mypage/mypage_order_list")
 	public ModelAndView deleteShipping(HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -179,14 +178,15 @@ public class MypageController {
 			}
 		}
 		
+		System.out.println(list);
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
-		mv.setViewName("/mypage/order_list");
+		mv.setViewName("/mypage/mypage_order_list");
 		return mv;
 	}
 	
-	@GetMapping("/mypage/order_list/start={start}&end={end}")
+	@GetMapping("/mypage/mypage_order_list/start={start}&end={end}")
 	public ModelAndView searchOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
@@ -206,7 +206,23 @@ public class MypageController {
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
-		mv.setViewName("/mypage/order_list");
+		mv.setViewName("/mypage/mypage_order_list");
+		return mv;
+	}
+	
+	@GetMapping("/mypage/mypage_order_list/{id}")
+	public ModelAndView getOrderNo(@PathVariable int id) {
+		System.out.println("id:"+ id);
+		Order order = orderService.getOrderByNo(id);
+		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
+		order.setDetails(odList);
+		for(OrderDetail od: odList) {
+			od.setOrderId(order.getId());
+		}
+		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("order", order);
+		mv.setViewName("/mypage/mypage_order_detail");
 		return mv;
 	}
 

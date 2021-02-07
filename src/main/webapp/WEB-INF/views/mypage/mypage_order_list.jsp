@@ -13,7 +13,7 @@ $(document).ready(function(){
 	    if (rows.length > 1) {
 	        rows.eq(0).prop("rowspan", rows.length);
 	        rows.not(":eq(0)").remove();
-
+	        
 	    } 
 	});
 	 
@@ -96,13 +96,14 @@ $(document).ready(function(){
 		if(start_val == "" || end_val == ""){
 			alert('날짜를 선택하세요.')
 		}else{
-			location.href='/mypage/order_list/start='+start_val + '&end=' + end_val;
+			
+			location.href='/mypage/mypage_order_list/start='+start_val + '&end=' + end_val;
 			<% 
 				String start = request.getParameter("start");
 				String end = request.getParameter("end");
 			%>
 			var x = new Date()
-			console.log(<%=start%>);
+			
 			<%-- $("#start_date").datepicker("setDate", <%=start%>);
 			$("#end_date").datepicker("setDate", <%=end%>); --%>
 		}
@@ -136,6 +137,7 @@ $(document).ready(function(){
 			<col width="100px">
 			<col width="200px">
 			<col width="150px">
+			<col width="150px">
 		</colgroup>
 		<thead>
 			<tr>
@@ -144,39 +146,61 @@ $(document).ready(function(){
 				<th>수량</th>
 				<th>상품금액</th>
 				<th>주문상태</th>
+				<th>총 결제금액</th>
 			</tr>
 		</thead>
 		<tbody>
+		<c:if test="${empty list}">
+			<tr>
+				<td colspan="6" style="padding:50px">주문 내역이 없습니다.</td>
+			</tr>
+		</c:if>
 			<c:forEach var="order" items="${list}" varStatus="status">
 				<c:forEach var="od" items="${order.details}" varStatus="odstatus">
             		<tr>
             			<c:if test="${od.partcnt > 1}">
-            				<td class="gubun">
-            					<span class="order_list_span"  onclick="location.href='/mypage/order_list/${order.id}'">	
-	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-mm-dd'T'HH:mm" var="parseDate" type="both" />
+            				<td class="gubun order_num">
+            					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
+	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id}
             					</span>
             				</td>
             			</c:if>
             			<c:if test="${od.partcnt == 1}">
-            				<td>
-            					<span class="order_list_span"  onclick="location.href='/mypage/order_list/${order.id}'">	
-	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-mm-dd'T'HH:mm" var="parseDate" type="both" />
+            				<td class="order_num">
+            					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
+	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id}
 	            				</span>
             				</td>
             			</c:if>
 							
-						<td class="tl">
-							<c:if test="${od.pdt.image1 eq null}"><img src="/resources/images/no_image.jpg" class="order_list_img"></c:if>
-							<c:if test="${od.pdt.image1 ne null}"><img src="/resources${od.pdt.image1}" class="order_list_img"></c:if>
-							<span style="margin-left:20px;">${od.pdt.name}</span>
+						<td class="tl" >
+							<div class="order_img_wrapper">
+									<c:if test="${od.pdt.image1 eq null}"><img src="/resources/images/no_image.jpg" class="order_list_img"></c:if>
+									<c:if test="${od.pdt.image1 ne null}"><img src="/resources${od.pdt.image1}" class="order_list_img"></c:if>
+								<span style="margin-left:30px;">${od.pdt.name}</span></div>
+							
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
 						<td>${order.state}</td>
+						
+						<c:if test="${od.partcnt > 1}">
+            				<td class="gubun final_price">
+            					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
+            					<fmt:formatNumber value="${order.finalPrice}"/></td>
+						</c:if>
+						<c:if test="${od.partcnt == 1}">
+            				<td class="final_price">
+	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
+	            		<fmt:formatNumber value="${order.finalPrice}"/>
+            				</td>
+            			</c:if>
 						
 					</tr>
 				</c:forEach>

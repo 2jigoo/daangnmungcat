@@ -246,11 +246,7 @@ public class OrderServiceImpl implements OrderService{
 		return mapper.searchByDate(start, end, member);
 	}
 
-	@Override
-	public List<Order> search(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return mapper.search(map);
-	}
+	
 
 
 }

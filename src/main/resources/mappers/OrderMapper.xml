@@ -102,7 +102,9 @@
 	</insert>
 	
 	<select id="selectOrderById" resultMap="orderRes">
-		SELECT * FROM mall_order where mem_id = #{member.id} ORDER BY id desc
+		SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+		and mem_id = #{member.id} ORDER BY id desc
 	</select>
 	
 	<select id="getOrderByNo" resultMap="orderRes">
@@ -143,6 +145,8 @@
 								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
 		and mem_id = #{member.id} order by id desc
 	</select>
+	
+	
 	
 	
 </mapper>
