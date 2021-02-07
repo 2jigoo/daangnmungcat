@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.MallProduct;
@@ -33,6 +34,21 @@ public class CartServiceImpl implements CartService {
 		
 		return list;
 	}
+	
+	
+	@Override
+	public List<Cart> getCartForNonmember(String basketId) {
+		List<Cart> list = cartMapper.selectCartByBasketId(basketId);
+		
+		try {
+			list.forEach(cart -> log.info(cart.toString()));
+		} catch(IndexOutOfBoundsException e) {
+			log.info("cart list is empty!");
+		}
+		
+		return list;
+	}
+	
 
 	// 본인 식별 가능: id / member.id & product.id
 	// 해당 회원의 장바구니 상품 하나 조회
@@ -85,6 +101,12 @@ public class CartServiceImpl implements CartService {
 	
 	
 	@Override
+	public int moveToMember(String basketId, String memberId) {
+		int res = cartMapper.updateCartItemFromBasektIdToMember(basketId, memberId);
+		return res;
+	}
+	
+	@Override
 	public int modifyQuantity(Cart cart) {
 		int res = cartMapper.updateCartItem(cart);
 		return res;
@@ -97,4 +119,10 @@ public class CartServiceImpl implements CartService {
 		return res;
 	}
 
+	@Override
+	@Transactional
+	public int deleteAfterOrdered(String memberId, List<MallProduct> pdtList) {
+		int res = cartMapper.deleteCartItems(memberId, pdtList);
+		return res;
+	}
 }

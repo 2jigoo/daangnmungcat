@@ -344,6 +344,32 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .joongo_review .btn {float:right; font-size:1em; line-height:35px; padding:0 10px; color:#fff; background:#ff7e15; border:0; cursor:pointer; margin-left:5px; border-radius:5px; margin-top:10px; font-family:'S-CoreDream'}
 .joongo_review .btn.history_back_btn {background:#111}
 
+.member_info {width:100%; overflow:hidden; margin-bottom:50px;}
+.member_info .img_box {float:left; width:80px; height:80px; border-radius:50%; overflow:hidden; margin-right:30px;}
+.member_info .txt_box {float:left; width:calc(100% - 110px); margin-top:10px;}
+.member_info .txt_box .name {font-size:1.2em; color:#111;}
+.member_info .txt_box .name span {font-size:0.6em; color:#999; margin-left:10px;}
+.member_info .txt_box .count {font-size:0.83em; margin-top:20px;}
+
+.joongo_review_list > li {padding:15px 0; border-bottom:1px solid #eee;}
+.joongo_review_list > li.no_board {text-align:center; padding:50px 0;}
+.joongo_review_list .user {width:100%; overflow:hidden; margin-bottom:10px;}
+.joongo_review_list .user .img {width:35px; height:35px; background:#ddd; border-radius:50%; float:left; overflow:hidden;}
+.joongo_review_list .user .img img {width:100%; height:100%;}
+.joongo_review_list .user .name {float:left; font-size:1em; line-height:35px; margin-left:15px;}
+.joongo_review_list .user .name span {font-size:0.8em; margin-left:10px; color:#666;}
+.joongo_review_list .tag {display:inline; font-weight:600; color:#000;}
+.joongo_review_list .star_box {display:block; overflow:hidden;}
+.joongo_review_list .star_box .star {float:left; display:block; width:8.5px; height:17px; background-image:url(/resources/images/ico_star.png); background-repeat:no-repeat;}
+.joongo_review_list .star_box .star.star_left {background-position:left center;}
+.joongo_review_list .star_box .star.star_right {background-position:right center;}
+.joongo_review_list .star_box .star.on {background-image:url(/resources/images/ico_star_on.png)}
+.joongo_review_list .content {width:100%; font-size:0.95em; line-height:1.7em; font-family:'S-CoreDream'; display:inline; white-space:break-spaces;}
+.joongo_review_list .info {font-size:0.8em; color:#666; margin-top:10px;}
+.joongo_review_list .info .date {display:inline-block;}
+.joongo_review_list .info ul {display:inline-block;}
+.joongo_review_list .info ul li {display:inline-block; margin-left:10px; cursor:pointer;}
+
 @media screen and (max-width:767px){
 	.joongo_review ul li {margin-top:2%}
 	.joongo_review ul li > p, .joongo_review ul li > div {display:block; width:100% !important;}

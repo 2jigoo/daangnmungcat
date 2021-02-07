@@ -173,6 +173,11 @@ function deleteCartItem(cart_id) {
 						</tr>
 					</thead>
 					<tbody>
+						<c:if test="${list eq null }">
+							<tr>
+								<td colspan="6">장바구니가 비었습니다.</td>
+							</tr>
+						</c:if>
 						<c:forEach var="cart" items="${list }">
 							<tr>
 								<td><input type="checkbox" class="ckbox" name="id" value="${cart.id }"></td>

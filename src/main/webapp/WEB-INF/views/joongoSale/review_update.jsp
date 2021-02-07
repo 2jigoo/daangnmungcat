@@ -2,27 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
 
-<c:if test="${loginUser.id ne sale.buyMember.id}">
-<script>
-	$(function(){
-		alert("구매한 제품만 리뷰작성이 가능합니다.")
-		window.location = "/";
-	})
-</script>
-</c:if>
-
-<c:if test="${not empty review}">
-<script>
-	$(function(){
-		alert("이미 제품 리뷰를 등록했습니다.")
-		window.location = "/";
-	})
-</script>
-</c:if>
 
 <script>
 $(function(){
-	$(".joongo_review #insert").click(function(){
+	$(".joongo_review #update").click(function(){
 		var star_num = ($(".star_box .star.on:last").index() + 1) * 0.5;
 		
 		if (star_num == 0){
@@ -35,6 +18,7 @@ $(function(){
 		}
 		
 		var saleReview = {
+			id : $("input[name='id']").val(),
 			sale : {
 				id : $("input[name='sale']").val(),
 			},
@@ -49,7 +33,7 @@ $(function(){
 		
 		$.ajax({
          type: "post",
-         url : "/joongo/review/write",
+         url : "/joongo/review/update",
          contentType : "application/json; charset=utf-8",
          cache : false,
          dataType : "json",
@@ -58,8 +42,8 @@ $(function(){
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
          },
          success:function(){
-            alert("리뷰가 등록됐습니다")
-            window.location = "/";
+            alert("리뷰가 수정됐습니다.")
+            window.history.back();
          },
          error: function(request,status,error){
             alert('에러' + request.status+request.responseText+error);
@@ -75,6 +59,7 @@ $(function(){
 	<h2 id="subTitle">중고 리뷰 글쓰기</h2>
 	<div id="pageCont" class="s-inner">
 		<div class="joongo_review">
+			<input type="hidden" name="id" value="${review.id}">
 			<input type="hidden" name="sale" value="${sale.id}">
 			<input type="hidden" name="buyMember" value="${sale.buyMember.id}">
 			<ul>
@@ -99,7 +84,7 @@ $(function(){
 				<li>
 					<p>상품평점</p>
 					<div>
-						<div class="star_box star_box_click">
+						<div class="star_box star_box_click star_box_data" data-star="${review.rating}">
 							<span class="star star_left"></span>
 							<span class="star star_right"></span>
 							
@@ -120,11 +105,11 @@ $(function(){
 				</li>
 				<li>
 					<p>내용</p>
-					<div><textarea name="content"></textarea></div>
+					<div><textarea name="content">${review.content}</textarea></div>
 				</li>
 			</ul>
 			<a href="#" class="btn history_back_btn">목록</a>
-			<input type="submit" id="insert" class="btn" value="등록">
+			<input type="submit" id="update" class="btn" value="수정">
 		</div>
 	</div>
 </div>

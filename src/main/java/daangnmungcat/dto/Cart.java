@@ -24,6 +24,7 @@ public class Cart {
 
 	private int id;
 	private Member member;
+	private String basketId;
 	private MallProduct product;
 	private int quantity;
 	
@@ -39,6 +40,7 @@ public class Cart {
 		this.member = member;
 		this.product = product;
 	}
+	
 	public Cart(int id, Member member, MallProduct product, int quantity) {
 		this.id = id;
 		this.member = member;
@@ -47,11 +49,26 @@ public class Cart {
 	}
 	
 	public Cart(Member member, MallProduct product, int quantity) {
-		super();
 		this.member = member;
 		this.product = product;
 		this.quantity = quantity;
 	}
+	
+	
+	/* 비회원용 */
+	public Cart(String basketId, MallProduct product) {
+		this.basketId = basketId;
+		this.product = product;
+	}
+
+	
+	public Cart(String basketId, MallProduct product, int quantity) {
+		this.basketId = basketId;
+		this.product = product;
+		this.quantity = quantity;
+	}
+	
+	
 	
 	/* 비지니스 로직 */
 	public int getAmount() {

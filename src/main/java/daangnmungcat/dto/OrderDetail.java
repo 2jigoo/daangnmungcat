@@ -25,6 +25,8 @@ public class OrderDetail {
 	private int quantity;
 	private int totalPrice;
 	private int partcnt;
+	private OrderState orderState;
+	
 }
 
 

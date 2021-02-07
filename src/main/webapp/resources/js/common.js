@@ -68,10 +68,17 @@ $(document).ready(function(){
         $(".product_detail .detail_info .txt_box .totalPrice p:last span").text(totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
     })
     
-    $(".star_box .star").click(function(){
-		$(".star_box .star").removeClass("on")
+    $(".star_box_click .star").click(function(){
+		$(".star_box_click .star").removeClass("on")
 		for (var i = 0; i <= $(this).index(); i++){
-			$(".star_box .star:eq("+ i +")").addClass("on")
+			$(".star_box_click .star:eq("+ i +")").addClass("on")
+		}
+	})
+	
+	$(".star_box_data").each(function(){
+		var rating = $(this).data("star");
+		for (var i = 0; i < rating / 0.5; i++){
+			$(this).children(".star:eq("+ i +")").addClass("on");
 		}
 	})
 })

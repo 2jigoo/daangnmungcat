@@ -2,6 +2,8 @@ package daangnmungcat.mapper;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
@@ -35,8 +37,15 @@ public class JoongoSaleReviewMapperTest {
 	@Test
 	public void testSelectJoongoReviewBySaleId() {
 		System.out.println("중고 상품 아이디 검색");
-		SaleReview review = mapper.selectJoongoReviewBySaleId(2);
+		SaleReview review = mapper.selectJoongoReviewBySaleId(5);
 		System.out.println(review);
+	}
+	
+	@Test
+	public void testSelectJoongoReviewByAll() {
+		System.out.println("중고 리뷰 리스트");
+		List<SaleReview> list = mapper.selectJoongoReviewByAll();
+		list.forEach(System.out::println);
 	}
 
 	/*@Test

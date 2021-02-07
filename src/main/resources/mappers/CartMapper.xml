@@ -30,6 +30,12 @@
 		ORDER BY REGDATE DESC
 	</select>
 	
+	<select id="selectCartByBasketId" resultMap="cartRes">
+		<include refid="selectSimpleSQL" />
+		WHERE basket_id = #{basketId}
+		ORDER BY REGDATE DESC
+	</select>
+	
 	<select id="selectCartItem" resultMap="cartRes">
 		<include refid="selectSimpleSQL" />
 		<choose>
@@ -45,8 +51,8 @@
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT mall_cart_seq.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO MALL_CART(id, member_id, product_id, quantity, regdate)
-		VALUES(#{id}, #{member.id}, #{product.id}, #{quantity}, sysdate)
+		INSERT INTO MALL_CART(id, member_id, basket_id, product_id, quantity, regdate)
+		VALUES(#{id}, #{member.id}, #{basketId}, #{product.id}, #{quantity}, sysdate)
 	</insert>
 	
 	<update id="updateCartItem" parameterType="Cart">
@@ -56,9 +62,27 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="updateCartItemFromBasektIdToMember">
+		UPDATE mall_cart
+		SET
+			member_id = #{memberId},
+			basket_id = NULL
+		WHERE basket_id = #{basketId}
+	</update>
+	
 	<delete id="deleteCartItem" parameterType="Cart">
 		DELETE
 		FROM mall_cart
-		WHERE id = #{id}
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteCartItems">
+		DELETE
+		FROM mall_cart
+		WHERE member_id = #{memberId}
+			AND product_id IN
+			<foreach item="pdt" index="index" collection="pdtList" open="(" separator="," close=")">
+				#{pdt.id}
+			</foreach>
 	</delete>
 </mapper>

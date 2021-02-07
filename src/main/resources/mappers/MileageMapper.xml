@@ -30,7 +30,7 @@
 	<!-- member select할 때 조회해옴 -->
 	
 	<select id="getMileage" parameterType="string" resultType="int">
-		SELECT sum(mileage) as mileage FROM MALL_MILEAGE WHERE mem_id = #{id}
+		SELECT NVL(sum(mileage), 0) as mileage FROM MALL_MILEAGE WHERE mem_id = #{id}
 	</select>
 
 	

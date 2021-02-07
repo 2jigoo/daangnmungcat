@@ -3,20 +3,33 @@
 <mapper namespace="daangnmungcat.mapper.JoongoSaleReviewMapper">
 	
 	<sql id="selectSQL">
-		SELECT ID, SALE_ID, BUY_MEM_ID, RATING, CONTENT, REGDATE FROM JOONGO_REVIEW
+		SELECT * FROM SALE_REVIEW_VIEW
 	</sql>
 	
 	<resultMap type="SaleReview" id="reviewResult">
 		<id column="id" property="id"/>
-		<result column="sale_id" property="sale.id"/>
-		<result column="buy_mem_id" property="buyMember.id"/>
 		<result column="rating" property="rating"/>
 		<result column="content" property="content"/>
 		<result column="regdate" property="regdate"/>
+		
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" fetchType="lazy" />
+		<association property="buyMember" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
+	
+	<select id="selectJoongoReviewByAll" resultMap="reviewResult">
+		<include refid="selectSQL" />
+	</select>
+	
+	<select id="selectJoongoReviewBySaleMemId" resultMap="reviewResult">
+		<include refid="selectSQL" /> WHERE SALE_MEM_ID = #{memId}
+	</select>
 	
 	<select id="selectJoongoReviewBySaleId" resultMap="reviewResult">
 		<include refid="selectSQL" /> WHERE SALE_ID = #{saleId}
+	</select>
+	
+	<select id="selectJoongoReviewById" resultMap="reviewResult">
+		<include refid="selectSQL" /> WHERE ID = #{id}
 	</select>
 
 	<insert id="insertJoongoSaleReview" parameterType="SaleReview">
@@ -25,4 +38,16 @@
 		</selectKey>
 		INSERT INTO JOONGO_REVIEW(ID, SALE_ID, BUY_MEM_ID, RATING, CONTENT) VALUES(#{id}, #{sale.id}, #{buyMember.id}, #{rating}, #{content})
 	</insert>
+	
+	<update id="updateJoongoSaleReview" parameterType="SaleReview">
+		UPDATE JOONGO_REVIEW SET RATING = #{rating}, CONTENT = #{content} WHERE ID = #{id}
+	</update>
+	
+	<delete id="deleteJoongoSaleReview" parameterType="int">
+		DELETE FROM JOONGO_REVIEW WHERE ID = #{id}
+	</delete>
+	
+	<select id="countMemId" resultType="int">
+		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW WHERE SALE_MEM_ID = #{memId}
+	</select>
 </mapper>

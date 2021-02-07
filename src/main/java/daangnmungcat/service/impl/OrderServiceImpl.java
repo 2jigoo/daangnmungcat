@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.KakaoPayApprovalVO;
+import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
@@ -89,8 +91,8 @@ public class OrderServiceImpl implements OrderService{
 		//주문할 리스트 -> detail에 추가
 		List<OrderDetail> detailList = new ArrayList<OrderDetail>();
 		
-		OrderDetail od = new OrderDetail();
 		for(Cart c: cartList) {
+			OrderDetail od = new OrderDetail();
 			od.setOrderId(nextOrderNo);
 			od.setPdt(c.getProduct());
 			od.setMember(loginUser);
@@ -188,6 +190,12 @@ public class OrderServiceImpl implements OrderService{
 		session.setAttribute("delivery", deli);
 		
 		log.info("..........end..........");
+		
+		// 주문완료된 상품 카트에서 삭제
+		List<MallProduct> pdtList = detailList.stream().map(OrderDetail::getPdt).collect(Collectors.toList());
+		System.out.println("카트에서 삭제할 목록");
+		pdtList.forEach(System.out::println);
+		cartService.deleteAfterOrdered(loginUser.getId(), pdtList);
 	}
 	
 	@Override
