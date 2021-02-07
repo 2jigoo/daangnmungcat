@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +20,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@JsonInclude(Include.NON_DEFAULT)
 public class Order {
 	private int id; 
 	private Member member;
@@ -40,4 +44,8 @@ public class Order {
 	private LocalDateTime payDate;
 	private String state;
 	
+	
+	public Order(int id) {
+		this.id = id;
+	}
 }

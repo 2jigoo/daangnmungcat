@@ -122,7 +122,7 @@ INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mile
 SELECT * FROM MALL_PAYMENT;
 
 SELECT * FROM mall_order ORDER BY id;
-SELECT * FROM mall_order_Detail WHERE ORDER_ID = 13;
+SELECT * FROM mall_order_Detail ORDER BY id;
 SELECT * FROM MALL_MILEAGe ORDER BY id;
 SELECT sum(mileage) FROM MALL_MILEAGE WHERE mem_id = 'test';
 
@@ -131,12 +131,21 @@ SELECT * FROM MALL_MILEAGE WHERE od_id = 7;
 UPDATE MALL_MILEAGE SET MILEAGE = MILEAGE - 30000 * 0.01 
 WHERE CONTENT = '상품 구매 적립' AND OD_ID = 7;
 
+UPDATE mall_order SET STATE = '결제완료';
 
-SELECT * FROM mall_order where mem_id = 'test';
+SELECT * FROM mall_order where mem_id = 'test' ORDER BY id desc;
 
-CREATE OR REPLACE VIEW detail_view AS 
-SELECT od.ID, od.ORDER_ID, od.MEM_ID, od.PDT_ID, p.NAME AS pname, od.QUANTITY, od.PRICE, od.TOTAL_PRICE FROM MALL_ORDER_DETAIL od
-LEFT OUTER JOIN mall_order o ON o.id = od.ORDER_ID
-LEFT OUTER JOIN mall_pdt p ON p.id = od.PDT_ID ORDER BY od.ORDER_ID;
+SELECT od.ID AS od_id, od.ORDER_ID AS od_oid , od.MEM_ID AS mem_id, od.PDT_ID AS PDT_ID , p.NAME AS pname, od.QUANTITY AS od_qtt, od.PRICE AS price, od.TOTAL_PRICE AS TOTAL_PRICE FROM MALL_ORDER_DETAIL od
+LEFT OUTER JOIN mall_pdt p ON p.id = od.PDT_ID WHERE od.MEM_ID = 'test' ORDER BY od_id;
 
-SELECT * FROM detail_view WHERE order_id = 4;
+SELECT od_id, od_oid, mem_id, PDT_ID, pname, od_qtt, price, TOTAL_PRICE FROM detail_view;
+
+SELECT * FROM MALL_ORDER_DETAIL;
+--sort
+SELECT ORDER_ID ,COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT FROM mall_order_detail WHERE MEM_ID = 'test' ORDER BY id desc;
+
+ALTER TABLE MALL_ORDER_DETAIL ADD(partcnt NUMBER(1));
+ALTER TABLE mall_order_detail DROP COLUMN partcnt;
+
+SELECT * FROM mall_order WHERE regdate BETWEEN to_date('2021-02-04', 'yyyy-MM-dd') AND TO_date('2021-02-05', 'yyyy-MM-dd')+1 AND MEM_ID = 'test';
+SELECT sysdate -  FROM dual;

@@ -54,4 +54,36 @@
 			ORDER BY A.RNUM	
 	</select>
 	
+	
+	<select id="selectMileageBySearch" parameterType="map" resultMap="mileRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE FROM MALL_MILEAGE
+		<where>
+			<if test="mileage.content !=null">and content like '%'||#{mileage.content}||'%'</if>
+			<if test="mileage.member !=null">and mem_id like '%'||#{mileage.member.id}||'%'</if>
+		</where>)b)a
+		WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		order by a.rnum		
+	</select>
+	
+	<select id="selectMileageInfoById" parameterType="int" resultMap="mileRes">
+		<include refid="selectSql"></include>
+		where id = #{id}
+	</select>
+	
+	<update id="updateMileageById" parameterType="Mileage">
+		update mall_mileage set <if test="order.id != null"> od_id =#{order.id}, </if> mem_id= #{member.id}, mileage = #{mileage} , content = #{content} where id = #{id}
+	</update>
+	
+	<delete id="deleteMileage" parameterType="int">
+		DELETE FROM MALL_MILEAGE WHERE id = #{id}
+	</delete>
+	
+	<insert id="insertEventMilege" parameterType="Mileage">
+		INSERT INTO MALL_MILEAGE(id, mem_id, mileage, content)
+		SELECT mall_mileage_seq.nextval, id, #{mileage}, #{content}
+		FROM MEMBER
+	</insert>
+	
 </mapper>

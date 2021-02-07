@@ -16,6 +16,7 @@ DROP SEQUENCE mall_order_detail_seq;
 DROP SEQUENCE mall_payment_seq;
 DROP SEQUENCE mall_mileage_seq;
 DROP SEQUENCE notice_seq;
+DROP SEQUENCE joongo_review_seq;
 
 
 CREATE SEQUENCE dongne1_seq
@@ -112,6 +113,11 @@ INCREMENT BY 1
 MINVALUE 1;
 
 CREATE SEQUENCE notice_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE joongo_review_seq
 START WITH 1
 INCREMENT BY 1
 MINVALUE 1;

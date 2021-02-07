@@ -3,6 +3,47 @@
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
 $(function(){
+	var contextPath = "<%=request.getContextPath()%>";
+	
+	$("#submitBtn").click(function(){
+		if ($("select[name='search']").val() == ""){
+			alert("검색 기준을 선택해주세요.")
+			return false;
+		} else {
+			if ($("select[name='search']").val() == "content"){
+			window.location = "/admin/mileage/list?"+$("select[name='search']").val()+"="+$("input[name='query']").val()+"";
+		}else if($("select[name='search']").val() == "member"){
+			window.location = "/admin/mileage/list?"+$("select[name='search']").val()+"="+$("input[name='query']").val()+"";		
+		}else {
+			window.location = "/admin/mileage/list?"+$("select[name=search]").val()+"="+$("input[name='query']").val()+"";
+		}
+		}
+	})
+	
+	$("select[name='search']").change(function(){
+		if($(this).val() == "member"){
+			$(".sch_txt").hide()
+			$(".sch_select").show()
+			$(".sch_select2").hide()
+		} else if($(this).val() == "content"){
+			$(".sch_txt").hide()
+			$(".sch_select").hide()
+			$(".sch_select2").show()
+		} else {
+			$(".sch_txt").show()
+			$(".sch_select").hide()
+			$(".sch_select2").hide()
+		}
+	})
+	
+	$("#mileDelBtn").click(function(){
+		if (confirm("정말 삭제하시겠습니까??") == true){
+		} else{
+		    return false;
+		}
+	})
+	
+	
 	
 });
 </script>
@@ -12,25 +53,21 @@ $(function(){
 		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
 			<div class="mt-2 float-left">마일리지 리스트</div>
 			<button id="addNew" class="btn btn-success btn-sm" onclick="location.href='/admin/mileage/write' " style="float: right;">마일리지 등록</button>
-			<!-- <button id="deselectAll" class="btn btn-outline-secondary btn-sm" style="float: right;  margin-right: 10px;">선택해제</button>
-			<button id="selectAll" class="btn btn-secondary btn-sm" style="float: right;  margin-right: 10px;">전체선택</button>
-           	<button id="deleteSelected"class="btn btn-danger btn-sm" style="float: right; margin-right: 10px;">예약 취소</button> -->
 		</h6>
 	</div>
 	<!-- card-body -->
 	<div class="card-body">
 		<div class="col-sm-12 col-md-6 p-0">
 			<div>
-				<select class="custom-select custom-select-sm" name="where" style="width: 80px;">
+				<select class="custom-select custom-select-sm" name="search" style="width: 80px;">
 					<option value="">기준</option>
-					<option value="name">상품명</option>
-					<option value="category">카테고리</option>
-					<option value="saleYn">판매상태</option>
-				</select>
+					<option value="content">적립 내용</option>
+					<option value="member">회원 아이디</option>
+					</select>
 				<label>
 					<input type="search" class="form-control form-control-sm" name="query">
 				</label>
-				<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
+				<input type="submit" class="btn btn-primary btn-sm" value="검색" id="submitBtn"></input>
 			</div>
 		</div>
 	
@@ -66,7 +103,7 @@ $(function(){
 					<td>${list.regDate}</td>
 					<td>
 						<a href="<%=request.getContextPath() %>/admin/mileage/update?id=${list.id}">수정</a>
-						<a href="<%=request.getContextPath() %>/admin/mileage/delete?id=${list.id}">삭제</a>
+						<a href="<%=request.getContextPath() %>/admin/mileage/delete?id=${list.id}" id="mileDelBtn">삭제</a>
 					</td>
 				</tr>
 				</c:forEach>

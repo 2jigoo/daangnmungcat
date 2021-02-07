@@ -16,4 +16,12 @@ public interface MileageService {
 	int getMileage(String id);
 
 	int listCount();
+	
+	List<Mileage> selectMileageBySearch(Mileage mileage, Criteria cri);
+
+	Mileage selectMileageById(int id);
+	
+	int updateMileageById(Mileage mileage);
+	
+	int deleteMileage(int id);
 }

@@ -44,4 +44,24 @@ public class MileageServiceImpl implements MileageService {
 		return mapper.selectMileageByAll(cri);
 	}
 
+	@Override
+	public List<Mileage> selectMileageBySearch(Mileage mileage, Criteria cri) {
+		return mapper.selectMileageBySearch(mileage, cri);
+	}
+
+	@Override
+	public Mileage selectMileageById(int id) {
+		return mapper.selectMileageInfoById(id);
+	}
+
+	@Override
+	public int updateMileageById(Mileage mileage) {
+		return mapper.updateMileageById(mileage);
+	}
+
+	@Override
+	public int deleteMileage(int id) {
+		return mapper.deleteMileage(id);
+	}
+
 }
