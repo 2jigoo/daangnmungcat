@@ -73,6 +73,16 @@
 	<delete id="deleteCartItem" parameterType="Cart">
 		DELETE
 		FROM mall_cart
-		WHERE id = #{id}
+		where id = #{id}
+	</delete>
+	
+	<delete id="deleteCartItems">
+		DELETE
+		FROM mall_cart
+		WHERE member_id = #{memberId}
+			AND product_id IN
+			<foreach item="pdt" index="index" collection="pdtList" open="(" separator="," close=")">
+				#{pdt.id}
+			</foreach>
 	</delete>
 </mapper>

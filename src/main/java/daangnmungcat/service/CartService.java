@@ -3,6 +3,7 @@ package daangnmungcat.service;
 import java.util.List;
 
 import daangnmungcat.dto.Cart;
+import daangnmungcat.dto.MallProduct;
 
 public interface CartService {
 
@@ -15,4 +16,6 @@ public interface CartService {
 	int moveToMember(String basketId, String memberId);
 	int modifyQuantity(Cart cart);
 	int deleteCartItem(Cart cart);
+	
+	int deleteAfterOrdered(String memberId, List<MallProduct> pdtList);
 }
