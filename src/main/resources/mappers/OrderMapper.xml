@@ -121,6 +121,7 @@
 		<result property="pdt.price" column="price" />
 		<result property="totalPrice" column="total_price" />
 		<result property="partcnt" column="partcnt"/>
+		<!-- <result column="ORDER_STATE" property="orderState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.OrderState$TypeHandler"/> -->
 		<association property="pdt" column="pdt_id" select="daangnmungcat.mapper.MallPdtMapper.getProductById" fetchType="lazy"></association>
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 	</resultMap>

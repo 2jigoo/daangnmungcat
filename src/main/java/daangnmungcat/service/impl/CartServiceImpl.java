@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.MallProduct;
@@ -118,4 +119,10 @@ public class CartServiceImpl implements CartService {
 		return res;
 	}
 
+	@Override
+	@Transactional
+	public int deleteAfterOrdered(String memberId, List<MallProduct> pdtList) {
+		int res = cartMapper.deleteCartItems(memberId, pdtList);
+		return res;
+	}
 }

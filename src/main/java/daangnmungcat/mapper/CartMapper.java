@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import daangnmungcat.dto.Cart;
+import daangnmungcat.dto.MallProduct;
 
 public interface CartMapper {
 
@@ -16,5 +17,7 @@ public interface CartMapper {
 	int updateCartItemFromBasektIdToMember(@Param("basketId")String basketId, @Param("memberId")String memberId);
 	int updateCartItem(Cart cart);
 	int deleteCartItem(Cart cart);
+	
+	int deleteCartItems(@Param("memberId") String memberId, @Param("pdtList") List<MallProduct> pdtList);
 	
 }
