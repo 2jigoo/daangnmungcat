@@ -99,10 +99,17 @@
 					type: "post",
 					dataType: "json",
 					success: function(data) {
-						console.log(data);
+						if(memberId == "${chat.buyer.id}") {
+							if(confirm("지금 바로 거래 후기를 남기시겠습니까?") == true) {
+								location.href = "/joongo/review/write?saleId=" + data;
+							}
+						} else {
+							alert("거래가 완료되었습니다!");
+						}
 					},
 					error: function(e) {
 						console.log(e);
+						alert(JSON.parse(e.responseText));
 					}
 				});
 			};
@@ -131,7 +138,13 @@
 						</c:choose>
 					</a>
 					<br>
-					<button type="button" id="sold-out-btn" class="chat-btn" style="float: none;">거래완료</button>
+						<c:choose>
+							<c:when test="${chat.sale.saleState.code ne 'SOLD_OUT'}">
+								<button type="button" id="sold-out-btn" class="chat-btn" style="float: none;">거래완료</button>
+							</c:when>
+<%-- 							<c:when test="${ }">
+							</c:when> --%>
+						</c:choose>
 		        </div>
 		        <div class="connecting">
 		          	  연결중...

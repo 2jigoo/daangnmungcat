@@ -18,6 +18,7 @@ import daangnmungcat.dto.FileForm;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleState;
+import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.mapper.FileFormMapper;
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
@@ -220,6 +221,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	 */
 	@Override
 	public int soldOut(Member buyMember, Sale sale) {
+		if(sale.getSaleState() == SaleState.SOLD_OUT) {
+			throw new AlreadySoldOut("이미 거래가 완료된 중고판매글입니다.");
+		}
 		sale.setBuyMember(buyMember);
 		sale.setSaleState(SaleState.SOLD_OUT);
 		int res = joongoListMapper.updateSold(sale);

@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.databind.node.TextNode;
+
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.service.JoongoSaleService;
 import lombok.extern.log4j.Log4j2;
@@ -167,16 +170,17 @@ public class ChatController {
 	
 	
 	@PostMapping("/chat/{id}/sold-out")
-	@ResponseBody
 	public ResponseEntity<Object> soldOut(@PathVariable(value = "id") int id, HttpServletRequest request) {
 		int res = 0;
 		try {
-			AuthInfo loginUser = (AuthInfo) request.getSession().getAttribute("loginUser");
+			String loginUser = ((AuthInfo) request.getSession().getAttribute("loginUser")).getId();
 			Chat chat = chatService.getChatInfo(id);
+			if(!loginUser.equals(chat.getSale().getMember().getId()) && !loginUser.equals(chat.getBuyer().getId())) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body("해당 채팅의 참여자가 아닙니다.");
+			}
 			res = saleService.soldOut(chat.getBuyer(), chat.getSale());
-		} catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		} catch (AlreadySoldOut so) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(so.getMessage());
 		}
 		
 		return ResponseEntity.ok(res);
