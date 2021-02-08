@@ -147,12 +147,6 @@ public class OrderServiceImpl implements OrderService{
 		mapper.insertPayment(pay);
 		log.info("insert payment..........................................");
 		
-//		
-//		for(Cart c :cartList) {
-//			cartService.deleteCartItem(c);
-//		}
-		//		log.info("주문한 카트아이템만 카트에서 삭제");
-		
 		
 		int myMileage = mileService.getMileage(loginUser.getId());
 		
@@ -254,11 +248,7 @@ public class OrderServiceImpl implements OrderService{
 		return mapper.searchByDate(start, end, member);
 	}
 
-	@Override
-	public List<Order> search(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return mapper.search(map);
-	}
+	
 
 
 }

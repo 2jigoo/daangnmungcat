@@ -147,5 +147,24 @@ SELECT ORDER_ID ,COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT FROM mall_order_
 ALTER TABLE MALL_ORDER_DETAIL ADD(partcnt NUMBER(1));
 ALTER TABLE mall_order_detail DROP COLUMN partcnt;
 
-SELECT * FROM mall_order WHERE regdate BETWEEN to_date('2021-02-04', 'yyyy-MM-dd') AND TO_date('2021-02-05', 'yyyy-MM-dd')+1 AND MEM_ID = 'test';
-SELECT sysdate -  FROM dual;
+SELECT * FROM mall_order WHERE regdate BETWEEN to_date('2021-01-07', 'yyyy-MM-dd') AND TO_date('2021-02-07', 'yyyy-MM-dd')+1 AND MEM_ID = 'test' ORDER BY id desc;
+
+SELECT TO_date(sysdate, 'yyyy-mm-dd') FROM dual;
+
+SELECT * FROM mall_order WHERE regdate BETWEEN TO_date(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND TO_date(to_char(sysdate + 1, 'yyyy-MM-dd')) AND mem_id = 'test' ORDER BY id DESC;
+
+SELECT * FROM mall_order WHERE id = 24 ORDER BY id DESC;
+
+
+SELECT TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') PREV_MONTH --이전달 
+     , TO_char(ADD_MONTHS(sysdate, 1),'yyyy-MM-dd') NEXT_MONTH --다음달
+  FROM DUAL;
+  
+SELECT * FROM MALL_ORDER ORDER BY id desc;
+INSERT INTO mall_order VALUES(mall_order_seq.nextval, 'test', '관리자', 'admin@admin.co.kr', '관리자','010-5616-6004', '13536', '주소주소주소주소', '201호', '010-5656-5656', '010-5656-5656', '메모', 56000, 0, 54000, 0, 0, 0, 21, to_date('2021-01-07', 'yyyy-mm-dd'), NULL, NULL, 'y' );
+INSERT INTO MALL_ORDER_DETAIL VALUES(mall_order_detail_seq.nextval, 23, 'test', 4, 1, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL VALUES(mall_order_detail_seq.nextval, 23, 'test', 2, 1, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL VALUES(mall_order_detail_seq.nextval, 23, 'test', 1, 2, 23000, 20000);
+
+
+SELECT * FROM MALL_ORDER_DETAIL;

@@ -16,10 +16,12 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 import daangnmungcat.typehandler.CodeEnum;
 import daangnmungcat.typehandler.CodeEnumTypeHandler;
+import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+
 public enum SaleState implements CodeEnum {
 
 	ON_SALE("판매중"), RESERVED("예약중"), SOLD_OUT("판매 완료");

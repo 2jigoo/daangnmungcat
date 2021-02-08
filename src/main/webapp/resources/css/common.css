@@ -49,6 +49,7 @@ a {text-decoration:none; color:#353535}
 html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 
 .tc {text-align:center;}
+.tl {text-align:left;}
 
 @media all and (max-width:1199px) {
 .inner {width:100%;}
@@ -526,10 +527,18 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 
 /* mypage - order_list*/
 #order_list_table {width:70%; margin:0 auto; text-align:center; border-top:1px solid black;}
-#order_list_table tr td {border-top:1px solid black; vertical-align:middle}
-#order_list_table th {padding:20px;}
-.tl {text-align:left;}
-.order_list_img {width:20%; text-align:left; vertical-align:middle }
+#order_list_table tr td { border-bottom:1px solid black; vertical-align:middle;}
+#order_list_table th {padding:20px; border-bottom:1px solid black;}
+.order_list_img {width:25%; text-align:left; padding:5px; border-left:1px solid black; border-right:1px solid black;}
 .order_list_span {cursor:pointer;}
 .order_list_span:hover {text-decoration:underline}
-.order_list_search_div {width:70%; margin:0 auto; text-align:center; padding:30px;}
+.order_list_search_div {width:70%; margin:0 auto; text-align:center; padding:50px;}
+.order_img_wrapper {display: inline-block; over-flow: hidden; vertical-align:middle }
+
+
+/* mypage - order_detail */
+.order_detail_info_div {width:80%; margin:0 auto; padding-top:100px; text-align:center;}
+.tableTitle {text-align:center; font-weight:bold; margin-left:30px;}
+.order_detail_table {width:80%; margin:0 auto; padding:50px; text-align:left}
+.order_detail_table td {border-bottom:1px solid black; padding:10px}
+.order_detail_table tr td:nth-child(1) {width:20%;}

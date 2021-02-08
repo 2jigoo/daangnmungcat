@@ -39,5 +39,5 @@ public interface OrderService {
 	List<OrderDetail> sortingOrderDetail(int orderId);
 	
 	List<Order> searchByDate(String start, String end, Member member);
-	List<Order> search(Map<String, Object> map);
+	
 }

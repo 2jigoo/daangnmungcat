@@ -27,8 +27,8 @@
 		<result property="payId" column="pay_id"></result>
 		<result property="payDate" column="regdate"></result>
 		<result property="state" column="state"></result>
-
-		<collection property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult"></collection>
+		
+		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 		<collection property="details" resultMap="odRes"></collection>
 		
 	</resultMap>
@@ -55,7 +55,7 @@
 		STATE
 	</sql>
 	<sql id="odSql">
-		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE
+		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE
 	</sql>
 
 	<!-- query -->
@@ -102,7 +102,9 @@
 	</insert>
 	
 	<select id="selectOrderById" resultMap="orderRes">
-		SELECT * FROM mall_order where mem_id = #{member.id} ORDER BY id desc
+		SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+		and mem_id = #{member.id} ORDER BY id desc
 	</select>
 	
 	<select id="getOrderByNo" resultMap="orderRes">
@@ -119,7 +121,7 @@
 		<result property="pdt.price" column="price" />
 		<result property="totalPrice" column="total_price" />
 		<result property="partcnt" column="partcnt"/>
-		<!-- <result column="ORDER_STATE" property="orderState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.OrderState$TypeHandler"/> -->
+		<result property="orderState" column="ORDER_STATE" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.OrderState$TypeHandler"/>
 		<association property="pdt" column="pdt_id" select="daangnmungcat.mapper.MallPdtMapper.getProductById" fetchType="lazy"></association>
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 	</resultMap>
@@ -132,6 +134,7 @@
 			QUANTITY, 
 			PRICE, 
 			TOTAL_PRICE, 
+			order_state,
 			COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT 
 		FROM mall_order_detail where order_id = #{orderId} ORDER BY id desc
 	</select>
@@ -144,6 +147,8 @@
 								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
 		and mem_id = #{member.id} order by id desc
 	</select>
+	
+	
 	
 	
 </mapper>
