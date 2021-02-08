@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="daangnmungcat.mapper.NoticeMapper">
+
+	<sql id="selectNoticeSQL">
+		SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice 
+	</sql>
+	
+	<resultMap type="Notice" id="noticeResult">
+		<id column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="contents" property="contents"/>
+		<result column="regdate" property="regdate"/>
+		<result column="notice_YN" property="noticeYn"/>
+		<result column="notice_file" property="noticeFile"/>
+	</resultMap>
+	
+	
+	<select id="selectNoticeByAllPage" resultMap="noticeResult">
+		SELECT a.*
+		FROM (SELECT rownum AS rnum, b.*
+	  		FROM (SELECT id, title, contents, regdate, notice_YN, notice_file FROM notice ORDER BY notice_yn desc) b) a
+		WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		ORDER BY a.rnum
+	</select>
+	
+	<select id="selectNoticeBySearch" parameterType="map" resultMap="noticeResult">
+		SELECT a.*
+		  FROM (SELECT rownum AS rnum, b.*
+		  		FROM (SELECT id, title, contents, regdate, notice_YN, notice_file FROM notice ORDER BY notice_yn desc
+		  <where>
+		  	<if test="notce.title != null">and title LIKE '%'||#{notice.title}||'%' </if>
+		  	<if test="notce.contents != null">and title LIKE '%'||#{notice.contents}||'%' </if>
+			<if test="notice.noticeYn != null">and cat_cate = #{notice.noticeYn} </if>
+		  </where>) b) a
+		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		ORDER BY a.rnum
+	</select>
+	
+	
+	<select id="listCount" parameterType="map" resultType="int">
+	  SELECT count(a.id)
+	  FROM (SELECT rownum AS rnum, b.*
+	  		FROM (SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice
+	  ORDER BY id desc) b) a
+	</select>
+	
+	<select id="selectNoticeByNo" resultMap="noticeResult" parameterType="int">
+		<include refid="selectNoticeSQL"></include>
+		where id = #{id}
+	</select>
+	
+	<insert id="insertNotice" parameterType="Notice">
+		insert into notice values(notice_seq.nextval, #{title}, #{contents}, sysdate, #{noticeYn}, #{noticeFile})
+	</insert>
+
+</mapper>

@@ -12,7 +12,7 @@ $(function(){
    var contextPath = "<%=request.getContextPath()%>";
    
    $.get(contextPath+"/dongne1", function(json){
-	      var datalength = json.length; 
+	   var datalength = json.length; 
 	      if(datalength >= 1){
 	         var sCont = "";
 	         for(i=0; i<datalength; i++){

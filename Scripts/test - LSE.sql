@@ -60,6 +60,7 @@ SELECT * FROM JOONGO_IMAGE;
 SELECT * FROM MALL_MILEAGE;
 DELETE FROM MEMBER WHERE id = 'chattest3';
 select * from user_sequences;
+SELECT * FROM notice;
 
 
 INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID , SALE_STATE, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
@@ -247,7 +248,79 @@ SELECT ID, OD_ID, MEM_ID, sum(MILEAGE) AS mileage, CONTENT, REGDATE FROM MALL_MI
 
 INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', 1000, '회원가입', sysdate);
 INSERT INTO MALL_MILEAGE (id, mem_id, mileage, content, regdate)values(mall_mileage_seq.nextval, 'chattest1', -500, '테스트', sysdate);
-DELETE FROM mall_mileage WHERE id =4; 
+DELETE FROM mall_mileage WHERE id =16; 
 SELECT * FROM MALL_MILEAGE ;
 
+SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice; 
+
+SELECT * FROM notice;
+INSERT INTO notice (id, title, contents, regdate, notice_yn, notice_file )values(notice_seq.nextval, '제목', '공지 내용', sysdate, 'n', null);
+INSERT INTO notice (id, title, contents, regdate, notice_yn, notice_file )values(notice_seq.nextval, '공지-제목', '공지 내용', sysdate, 'y', null);
+INSERT INTO notice (id, title, contents, regdate, notice_yn, notice_file )values(notice_seq.nextval, '공지-이벤트', '마일리지 이벤트', sysdate, 'y', 'images/mileage_1000.png');
+SELECT * FROM notice ORDER BY notice_yn desc;
+
+
+		SELECT count(a.id)
+	  FROM (SELECT rownum AS rnum, b.*
+	  		FROM (SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice
+	  ORDER BY id desc) b) a;
+	  
+	 
+SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE FROM MALL_MILEAGE ORDER BY id desc )B)A
+			WHERE A.RNUM BETWEEN 1 AND 20
+			ORDER BY A.RNUM;
+			
+SELECT * FROM JOONGO_SALE;			
+SELECT * FROM MEMBER;
+SELECT id FROM MEMBER;
+
+
+
+SELECT DISTINCT mm.id AS id, od_id , m.id AS mem_id, mileage, content, mm.regdate FROM MALL_MILEAGE mm LEFT JOIN MEMBER m  ON m.id = mm.MEM_ID ;
+
+INSERT INTO COUPON(guest_id, EVENT_NO, EVENT_START, EVENT_END)
+		SELECT guest_id, 1/*이벤트번호*/, "thisyear_bd" AS event_start, "thisyear_bd" + 14 - 1 / (24*60*60) + 1 AS event_end
+		FROM (
+		SELECT guest_id, guest_birthday, TO_DATE((TO_CHAR(sysdate, 'YYYY-') || TO_CHAR(GUEST_BIRTHDAY, 'MM-DD'))) AS "thisyear_bd", 1 AS fake FROM guest_view g
+		) gb WHERE TO_CHAR(sysdate, 'YYYY-MM-DD') = TO_CHAR("thisyear_bd", 'YYYY-MM-DD');
+      END;
+
+     
+SELECT id FROM MEMBER;
+
+INSERT INTO MALL_MILEAGE  (id, mem_id, MILEAGE, CONTENT, regdate)
+VALUES (mall_mileage_seq.nextval, (SELECT id FROM MEMBER) , 1000, '실험',
+
+INSERT all
+ INTO MALL_MILEAGE (mem_id) SELECT id FROM MEMBER
+ INTO MALL_MILEAGE (id, MILEAGE, CONTENT, regdate) VALUES (mall_mileage_seq.nextval, , 1000, '실험', sysdate)
+SELECT id, MEM_ID ,MILEAGE ,CONTENT ,regdate
+FROM MALL_MILEAGE;
+
+INSERT INTO MALL_MILEAGE(id, mem_id, mileage, content)
+SELECT guest_id, 1/*이벤트번호*/, "thisyear_bd" AS event_start, "thisyear_bd" + 14 - 1 / (24*60*60) + 1 AS event_end
+FROM (
+	SELECT guest_id, guest_birthday, TO_DATE((TO_CHAR(sysdate, 'YYYY-') || TO_CHAR(GUEST_BIRTHDAY, 'MM-DD'))) AS "thisyear_bd", 1 AS fake FROM guest_view g
+	) gb WHERE TO_CHAR(sysdate, 'YYYY-MM-DD') = TO_CHAR("thisyear_bd", 'YYYY-MM-DD');
+
+
+
+
+SELECT a.*
+	FROM (SELECT rownum AS rnum, b.*
+		FROM (SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE 
+		FROM MALL_MILEAGE WHERE content like '%이벤트%') b )a
+	WHERE a.RNUM BETWEEN 0 AND 10
+	order by a.rnum;
+	
+
+DELETE FROM MALL_MILEAGE mm WHERE id = 5;
+
+INSERT INTO MALL_MILEAGE(id, mem_id, mileage, content)
+SELECT mall_mileage_seq.nextval, id, 2000, '이벤트'
+FROM MEMBER;
+
+SELECT * FROM MALL_MILEAGE;
 

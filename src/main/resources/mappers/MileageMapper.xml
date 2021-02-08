@@ -11,22 +11,20 @@
 	
 	<resultMap type="Mileage" id="mileRes">
 		<id property="id" column="id" />		
-		<result property="member.id" column="mem_id" />	
-		<result property="order.id" column="od_id" />			
 		<result property="mileage" column="mileage" />		
 		<result property="content" column="content" />		
 		<result property="regDate" column="regdate" />		
 		
-		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
-		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" />
+		<association property="member" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" columnPrefix="MEM_"/>
+		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" columnPrefix="OD_"/>
 	</resultMap>
 	
-	<insert id="insertMilegeInfo">
+	<insert id="insertMilegeInfo" parameterType="Mileage">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT mall_mileage_seq.nextval FROM DUAL
 		</selectKey>
 			INSERT INTO MALL_MILEAGE(ID, OD_ID, MEM_ID, MILEAGE, CONTENT)
-			VALUES(#{id}, #{order.id}, #{member.id}, #{mileage}, #{content})
+			VALUES(#{id}, <if test="order.id != null">#{order.id},</if> #{member.id}, #{mileage}, #{content})
 	</insert>
 	
 	<!-- member select할 때 조회해옴 -->
@@ -40,4 +38,52 @@
 		<include refid="selectSql"></include>
 		where mem_id = #{member.id}
 	</select>
+	
+	<select id="listCount" parameterType="map" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ROWNUM, ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
+		FROM MALL_MILEAGE )B)A
+	</select>
+	
+	<select id="selectMileageByAll" resultMap="mileRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE FROM MALL_MILEAGE ORDER BY id desc  )B)A
+			WHERE A.RNUM BETWEEN #{rowStart} AND #{rowEnd}
+			ORDER BY A.RNUM	
+	</select>
+	
+	
+	<select id="selectMileageBySearch" parameterType="map" resultMap="mileRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE FROM MALL_MILEAGE
+		<where>
+			<if test="mileage.content !=null">and content like '%'||#{mileage.content}||'%'</if>
+			<if test="mileage.member !=null">and mem_id like '%'||#{mileage.member.id}||'%'</if>
+		</where>)b)a
+		WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+		order by a.rnum		
+	</select>
+	
+	<select id="selectMileageInfoById" parameterType="int" resultMap="mileRes">
+		<include refid="selectSql"></include>
+		where id = #{id}
+	</select>
+	
+	<update id="updateMileageById" parameterType="Mileage">
+		update mall_mileage set <if test="order.id != null"> od_id =#{order.id}, </if> mem_id= #{member.id}, mileage = #{mileage} , content = #{content} where id = #{id}
+	</update>
+	
+	<delete id="deleteMileage" parameterType="int">
+		DELETE FROM MALL_MILEAGE WHERE id = #{id}
+	</delete>
+	
+	<insert id="insertEventMilege" parameterType="Mileage">
+		INSERT INTO MALL_MILEAGE(id, mem_id, mileage, content)
+		SELECT mall_mileage_seq.nextval, id, #{mileage}, #{content}
+		FROM MEMBER
+	</insert>
+	
 </mapper>

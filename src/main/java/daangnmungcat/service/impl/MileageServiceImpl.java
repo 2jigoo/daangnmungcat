@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.mapper.MileageMapper;
@@ -19,8 +20,8 @@ public class MileageServiceImpl implements MileageService {
 	private MileageMapper mapper;
 	
 	@Override
-	public int insertMilegeInfo(Mileage mile) {
-		return mapper.insertMilegeInfo(mile);
+	public int insertMilegeInfo(Mileage mileage) {
+		return mapper.insertMilegeInfo(mileage);
 	}
 
 	@Override
@@ -32,4 +33,40 @@ public class MileageServiceImpl implements MileageService {
 	public List<Mileage> selectMileageInfoByMemberId(String id) {
 		return mapper.selectMileageInfoByMemberId(id);
 	}
+
+	@Override
+	public int listCount() {
+		return mapper.listCount();
+	}
+
+	@Override
+	public List<Mileage> selectMileageByAll(Criteria cri) {
+		return mapper.selectMileageByAll(cri);
+	}
+
+	@Override
+	public List<Mileage> selectMileageBySearch(Mileage mileage, Criteria cri) {
+		return mapper.selectMileageBySearch(mileage, cri);
+	}
+
+	@Override
+	public Mileage selectMileageById(int id) {
+		return mapper.selectMileageInfoById(id);
+	}
+
+	@Override
+	public int updateMileageById(Mileage mileage) {
+		return mapper.updateMileageById(mileage);
+	}
+
+	@Override
+	public int deleteMileage(int id) {
+		return mapper.deleteMileage(id);
+	}
+
+	@Override
+	public int insertEventMilege(Mileage mileage) {
+		return mapper.insertEventMilege(mileage);
+	}
+
 }
