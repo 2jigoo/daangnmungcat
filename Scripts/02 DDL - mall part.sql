@@ -183,8 +183,8 @@ ALTER TABLE MALL_ORDER_DETAIL
 
 /* 쇼핑몰_마일리지 */
 CREATE TABLE MALL_MILEAGE (
-	id NUMBER NOT NULL, /* 새 컬럼 */
-	od_id NUMBER, /* 상세주문id */
+	id NUMBER(12) NOT NULL, /* 새 컬럼 */
+	od_id NUMBER(12), /* 주문id */
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
 	mileage  NUMBER(12) NOT NULL, /* 적립및사용금액 */
 	content VARCHAR2(1500) NOT NULL, /* 적립및사용 내용 */

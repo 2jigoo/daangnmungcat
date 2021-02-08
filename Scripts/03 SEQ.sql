@@ -15,6 +15,7 @@ DROP SEQUENCE mall_order_seq;
 DROP SEQUENCE mall_order_detail_seq;
 DROP SEQUENCE mall_payment_seq;
 DROP SEQUENCE mall_mileage_seq;
+DROP SEQUENCE notice_seq;
 DROP SEQUENCE joongo_review_seq;
 DROP SEQUENCE sale_img_seq;
 
@@ -108,6 +109,11 @@ INCREMENT BY 1
 MINVALUE 1;
 
 CREATE SEQUENCE mall_mileage_seq
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1;
+
+CREATE SEQUENCE notice_seq
 START WITH 1
 INCREMENT BY 1
 MINVALUE 1;

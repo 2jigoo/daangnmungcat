@@ -53,6 +53,5 @@ public interface MemberService {
 	int updateShippingAddress(Address address);
 	int deleteShippingAddress(String id);
 	
-	
 
 }
