@@ -6,13 +6,19 @@
 <script>
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
-	 $.get(contextPath+"/admin/mileage/write", function(json){
-		
-		}
-	 });
 	
-	$("#mileage_update_btn").click(function(e){
-		e.preventDefault();
+	 $.get(contextPath+"/members", function(json){
+		console.log(json)
+		var datalength = json.length;
+	 var sCont = "";
+		for(i=0; i<datalength; i++){
+			sCont += '<option value="' + json[i].id + '">' + json[i].id + '</option>';
+		}
+		$("select[name='member.id']").append(sCont); 
+	});
+ 
+	
+	$("#mileage_add_btn").click(function(e){
 		
 		if($("input[name='member.id']").val() == "") {
 			alert("회원 이름을 입력해주세요.")
@@ -35,36 +41,38 @@ $(function(){
 			return false;
 		}
 		
-		if (confirm("정말 수정하시겠습니까?") == true){
-		} else{
-		    return false;
+		if($("select[name='member.id']").val() == "none"){
+			alert("적립 회원을 입력해주세요.")
+			$("select[name='selectMember']").focus();
+			
+			return false;
 		}
 		
 		
-		var modiList = {
-			id : $('#id').val(),	
+		
+		var mileageWrite = {
 			member : {
-				id : $('#memId').val()
+				id : $('#add_member').val()
 			},
 			order : {
-				id : $('#odId').val()
+				id : $('#add_odId').val()
 			},
-			content : $('#content').val(),
-			mileage : $('#mileage').val()
+			content : $('#add_content').val(),
+			mileage : $('#add_mileage').val()
 		};
 		
-		alert(JSON.stringify(modiList));
+		alert(JSON.stringify(mileageWrite));
 
 		
 		$.ajax({
-			url: contextPath + "/admin/mileage/update",
+			url: contextPath + "/admin/mileage/write",
 			type: "POST",
 			contentType:"application/json; charset=UTF-8",
 			dataType: "json",
 			cache : false,
-			data : JSON.stringify(modiList),
+			data : JSON.stringify(mileageWrite),
 			beforeSend : function(xhr)
-	        {   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+	        {   //데이터를 전송하기 전에 헤더에 csrf값을 설정한다
 	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 	        },
 			success: function() {
@@ -75,10 +83,9 @@ $(function(){
 				alert('에러!!!!' + request.status+request.responseText+error);
 			}
 		});
-		console.log(contextPath+"/admin/mileage/update");	
+		console.log(contextPath+"/admin/mileage/write");	
 		
-		
-	})
+	});
 	
 })
 </script>
@@ -93,39 +100,39 @@ $(function(){
 	<!-- card-body -->
 	<div class="card-body mall_adm_list">
 		<div class="mall_pdt_write">
-			<form name="mileAdd" action="/admin/mileage/write" method="post">
+			<form id="mileAdd" name="mileAdd" action="/admin/mileage/write" method="post">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 				<ul>
 					<li>
 						<p>주문번호</p>
 						<div>
-							<input type="text" id="odId" name="order.id" value="${mileage.order.id}">
+							<input type="text" id="add_odId" name="order.id">
 						</div>
 					</li>
 					<li>
 						<p>회원 아이디</p>
 						<div>
-							<select name="member.id" id="member">
-								<option value="0">회원을 선택하세요.</option>
-								<option value="1">모든 회원</option>
+							<select name="member.id" id="add_member">
+								<option value="none">회원을 선택하세요.</option>
+								<option value="all">모든 회원</option>
 							</select>
-						</div>
-					</li>
-					<li>
-						<p>적립 내용</p>
-						<div>
-							<input type="text" id="content" name="content" value="${mileage.content}">
 						</div>
 					</li>
 					<li>
 						<p>적립 금액</p>
 						<div>
-							<input type="text" id="mileage" name="mileage" value="${mileage.mileage}">
+							<input type="number" id="add_mileage" name="mileage" >
+						</div>
+					</li>
+					<li>
+						<p>적립 내용</p>
+						<div>
+							<input type="text" id="add_content" name="content">
 						</div>
 					</li>
 				</ul>
 				<a href="#" class="history_back_btn fr ml5">목록</a>
-				<input type="submit" id="mileage_update_btn" value="수정">
+				<input type="submit" id="mileage_add_btn" value="등록">
 			</form>
 		</div>
 	</div>

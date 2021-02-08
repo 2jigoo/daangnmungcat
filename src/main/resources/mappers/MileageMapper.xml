@@ -19,12 +19,12 @@
 		<association property="order" resultMap="daangnmungcat.mapper.OrderMapper.orderRes" columnPrefix="OD_"/>
 	</resultMap>
 	
-	<insert id="insertMilegeInfo">
+	<insert id="insertMilegeInfo" parameterType="Mileage">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT mall_mileage_seq.nextval FROM DUAL
 		</selectKey>
 			INSERT INTO MALL_MILEAGE(ID, OD_ID, MEM_ID, MILEAGE, CONTENT)
-			VALUES(#{id}, #{order.id}, #{member.id}, #{mileage}, #{content})
+			VALUES(#{id}, <if test="order.id != null">#{order.id},</if> #{member.id}, #{mileage}, #{content})
 	</insert>
 	
 	<!-- member select할 때 조회해옴 -->

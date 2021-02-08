@@ -12,6 +12,7 @@ public interface MileageService {
 	List<Mileage> selectMileageByAll(Criteria cri);
 	
 	int insertMilegeInfo(Mileage mile);
+	int insertEventMilege(Mileage mileage);
 
 	int getMileage(String id);
 

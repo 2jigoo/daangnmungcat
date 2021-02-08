@@ -20,8 +20,8 @@ public class MileageServiceImpl implements MileageService {
 	private MileageMapper mapper;
 	
 	@Override
-	public int insertMilegeInfo(Mileage mile) {
-		return mapper.insertMilegeInfo(mile);
+	public int insertMilegeInfo(Mileage mileage) {
+		return mapper.insertMilegeInfo(mileage);
 	}
 
 	@Override
@@ -62,6 +62,11 @@ public class MileageServiceImpl implements MileageService {
 	@Override
 	public int deleteMileage(int id) {
 		return mapper.deleteMileage(id);
+	}
+
+	@Override
+	public int insertEventMilege(Mileage mileage) {
+		return mapper.insertEventMilege(mileage);
 	}
 
 }

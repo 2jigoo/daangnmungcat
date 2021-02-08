@@ -1,7 +1,12 @@
 package daangnmungcat.controller.admin;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +17,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
@@ -68,7 +77,6 @@ public class AdminMileageController {
 	
 	@PostMapping("/admin/mileage/update")
 	public ResponseEntity<Object> updateMileage (@RequestBody Mileage mileage ) {
-		System.out.println("오긴오냐?");
 		try {
 			return ResponseEntity.ok(service.updateMileageById(mileage));
 		} catch (DuplicateMemberException e) {
@@ -86,9 +94,26 @@ public class AdminMileageController {
 
 	@GetMapping("/admin/mileage/write")
 	public String writeMileage (Model model) {
-		List<Member> list = memService.selectMemberByAll();
-		model.addAttribute("list", list);
 		return "/admin/mileage/mileage_write";
 	}
 	
+	@GetMapping("/members")
+	public ResponseEntity<Object> members() {
+		return ResponseEntity.ok(memService.selectMemberByAll());
+	}
+	
+
+	@PostMapping("/admin/mileage/write")
+	public ResponseEntity<Object> writeMileage (@RequestBody Mileage mileage ) {
+		try {
+			if(mileage.getMember().getId().equals("all")) {
+				return ResponseEntity.ok(service.insertEventMilege(mileage));
+			}else {
+				return ResponseEntity.ok(service.insertMilegeInfo(mileage));
+			}
+		} catch (DuplicateMemberException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+
+	}
 }
