@@ -39,13 +39,10 @@ import lombok.extern.log4j.Log4j2;
 public class JoongoListController {
 	
 	@Autowired
-	private JoongoListMapper mapper;
-	
-	@Autowired
-	private MemberService service;
+	private MemberService memberService;
 
 	@Autowired
-	private JoongoSaleService s;
+	private JoongoSaleService saleService;
 
 	@GetMapping("/joongo_list")
 	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
@@ -65,13 +62,13 @@ public class JoongoListController {
 	@GetMapping("/joongo_list/all")
 	public String listAll(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
 		System.out.println(cri);
-		List<Sale> list = mapper.selectJoongoByAllPage(cri);
+		List<Sale> list = saleService.getLists(cri);
 		System.out.println(list);
 		model.addAttribute("list", list);
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(mapper.listCount());
+		pageMaker.setTotalCount(saleService.listCount());
 		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/joongo_list";
@@ -79,14 +76,14 @@ public class JoongoListController {
 	
 	@GetMapping("/joongo_list/{dongne1}")
 	public String listDongne1(Model model, @PathVariable("dongne1") String dongne1, Criteria cri){
-		List<Sale> list = mapper.selectJoongoByDongne1(dongne1, cri);
+		List<Sale> list = saleService.getLists(dongne1, cri);
 		model.addAttribute("list", list);
 		model.addAttribute("dongne1Name", dongne1);
 
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(mapper.listCount1(dongne1));
+		pageMaker.setTotalCount(saleService.listCountByDongne1(dongne1));
 		model.addAttribute("pageMaker", pageMaker);
 		return "/joongo_list";
 	}
@@ -94,14 +91,14 @@ public class JoongoListController {
 	@GetMapping("/joongo_list/{dongne1}/{dongne2}")
 	public String listDongne2(Model model, @PathVariable("dongne1") String dongne1, @PathVariable("dongne2") String dongne2, Criteria cri) {
 		System.out.println(dongne1);
-		List<Sale> list = mapper.selectJoongoByDongne2(dongne1, dongne2, cri);
+		List<Sale> list = saleService.getLists(dongne1, dongne2, cri);
 		model.addAttribute("list", list);
 		model.addAttribute("dongne1Name", dongne1);
 		model.addAttribute("dongne2Name", dongne2);
 
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(mapper.listCount2(dongne1, dongne2));
+		pageMaker.setTotalCount(saleService.listCountByDongne2(dongne1, dongne2));
 		model.addAttribute("pageMaker", pageMaker);
 		return "/joongo_list";
 	}
@@ -144,20 +141,20 @@ public class JoongoListController {
 	//insertForm용  -> 동네1 선택
 	@GetMapping("/joongoSale/addList/dongne1")
 	public ResponseEntity<Object> dongne1() {
-		return ResponseEntity.ok(service.Dongne1List());
+		return ResponseEntity.ok(memberService.Dongne1List());
 	}
 	
 	//insertForm용 -> 동네2선택 후
 	@GetMapping("joongoSale/addList/dongne2/{dongne1}")
 	public ResponseEntity<Object> dongne2(@PathVariable int dongne1) {
-		return ResponseEntity.ok(service.Dongne2List(dongne1));
+		return ResponseEntity.ok(memberService.Dongne2List(dongne1));
 	}
 	
 	//update용  
 	@GetMapping("/joongoSale/modiList")
 	public String updateForm(@RequestParam int id, Model model, HttpSession session) {
-		Sale sale = s.getSaleById(id);
-		List<FileForm> flist = s.selectImgPath(id);
+		Sale sale = saleService.getSaleById(id);
+		List<FileForm> flist = saleService.selectImgPath(id);
 		model.addAttribute("sale", sale);
 		model.addAttribute("flist", flist);
 		
@@ -167,13 +164,13 @@ public class JoongoListController {
 	//update용  -> 동네1 선택
 	@GetMapping("/joongoSale/modify/dongne1")
 	public ResponseEntity<Object> dongne1Modify() {
-		return ResponseEntity.ok(service.Dongne1List());
+		return ResponseEntity.ok(memberService.Dongne1List());
 	}
 	
 	//update용 -> 동네2선택 후
 	@GetMapping("joongoSale/modify/dongne2/{dongne1}")
 	public ResponseEntity<Object> dongne2Modify(@PathVariable int dongne1) {
-		return ResponseEntity.ok(service.Dongne2List(dongne1));
+		return ResponseEntity.ok(memberService.Dongne2List(dongne1));
 	}
 	
 	@PostMapping("/joongoSale/insert")
@@ -197,7 +194,7 @@ public class JoongoListController {
 		}
 
 		sale.setMember(new Member(loginUser.getId()));
-		s.insertJoongoSale(sale, fileList, request);
+		saleService.insertJoongoSale(sale, fileList, request);
 		int id = sale.getId();
 		String textUrl = "detailList?id=" + id;
 		model.addAttribute("msg", "등록되었습니다.");

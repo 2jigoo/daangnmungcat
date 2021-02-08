@@ -74,7 +74,7 @@ public class JoongoListMapperTest {
 		Sale sale = new Sale();
 		sale.setDongne1(new Dongne1(0, "서울특별시"));
 		sale.setDongne2(new Dongne2(0, null, "종로구"));
-		List<Sale> list = service.selectJoongoBySearch(sale, cri);
+		List<Sale> list = service.getListsSearchedBy(sale, cri);
 //		List<Sale> list = mapper.selectJoongoBySearch(sale, cri);
 		list.stream().forEach(System.out::println);
 	}
@@ -84,7 +84,7 @@ public class JoongoListMapperTest {
 		Criteria cri = new Criteria();
 		Sale sale = new Sale();
 		sale.setMember(new Member("chattest1"));
-		List<Sale> list = service.selectJoongoBySearch(sale, cri);
+		List<Sale> list = service.getListsSearchedBy(sale, cri);
 //		List<Sale> list = mapper.selectJoongoBySearch(sale, cri);
 		list.stream().forEach(System.out::println);
 	}

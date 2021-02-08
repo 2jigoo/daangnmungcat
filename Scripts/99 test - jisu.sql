@@ -204,11 +204,5 @@ SELECT mall_mileage_seq.nextval, id, 2000, '이벤트'
 FROM MEMBER;
 
 
-SELECT guest_id, 1/*이벤트번호*/, "thisyear_bd" AS event_start, "thisyear_bd" + 14 - 1 / (24*60*60) + 1 AS event_end
-FROM (
-   SELECT guest_id, guest_birthday, TO_DATE((TO_CHAR(sysdate, 'YYYY-') || TO_CHAR(GUEST_BIRTHDAY, 'MM-DD'))) AS "thisyear_bd", 1 AS fake FROM guest_view g
-   ) gb WHERE TO_CHAR(sysdate, 'YYYY-MM-DD') = TO_CHAR("thisyear_bd", 'YYYY-MM-DD');
-  
-
-  
-SELECT * FROM JOONGO_REVIEW jr;
+SELECT * FROM JOONGO_REVIEW jr ;
+SELECT * FROM SALE_REVIEW_VIEW srv;

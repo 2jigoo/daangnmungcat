@@ -15,8 +15,13 @@ import daangnmungcat.dto.Sale;
 
 @Service
 public interface JoongoSaleService {
+	
 	List<Sale> getLists();
+	List<Sale> getLists(Criteria cri);
+	List<Sale> getLists(String dongne1, Criteria cri);
+	List<Sale> getLists(String dongne1, String dongne2, Criteria cri);
 	List<Sale> getListByMemID(String memId);
+	
 	
 	Sale getSaleById(int id);
 	
@@ -26,16 +31,20 @@ public interface JoongoSaleService {
 
 	List<FileForm> selectImgPath(int id);
 	
-	// 해당 회원의 페이징된 찜 목록
-	List<Sale> getHeartedList(String memberId, Criteria criteria);
-	
-	List<Sale> selectJoongoByAllPage(Criteria cri);
+
 	int listCount();
+	int listCountByDongne1(String dongne1);
+	int listCountByDongne2(String dongne1, String dongne2);
 	
 	int updateJoongoSale(Sale sale);
 	
+	
+	// 해당 회원의 페이징된 찜 목록
+	List<Sale> getHeartedList(String memberId, Criteria criteria);
+	
+	// 판매완료 처리
 	int soldOut(Member buyMember, Sale sale);
 	
-	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
-
+	// 검색 조건에 따른 리스트
+	List<Sale> getListsSearchedBy(Sale sale, Criteria cri);
 }
