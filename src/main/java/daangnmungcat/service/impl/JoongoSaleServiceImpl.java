@@ -15,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.FileForm;
+import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.dto.SaleState;
 import daangnmungcat.mapper.FileFormMapper;
 import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.mapper.JoongoSaleMapper;
@@ -157,7 +159,14 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return 0;
 	}
 	
-
+	@Override
+	public int soldOut(Member buyMember, Sale sale) {
+		sale.setBuyMember(buyMember);
+		sale.setSaleState(SaleState.SOLD_OUT);
+		int res = joongoListMapper.updateSold(sale);
+		return res == 1 ? sale.getId() : 0;
+	}
+	
 	@Override
 	public List<Sale> selectJoongoBySearch(Sale sale, Criteria cri) {
 		return joongoListMapper.selectJoongoBySearch(sale, cri);

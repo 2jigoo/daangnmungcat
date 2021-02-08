@@ -177,6 +177,12 @@
 		  DONGNE2_ID = #{dongne2.id}, SALE_STATE = #{saleState}, REGDATE = #{REGDATE} WHERE ID = #{id} 
 	</update>
 	
+	<update id="updateSold" parameterType="Sale">
+		UPDATE joongo_sale
+		SET	sale_state = #{saleState}, buy_mem_id = #{buyMember.id}
+		WHERE id = #{id}
+	</update>
+	
 	<select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">
 		SELECT a.*
 		FROM (

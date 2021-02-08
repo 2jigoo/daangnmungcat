@@ -35,7 +35,7 @@
 		
 		$("#chat-loading-btn").click(function() {
 			$.ajax({
-				url: "/daangnmungcat/api/chat/message",
+				url: "/api/chat/message",
 				type: "get",
 				data: {id: chatId, page: ++page},
 				/* beforeSend : function(xhr){xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");}, */
@@ -89,6 +89,24 @@
 				}
 			});
 		});
+		
+		
+		$("#sold-out-btn").click(function() {
+			if (confirm("거래완료 처리하시겠습니까?") == true) {
+				var url = "/chat/" + chatId + "/sold-out";
+				$.ajax({
+					url: url,
+					type: "post",
+					dataType: "json",
+					success: function(data) {
+						console.log(data);
+					},
+					error: function(e) {
+						console.log(e);
+					}
+				});
+			};
+		});
 	});
 </script>
 <div>
@@ -104,13 +122,16 @@
 							${chat.buyer.nickname }
 						</c:if>
 					</h2>
-		            [${chat.sale.saleState.label }] ${chat.sale.title } <br>
-		            <span class="dongne">${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}</span><br>
-					<c:choose>
-						<c:when test="${chat.sale.price eq 0}">무료나눔</c:when>
-						<c:otherwise>${chat.sale.price}원</c:otherwise>
-					</c:choose>
+					<a href="/joongoSale/detailList?id=${chat.sale.id }">
+			            [${chat.sale.saleState.label }] ${chat.sale.title } <br>
+			            <span class="dongne">${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}</span><br>
+						<c:choose>
+							<c:when test="${chat.sale.price eq 0}">무료나눔</c:when>
+							<c:otherwise>${chat.sale.price}원</c:otherwise>
+						</c:choose>
+					</a>
 					<br>
+					<button type="button" id="sold-out-btn" class="chat-btn" style="float: none;">거래완료</button>
 		        </div>
 		        <div class="connecting">
 		          	  연결중...

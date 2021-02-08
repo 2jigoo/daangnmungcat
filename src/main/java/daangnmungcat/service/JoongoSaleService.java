@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.FileForm;
+import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 
 @Service
@@ -32,6 +33,8 @@ public interface JoongoSaleService {
 	int listCount();
 	
 	int updateJoongoSale(Sale sale);
+	
+	int soldOut(Member buyMember, Sale sale);
 	
 	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
 

@@ -50,5 +50,7 @@ public class Chat {
 		this.buyer = buyer;
 	}
 
-	
+	public boolean isOwner(String memberId) {
+		return memberId.equals(sale.getMember().getId());
+	}
 }

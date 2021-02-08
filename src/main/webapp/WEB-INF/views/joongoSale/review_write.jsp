@@ -63,6 +63,8 @@ $(function(){
          },
          error: function(request,status,error){
             alert('에러' + request.status+request.responseText+error);
+            console.log(request);
+            console.log(error);
          }
       })
 	})

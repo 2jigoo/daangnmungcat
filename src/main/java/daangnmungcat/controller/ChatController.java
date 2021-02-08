@@ -2,6 +2,7 @@ package daangnmungcat.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +163,23 @@ public class ChatController {
 		}
 		
 		return ResponseEntity.ok(fileName);
+	}
+	
+	
+	@PostMapping("/chat/{id}/sold-out")
+	@ResponseBody
+	public ResponseEntity<Object> soldOut(@PathVariable(value = "id") int id, HttpServletRequest request) {
+		int res = 0;
+		try {
+			AuthInfo loginUser = (AuthInfo) request.getSession().getAttribute("loginUser");
+			Chat chat = chatService.getChatInfo(id);
+			res = saleService.soldOut(chat.getBuyer(), chat.getSale());
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(res);
 	}
 	
 }
