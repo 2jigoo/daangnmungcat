@@ -134,7 +134,7 @@
 				<li><a href="#"><img src="/resources/images/ico_salesarticle.png"><span>판매글</span></a></li>
 				<li><a href="<c:url value="/chat" />"><img src="/resources/images/ico_chatting.png"><span>채팅</span></a></li>
 				<li><a href="<c:url value="/mall/cart/list" />"><img src="/resources/images/ico_cart.png"><span>장바구니</span></a></li>
-				<li><a href="/mypage/order_list"><img src="/resources/images/ico_buy.png"><span>구매내역</span></a></li>
+				<li><a href="/mypage/mypage_order_list"><img src="/resources/images/ico_buy.png"><span>구매내역</span></a></li>
 			</ul>
 		</div>
 

@@ -2,10 +2,13 @@ package daangnmungcat.service.impl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,6 +30,7 @@ import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.dto.KakaoPayReadyVO;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Order;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
@@ -53,11 +57,23 @@ private static final String HOST = "https://kapi.kakao.com";
     
     
     public String kakaoPayReady(HttpServletRequest request, HttpSession session) {
-    	
+    	log.info("kakao - ready");
     	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 
-		int myMileage = mileService.getMileage(loginUser.getId());
+    	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String today = sdf.format(new Date());
+		Random rand = new Random();
+		String numStr = "";
+		for (int i = 0; i < 6; i++) {
+			String ran = Integer.toString(rand.nextInt(10));
+			numStr += ran;
+		}
+		String nextOrderNo = today + numStr;
+		
+		System.out.println("다음 주문 번호:" + nextOrderNo);
+   
 		
 		//주문할거만 담은 새로운 id
 		String[] id = request.getParameterValues("pdt_id");
@@ -95,6 +111,7 @@ private static final String HOST = "https://kapi.kakao.com";
 		session.setAttribute("total_qtt", totalQtt);
 		session.setAttribute("final_price", finalPrice);
 		session.setAttribute("plus_mile", plusMile);
+		session.setAttribute("nextOrderNo", nextOrderNo);
 		
         RestTemplate restTemplate = new RestTemplate();
         
@@ -105,13 +122,12 @@ private static final String HOST = "https://kapi.kakao.com";
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
         int qtt = Integer.parseInt(request.getParameter("pdt_qtt"));
-        int nextPayNo = orderService.nextPayNo(); 
         
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
-        params.add("partner_order_id", String.valueOf(nextPayNo));
-        params.add("partner_user_id",  request.getParameter("mem_id"));
+        params.add("partner_order_id", nextOrderNo);
+        params.add("partner_user_id", request.getParameter("mem_id"));
         
         String name;
         if(qtt <= 1) {
@@ -134,7 +150,7 @@ private static final String HOST = "https://kapi.kakao.com";
         try {
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
             kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
-
+            
             log.info("" + kakaoPayReadyVO);
             return kakaoPayReadyVO.getNext_redirect_pc_url();
  
@@ -146,6 +162,8 @@ private static final String HOST = "https://kapi.kakao.com";
             e.printStackTrace();
         }
         
+        //결제창가면 끊긴ㄷㅏ,,
+      
         return "/pay";
         
     }
@@ -160,8 +178,9 @@ private static final String HOST = "https://kapi.kakao.com";
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		String finalPrice = (String) session.getAttribute("final_price");
-		String usedMile = (String) session.getAttribute("usedMile");
-		String plus_mile = (String) session.getAttribute("plus_mile");
+//		String usedMile = (String) session.getAttribute("usedMile");
+//		String plus_mile = (String) session.getAttribute("plus_mile");
+		String nextNo = (String) session.getAttribute("nextOrderNo");
 		
         RestTemplate restTemplate = new RestTemplate();
         
@@ -171,15 +190,13 @@ private static final String HOST = "https://kapi.kakao.com";
         headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
         
-        int nextPayNo = orderService.nextPayNo(); 
+       
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoPayReadyVO.getTid());
-        params.add("partner_order_id", String.valueOf(nextPayNo));
+        params.add("partner_order_id", nextNo);
         params.add("partner_user_id", member.getId());
-        params.add("used_mileage", usedMile); 
-        params.add("plus_mileage", plus_mile); 
         params.add("pg_token", pg_token);
         params.add("total_amount", finalPrice);
         
@@ -204,6 +221,6 @@ private static final String HOST = "https://kapi.kakao.com";
         
         
     }
-    
+
 }
  

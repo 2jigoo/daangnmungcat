@@ -19,18 +19,14 @@ import daangnmungcat.dto.Payment;
 public interface OrderMapper {
 	
 	List<Order> selectOrderById(String id);
-	Order getOrderByNo(int id);
-	List<OrderDetail> getOrderDetail(int orderNo);
-	
-	int nextOrderNo();
-	int nextPayNo();
+	Order getOrderByNo(String id);
+	List<OrderDetail> getOrderDetail(String orderId);
 	
 	int insertOrderDetail(OrderDetail od);
 	int insertOrder(Order order);
 	int insertPayment(Payment pay);
 	
-	List<Order> orderListById(String id);
-	List<OrderDetail> sortingOrderDetail(int orderId);
+	List<OrderDetail> sortingOrderDetail(@Param("orderId")String orderId);
 	
-	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("member")Member member);
+	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, Member member);
 }

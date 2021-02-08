@@ -75,7 +75,7 @@ CREATE TABLE JOONGO_SALE (
 	dongne1_id NUMBER(12) NOT NULL, /* 동네1차아이디 */
 	dongne2_id NUMBER(12) NOT NULL, /* 동네2차아이디 */
 	buy_mem_id VARCHAR2(20), /* 구매자 아이디 */
-	sale_state NUMBER(1) NOT NULL, /* 판매상태 */
+	sale_state varchar2(30) DEFAULT '판매중' NOT NULL, /* 판매상태 */
 	regdate DATE NOT NULL, /* 작성일시 */
 	redate DATE, /* 끌올일시 */
 	hits NUMBER(12) NOT NULL, /* 조회수 */

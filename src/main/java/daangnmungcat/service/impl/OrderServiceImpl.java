@@ -54,6 +54,9 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session) {
 		
+		//order, payment의 pay - id
+		System.out.println("TID:" + kakao.getTid());
+		
 		session = request.getSession();
 		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
 		Member loginUser = memberService.selectMemberById(info.getId());
@@ -68,7 +71,6 @@ public class OrderServiceImpl implements OrderService{
 		
 		//kakao -> 세션으로
 		String finalPrice = (String) session.getAttribute("final_price");
-		System.out.println("total::" + finalPrice);
 		
 		//받은 session
 		String name = (String) session.getAttribute("add_name");
@@ -80,20 +82,28 @@ public class OrderServiceImpl implements OrderService{
 		String memo = (String) session.getAttribute("memo");
 		String usedMile = (String) session.getAttribute("usedMile");
 		String plus_mile = (String) session.getAttribute("plus_mile");
+		String nextNo = (String) session.getAttribute("nextOrderNo");
+		
+		System.out.println("session으로 받은 no:" + nextNo);
+		
+		System.out.println(nextNo);
 		
 		if(usedMile.equals("")) {
 			usedMile = "0";
 		}
+
+		//order insert
 		
-		//order 다음 번호
-		int nextOrderNo = nextOrderNo();
-				
+		Order order = new Order();
+		order.setId(nextNo);
+		order.setMember(loginUser);
+		
 		//주문할 리스트 -> detail에 추가
 		List<OrderDetail> detailList = new ArrayList<OrderDetail>();
 		
 		for(Cart c: cartList) {
 			OrderDetail od = new OrderDetail();
-			od.setOrderId(nextOrderNo);
+			od.setOrderId(order.getId());
 			od.setPdt(c.getProduct());
 			od.setMember(loginUser);
 			od.setQuantity(c.getQuantity());
@@ -106,13 +116,6 @@ public class OrderServiceImpl implements OrderService{
 		log.info("insert od..........................................");
 		
 		
-		
-		//order insert
-		int nextPayNo = nextPayNo(); 
-		
-		Order order = new Order();
-		order.setId(nextOrderNo);
-		order.setMember(loginUser);
 		order.setDetails(detailList);
 		order.setAddName(name);
 		order.setZipcode(Integer.parseInt(zipcode));
@@ -126,9 +129,10 @@ public class OrderServiceImpl implements OrderService{
 		order.setFinalPrice(Integer.parseInt(finalPrice));
 		order.setPlusMileage(Integer.parseInt(plus_mile));
 		order.setDeliveryPrice(deli);
-		order.setPayId(nextPayNo);
+		order.setPayId(kakao.getTid());
 		log.info("insert order..........................................");
 		mapper.insertOrder(order);
+		
 		
 		//결제정보 얻어오기
 		String pg_token = request.getParameter("pg_token");
@@ -137,7 +141,7 @@ public class OrderServiceImpl implements OrderService{
 		
 		//payment insert
 		Payment pay = new Payment();
-		pay.setId(nextPayNo);
+		pay.setId(kakao.getTid());
 		pay.setKakao(kakao);
 		pay.setMember(loginUser);
 		pay.setOrder(order);
@@ -151,7 +155,7 @@ public class OrderServiceImpl implements OrderService{
 		int myMileage = mileService.getMileage(loginUser.getId());
 		
 		//현재마일리지
-		System.out.println("현재 마일리지" + myMileage);
+		System.out.println("현재 마일리지: " + myMileage);
 		
 		//보유금액 -일때
 		if(usedMile.contains("-")) {
@@ -179,17 +183,17 @@ public class OrderServiceImpl implements OrderService{
 		System.out.println("처리 후 현재마일리지:" + afterMile);
 		log.info("마일리지 set / 내역테이블 insert");
 		
-		session.setAttribute("usedMile", usedMile);
-		session.setAttribute("plusMile", plus_mile);
-		session.setAttribute("delivery", deli);
-		
-		log.info("..........end..........");
+//		session.setAttribute("usedMile", usedMile);
+//		session.setAttribute("plusMile", plus_mile);
+//		session.setAttribute("delivery", deli);
 		
 		// 주문완료된 상품 카트에서 삭제
 		List<MallProduct> pdtList = detailList.stream().map(OrderDetail::getPdt).collect(Collectors.toList());
 		System.out.println("카트에서 삭제할 목록");
 		pdtList.forEach(System.out::println);
 		cartService.deleteAfterOrdered(loginUser.getId(), pdtList);
+		
+		log.info("..........end..........");
 	}
 	
 	@Override
@@ -203,20 +207,9 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<OrderDetail> getOrderDetail(int orderNo) {
+	public List<OrderDetail> getOrderDetail(String orderNo) {
 		// TODO Auto-generated method stub
 		return mapper.getOrderDetail(orderNo);
-	}
-
-	@Override
-	public int nextOrderNo() {
-		return mapper.nextOrderNo();
-	}
-
-	@Override
-	public int nextPayNo() {
-		// TODO Auto-generated method stub
-		return mapper.nextPayNo();
 	}
 
 	@Override
@@ -232,20 +225,21 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public Order getOrderByNo(int id) {
+	public Order getOrderByNo(String id) {
 		return mapper.getOrderByNo(id);
 	}
 
-	@Override
-	public List<OrderDetail> sortingOrderDetail(int orderId) {
-		// TODO Auto-generated method stub
-		return mapper.sortingOrderDetail(orderId);
-	}
 
 	@Override
 	public List<Order> searchByDate(String start, String end, Member member) {
 		// TODO Auto-generated method stub 
 		return mapper.searchByDate(start, end, member);
+	}
+
+	@Override
+	public List<OrderDetail> sortingOrderDetail(String id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

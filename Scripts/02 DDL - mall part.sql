@@ -106,10 +106,11 @@ ALTER TABLE MALL_DELIVERY
 /* 쇼핑몰_카트 */
 CREATE TABLE MALL_CART (
 	id			NUMBER(12) PRIMARY KEY, /* 장바구니 번호 */
-	member_id		VARCHAR2(20) NOT NULL, /* 회원아이디 */
+	member_id VARCHAR2(20), /* 회원아이디 */
 	product_id		NUMBER(12) NOT NULL, /* 상품아이디 */
 	quantity	NUMBER(4), /* 수량 */
-	regdate		 DATE /* 등록일 */
+	regdate		 DATE, /* 등록일 */
+	basket_id VARCHAR2(128)
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE MALL_CART
@@ -121,7 +122,7 @@ ALTER TABLE MALL_CART
 
 /* 쇼핑몰_주문 */
 CREATE TABLE MALL_ORDER (
-	id NUMBER(12) NOT NULL, /* 주문서아이디 */
+	id varchar2(20) NOT NULL, /* 주문서아이디 */
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
 	mem_name VARCHAR2(36) NOT NULL, /* 회원이름 */
 	mem_email VARCHAR2(50) NOT NULL, /* 회원이메일 */
@@ -139,12 +140,13 @@ CREATE TABLE MALL_ORDER (
 	plus_mileage NUMBER(10) NOT NULL, /* 마일리지적립금액 */
 	delivery_price NUMBER(10) NOT NULL, /* 배송비 */
 	add_delivery_price NUMBER(10), /* 추가배송비 */
-	pay_id NUMBER(12) NOT NULL, /* 결제번호 */
+	pay_id varchar2(30) NOT NULL, /* 결제번호 */
 	regdate DATE DEFAULT SYSDATE, 
 	cancel_price NUMBER(10), /* 취소금액 */
 	return_price NUMBER(10), /* 반품/품절금액 */
 	state VARCHAR2(20) DEFAULT '결제완료' /* 주문상태 */
 );
+
 
 CREATE UNIQUE INDEX PK_MALL_ORDER
 	ON MALL_ORDER (
@@ -161,12 +163,13 @@ ALTER TABLE MALL_ORDER
 /* 쇼핑몰_주문상세 */
 CREATE TABLE MALL_ORDER_DETAIL (
 	id NUMBER(12) NOT NULL, /* 새 컬럼 */
-	order_id NUMBER(12) NOT NULL, /* 주문서아이디 */
+	order_id varchar2(20) NOT NULL, /* 주문서아이디 */
 	mem_id VARCHAR2(20) NOT NULL,
 	pdt_id NUMBER(12) NOT NULL, /* 상품아이디 */
 	quantity NUMBER(4) NOT NULL, /* 수량 */
 	price NUMBER(12) NOT NULL, /* 가격 */
-	total_price NUMBER(12) NOT NULL/* 총가격 */
+	total_price NUMBER(12) NOT NULL,/* 총가격 */
+	order_state VARCHAR2(30) DEFAULT '결제완료'
 );
 
 CREATE UNIQUE INDEX PK_MALL_ORDER_DETAIL
@@ -180,11 +183,12 @@ ALTER TABLE MALL_ORDER_DETAIL
 		PRIMARY KEY (
 			id
 		);
+	
 
 /* 쇼핑몰_마일리지 */
 CREATE TABLE MALL_MILEAGE (
 	id NUMBER(12) NOT NULL, /* 새 컬럼 */
-	od_id NUMBER(12), /* 상세주문id */
+	od_id varchar2(20), /* 상세주문id */
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
 	mileage  NUMBER(12) NOT NULL, /* 적립및사용금액 */
 	content VARCHAR2(1500) NOT NULL, /* 적립및사용 내용 */
@@ -205,14 +209,16 @@ ALTER TABLE MALL_MILEAGE
 
 /* 쇼핑몰_결제수단 */
 CREATE TABLE MALL_PAYMENT (
-	id NUMBER(12) NOT NULL, /* 아이디 */
+	id varchar2(30) NOT NULL, /* 아이디 */
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
-	order_id NUMBER(12) NOT NULL, /* 주문서아이디 */
+	order_id varchar2(20) NOT NULL, /* 주문서아이디 */
 	pay_price NUMBER(10) NOT NULL, /* 결제금액 */
 	pay_date DATE DEFAULT SYSDATE, /* 결제일시 */
 	pay_type VARCHAR2(1500) NOT NULL, /* 결제방법 */
-	pay_quantity NUMBER(12) NOT NULL /* 수량 */
+	pay_quantity NUMBER(12) NOT NULL, /* 수량 */
+	pay_state VARCHAR2(30) DEFAULT '결제완료'
 );
+
 
 CREATE UNIQUE INDEX PK_MALL_PAYMENT
 	ON MALL_PAYMENT (
