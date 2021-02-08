@@ -42,7 +42,7 @@ $(function(){
 					<img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
 				</c:if>
 				<c:if test="${not empty saleMember.profilePic}">
-					<img src="/resources/${list.buyMember.profilePic}">
+					<img src="/resources/${saleMember.profilePic}">
 				</c:if>
 			</div>
 			<div class="txt_box">

@@ -63,6 +63,7 @@
 	        else {
 	            alert('Uncaught Error.n' + jqXHR.responseText);
 	        }
+	        console.log(exception);
 	    }
 	});
 	

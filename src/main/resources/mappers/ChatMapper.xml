@@ -65,6 +65,12 @@
 		and sale_id = #{saleId}
 	</select>
 	
+	<select id="selectCountBySaleId" resultType="int">
+		SELECT NVL(count(*), 0)
+		FROM joongo_chat
+		WHERE sale_id = #{saleId}
+	</select>
+	
 	<insert id="insertChat" parameterType="Chat">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT chat_seq.nextval FROM DUAL

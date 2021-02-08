@@ -57,4 +57,10 @@ public class Sale {
 	private String thumImg;
 	private List<SaleImage> images;
 	List<MultipartFile> files;
+	
+	public Sale(int id) {
+		this.id = id;
+	}
+	
+	
 }
