@@ -81,7 +81,8 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("mypage/shipping_main").setViewName("mypage/shipping_main");
 		registry.addViewController("mypage/shipping_add").setViewName("mypage/shipping_add");
 		registry.addViewController("mypage/shipping_update").setViewName("mypage/shipping_update");
-		registry.addViewController("mypage/order_list").setViewName("mypage/order_list");
+		registry.addViewController("mypage/mypage_order_list").setViewName("mypage/mypage_order_list");
+		registry.addViewController("mypage/mypage_order_detail").setViewName("mypage/mypage_order_detail");
 		
 		registry.addViewController("admin/main").setViewName("admin/main");
 		
