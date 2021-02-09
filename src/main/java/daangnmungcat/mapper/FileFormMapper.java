@@ -13,4 +13,7 @@ public interface FileFormMapper {
 	
 	List<FileForm> selectImgPath(@Param("id")int id);
 	
+	int deleteSaleFile(String fileName);
+	int deleteSaleFileBySaleId(int id);
+	
 }

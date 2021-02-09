@@ -23,6 +23,7 @@ public interface JoongoSaleService {
 	void JSHits(int id);
 
 	int insertJoongoSale(Sale sale, MultipartFile[] fileList, HttpServletRequest request) throws Exception;
+	int updateJoongoSale(Sale sale, MultipartFile[] fileList, HttpServletRequest request) throws Exception;
 
 	List<FileForm> selectImgPath(int id);
 
@@ -33,8 +34,11 @@ public interface JoongoSaleService {
 
 	int listCount();
 
-	int updateJoongoSale(Sale sale);
 
 	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
 
+	
+	//상세보기 - 수정에서 사진 db삭제
+	int deleteSaleFile(String fileName);
+	int deleteSaleFileBySaleId(int id);
 }

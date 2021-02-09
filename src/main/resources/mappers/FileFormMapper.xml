@@ -25,4 +25,11 @@
 	where sale_id = #{id}
 </select>
 
+<delete id="deleteSaleFile" parameterType="String">
+	delete from joongo_image where image_name = #{fileName}
+</delete>
+
+<delete id="deleteSaleFileBySaleId" parameterType="int">
+		delete from joongo_image where sale_id = #{id}
+</delete>
 </mapper>

@@ -20,7 +20,7 @@ textarea {
 	height: 200px;
 }
 
-#preview1 > img {
+#preview1 > a > img {
 	width: 160px;
 	height: 160px;
 }
@@ -144,13 +144,18 @@ function handleImgs(e) {
 		sel_files.push(f);
 		var reader = new FileReader();
 		reader.onload = function(e){
-			var img_html = "<img src=\"" + e.target.result + "\" />";
+			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /> 삭제</a>";
 			$('#preview1').append(img_html);
+			
+			$("a[name='delete']").on("click",function(e){
+				$(this).remove();
+			})
 		}
 		reader.readAsDataURL(f);
 	});
 	
 }
+
 
 function handleThumImgs(){
 	var file = document.getElementById("thumImgInput").files[0]

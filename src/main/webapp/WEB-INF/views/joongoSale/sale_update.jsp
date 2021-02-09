@@ -20,12 +20,12 @@ textarea {
 	height: 200px;
 }
 
-#preview1 > img {
+#preview1 > img, #preview1 > a > img {
 	width: 160px;
 	height: 160px;
 }
 
-#preview2 > img {
+#preview2 > a > img, #preview2  > img  {
 	width: 160px;
 	height: 160px;
 	float: left;
@@ -133,7 +133,6 @@ $(function(){
 	    });
 	 
 	 $('#update').on("click", function(e){
-		e.preventDefault();
 		
 		var price = $('#price').val();	
 		var num = /^[0-9]*$/;
@@ -158,31 +157,20 @@ $(function(){
 			return false; 
 		} 
 		 
-		updateBoard();
 	});
+	 
+	 
+	 //클릭한 사진 db에서 삭제
+	 $("#sale_pic_delete_btn").click(function(){
+		if (confirm("정말 삭제하시겠습니까??") == true){
+		} else{
+		    return false;
+		}
+	})
+	 
 	 
 	$('#imgInput').on("change", handleImgs);	
 	
-	function updateBoard(){
-		var formData = new FormData($("#boardForm")[0]);
-		
-		$.ajax({
-			type : 'post',
-			url : contextPath + "/joongoSale/modify",
-			data : formData,
-			processData : false,
-			contentType : false,
-			success : function(html) {
-				alert("파일 업로드하였습니다.");
-				console.log(html);
-			},
-			error : function(error) {
-				alert("파일 업로드에 실패하였습니다.");
-				console.log(error);
-				console.log(error.status);
-			}
-		});
-	}
 });
 
 function loadSaleStatesBox(list) {
@@ -211,9 +199,12 @@ function handleImgs(e) {
 		sel_files.push(f);
 		var reader = new FileReader();
 		reader.onload = function(e){
-			var img_html = "<img src=\"" + e.target.result + "\" />";
+			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /> 삭제</a>";
 			$('#preview1').append(img_html);
-			index++;
+			
+			$("a[name='delete']").on("click",function(e){
+				$(this).remove();
+			})
 		}
 		reader.readAsDataURL(f);
 	});
@@ -243,8 +234,9 @@ function handleThumImgs(){
 	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-<form id="boardForm" name="boardForm" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form id="modifyForm" name="modifyForm" action="<%=request.getContextPath() %>/joongoSale/pic/modify" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+				<input type="hidden" name="id" value="${param.id}">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td>
@@ -295,13 +287,13 @@ function handleThumImgs(){
 			</tr>
 			
 			<tr>
-				<td>사진</td>
+				<td>사진<br>*클릭하여 삭제가능</td>
 				<td>
 					<div id="fileArea">
 						<input multiple="multiple" type="file" name="file" id="imgInput" />
 						<div id="preview1"></div>
 					<c:forEach items="${flist }" var="flist" begin="1">
-						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+						<div id="preview2"><a href="<%=request.getContextPath()%>/joongoSale/pic/delete?id=${param.id }&fileName=${flist.fileName}" id="sale_pic_delete_btn"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></a></div>
 					</c:forEach>
 					</div>
 				</td>

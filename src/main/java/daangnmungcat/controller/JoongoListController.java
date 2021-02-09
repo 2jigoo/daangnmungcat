@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -207,6 +208,31 @@ public class JoongoListController {
 		return "/joongoSale/alertFrom";
 	}
 	
+	@PostMapping("/joongoSale/pic/modify")
+	public String modify(HttpSession session, @RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+		request.setCharacterEncoding("UTF-8");
+		//s.deleteSaleFileBySaleId(id);
+		
+		switch (category) {
+		case 1:
+			sale.setDogCate("y");
+			sale.setCatCate("n");
+			break;
+		case 2:
+			sale.setDogCate("n");
+			sale.setCatCate("y");
+			break;
+		case 3:
+			sale.setDogCate("y");
+			sale.setCatCate("y");
+			break;
+		}
+		
+		s.updateJoongoSale(sale, fileList, request);
+		
+		return null;
+	}
+	
 	@PostMapping("/joongoSale/modify")
 	public String update(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
 		request.setCharacterEncoding("UTF-8");
@@ -214,6 +240,12 @@ public class JoongoListController {
 		log.info("수정 후 SaleState: " + sale.getSaleState() + sale.getSaleState().getCode() + sale.getSaleState().getLabel());
 	
 		return null;
+	}
+	
+	@GetMapping("/joongoSale/pic/delete")
+	public String picDel(@RequestParam int id, @RequestParam String fileName) throws Exception {
+		s.deleteSaleFile(fileName);
+		return "redirect:/joongoSale/modiList?id="+id;
 	}
 	
 }
