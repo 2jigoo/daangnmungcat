@@ -15,12 +15,6 @@
 	var page = 1;
 	var perPage = 20;
 	
-	/* var headerName = "${_csrf.headerName}";
-	var token = "${_csrf.token}";
-	var headers = {};
-	headers[headerName] = token;
-	console.log(headers); */
-	
 	$(document).ready(function(){
 		
 		/* 글쓴 시간 비교시간 변경 */
@@ -114,6 +108,12 @@
 				});
 			};
 		});
+		
+		$("#write-review-btn").click(function() {
+			if (confirm("해당 판매글에 대한 후기를 남기시겠습니까?") == true) {
+				location.href = "/joongo/review/write?saleId=${chat.sale.id}";
+			}
+		});
 	});
 </script>
 <div>
@@ -123,28 +123,55 @@
 		        <div class="chat-header">
 		            <h2>
 			        	<c:if test="${chat.sale.member.id eq loginUser.id }">
-							${chat.sale.member.nickname }
+			        		<a href="${pageContext.request.contextPath }/member/profile?id=${chat.sale.member.id}">
+								${chat.sale.member.nickname }
+							</a>
 						</c:if>
 						<c:if test="${chat.buyer.id eq loginUser.id }">
-							${chat.buyer.nickname }
+							<a href="${pageContext.request.contextPath }/member/profile?id=${chat.buyer.nickname }">
+								${chat.buyer.nickname }
+							</a>
 						</c:if>
 					</h2>
-					<a href="/joongoSale/detailList?id=${chat.sale.id }">
-			            [${chat.sale.saleState.label }] ${chat.sale.title } <br>
-			            <span class="dongne">${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}</span><br>
-						<c:choose>
-							<c:when test="${chat.sale.price eq 0}">무료나눔</c:when>
-							<c:otherwise>${chat.sale.price}원</c:otherwise>
-						</c:choose>
-					</a>
-					<br>
+				</div>
+					
+				<div class="chat-header" style="display: flex;">
+					<div style="float: left;width: calc(100% - 120px);text-align: left;">
+						<a href="/joongoSale/detailList?id=${chat.sale.id }">
+  						<div style="display: inline-block; margin-right: 10px;">
+  							<c:if test="${chat.sale.thumImg eq null }">
+  								<img src="/resources/images/no_image.jpg" width="80px">
+  							</c:if>
+  							<c:if test="${chat.sale.thumImg ne null }">
+  								<img src="/resources/${chat.sale.thumImg }" width="80px">
+  							</c:if>
+							
+			 		   	</div>
+					    <div style="display: inline-grid">
+							[${chat.sale.saleState.label }] ${chat.sale.title }
+							<span class="dongne">${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}</span>
+							<c:choose>
+								<c:when test="${chat.sale.price eq 0}">무료나눔</c:when>
+								<c:otherwise>${chat.sale.price}원</c:otherwise>
+							</c:choose>
+					    </div>
+						</a>
+					</div>
+					<div style="float:  right; width: 120px; margin: auto 0;">
 						<c:choose>
 							<c:when test="${chat.sale.saleState.code ne 'SOLD_OUT'}">
-								<button type="button" id="sold-out-btn" class="chat-btn" style="float: none;">거래완료</button>
+								<button type="button" id="sold-out-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">거래완료</button>
 							</c:when>
-<%-- 							<c:when test="${ }">
-							</c:when> --%>
+							<c:otherwise>
+								<c:if test="${reviewed ne true }">
+									<button type="button" id="write-review-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">
+										거래 후기
+										남기기
+									</button>
+								</c:if>
+							</c:otherwise>
 						</c:choose>
+				    </div>
 		        </div>
 		        <div class="connecting">
 		          	  연결중...

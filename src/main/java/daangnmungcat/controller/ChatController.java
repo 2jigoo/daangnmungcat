@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.databind.node.TextNode;
-
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
@@ -29,6 +27,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.service.ChatService;
+import daangnmungcat.service.JoongoSaleReviewService;
 import daangnmungcat.service.JoongoSaleService;
 import lombok.extern.log4j.Log4j2;
 
@@ -41,6 +40,9 @@ public class ChatController {
 	
 	@Autowired
 	private JoongoSaleService saleService;
+	
+	@Autowired
+	private JoongoSaleReviewService reviewService;
 	
 	@GetMapping("/chat")
 	public String myChatList(Model model, HttpSession session) {
@@ -76,6 +78,10 @@ public class ChatController {
 		Criteria cri = new Criteria(1, 20);
 		Chat chat = chatService.getChatWithMessages(id, cri);
 		log.debug("chat: " + chat.toString());
+		
+		if(reviewService.selectJoongoReviewBySaleId(chat.getSale().getId()) != null) {
+			model.addAttribute("reviewed", true);
+		}
 		
 		model.addAttribute("chat", chat);
 		
