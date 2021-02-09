@@ -205,7 +205,7 @@ public class JoongoListController {
 		return "/joongoSale/alertFrom";
 	}
 	
-	@PostMapping("/joongoSale/pic/modify")
+	@PostMapping("/joongoSale/modify")
 	public String modify(HttpSession session, @RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		//s.deleteSaleFileBySaleId(id);
@@ -226,8 +226,10 @@ public class JoongoListController {
 		}
 		
 		saleService.updateJoongoSale(sale, fileList, file, request);
-		
-		return null;
+		String textUrl = "detailList?id=" + id;
+		model.addAttribute("msg", "수정되었습니다.");
+		model.addAttribute("url", textUrl);
+		return "/joongoSale/alertFrom";
 	}
 	
 	@PutMapping("/joongo/sale/{id}/state")

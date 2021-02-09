@@ -200,7 +200,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		//UUID uuid = UUID.randomUUID();
 		List<FileForm> list = fileMapper.selectImgPath(sale.getId());
 		
-		int cnt = 1;
 		
 		//썸네일 이미지 정정 
 		if(file.getSize() != 0) {
@@ -236,10 +235,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 			
 			res += fileMapper.insertSaleFile(fileForm);
 			
-			//System.out.println("fileForm >> " + fileForm);
 			try {
 				multipartFile.transferTo(saveFile);
-				cnt++;
+				num++;
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

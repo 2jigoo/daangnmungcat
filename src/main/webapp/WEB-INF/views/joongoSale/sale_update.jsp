@@ -233,7 +233,7 @@ function handleThumImgs(){
 	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-<form id="modifyForm" name="modifyForm" action="<%=request.getContextPath() %>/joongoSale/pic/modify" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form id="modifyForm" name="modifyForm" action="<%=request.getContextPath() %>/joongoSale/modify" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
 				<input type="hidden" name="id" value="${param.id}">
 		<table style="width: 800px; table-layout: fixed;">
