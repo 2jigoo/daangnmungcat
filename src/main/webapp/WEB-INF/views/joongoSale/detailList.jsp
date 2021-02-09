@@ -221,6 +221,35 @@ $(document).ready(function(){
 	   document.getElementById('regdate').style.display='none';
 	   
    
+	   $("#saleState").val("${sale.saleState.code}").prop("selected", true);
+	   
+	   $("#saleState").on("change", function() {
+		  var originalState = "${sale.saleState.code}"; 
+		  var state = $("#saleState option:selected").text();
+		  var changeStateCode = $("#saleState option:selected").val();
+		  
+		  console.log(JSON.stringify({saleState: {label: state}}));
+		  if(confirm(state + "(으)로 변경하시겠습니까?") == true) {
+			  $.ajax({
+				  type: "put",
+			         url : "/joongo/sale/${sale.id}/state",
+			         contentType : "application/json; charset=utf-8",
+			         cache : false,
+			         data : JSON.stringify({member: {id: "${loginUser.id}"}, saleState: {label: state}}),
+			         dataType : "json",
+			         success: function(data){
+			        	alert("변경했습니다.");	
+			            // location.reload();
+			         },
+			         error: function(e){
+			        	 console.log(e);
+			         }
+			  });
+		  } else {
+			  $("#saleState").val("${sale.saleState.code}").prop("selected", true);
+		  }
+	   });
+	   
    // 댓글 쓰기
    var contextPath = "<%=request.getContextPath()%>";
    $(".comment_write_btn").click(function(){
@@ -472,8 +501,13 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		         		</c:if>
 		         		${sale.title }
 	         		</span>
-			        <span>	
+			        <span style="float: right;">	
 			         	<c:if test="${loginUser.getId() eq sale.member.id}">
+			         		<select name="saleState" id="saleState" selected="selected">
+				         		<c:forEach var="saleState" items="${saleStateList }">
+									<option value="${saleState.code }">${saleState.label }</option>
+								</c:forEach>
+							</select>
 			         		<a href="<%=request.getContextPath()%>/joongoSale/modiList?id=${sale.id}">수정</a>
 							<a id="delBtn" href="<%=request.getContextPath()%>/joongoSale/delete?id=${sale.id}">삭제</a>
 						</c:if>

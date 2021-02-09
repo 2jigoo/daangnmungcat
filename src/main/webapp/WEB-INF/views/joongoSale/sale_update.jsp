@@ -155,8 +155,7 @@ $(function(){
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
-		} 
-		 
+		}
 	});
 	 
 	 
@@ -199,7 +198,7 @@ function handleImgs(e) {
 		sel_files.push(f);
 		var reader = new FileReader();
 		reader.onload = function(e){
-			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /> 삭제</a>";
+			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /></a>";
 			$('#preview1').append(img_html);
 			
 			$("a[name='delete']").on("click",function(e){
@@ -276,18 +275,22 @@ function handleThumImgs(){
 				<td>대표 사진<br>*대표사진은1장만 추가가능</td>
 				<td>
 					<div id="thumFileArea">
-						<input type="file" name="file" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
+						<input type="file" name="thum" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
 						<img id="productImg1">
 						<div id="preview"></div>
-							<c:forEach items="${flist }" var="flist" begin="0" end="0">
-						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+						<c:forEach items="${flist }" var="flist" begin="0" end="0">
+							<div id="preview2">
+							<c:if test="${ not empty thumImg.thumName}">
+								<a href="<%=request.getContextPath()%>/joongoSale/pic/delete?id=${param.id }&fileName=${flist.fileName}" id="sale_pic_delete_btn"><img src="<%=request.getContextPath()%>/resources/${thumImg.thumName}"></a></c:if>
+							</div>
+					
 						</c:forEach>
 					</div>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>사진<br>*클릭하여 삭제가능</td>
+				<td>사진<br>*사진 클릭시삭제가능</td>
 				<td>
 					<div id="fileArea">
 						<input multiple="multiple" type="file" name="file" id="imgInput" />
@@ -302,12 +305,6 @@ function handleThumImgs(){
 			<tr>	
 				<td>카테고리</td>
 				<td>
-				<!-- 	<select name="dogCate" id="dogCate" >
-						<option value="">카테고리를 선택하세요.</option>
-						<option value="y">강아지 카테고리</option>
-						<option value="n">고양이 카테고리 </option>
-						<option value="y"> 모두 포함 </option>
-					</select> -->
 					<input type="radio" name="category" id="category" value="1" >강아지 카테고리
 					<input type="radio" name="category" id="category" value="2" style="margin-left: 15px;">고양이 카테고리
 					<input type="radio" name="category" id="category" value="3" style="margin-left: 15px;">모두 포함

@@ -62,18 +62,6 @@ $(document).ready(function(){
 					</a>
 				</section>
 			</c:forEach>
-		
-		<%-- <tr>
-				<td>${chat.id }</td>
-				<td>${chat.sale.id }</td>
-				<td>아직${chat.sale.thumImage }</td>
-				<td>${chat.sale.title }</td>
-				<td>${chat.sale.member.id }</td>
-				<td>${chat.buyer.id }</td>
-				<td>${chat.regdate }</td>
-				<td><javatime:format value="${chat.latestDate }" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-				<td><javatime:format value="${chat.messages[0].regdate }" pattern="yyyy-MM-dd HH:mm:ss" /></td>
-			</tr> --%>
 		</article>
 	</div>
 </div>

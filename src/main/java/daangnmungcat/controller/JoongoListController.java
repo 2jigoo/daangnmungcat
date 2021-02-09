@@ -11,14 +11,15 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +30,6 @@ import daangnmungcat.dto.GpsToAddress;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
-import daangnmungcat.mapper.JoongoListMapper;
 import daangnmungcat.service.GpsToAddressService;
 import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.service.MemberService;
@@ -156,8 +156,10 @@ public class JoongoListController {
 	public String updateForm(@RequestParam int id, Model model, HttpSession session) {
 		Sale sale = saleService.getSaleById(id);
 		List<FileForm> flist = saleService.selectImgPath(id);
+		FileForm thumImg = saleService.selectThumImgPath(id);
 		model.addAttribute("sale", sale);
 		model.addAttribute("flist", flist);
+		model.addAttribute("thumImg",thumImg);
 		
 		return "joongoSale/sale_update";
 	}
@@ -175,9 +177,9 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/insert")
-	public String add(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+	public String add(HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
-		
+		System.out.println("왔나?");
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		switch (category) {
 		case 1:
@@ -195,7 +197,7 @@ public class JoongoListController {
 		}
 
 		sale.setMember(new Member(loginUser.getId()));
-		saleService.insertJoongoSale(sale, fileList, request);
+		saleService.insertJoongoSale(sale, fileList, file, request);
 		int id = sale.getId();
 		String textUrl = "detailList?id=" + id;
 		model.addAttribute("msg", "등록되었습니다.");
@@ -204,7 +206,7 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/pic/modify")
-	public String modify(HttpSession session, @RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+	public String modify(HttpSession session, @RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
 		//s.deleteSaleFileBySaleId(id);
 		
@@ -223,9 +225,30 @@ public class JoongoListController {
 			break;
 		}
 		
-		saleService.updateJoongoSale(sale, fileList, request);
+		saleService.updateJoongoSale(sale, fileList, file, request);
 		
 		return null;
 	}
-}
 	
+	@PutMapping("/joongo/sale/{id}/state")
+	public ResponseEntity<Object> modifySaleState(HttpSession session, @PathVariable("id") int id, Sale sale) {
+		int res = 0;
+		try {
+			Member member = new Member(((AuthInfo) session.getAttribute("loginUser")).getId());
+			sale.setId(id);
+			sale.setMember(member);
+			log.info("변경할 saleState: " + sale.getSaleState());
+			res = saleService.changeSaleState(sale);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		return ResponseEntity.ok(res);
+	}
+	
+	@GetMapping("/joongoSale/pic/delete")
+	public String picDel(@RequestParam int id, @RequestParam String fileName) throws Exception {
+		saleService.deleteSaleFile(fileName);
+		return "redirect:/joongoSale/modiList?id="+id;
+	}
+}

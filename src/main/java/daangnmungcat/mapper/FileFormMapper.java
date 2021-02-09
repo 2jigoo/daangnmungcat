@@ -12,6 +12,7 @@ public interface FileFormMapper {
 	int insertSaleFile(FileForm fileForm);
 	
 	List<FileForm> selectImgPath(@Param("id")int id);
+	FileForm selectThumImgPath(@Param("id")int id);
 	
 	int deleteSaleFile(String fileName);
 	int deleteSaleFileBySaleId(int id);

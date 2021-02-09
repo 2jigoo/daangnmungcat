@@ -123,6 +123,9 @@ $(function(){
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
+		}else if($('#thumImgInput').val() == ""){
+			alert("대표사진 업로드는 필수입니다.")
+			return false;
 		}
 		 
 	 });
@@ -144,7 +147,7 @@ function handleImgs(e) {
 		sel_files.push(f);
 		var reader = new FileReader();
 		reader.onload = function(e){
-			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /> 삭제</a>";
+			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /></a>";
 			$('#preview1').append(img_html);
 			
 			$("a[name='delete']").on("click",function(e){
@@ -210,17 +213,17 @@ function handleThumImgs(){
 				</td>
 			</tr>
 			<tr>
-				<td>대표 사진<br>*대표사진은1장만 추가가능</td>
+				<td>대표 사진<br>*대표사진은 1장만 추가 가능</td>
 				<td>
 					<div id="thumFileArea">
-						<input type="file" name="file" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
+						<input type="file" name="thum" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
 						<img id="productImg1">
 						<div id="preview"></div>
 					</div>
 				</td>
 			</tr>
 			<tr>
-				<td>사진</td>
+				<td>사진<br>*사진 클릭시 업로드 취소 가능</td>
 				<td>
 					<div id="fileArea">
 						<input multiple="multiple" type="file" name="file" id="imgInput" accept="image/*"/>
