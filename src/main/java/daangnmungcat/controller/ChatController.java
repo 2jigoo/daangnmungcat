@@ -25,6 +25,7 @@ import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.dto.SaleState;
 import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.service.JoongoSaleReviewService;

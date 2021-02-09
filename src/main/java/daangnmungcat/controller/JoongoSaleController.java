@@ -92,6 +92,8 @@ public class JoongoSaleController {
 		pageMaker.setTotalCount(commentService.commentCount(id));
 		model.addAttribute("pageMaker", pageMaker);
 		
+		model.addAttribute("saleStateList", SaleState.saleStateList);
+		
 		return "/joongoSale/detailList";
 	}
 

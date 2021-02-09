@@ -43,6 +43,7 @@ public interface JoongoSaleService {
 	
 	// 판매완료 처리
 	int soldOut(Member buyMember, Sale sale);
+	int changeSaleState(Sale sale);
 	
 	// 검색 조건에 따른 리스트
 	List<Sale> getListsSearchedBy(Sale sale, Criteria cri);

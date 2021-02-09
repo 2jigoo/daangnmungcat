@@ -11,12 +11,12 @@ import java.util.stream.Stream;
 
 import org.apache.ibatis.type.MappedTypes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import daangnmungcat.typehandler.CodeEnum;
 import daangnmungcat.typehandler.CodeEnumTypeHandler;
-import lombok.Builder;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -48,7 +48,8 @@ public enum SaleState implements CodeEnum {
 	
 	public static final List<SaleState> saleStateList = new ArrayList<>(Arrays.asList(values()));
 	
-	public static SaleState fromString(String symbol) {
+	@JsonCreator
+	public static SaleState fromString(@JsonProperty("label") String symbol) {
 		SaleState state = StringToEnum.get(symbol);
 		if(Objects.isNull(state)) {
 			log.error("잘못된 판매상태 타입입니다. ", symbol);
