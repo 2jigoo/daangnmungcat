@@ -1,10 +1,13 @@
 package daangnmungcat.controller;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -67,10 +70,8 @@ public class KakaoPayController {
 	public ModelAndView kakaoPaySuccess(@RequestParam("pg_token") String pg_token, HttpServletRequest request, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
 		log.info("kakaoPaySuccess - get");
-		log.info("kakaoPaySuccess pg_token : " + pg_token);
-		
 		KakaoPayApprovalVO kakao = kakaoService.kakaoPayInfo(pg_token, request, session);
-		log.info("kakaoPaySuccess - kakao:" + kakao);
+		log.info("kakaoPaySuccess - 결제정보 :" + kakao);
 		
 		//결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
 		orderService.orderTransaction(kakao, request, session);

@@ -6,8 +6,8 @@ SELECT * FROM MALL_MILEAGE;
 
 UPDATE MEMBER SET MILEAGE = 2000 WHERE id = 'test';
 INSERT INTO MEMBER(ID,PWD,NAME,NICKNAME,EMAIL,PHONE ,DONGNE1,DONGNE2, BIRTHDAY,ZIPCODE,ADDRESS1,ADDRESS2) 
-VALUES('test', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234',1, 1, '1991-12-19', NULL, NULL, NULL);
-
+VALUES('test', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234',1, 1, '1991-12-19', 40404, '대구광역시웅앵', '2222');
+DELETE FROM MEMBER;
 SELECT * FROM dongne_view;
 SELECT * FROM member_view;
 
@@ -160,11 +160,36 @@ SELECT TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') PREV_MONTH --이전달
      , TO_char(ADD_MONTHS(sysdate, 1),'yyyy-MM-dd') NEXT_MONTH --다음달
   FROM DUAL;
   
-SELECT * FROM MALL_ORDER ORDER BY id desc;
+SELECT * FROM MALL_ORDER_DETAIL ORDER BY id desc;
 INSERT INTO mall_order VALUES(mall_order_seq.nextval, 'test', '관리자', 'admin@admin.co.kr', '관리자','010-5616-6004', '13536', '주소주소주소주소', '201호', '010-5656-5656', '010-5656-5656', '메모', 56000, 0, 54000, 0, 0, 0, 21, to_date('2021-01-07', 'yyyy-mm-dd'), NULL, NULL, 'y' );
-INSERT INTO MALL_ORDER_DETAIL VALUES(mall_order_detail_seq.nextval, 23, 'test', 4, 1, 23000, 20000);
-INSERT INTO MALL_ORDER_DETAIL VALUES(mall_order_detail_seq.nextval, 23, 'test', 2, 1, 23000, 20000);
-INSERT INTO MALL_ORDER_DETAIL VALUES(mall_order_detail_seq.nextval, 23, 'test', 1, 2, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, 1, 'test', 4, 1, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, 1, 'test', 2, 1, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, 1, 'test', 1, 2, 23000, 20000);
 
+SELECT * FROM MALL_ORDER ORDER BY id desc;
+SELECT * FROM MALL_ORDER_DETAIL ORDER BY id desc;
+SELECT * FROM MALL_PAYMENT;
 
-SELECT * FROM MALL_ORDER_DETAIL;
+SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_date(sysdate, 'yyyy-MM-dd') 
+		and mem_id = 'test' ORDER BY id DESC;
+		
+SELECT * FROM mall_pdt;
+SELECT * FROM MALL_PAYMENT WHERE id = 'T2860982504896912820';
+SELECT * FROM mall_order WHERE PAY_ID = 'T2860982504896912820';
+SELECT * FROM MALL_ORDER_DETAIL WHERE ORDER_ID = '20210208311560';
+
+SELECT ID, 
+			ORDER_ID, 
+			MEM_ID, 
+			PDT_ID, 
+			QUANTITY, 
+			PRICE, 
+			TOTAL_PRICE, 
+			order_state,
+			COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT 
+		FROM mall_order_detail where order_id = '20210208311560' ORDER BY id DESC;
+		
+SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+		and mem_id = 'test' ORDER BY id DESC;

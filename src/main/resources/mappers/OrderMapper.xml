@@ -41,6 +41,7 @@
 		<result property="quantity" column="quantity" />
 		<result property="pdt.price" column="price" />
 		<result property="totalPrice" column="total_price" />
+		<result property="orderState" column="ORDER_STATE" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.OrderState$TypeHandler"/>
 	
 		<association property="pdt" column="pdt_id" select="daangnmungcat.mapper.MallPdtMapper.getProductById" fetchType="lazy"></association>
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
@@ -60,17 +61,9 @@
 
 	<!-- query -->
 
-	<select id="getOrderDetail" resultMap="odRes">
+	<select id="getOrderDetail" resultMap="odRes" parameterType="string">
 		<include refid="odSql"></include> 
 		from mall_order_detail where order_id = #{orderId}
-	</select>
-
-	<select id="nextOrderNo" resultType="int">
-		SELECT nvl(max(id)+1, 1) FROM mall_order
-	</select>
-	
-	<select id="nextPayNo" resultType="int">
-		SELECT nvl(max(id)+1, 1) FROM MALL_PAYMENT
 	</select>
 
 	<insert id="insertOrderDetail">
@@ -82,9 +75,6 @@
 		
 	</insert>
 	<insert id="insertOrder">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			SELECT mall_order_seq.nextval FROM DUAL
-		</selectKey>
 			insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
 				ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
 				TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, PAY_ID)
@@ -94,14 +84,11 @@
 	</insert>
 	
 	<insert id="insertPayment">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			SELECT mall_payment_seq.nextval FROM DUAL
-		</selectKey>
 		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
 		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
 	</insert>
 	
-	<select id="selectOrderById" resultMap="orderRes">
+	<select id="selectOrderById" resultMap="orderRes" parameterType="string">
 		SELECT * FROM mall_order 
 		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
 		and mem_id = #{member.id} ORDER BY id desc
@@ -122,6 +109,7 @@
 		<result property="totalPrice" column="total_price" />
 		<result property="partcnt" column="partcnt"/>
 		<result property="orderState" column="ORDER_STATE" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.OrderState$TypeHandler"/>
+		
 		<association property="pdt" column="pdt_id" select="daangnmungcat.mapper.MallPdtMapper.getProductById" fetchType="lazy"></association>
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 	</resultMap>
@@ -147,8 +135,5 @@
 								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
 		and mem_id = #{member.id} order by id desc
 	</select>
-	
-	
-	
 	
 </mapper>

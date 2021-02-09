@@ -19,7 +19,7 @@ import lombok.ToString;
 @JsonInclude(Include.NON_DEFAULT)
 public class OrderDetail {
 	private int id;
-	private int orderId; 
+	private String orderId; 
 	private Member member;
 	private MallProduct pdt; 
 	private int quantity;

@@ -19,7 +19,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Payment {
-	private int id; 
+	private String id; 
 	private Member member;
 	private Order order; //id, final_price, date
 	private KakaoPayApprovalVO kakao;
