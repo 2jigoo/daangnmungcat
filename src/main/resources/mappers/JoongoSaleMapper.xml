@@ -2,8 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.JoongoSaleMapper">
 <sql id="selectSQL">
-	SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
-	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
+	SELECT
+		DISTINCT s.id AS id,
+		m.id AS MEM_ID,
+		m.nickname AS mem_nickname,
+		dv.D1NAME as dongne1_name,
+		dv.D2NAME as dongne2_name,
+		grade,
+		profile_pic, 
+		DOG_CATE,
+		CAT_CATE,
+		TITLE,
+		CONTENT,
+		PRICE,
+		s.REGDATE AS regdate, 
 	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT , THUM_NAME 
 	FROM JOONGO_SALE s 
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
@@ -44,6 +56,7 @@
 <resultMap type="Sale" id="saleResult">
 	<id column="id" property="id"></id>
 	<result column="mem_id" property="member.id"/>
+	<result column="mem_nickname" property="member.nickname"/>
 	<result column="dongne1_name" property="dongne1.name"/>
 	<result column="dongne2_name" property="dongne2.name"/>
 	<result column="grade" property="member.grade"/>
