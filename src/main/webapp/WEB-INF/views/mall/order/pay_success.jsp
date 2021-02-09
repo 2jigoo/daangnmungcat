@@ -36,8 +36,7 @@ ${info}<br>
 	<tr>
 		<td>사용 및 적립</td>
 		<td>
-			사용한 마일리지: ${info.used_mileage}<br>
-			적립된 마일리지: ${info.plus_mileage}<br>
+			
 		</td>
 	</tr>
 	<tr>

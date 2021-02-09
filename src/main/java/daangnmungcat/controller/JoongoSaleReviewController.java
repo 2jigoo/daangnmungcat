@@ -62,8 +62,11 @@ public class JoongoSaleReviewController {
 	@PostMapping("/joongo/review/write")
 	public ResponseEntity<Object> insertJoongoReview(@RequestBody SaleReview review){
 		try {
+			System.out.println("리뷰 쓰기");
+			System.out.println(review);
 			return ResponseEntity.ok(service.insertJoongoSaleReview(review));
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}

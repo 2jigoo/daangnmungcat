@@ -2,6 +2,7 @@ package daangnmungcat.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,9 @@ import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.service.ChatService;
+import daangnmungcat.service.JoongoSaleReviewService;
 import daangnmungcat.service.JoongoSaleService;
 import lombok.extern.log4j.Log4j2;
 
@@ -37,6 +40,9 @@ public class ChatController {
 	
 	@Autowired
 	private JoongoSaleService saleService;
+	
+	@Autowired
+	private JoongoSaleReviewService reviewService;
 	
 	@GetMapping("/chat")
 	public String myChatList(Model model, HttpSession session) {
@@ -72,6 +78,10 @@ public class ChatController {
 		Criteria cri = new Criteria(1, 20);
 		Chat chat = chatService.getChatWithMessages(id, cri);
 		log.debug("chat: " + chat.toString());
+		
+		if(reviewService.selectJoongoReviewBySaleId(chat.getSale().getId()) != null) {
+			model.addAttribute("reviewed", true);
+		}
 		
 		model.addAttribute("chat", chat);
 		
@@ -162,6 +172,24 @@ public class ChatController {
 		}
 		
 		return ResponseEntity.ok(fileName);
+	}
+	
+	
+	@PostMapping("/chat/{id}/sold-out")
+	public ResponseEntity<Object> soldOut(@PathVariable(value = "id") int id, HttpServletRequest request) {
+		int res = 0;
+		try {
+			String loginUser = ((AuthInfo) request.getSession().getAttribute("loginUser")).getId();
+			Chat chat = chatService.getChatInfo(id);
+			if(!loginUser.equals(chat.getSale().getMember().getId()) && !loginUser.equals(chat.getBuyer().getId())) {
+				return ResponseEntity.status(HttpStatus.CONFLICT).body("해당 채팅의 참여자가 아닙니다.");
+			}
+			res = saleService.soldOut(chat.getBuyer(), chat.getSale());
+		} catch (AlreadySoldOut so) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(so.getMessage());
+		}
+		
+		return ResponseEntity.ok(res);
 	}
 	
 }

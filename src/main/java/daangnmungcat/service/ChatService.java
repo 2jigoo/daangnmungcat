@@ -17,6 +17,7 @@ public interface ChatService {
 	List<Chat> getMyChatsList(int saleId);
 	Chat getChatInfo(int chatId);
 	Chat getChatInfoFromSale(String memberId, int saleId);
+	int getChatCounts(int saleId);
 	
 	Chat getChatWithMessages(int chatId);
 	Chat getChatWithMessages(int chatId, Criteria criteria);

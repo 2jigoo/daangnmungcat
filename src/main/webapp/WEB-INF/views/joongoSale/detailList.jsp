@@ -6,14 +6,6 @@
 
 <style>
 
-   article {
-      margin : 0 auto;
-   }
-   
-   #article{
-      margin: 8% 0;
-   }
-
    #section_img {
       position: relative;
       margin-bottom: 10px;      
@@ -24,34 +16,28 @@
       postition: relative;
    }
    
-   #section_div_img{
+   #section_div_img {
       margin: 0 auto;
    }
    
    
-   #section_profile_img img
-      {
+   #section_profile_img img {
       border-radius: 50px;
-      width:40px;
-      height:40px;
+      width: 50px;
+      height: 50px;
 
    }
    
-   #section_profile, #section_description, #section_buttons, #section_goods{
-      padding-left: 20%;
-   }
-   
-   #section_profile #section_profile_img 
-      {
-      width:40px;
-      height:40px;
+   #section_profile #section_profile_img {
+      width: 50px;
+      height: 50px;
       display: inline-block;
    }
    
    #section_profile #section_profile_link{
-         display : block;
-         padding-bottom: 30px;
-         position : relative;
+       display : block;
+       padding-bottom: 30px;
+       position : relative;
        border-bottom: 1px solid #e9ecef;
    }
    
@@ -63,76 +49,91 @@
 
    #section_profile #section_profile_left #nickname {
           font-size: 15px;
-            font-weight: 600;
+          font-weight: 600;
           line-height: 1.5;
           letter-spacing: -0.6px;
           color: #212529;
    }
    
    #section_profile #section_profile_left #dongnename {
-       font-size: 13px;
-          line-height: 1.46;
+       font-size: 14px;
+       line-height: 1.46;
        letter-spacing: -0.6px;
        color: #212529;
    }
    
    #section_description #description_title {
-       margin-top : 50px;
-       font-size:35px;
+       margin-top: 30px;
+       font-size: 26px;
     }
     
     #section_description #description_sub {
-        margin-top: 4px;
-       font-size: 13px;
+       margin-top: 20px;
+       /* font-size: 13px; */
        line-height: 1.46;
        letter-spacing: -0.6px;
        color: #868e96;
        padding-bottom:5px;
-   }
+	}
     
-    #section_description #description_content {
-       font-size: 20px;
-       margin-bottom: 16px;
-       margin-top: 8px;
-      padding-top:10px;
-   }
-    
-    #section_description #description_count {
-      font-size: 13px;
-       line-height: 1.46;
-       letter-spacing: -0.6px;
-       color: #868e96;
-         padding-bottom: 30px;
-       border-bottom: 1px solid #e9ecef;
-      }
-
-    #section_buttons {
-         padding-top: 10px;
-         padding-bottom: 5px;
-      }
-   
-   .lastTime {
-      display: inline-block;
-   }
-   
-   #product_list {
-   }
-   
-   #section_goods {
-	padding-right: 10%;
-   }
-   
-   .go_to_chat_btn {
-      width: 80%;
-      cursor: pointer;
-   }
+	#section_description #description_content {
+	    margin-bottom: 30px;
+	    margin-top: 12px;
+		padding-top:10px;
+	}
+	 
+	#section_description #description_count {
+		font-size: 14px;
+	    line-height: 1.46;
+	    letter-spacing: -0.6px;
+	    color: #868e96;
+	    padding-bottom: 30px;
+	    border-bottom: 1px solid #e9ecef;
+	}
+	
+	#section_buttons {
+		padding-top: 10px;
+		padding-bottom: 5px;
+		border-bottom: 1px solid #e9ecef;
+	}
+	
+	#section_buttons img {
+		padding: 8px;
+	}
+	
+	.lastTime {
+		display: inline-block;
+	}
+	
+	#product_list {
+		border-bottom: 1px solid #e9ecef;
+	}
+	
+	#product_list > span {
+		display: block;
+		margin: 30px 0;
+		font-weight: 500;
+		font-size: 1.25em;
+	}
+	
+	.go_to_chat_btn {
+		cursor: pointer;
+		width: calc(100% - 70px);
+		padding: 14px 0;
+		float: right;
+	    background: #ff7e15;
+	    color: #fff;
+	    border-radius: 4px;
+	    font-size: 16px;
+	    font-weight: 600;
+	}
    
    /* section_goods 부분 */
 
-         .section_goods_cl {overflow:hidden;}
+         .section_goods_cl {overflow:hidden; margin-bottom: 50px;}
          .section_goods_cl > li {float:left; width:calc(25% - 15px); margin-right:20px;}
-		.section_goods_cl > li:nth-of-type(4n) {margin-right:0;}
-		.section_goods_cl > li:nth-of-type(4) ~ li {margin-top:40px;}
+		 .section_goods_cl > li:nth-of-type(4n) {margin-right:0;}
+		 .section_goods_cl > li:nth-of-type(4) ~ li {margin-top:40px;}
          .section_goods_cl > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
          .section_goods_cl .section_img {width:100%; height:285px; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:center;}
          .section_goods_cl .section_img img {max-width:100%; max-height:100%;  }
@@ -168,20 +169,16 @@
          	float: right;
          	padding-right: 10px;
 		    line-height: 40px;
-		    margin-left: 5px;
+		    margin-left: 8px;
 		    padding: 0 10px;
 		    background: #353535;
 		    color: #fff;
 		    border-radius: 4px;
-		    font-size: 0.5em;
+		    font-size: 16px;
          }
          
        	 #description_title #delBtn {
 		    background: #ff7e15;;
-         }
-         
-         #description_title  {
-         	margin-right: 150px;
          }
          
          
@@ -221,6 +218,7 @@ $(document).ready(function(){
 	   var regdate = document.getElementById('regdate').innerHTML;
 	   var writeNow = dayjs(regdate).toDate();
 	   document.getElementsByClassName("lastTime")[0].innerHTML = timeBefore(writeNow);
+	   document.getElementById('regdate').style.display='none';
 	   
    
    // 댓글 쓰기
@@ -429,202 +427,199 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 </c:if>
 </script>
 
-<article>
-   <div id="article">
-      <input id ="id" type="hidden" value="${sale.member.id }"> 
-      
-      <section id="section_img">
-         <div class="swiper-container">
-               <div class="swiper-wrapper">
-                 <c:forEach items="${flist }" var="flist">
-                  <div class="swiper-slide"><img alt="프로필" src="<%=request.getContextPath() %>/resources/${flist.fileName}"></div>
-               </c:forEach>
-               </div>
-            <!-- 도트 -->
-            <div class="swiper-pagination"></div>
-            
-            <!-- 좌우 화살표 -->
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-         </div>
-      </section>
-      
-      <section id="section_profile">
-         <a id="section_profile_link" href="#">
-            <div>
-               <div>
-                  ${sale.member.grade } 
-               </div>
-               <div id="section_profile_img">
-                        <img alt="프로필" src="<%=request.getContextPath() %>/resources/${sale.member.profilePic}">
-               </div>
-               <div id="section_profile_left">
-                  <div id="nickname" >${sale.member.id}</div>
-                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>	
-               </div>
-            </div>
-         </a>
-      </section>
-      
-      <section id="section_description">
-         <div id="description_title"><span>${sale.title }</span>
-         <span>	
-         	<c:if test="${loginUser.getId() eq sale.member.id}">
-         		<a href="<%=request.getContextPath()%>/joongoSale/modiList?id=${sale.id}">수정</a>
-				<a id="delBtn" href="<%=request.getContextPath()%>/joongoSale/delete?id=${sale.id}">삭제</a>
-			</c:if>
-		</span>
-         </div> 
-         <div id="description_sub">
-            <c:if test="${sale.dogCate == 'y'}">강아지 카테고리</c:if>
-            <c:if test="${sale.dogCate == 'n'}"></c:if>
-            <c:if test="${sale.catCate == 'y'}">고양이 카테고리</c:if>
-            <c:if test="${sale.catCate == 'n'}"></c:if> 
-            · <div class="lastTime"></div> <span style="color:#992124;"> · ${sale.saleState.label }</span><div class="regdate" id="regdate">${sale.regdate }</div> 
-         </div>
-         <h2>
-            <c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
-            <c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
-         </h2>
-         
-         <div id="description_content">
-            ${sale.content }
-         </div>
-      
-         <div id="description_count"> 
-            관심 ${sale.heartCount} 채팅 ${sale.chatCount} 조회${sale.hits } 
-         </div>
-         
-      </section>
-      <section id="section_buttons">
-         <div>
-            <c:choose>
-               <c:when test="${sale.hearted eq false}">
-                  <a href="<%=request.getContextPath()%>/heart?id=${sale.id}">
-                  <img src="<%=request.getContextPath()%>/resources/images/icon_big_empty_heart.png"/></a>
-               </c:when>
-               <c:when test="${sale.hearted eq true}">
-                  <a href="<%=request.getContextPath()%>/heartNo?id=${sale.id}">
-                  <img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
-               </c:when>
-            </c:choose>
-            <a href="<%=request.getContextPath()%>/go-to-chat?id=${sale.id}">
-               <button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
-            </a>
-         </div>
-      </section>
-      
-      <section id="section_goods">
-         <div id = "product_list">
-            <ul class="section_goods_cl">
-            
-            <c:if test = "${mlist.size() eq 1}">
-               <p>이 판매자의 다른 중고 상품이 없습니다.</p>
-            </c:if>
-            
-            <c:if test = "${mlist.size() gt 2}" >   
-               <p>이 판매자의 다른 중고상품들 입니다.</p>
-               <c:forEach items="${mlist }" var="mlist">
-                  <!--원글 id랑 mlist.id랑 같으면 mlist.안보이게 하기 -->
-                  <c:if test="${param.id eq mlist.id }">
-                  </c:if>
-                  <li>
-                     <c:if test="${param.id ne mlist.id }">
-                     <a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
-                        <div class="section_img"><img src="<%=request.getContextPath()%>/resources/${mlist.thumImg}"></div>
-                        <div class="section_txt">
-                           <p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
-                           <p class="section_subject">${mlist.title}</p>
-                           <p class="section_price">
-                           <span>
-                              <c:if test="${mlist.price eq 0 }" >무료 나눔</c:if>
-                              <c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
-                           </span>
-                           </p>
-                           <ul>
-                              <li class="section_heart">${mlist.heartCount}</li>
-                              <li class="section_chat">${mlist.chatCount}</li>
-                           </ul>
-                        </div>   
-                     </a>   
-                     </c:if>
-                  </li>
-               </c:forEach>
-            </c:if>
-            </ul>
-         </div>
-      </section>
-      
-      <div class="joongo_comment s-inner" id="joongo_comment">
-         <p class="tit">댓글</p>
-         <ul class="joongo_comment_list">
-            <c:forEach items="${commentList}" var="commentList">
-               <c:if test="${empty commentList.saleComment.id}">
-               <li data-id="${commentList.id}">
-               </c:if>
-               <c:if test="${not empty commentList.saleComment.id}">
-               <li class="reply" data-id="${commentList.saleComment.id}">
-               </c:if>
-                  <div class="user">
-                     <p class="img">
-                        <c:if test="${empty commentList.member.profilePic}">
-                           <img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
-                        </c:if>
-                        <c:if test="${not empty commentList.member.profilePic}">
-                           <img src="<%=request.getContextPath()%>/resources/${commentList.member.profilePic}">
-                        </c:if>
-                     </p>
-                     <p class="name">${commentList.member.id}</p>
-                  </div>
-                  <c:if test="${not empty commentList.tagMember.id}">
-                     <p class="tag">@${commentList.tagMember.id} </p>
-                  </c:if>
-                  <pre class="content">${commentList.content}</pre>
-                  <div class="info">
-                     <p class="date">${commentList.regdate}</p> 
-                     <ul>
-                        <li class="comment_btn">답글쓰기</li>
-                        <c:if test="${loginUser.id == commentList.member.id}">
-                           <li class="update_btn">수정</li>
-                           <li class="delete_btn">삭제</li>
-                        </c:if>
-                     </ul>
-                  </div>
-               </li>
-            </c:forEach>
-            <c:if test="${empty commentList}">
-            <li class="no_comment">
-               등록된 댓글이 없습니다.
-            </li>
-            </c:if>
-         </ul>
-         
-         <c:forEach items="${list}" var="list">
-            <div class="board_page">
-                <c:if test="${pageMaker.prev}">
-                      <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.startPage - 1)}&id=${list.id}#joongo_comment">이전</a></p>
-                </c:if> 
-               <ul>
-               
-                 <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-                   <li><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(idx)}&id=${list.id}#joongo_comment">${idx}</a></li>
-                 </c:forEach>
-               </ul>
-               
-                 <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-                   <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.endPage + 1)}&id=${list.id}#joongo_comment">다음</a></p>
-                 </c:if> 
-            </div>
-         </c:forEach>
-         
-         <div class="comment_write">
-            <input type="hidden" value="${sale.id}" class="comment_sale_id">
-            <input type="hidden" value="${loginUser.id}" class="comment_member_id">
-            <textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
-            <input type="button" value="등록" class="comment_write_btn btn">
-         </div>
-      </div>
-   
-   </div>
-</article>
+<div id="subContent">
+	<h2 id="subTitle">중고판매글 상세보기</h2>
+		<div id="pageCont" class="s-inner">
+			<input id ="id" type="hidden" value="${sale.member.id }"> 
+			<section id="section_img">
+		         <div class="swiper-container">
+		         	<div class="swiper-wrapper">
+		            	<c:forEach items="${flist }" var="flist">
+		                	<div class="swiper-slide"><img alt="프로필" src="<%=request.getContextPath() %>/resources/${flist.fileName}"></div>
+		               	</c:forEach>
+		            </div>
+		            <!-- 도트 -->
+		            <div class="swiper-pagination"></div>
+		            
+		            <!-- 좌우 화살표 -->
+		            <div class="swiper-button-next"></div>
+		            <div class="swiper-button-prev"></div>
+		         </div>
+		      </section>
+	      
+		      <section id="section_profile">
+		         <a id="section_profile_link" href="#">
+		            <div>
+		               <div id="section_profile_img">
+		                        <img alt="프로필" src="<%=request.getContextPath() %>/resources/${sale.member.profilePic}">
+		               </div>
+		               <div id="section_profile_left">
+		                  <div id="nickname" >${sale.member.nickname} ${sale.member.grade }</div>
+		                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>	
+		               </div>
+		            </div>
+		         </a>
+		      </section>
+		      
+		      <section id="section_description">
+		         <div id="description_title">
+		         	<span style="font-weight: 600;">
+		         		<c:if test="${sale.saleState.code eq 'SOLD_OUT' }">
+		         			<span style="color:lightslategray">${sale.saleState.label }</span>
+		         		</c:if>
+		         		<c:if test="${sale.saleState.code eq 'RESERVED' }">
+		         			<span style="color:seagreen">${sale.saleState.label }</span>
+		         		</c:if>
+		         		${sale.title }
+	         		</span>
+			        <span>	
+			         	<c:if test="${loginUser.getId() eq sale.member.id}">
+			         		<a href="<%=request.getContextPath()%>/joongoSale/modiList?id=${sale.id}">수정</a>
+							<a id="delBtn" href="<%=request.getContextPath()%>/joongoSale/delete?id=${sale.id}">삭제</a>
+						</c:if>
+					</span>
+		         </div> 
+		         <div id="description_sub">
+		         	<c:choose>
+		         		<c:when test="${sale.dogCate eq 'y' and sale.catCate eq 'y' }">멍냥</c:when>
+		         		<c:when test="${sale.dogCate eq 'y' }">멍</c:when>
+		         		<c:otherwise>냥</c:otherwise>
+		         	</c:choose>
+		            · <div class="lastTime"></div> <div class="regdate" id="regdate">${sale.regdate }</div> 
+		         </div>
+		         <h3>
+		            <c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
+		            <c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
+		         </h3>
+		         
+		         <div id="description_content">
+		            ${sale.content }
+		         </div>
+		      
+		         <div id="description_count"> 
+		            관심 ${sale.heartCount} 채팅 ${sale.chatCount} 조회${sale.hits } 
+		         </div>
+		         
+		      </section>
+		      <section id="section_buttons">
+		         <div>
+		            <c:choose>
+		               <c:when test="${sale.hearted eq false}">
+		                  <a href="<%=request.getContextPath()%>/heart?id=${sale.id}">
+		                  <img src="<%=request.getContextPath()%>/resources/images/icon_big_empty_heart.png"/></a>
+		               </c:when>
+		               <c:otherwise>
+		                  <a href="<%=request.getContextPath()%>/heartNo?id=${sale.id}">
+		                  <img src="<%=request.getContextPath()%>/resources/images/icon_big_heart.png"/></a>
+		               </c:otherwise>
+		            </c:choose>
+		            <a href="<%=request.getContextPath()%>/go-to-chat?id=${sale.id}">
+		               <button class="go_to_chat_btn" type="button">채팅으로 거래하기</button>
+		            </a>
+		         </div>
+		      </section>
+		      
+		      	<c:if test="${mlist.size() ne 0}">
+		      		<section id="section_goods">
+			         <div id = "product_list">
+		             	<span>${sale.member.nickname }님의 판매 상품</span>
+			            <ul class="section_goods_cl">
+			               <c:forEach items="${mlist }" var="mlist">
+			                  <li>
+			                     <a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
+			                        <div class="section_img"><img src="<%=request.getContextPath()%>/resources/${mlist.thumImg}"></div>
+			                        <div class="section_txt">
+			                           <p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
+			                           <p class="section_subject">${mlist.title}</p>
+			                           <p class="section_price">
+			                           <span>
+			                              <c:if test="${mlist.price eq 0 }" >무료 나눔</c:if>
+			                              <c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
+			                           </span>
+			                           </p>
+			                           <ul>
+			                              <li class="section_heart">${mlist.heartCount}</li>
+			                              <li class="section_chat">${mlist.chatCount}</li>
+			                           </ul>
+			                        </div>   
+			                       </a>   
+			                 	</li>
+			               </c:forEach>
+			            </ul>
+			         </div>
+			      </section>
+		      	</c:if>
+		      
+		      <div class="joongo_comment s-inner" id="joongo_comment">
+		         <p class="tit">댓글 ${commentList.size() }</p>
+		         <ul class="joongo_comment_list">
+		            <c:forEach items="${commentList}" var="commentList">
+		               <c:if test="${empty commentList.saleComment.id}">
+		               <li data-id="${commentList.id}">
+		               </c:if>
+		               <c:if test="${not empty commentList.saleComment.id}">
+		               <li class="reply" data-id="${commentList.saleComment.id}">
+		               </c:if>
+		                  <div class="user">
+		                     <p class="img">
+		                        <c:if test="${empty commentList.member.profilePic}">
+		                           <img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
+		                        </c:if>
+		                        <c:if test="${not empty commentList.member.profilePic}">
+		                           <img src="<%=request.getContextPath()%>/resources/${commentList.member.profilePic}">
+		                        </c:if>
+		                     </p>
+		                     <p class="name">${commentList.member.id}</p>
+		                  </div>
+		                  <c:if test="${not empty commentList.tagMember.id}">
+		                     <p class="tag">@${commentList.tagMember.id} </p>
+		                  </c:if>
+		                  <pre class="content">${commentList.content}</pre>
+		                  <div class="info">
+		                     <p class="date">${commentList.regdate}</p> 
+		                     <ul>
+		                        <li class="comment_btn">답글쓰기</li>
+		                        <c:if test="${loginUser.id == commentList.member.id}">
+		                           <li class="update_btn">수정</li>
+		                           <li class="delete_btn">삭제</li>
+		                        </c:if>
+		                     </ul>
+		                  </div>
+		               </li>
+		            </c:forEach>
+		            <c:if test="${empty commentList}">
+		            <li class="no_comment">
+		               등록된 댓글이 없습니다.
+		            </li>
+		            </c:if>
+		         </ul>
+		         
+		         <c:forEach items="${list}" var="list">
+		            <div class="board_page">
+		                <c:if test="${pageMaker.prev}">
+		                      <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.startPage - 1)}&id=${list.id}#joongo_comment">이전</a></p>
+		                </c:if> 
+		               <ul>
+		               
+		                 <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+		                   <li><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(idx)}&id=${list.id}#joongo_comment">${idx}</a></li>
+		                 </c:forEach>
+		               </ul>
+		               
+		                 <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+		                   <p><a href="<%=request.getContextPath()%>/detailList${pageMaker.makeQuery(pageMaker.endPage + 1)}&id=${list.id}#joongo_comment">다음</a></p>
+		                 </c:if> 
+		            </div>
+		         </c:forEach>
+		         
+		         <div class="comment_write">
+		            <input type="hidden" value="${sale.id}" class="comment_sale_id">
+		            <input type="hidden" value="${loginUser.id}" class="comment_member_id">
+		            <textarea placeholder="댓글내용을 입력해주세요" class="comment_content"></textarea>
+		            <input type="button" value="등록" class="comment_write_btn btn">
+		         </div>
+		      </div>
+		   
+	</div>
+</div>
 <jsp:include page="/resources/include/footer.jsp"/>

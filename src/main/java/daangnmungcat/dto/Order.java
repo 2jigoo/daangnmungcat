@@ -22,7 +22,7 @@ import lombok.ToString;
 @ToString
 @JsonInclude(Include.NON_DEFAULT)
 public class Order {
-	private int id; 
+	private String id; 
 	private Member member;
 	private List<OrderDetail> details;
 	private String addName;
@@ -40,12 +40,12 @@ public class Order {
 	private int addDeliveryPrice;
 	private int cancelPrice;
 	private int returnPrice;
-	private int payId;
+	private String payId;
 	private LocalDateTime payDate;
 	private String state;
+
 	
-	
-	public Order(int id) {
+	public Order(String id) {
 		this.id = id;
 	}
 }

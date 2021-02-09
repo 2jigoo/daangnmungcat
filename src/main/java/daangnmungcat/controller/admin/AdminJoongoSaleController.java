@@ -1,6 +1,6 @@
 package daangnmungcat.controller.admin;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AdminJoongoSaleController {
 	
 	@GetMapping("/admin/joongo/list")
 	public String list(Model model, Criteria cri, @RequestParam @Nullable String name, @RequestParam @Nullable String category, @RequestParam @Nullable String id, @RequestParam @Nullable String dongne1, @RequestParam @Nullable String dongne2) {
-		List<Sale> list = new ArrayList<Sale>();
+		List<Sale> list = Collections.emptyList();
 		System.out.println(cri);
 		
 		if (name != null || category != null || id != null || dongne1 != null) {
@@ -52,10 +52,10 @@ public class AdminJoongoSaleController {
 				}
 			}
 			
-			list = service.selectJoongoBySearch(sale, cri);
+			list = service.getListsSearchedBy(sale, cri);
 			
 		} else {
-			list = service.selectJoongoByAllPage(cri);
+			list = service.getLists(cri);
 		}
 		model.addAttribute("list", list);
 		

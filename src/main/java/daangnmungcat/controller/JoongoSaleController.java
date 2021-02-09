@@ -64,6 +64,8 @@ public class JoongoSaleController {
 		log.info("sale State: " + sale.getSaleState() + ", " + sale.getSaleState().getLabel());
 		
 		List<Sale> mlist = service.getListByMemID(memId);
+		mlist.removeIf(s -> s.getId() == id);
+		
 		List<FileForm> flist = service.selectImgPath(id);
 		
 		if (loginUser != null) {

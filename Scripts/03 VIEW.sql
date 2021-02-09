@@ -14,7 +14,7 @@ LEFT OUTER JOIN DONGNE2 b ON a.ID = b.DONGNE1_ID;
 SELECT * FROM JOONGO_IMAGE ji ;
 
 CREATE OR REPLACE VIEW sale_view
-AS SELECT DISTINCT s.id AS id, m.id AS MEM_ID, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+AS SELECT DISTINCT s.id AS id, m.id AS MEM_ID, m.nickname AS MEM_NICKNAME, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
 	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
 	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT , THUM_NAME 
 	FROM JOONGO_SALE s 

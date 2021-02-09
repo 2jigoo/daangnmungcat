@@ -2,23 +2,29 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
 
-<c:if test="${loginUser.id ne sale.buyMember.id}">
-<script>
-	$(function(){
-		alert("구매한 제품만 리뷰작성이 가능합니다.")
-		window.location = "/";
-	})
-</script>
-</c:if>
 
-<c:if test="${not empty review}">
-<script>
-	$(function(){
-		alert("이미 제품 리뷰를 등록했습니다.")
+<c:choose>
+	<c:when test="${loginUser.id eq sale.member.id }">
+	<script>
+		alert("본인의 판매글에 대해 거래후기를 남길 수 없습니다.");
 		window.location = "/";
-	})
-</script>
-</c:if>
+	</script>
+	</c:when>
+	<c:when test="${loginUser.id ne sale.buyMember.id }">
+		<script>
+			alert("본인이 구매한 판매글에만 거래후기를 남길 수 있습니다.")
+			window.location = "/";
+		</script>
+	</c:when>
+	<c:when test="${not empty review}">
+		<script>
+			alert("이미 해당 판매글에 대해 거래후기를 남겼습니다.")
+			window.location = "/";
+		</script>
+	</c:when>
+</c:choose>
+
+
 
 <script>
 $(function(){
@@ -63,6 +69,8 @@ $(function(){
          },
          error: function(request,status,error){
             alert('에러' + request.status+request.responseText+error);
+            console.log(request);
+            console.log(error);
          }
       })
 	})

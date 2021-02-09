@@ -198,3 +198,12 @@ DELETE FROM MALL_ORDER_DETAIL mod2 ;
 DELETE FROM mall_order;
 DELETE FROM MALL_MILEAGE mm ;
 
+
+INSERT INTO MALL_MILEAGE(id, mem_id, mileage, content)
+SELECT mall_mileage_seq.nextval, id, 2000, '이벤트'
+FROM MEMBER;
+
+
+SELECT * FROM JOONGO_REVIEW jr ;
+
+SELECT * FROM JOONGO_IMAGE ji ORDER BY id DESC;

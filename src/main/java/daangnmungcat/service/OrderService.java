@@ -21,23 +21,21 @@ import daangnmungcat.dto.Payment;
 public interface OrderService {
 
 	List<Order> selectOrderById(String id);
-	Order getOrderByNo(int id);
+	Order getOrderByNo(String id);
 	
 	int insertOrder(Order order);
 	
-	List<OrderDetail> getOrderDetail(int orderNo);
-	
-	int nextOrderNo();
-	int nextPayNo();
+	List<OrderDetail> getOrderDetail(String orderNo);
 
 	int insertPayment(Payment pay);
 
 	int insertOrderDetail(OrderDetail orderDetail);
 
-	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
 
-	List<OrderDetail> sortingOrderDetail(int orderId);
+	List<OrderDetail> sortingOrderDetail(String id);
 	
 	List<Order> searchByDate(String start, String end, Member member);
+	
+	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
 	
 }

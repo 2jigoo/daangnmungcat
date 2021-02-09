@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -180,13 +181,18 @@ public class MypageController {
 		
 		
 		List<Order> list = orderService.selectOrderById(member.getId());
+		System.out.println(list);
+		
 		for(Order o: list) {
+			System.out.println(o.getId());
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			System.out.println(odList);
 			o.setDetails(odList);
 			for(OrderDetail od: odList) {
 				od.setOrderId(o.getId());
 			}
 		}
+	
 		
 		ModelAndView mv = new ModelAndView();
 		
@@ -220,7 +226,7 @@ public class MypageController {
 	}
 	
 	@GetMapping("/mypage/mypage_order_list/{id}")
-	public ModelAndView getOrderNo(@PathVariable int id, HttpSession session, HttpServletRequest request) {
+	public ModelAndView getOrderNo(@PathVariable String id, HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());

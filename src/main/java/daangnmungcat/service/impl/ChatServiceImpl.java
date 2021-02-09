@@ -79,6 +79,13 @@ public class ChatServiceImpl implements ChatService {
 		return chat;
 	}
 	
+	@Override
+	public int getChatCounts(int saleId) {
+		int counts = chatMapper.selectCountBySaleId(saleId);
+		return counts;
+	}
+	
+	
 	// 채팅 얻어오면서 메시지 리스트 set 하기
 	@Override
 	public Chat getChatWithMessages(int chatId) {
@@ -221,6 +228,5 @@ public class ChatServiceImpl implements ChatService {
 		
 		return fileName;
 	}
-	
 	
 }

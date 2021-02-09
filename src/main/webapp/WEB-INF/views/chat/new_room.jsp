@@ -52,6 +52,8 @@
 				});
 			}
 		});
+		
+		
 	});
 </script>
 <div>
@@ -62,13 +64,44 @@
 		            <h2>
 						${sale.member.nickname }
 					</h2>
-		            [${sale.saleState.label }] ${sale.title } <br>
-		            <span class="dongne">${sale.dongne2.dongne1.name } ${sale.dongne2.name}</span><br>
-					<c:choose>
-						<c:when test="${sale.price eq 0}">무료나눔</c:when>
-						<c:otherwise>${sale.price}원</c:otherwise>
-					</c:choose>
-					<br>
+		        </div>
+		        <div class="chat-header" style="display: flex;">
+					<div style="float: left;width: calc(100% - 120px);text-align: left;">
+						<a href="/joongoSale/detailList?id=$sale.id }">
+  						<div style="display: inline-block; margin-right: 10px;">
+  							<c:if test="${sale.thumImg eq null }">
+  								<img src="/resources/images/no_image.jpg" width="80px">
+  							</c:if>
+  							<c:if test="${sale.thumImg ne null }">
+  								<img src="/resources/${sale.thumImg }" width="80px">
+  							</c:if>
+							
+			 		   	</div>
+					    <div style="display: inline-grid">
+							[${sale.saleState.label }] ${sale.title }
+							<span class="dongne">${sale.dongne1.name } ${sale.dongne2.name}</span>
+							<c:choose>
+								<c:when test="${sale.price eq 0}">무료나눔</c:when>
+								<c:otherwise>${sale.price}원</c:otherwise>
+							</c:choose>
+					    </div>
+						</a>
+					</div>
+					<div style="float:  right; width: 120px; margin: auto 0;">
+						<c:choose>
+							<c:when test="${sale.saleState.code ne 'SOLD_OUT'}">
+								<button type="button" id="sold-out-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">거래완료</button>
+							</c:when>
+							<c:otherwise>
+								<c:if test="${reviewed ne true }">
+									<button type="button" id="write-review-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">
+										거래 후기
+										남기기
+									</button>
+								</c:if>
+							</c:otherwise>
+						</c:choose>
+				    </div>
 		        </div>
 		        <div class="connecting">
 		          	  연결중...
