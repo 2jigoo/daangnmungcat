@@ -223,24 +223,9 @@ public class JoongoListController {
 			break;
 		}
 		
-		s.updateJoongoSale(sale, fileList, request);
+		saleService.updateJoongoSale(sale, fileList, request);
 		
 		return null;
 	}
-	
-	@PostMapping("/joongoSale/modify")
-	public String update(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
-		request.setCharacterEncoding("UTF-8");
-		
-		log.info("수정 후 SaleState: " + sale.getSaleState() + sale.getSaleState().getCode() + sale.getSaleState().getLabel());
-	
-		return null;
-	}
-	
-	@GetMapping("/joongoSale/pic/delete")
-	public String picDel(@RequestParam int id, @RequestParam String fileName) throws Exception {
-		s.deleteSaleFile(fileName);
-		return "redirect:/joongoSale/modiList?id="+id;
-	}
-	
 }
+	

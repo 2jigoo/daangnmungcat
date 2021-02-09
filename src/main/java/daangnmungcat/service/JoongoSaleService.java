@@ -45,4 +45,9 @@ public interface JoongoSaleService {
 	//상세보기 - 수정에서 사진 db삭제
 	int deleteSaleFile(String fileName);
 	int deleteSaleFileBySaleId(int id);
+	
+	
+	int listCount();
+	int listCountByDongne1(String dongne1);
+	int listCountByDongne2(String dongne1, String dongne2);
 }
