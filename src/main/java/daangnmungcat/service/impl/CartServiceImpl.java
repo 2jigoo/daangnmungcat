@@ -1,6 +1,7 @@
 package daangnmungcat.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,8 +102,20 @@ public class CartServiceImpl implements CartService {
 	
 	
 	@Override
+	@Transactional
 	public int moveToMember(String basketId, String memberId) {
-		int res = cartMapper.updateCartItemFromBasektIdToMember(basketId, memberId);
+		List<Cart> basketList = cartMapper.selectCartByBasketId(basketId);
+		List<Cart> memberList = cartMapper.selectCartByMemberId(memberId);
+		
+		List<Integer> dontExistIds = basketList.stream()
+					.filter(c -> memberList.stream().noneMatch(m -> m.getProduct().getId() == c.getProduct().getId()))
+					.map(Cart::getId).collect(Collectors.toList());
+		
+		int res = 0;
+		res += cartMapper.updateCartItemFromBasektIdToMember(dontExistIds, memberId);
+		res += cartMapper.updateQuantityFromBasektIdToMember(basketId, memberId);
+		res += cartMapper.deleteBasketId(basketId);
+		
 		return res;
 	}
 	

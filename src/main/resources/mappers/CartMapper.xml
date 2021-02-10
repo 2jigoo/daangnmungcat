@@ -67,7 +67,23 @@
 		SET
 			member_id = #{memberId},
 			basket_id = NULL
-		WHERE basket_id = #{basketId}
+		WHERE id
+			IN
+			<foreach collection="id" item="item" open="(" separator=", " close=")">
+				#{item}
+			</foreach>
+	</update>
+	
+	<update id="updateQuantityFromBasektIdToMember">
+		UPDATE MALL_CART a
+		SET
+			quantity = quantity + NVL((
+				SELECT quantity
+				FROM MALL_CART b
+				WHERE a.product_id = b.product_id
+					AND BASKET_ID = #{basketId}
+			), 0)
+		WHERE MEMBER_ID = #{memberId}
 	</update>
 	
 	<delete id="deleteCartItem" parameterType="Cart">
@@ -85,4 +101,11 @@
 				#{pdt.id}
 			</foreach>
 	</delete>
+	
+	<delete id="deleteBasketId">
+		DELETE
+		FROM mall_cart
+		WHERE basket_id = #{basketId}
+	</delete>
+	
 </mapper>

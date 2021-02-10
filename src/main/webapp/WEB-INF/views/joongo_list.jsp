@@ -30,11 +30,11 @@ $(function(){
 	   });
 	   
 	   setTimeout(function(){
-	      console.log("test : "+ dongne1Id)
+		  var dongne2Box = $("select[name=dongne2]");
 	      if (dongne1Name != ""){
 	         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
 	            var datalength = json.length; 
-	            var sCont = "<option>동네를 선택하세요</option>";
+	            var sCont = "";
 	            for(i=0; i<datalength; i++){
 	               if (json[i].name == "${dongne2Name}"){
 	                  sCont += '<option value="' + json[i].id + '" selected>';
@@ -44,7 +44,9 @@ $(function(){
 	               sCont += json[i].name;
 	               sCont += '</option>';
 	            }
-	            $("select[name=dongne2]").append(sCont);   
+	            dongne2Box.prop('disabled', false);
+	            dongne2Box.empty();   
+	            dongne2Box.append(sCont);   
 	         });
 	      }
 	   }, 50);
@@ -202,7 +204,8 @@ $(function(){
 				<select name="dongne1">
 					<option>전체 선택</option>
 				</select> 
-				<select name="dongne2">
+				<select name="dongne2" disabled>
+					<option>동네를 선택하세요</option>
 				</select>
 				<c:if test="${not empty loginUser}">
 					<p class="dongne_btn">내 동네 저장</p>

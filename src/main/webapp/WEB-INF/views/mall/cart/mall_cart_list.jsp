@@ -182,12 +182,18 @@ function deleteCartItem(cart_id) {
 							<tr>
 								<td><input type="checkbox" class="ckbox" name="id" value="${cart.id }"></td>
 								<td class="cart_thumb">
-									<div product-id="${cart.product.id}">
-										<c:if test="${cart.product.image1 eq null}"><img src="/resources/images/no_image.jpg"></c:if>
-										<c:if test="${cart.product.image1 ne null}"><img src="/resources${pdt.image1}"></c:if>
-									</div>
+									<a href="/mall/product/${cart.product.id }">
+										<div product-id="${cart.product.id}">
+											<c:if test="${cart.product.image1 eq null}"><img src="/resources/images/no_image.jpg"></c:if>
+											<c:if test="${cart.product.image1 ne null}"><img src="/resources${pdt.image1}"></c:if>
+										</div>
+									</a>
 								</td>
-								<td>${cart.product.name }</td>
+								<td>
+									<a href="/mall/product/${cart.product.id }">
+									${cart.product.name }
+									</a>
+								</td>
 								<td>
 									<span class="price" value="${cart.product.price}">${cart.product.price }</span>
 									<div class="qtt">
@@ -197,7 +203,7 @@ function deleteCartItem(cart_id) {
 											<p class="up"><span class="text_hidden">증가</span></p>
 										</div>
 									</div>
-									<a href="#" class="modify_quantity" cart-id="${cart.id }">변경</a>
+									<button class="cart_btn modify_quantity" cart-id="${cart.id }">변경</button>
 								</td>
 								<td>
 									<fmt:formatNumber value="${cart.product.price * 0.01}" />점

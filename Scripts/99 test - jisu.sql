@@ -206,4 +206,16 @@ FROM MEMBER;
 
 SELECT * FROM JOONGO_REVIEW jr ;
 
-SELECT * FROM JOONGO_IMAGE ji ORDER BY id DESC;
+SELECT * FROM mall_cart ORDER BY id;
+
+
+UPDATE MALL_CART a
+SET
+	quantity = quantity + NVL((
+		SELECT quantity
+		FROM MALL_CART b
+		WHERE a.product_id = b.product_id
+			AND BASKET_ID  = 'dc2e9747-878b-4631-8994-51ddcf7f6710'
+	), 0)
+WHERE MEMBER_ID = 'chattest1';
+--a.PRODUCT_ID IN (SELECT PRODUCT_ID FROM mall_cart WHERE BASKET_ID = 'dc2e9747-878b-4631-8994-51ddcf7f6710');

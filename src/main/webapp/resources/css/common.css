@@ -497,7 +497,7 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 .cart_table thead th {background:#404d69; color:#fff; text-align:center; border:1px solid rgba(255,255,255,0.1); padding:10px;}
 .cart_table tbody td {border:1px solid #ddd; padding:10px; text-align:center;}
 .cart_table tbody td:nth-child(3) {text-align:left !important; padding:0px 20px;}
-.cart_table tbody td a {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
+.cart_table .cart_btn {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
 
 .cart_thumb img {width: 100px;}
 .cart_table .qtt {text-align:center; margin-top: 6px;}
