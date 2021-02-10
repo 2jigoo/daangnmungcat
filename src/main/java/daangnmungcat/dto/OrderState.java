@@ -11,6 +11,9 @@ import java.util.stream.Stream;
 
 import org.apache.ibatis.type.MappedTypes;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import daangnmungcat.typehandler.CodeEnum;
 import daangnmungcat.typehandler.CodeEnumTypeHandler;
 import lombok.extern.log4j.Log4j2;
@@ -40,15 +43,16 @@ public enum OrderState implements CodeEnum{
 	}
 	
 	private static final Map<String, OrderState> StringToEnum =
-			Stream.of(values()).collect(toMap(OrderState::getLabel, e -> e));
+			Stream.of(values()).collect(toMap(OrderState::getCode, e -> e));
 	
 	public static final List<OrderState> orderStateList = new ArrayList<>(Arrays.asList(values()));
 	
-	public static OrderState fromString(String symbol) {
+	@JsonCreator
+	public static OrderState fromString(@JsonProperty("code") String symbol) {
 		OrderState state = StringToEnum.get(symbol);
 		if(Objects.isNull(state)) {
 			log.error("잘못된 판매상태 타입입니다. ", symbol);
-			throw new IllegalStateException("잘못된 판매상태 타입입니다.");
+			throw new IllegalStateException("잘못된 주문상태 타입입니다.");
 		}
 		return state;
 	}

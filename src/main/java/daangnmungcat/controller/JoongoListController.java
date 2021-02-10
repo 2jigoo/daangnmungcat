@@ -212,8 +212,9 @@ public class JoongoListController {
 		return null;
 	}
 	
+	// 판매상태 변경
 	@PutMapping("/joongo/sale/{id}/state")
-	public ResponseEntity<Object> modifySaleState(HttpSession session, @PathVariable("id") int id, Sale sale) {
+	public ResponseEntity<Object> modifySaleState(HttpSession session, @PathVariable("id") int id, @RequestBody Sale sale) {
 		int res = 0;
 		try {
 			Member member = new Member(((AuthInfo) session.getAttribute("loginUser")).getId());

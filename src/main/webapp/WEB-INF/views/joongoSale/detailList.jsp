@@ -235,13 +235,14 @@ $(document).ready(function(){
 			         url : "/joongo/sale/${sale.id}/state",
 			         contentType : "application/json; charset=utf-8",
 			         cache : false,
-			         data : JSON.stringify({member: {id: "${loginUser.id}"}, saleState: {label: state}}),
+			         data : JSON.stringify({member: {id: "${loginUser.id}"}, saleState: {code: changeStateCode}}),
 			         dataType : "json",
 			         success: function(data){
-			        	alert("변경했습니다.");	
-			            // location.reload();
+			        	alert("변경되었습니다.");	
+			            location.reload();
 			         },
 			         error: function(e){
+			        	 alert("판매상태를 변경하는 중 에러가 발생했습니다.");
 			        	 console.log(e);
 			         }
 			  });

@@ -44,12 +44,12 @@ public enum SaleState implements CodeEnum {
 	}
 	
 	private static final Map<String, SaleState> StringToEnum =
-			Stream.of(values()).collect(toMap(SaleState::getLabel, e -> e));
+			Stream.of(values()).collect(toMap(SaleState::getCode, e -> e));
 	
 	public static final List<SaleState> saleStateList = new ArrayList<>(Arrays.asList(values()));
 	
 	@JsonCreator
-	public static SaleState fromString(@JsonProperty("label") String symbol) {
+	public static SaleState fromString(@JsonProperty("code") String symbol) {
 		SaleState state = StringToEnum.get(symbol);
 		if(Objects.isNull(state)) {
 			log.error("잘못된 판매상태 타입입니다. ", symbol);
