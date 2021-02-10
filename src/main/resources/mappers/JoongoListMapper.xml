@@ -174,7 +174,7 @@
 	<update id="updateJoongoSale" parameterType="Sale">
 		UPDATE JOONGO_SALE SET 
 		DOG_CATE = #{dogCate}, CAT_CATE = #{catCate}, TITLE= #{title}, CONTENT = #{content}, PRICE = #{price},  DONGNE1_ID = #{dongne1.id},
-		  DONGNE2_ID = #{dongne2.id}, SALE_STATE = #{saleState}, REGDATE = #{REGDATE} WHERE ID = #{id} 
+		  DONGNE2_ID = #{dongne2.id}, SALE_STATE = #{saleState} WHERE ID = #{id} 
 	</update>
 	
 	<update id="updateSold" parameterType="Sale">

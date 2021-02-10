@@ -20,12 +20,12 @@ textarea {
 	height: 200px;
 }
 
-#preview1 > img {
+#preview1 > img, #preview1 > a > img {
 	width: 160px;
 	height: 160px;
 }
 
-#preview2 > img {
+#preview2 > a > img, #preview2  > img  {
 	width: 160px;
 	height: 160px;
 	float: left;
@@ -133,7 +133,6 @@ $(function(){
 	    });
 	 
 	 $('#update').on("click", function(e){
-		e.preventDefault();
 		
 		var price = $('#price').val();	
 		var num = /^[0-9]*$/;
@@ -156,33 +155,21 @@ $(function(){
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
-		} 
-		 
-		updateBoard();
+		}
 	});
+	 
+	 
+	 //클릭한 사진 db에서 삭제
+	 $("#sale_pic_delete_btn").click(function(){
+		if (confirm("정말 삭제하시겠습니까??") == true){
+		} else{
+		    return false;
+		}
+	})
+	 
 	 
 	$('#imgInput').on("change", handleImgs);	
 	
-	function updateBoard(){
-		var formData = new FormData($("#boardForm")[0]);
-		
-		$.ajax({
-			type : 'post',
-			url : contextPath + "/joongoSale/modify",
-			data : formData,
-			processData : false,
-			contentType : false,
-			success : function(html) {
-				alert("파일 업로드하였습니다.");
-				console.log(html);
-			},
-			error : function(error) {
-				alert("파일 업로드에 실패하였습니다.");
-				console.log(error);
-				console.log(error.status);
-			}
-		});
-	}
 });
 
 function loadSaleStatesBox(list) {
@@ -211,9 +198,12 @@ function handleImgs(e) {
 		sel_files.push(f);
 		var reader = new FileReader();
 		reader.onload = function(e){
-			var img_html = "<img src=\"" + e.target.result + "\" />";
+			var img_html = "<a href='#this' name='delete' class='btn'> <img src=\"" + e.target.result + "\" /></a>";
 			$('#preview1').append(img_html);
-			index++;
+			
+			$("a[name='delete']").on("click",function(e){
+				$(this).remove();
+			})
 		}
 		reader.readAsDataURL(f);
 	});
@@ -243,8 +233,9 @@ function handleThumImgs(){
 	<h2 id="subTitle">글 수정하기</h2> 	
 	<div id="pageCont" class="s-inner">
 		<article>
-<form id="boardForm" name="boardForm" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
+<form id="modifyForm" name="modifyForm" action="<%=request.getContextPath() %>/joongoSale/modify" method="post" enctype="multipart/form-data" accept-charset="UTF-8">
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+				<input type="hidden" name="id" value="${param.id}">
 		<table style="width: 800px; table-layout: fixed;">
 			<tr>
 				<td>
@@ -284,24 +275,28 @@ function handleThumImgs(){
 				<td>대표 사진<br>*대표사진은1장만 추가가능</td>
 				<td>
 					<div id="thumFileArea">
-						<input type="file" name="file" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
+						<input type="file" name="thum" id="thumImgInput" accept="image/*" onchange="handleThumImgs()"/>
 						<img id="productImg1">
 						<div id="preview"></div>
-							<c:forEach items="${flist }" var="flist" begin="0" end="0">
-						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+						<c:forEach items="${flist }" var="flist" begin="0" end="0">
+							<div id="preview2">
+							<c:if test="${ not empty thumImg.thumName}">
+								<a href="<%=request.getContextPath()%>/joongoSale/pic/delete?id=${param.id }&fileName=${flist.fileName}" id="sale_pic_delete_btn"><img src="<%=request.getContextPath()%>/resources/${thumImg.thumName}"></a></c:if>
+							</div>
+					
 						</c:forEach>
 					</div>
 				</td>
 			</tr>
 			
 			<tr>
-				<td>사진</td>
+				<td>사진<br>*사진 클릭시삭제가능</td>
 				<td>
 					<div id="fileArea">
 						<input multiple="multiple" type="file" name="file" id="imgInput" />
 						<div id="preview1"></div>
 					<c:forEach items="${flist }" var="flist" begin="1">
-						<div id="preview2"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></div>
+						<div id="preview2"><a href="<%=request.getContextPath()%>/joongoSale/pic/delete?id=${param.id }&fileName=${flist.fileName}" id="sale_pic_delete_btn"><img alt="상품사진" src="<%=request.getContextPath()%>/resources/${flist.fileName}"></a></div>
 					</c:forEach>
 					</div>
 				</td>
@@ -310,12 +305,6 @@ function handleThumImgs(){
 			<tr>	
 				<td>카테고리</td>
 				<td>
-				<!-- 	<select name="dogCate" id="dogCate" >
-						<option value="">카테고리를 선택하세요.</option>
-						<option value="y">강아지 카테고리</option>
-						<option value="n">고양이 카테고리 </option>
-						<option value="y"> 모두 포함 </option>
-					</select> -->
 					<input type="radio" name="category" id="category" value="1" >강아지 카테고리
 					<input type="radio" name="category" id="category" value="2" style="margin-left: 15px;">고양이 카테고리
 					<input type="radio" name="category" id="category" value="3" style="margin-left: 15px;">모두 포함

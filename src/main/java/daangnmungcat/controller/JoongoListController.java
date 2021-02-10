@@ -156,8 +156,10 @@ public class JoongoListController {
 	public String updateForm(@RequestParam int id, Model model, HttpSession session) {
 		Sale sale = saleService.getSaleById(id);
 		List<FileForm> flist = saleService.selectImgPath(id);
+		FileForm thumImg = saleService.selectThumImgPath(id);
 		model.addAttribute("sale", sale);
 		model.addAttribute("flist", flist);
+		model.addAttribute("thumImg",thumImg);
 		
 		return "joongoSale/sale_update";
 	}
@@ -175,9 +177,9 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/insert")
-	public String add(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+	public String add(HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
-		
+		System.out.println("왔나?");
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		switch (category) {
 		case 1:
@@ -195,7 +197,7 @@ public class JoongoListController {
 		}
 
 		sale.setMember(new Member(loginUser.getId()));
-		saleService.insertJoongoSale(sale, fileList, request);
+		saleService.insertJoongoSale(sale, fileList, file, request);
 		int id = sale.getId();
 		String textUrl = "detailList?id=" + id;
 		model.addAttribute("msg", "등록되었습니다.");
@@ -204,12 +206,30 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/modify")
-	public String update(HttpSession session,  Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam(value = "file") MultipartFile[] fileList) throws Exception {
+	public String modify(HttpSession session, @RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
+		//s.deleteSaleFileBySaleId(id);
 		
-		log.info("수정 후 SaleState: " + sale.getSaleState() + sale.getSaleState().getCode() + sale.getSaleState().getLabel());
-	
-		return null;
+		switch (category) {
+		case 1:
+			sale.setDogCate("y");
+			sale.setCatCate("n");
+			break;
+		case 2:
+			sale.setDogCate("n");
+			sale.setCatCate("y");
+			break;
+		case 3:
+			sale.setDogCate("y");
+			sale.setCatCate("y");
+			break;
+		}
+		
+		saleService.updateJoongoSale(sale, fileList, file, request);
+		String textUrl = "detailList?id=" + id;
+		model.addAttribute("msg", "수정되었습니다.");
+		model.addAttribute("url", textUrl);
+		return "/joongoSale/alertFrom";
 	}
 	
 	// 판매상태 변경
@@ -227,5 +247,11 @@ public class JoongoListController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		return ResponseEntity.ok(res);
+	}
+	
+	@GetMapping("/joongoSale/pic/delete")
+	public String picDel(@RequestParam int id, @RequestParam String fileName) throws Exception {
+		saleService.deleteSaleFile(fileName);
+		return "redirect:/joongoSale/modiList?id="+id;
 	}
 }

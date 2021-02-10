@@ -26,19 +26,15 @@ public interface JoongoSaleService {
 	Sale getSaleById(int id);
 	void JSHits(int id); // 게시물 조회시 조회수 증가
 
-	List<FileForm> selectImgPath(int id);
 
-	// 페이징용 카운트
-	int listCount();
-	int listCountByDongne1(String dongne1);
-	int listCountByDongne2(String dongne1, String dongne2);
+	int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, HttpServletRequest request) throws Exception;
+	int updateJoongoSale(Sale sale, MultipartFile[] fileList,   MultipartFile file, HttpServletRequest request) throws Exception;
+
+	List<FileForm> selectImgPath(int id);
+	FileForm selectThumImgPath(int id);
 
 	// 해당 회원의 페이징된 찜 목록
 	List<Sale> getHeartedList(String memberId, Criteria criteria);
-	
-	
-	int insertJoongoSale(Sale sale, MultipartFile[] fileList, HttpServletRequest request) throws Exception;
-	int updateJoongoSale(Sale sale);
 	
 	
 	// 판매완료 처리
@@ -47,4 +43,13 @@ public interface JoongoSaleService {
 	
 	// 검색 조건에 따른 리스트
 	List<Sale> getListsSearchedBy(Sale sale, Criteria cri);
+	
+	//상세보기 - 수정에서 사진 db삭제
+	int deleteSaleFile(String fileName);
+	int deleteSaleFileBySaleId(int id);
+	
+	
+	int listCount();
+	int listCountByDongne1(String dongne1);
+	int listCountByDongne2(String dongne1, String dongne2);
 }

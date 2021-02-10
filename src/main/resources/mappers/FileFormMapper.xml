@@ -2,14 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.FileFormMapper">
 <sql id="selectFileSQL">
-	SELECT id, sale_id, image_name from JOONGO_IMAGE
+	SELECT id, sale_id, image_name, THUM_NAME from JOONGO_IMAGE
 </sql>
 
 <resultMap type="FileForm" id="fileFormResult">
 	<id column="id" property="id"></id>
 	<result column="sale_id" property="sale.id"/>
 	<result column="image_name" property="fileName"/>
-	<result column="thum_name" property="thumName"/>
+	<result column="THUM_NAME" property="thumName"/>
 </resultMap>
 
 
@@ -22,7 +22,18 @@
 
 <select id="selectImgPath" resultMap="fileFormResult">
 	<include refid="selectFileSQL"></include>
-	where sale_id = #{id}
+	where sale_id = #{id} ORDER BY THUM_NAME ASC
 </select>
 
+<select id="selectThumImgPath" resultMap="fileFormResult">
+	select THUM_NAME from JOONGO_IMAGE where sale_id = #{id} AND THUM_NAME IS NOT NULL 
+</select>
+
+<delete id="deleteSaleFile" parameterType="String">
+	delete from joongo_image where image_name = #{fileName}
+</delete>
+
+<delete id="deleteSaleFileBySaleId" parameterType="int">
+		delete from joongo_image where sale_id = #{id}
+</delete>
 </mapper>
