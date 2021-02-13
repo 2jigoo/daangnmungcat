@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 
 @RestController
 public class SignUpControllor {
@@ -22,6 +23,9 @@ public class SignUpControllor {
 
 	@Autowired
 	private MemberService service;
+	
+	@Autowired
+	private MileageService mileService;
 
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
@@ -36,6 +40,7 @@ public class SignUpControllor {
 	@PostMapping("/sign-up")
 	public ResponseEntity<Object> newMember(@RequestBody Member member) {
 		try {
+			
 			return ResponseEntity.ok(service.registerMember(member));
 		} catch (DuplicateMemberException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();

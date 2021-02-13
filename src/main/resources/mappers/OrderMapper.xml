@@ -97,11 +97,17 @@
 		and mem_id = #{member.id} ORDER BY regdate desc
 	</select>
 	
+	<select id="selectCancelOrderById" resultMap="orderRes" parameterType="string">
+		SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+		and mem_id = #{member.id} and state = '환불완료' ORDER BY regdate desc
+	</select>
+	
 	<select id="getOrderByNo" resultMap="orderRes">
 		SELECT * FROM mall_order where id = #{id} ORDER BY regdate desc
 	</select>
 
-	<select  id="sortingOrderDetail" resultMap="sortRes" parameterType="daangnmungcat.dto.Order">
+	<select id="sortingOrderDetail" resultMap="sortRes" parameterType="daangnmungcat.dto.Order">
 		<include refid="odSql"></include>
 		FROM mall_order_detail where order_id = #{orderId}
 	</select>
@@ -112,6 +118,14 @@
 		WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
 								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
 		and mem_id = #{mem_id} order by regdate desc
+	</select>
+	
+	<select id="cancelSearchByDate" parameterType="String" resultMap="orderRes">
+		<include refid="orderSql"></include>
+		FROM mall_order 
+		WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
+								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
+		and mem_id = #{mem_id} and state = '환불완료' order by regdate desc
 	</select>
 	
 	<update id="updateOrderDetailState">

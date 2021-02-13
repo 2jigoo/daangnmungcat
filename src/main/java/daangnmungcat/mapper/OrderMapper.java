@@ -19,6 +19,8 @@ import daangnmungcat.dto.Payment;
 public interface OrderMapper {
 	
 	List<Order> selectOrderById(String id);
+	List<Order> selectCancelOrderById(String id);
+	
 	Order getOrderByNo(String id);
 	List<OrderDetail> getOrderDetail(String orderId);
 	
@@ -29,6 +31,7 @@ public interface OrderMapper {
 	List<OrderDetail> sortingOrderDetail(@Param("orderId")String id);
 	
 	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);
+	List<Order> cancelSearchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);
 
 	int updateOrderDetailState(@Param("orderState")String state, @Param("orderId") String id);
 	int updateOrderState(@Param("returnPrice") int price, @Param("state")String state, @Param("id") String id);

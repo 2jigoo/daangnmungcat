@@ -122,7 +122,7 @@ public class KakaoPayController {
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
-		mv.setViewName("redirect:/mypage/mypage_order_list");
+		mv.setViewName("/mypage/mypage_order_list");
 		return mv;
 	}
 }

@@ -54,7 +54,7 @@ $(document).ready(function(){
 </script>
 
 <div class="wrapper">
-<h2 id="subTitle">주문 상세내역</h2>
+<h2 id="subTitle">주문 상세</h2>
 	<table id="order_list_table">
 		<colgroup>
 			<col width="200px">

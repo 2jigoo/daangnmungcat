@@ -511,15 +511,18 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 
 
 /* mall - pre-order */
-.pre-order {width:100%; margin:0 auto; padding:30px;}
-.pre_order_table {width:80%; margin:0 auto; text-align:center;}
+.pre_order_table {width:70%; margin:0 auto; text-align:center;}
+.pre_order_table th {padding:20px; border-bottom:1px solid black;}
 .pre_order_table tbody input {width:70px; text-align:center; border:none; font-family:'S-CoreDream'; font-weight:400;}
+#pre_order_info_table {width:80%; margin:0 auto; padding:50px; text-align:left}
+#pre_order_info_table tr td:nth-child(1) {width:20%;}
+#pre_order_info_table td {padding:10px; border-bottom:1px solid black; }
 #pdt_name, #deli_price, #deli_kind, #deli_condition {width:150px;}
-.pre_order_btn {text-align:center}
-.pre_order_box {margin:0 auto; width:700px; padding:30px; overflow:hidden;}
-.box1, .box2, .box3 { text-align:center; width:25%; margin:0 auto; float:left;  display: inline-block;}
+.pre_order_btn {text-align:center; padding:50px;}
+.pre_order_go_cart_btn {text-align:center; padding:20px;}
+.pre_order_box {margin:0 auto; width:50%; overflow:hidden; border:1px solid black; text-align: center; padding:20px;}
+.box1, .box2, .box3 { width:25%; display: inline-block; padding:20px; vertical-align:middle;}
 .pre_order_mem_info {clear:both}
-.pre_order_btn {text-align:center; padding:20px;}
 .pre_order_mem_info {width:80%; margin:0 auto; padding:20px;}
 .pre_order_deli_info {width:80%; margin:0 auto; padding:20px; }
 .pre_order_pay_info {width:80%; margin:0 auto; padding:20px;}

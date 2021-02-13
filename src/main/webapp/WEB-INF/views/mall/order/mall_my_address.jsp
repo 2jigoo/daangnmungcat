@@ -11,16 +11,7 @@
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
-<script>
-	//spring security -> ajax post 타입 전송시 필요
-	var csrfToken = $("meta[name='_csrf']").attr("content");
-	console.log(csrfToken);
-	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
-	    if (options['type'].toLowerCase() === "post") {
-	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-	    }
-	});
-</script>
+
 <script>
 //주소 api
 function execPostCode(){
@@ -37,6 +28,14 @@ function execPostCode(){
 }
 
 $(document).ready(function(){
+	
+	//spring security -> ajax post 타입 전송시 필요
+	var csrfToken = $("meta[name='_csrf']").attr("content");
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
 	
 	$.get("/address-list", function(list){
 		var datalength = list.length; 
@@ -60,12 +59,42 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#sel_add').on('click', (function(){
-		console.log('asjdljklds');
+	$(document).on('click', '[id=sel_add]', function(){
+		var aid = $(this).attr('aid');
+		$.get("/address/"+aid, function(addr){
+			console.log(addr);
+			$('#zipcode', parent.opener.document).attr('value', addr.zipcode);
+			$('#address1', parent.opener.document).attr('value', addr.address1);
+			$('#address2', parent.opener.document).attr('value', addr.address2);
+			$('#address2', parent.opener.document).attr('value', addr.address2);
+			$('#order_name', parent.opener.document).attr('value', addr.name);
+		});
+		setTimeout(function(){
+		    self.close();
+		},300);
 	});
 	
+	$(document).on('click', '[id=update_addr]', function(){
+		var num = $(this).attr('addrId');
+		location.href= "/mall/order/mall_shipping_update?id="+num; 
+	});
+
+	$(document).on('click', '[id=delete_addr]', function(){
+		var num = $(this).attr('addrId');
+		$.get("/address/" + num, function(add){
+			if (confirm("["+ add.subject + "] 배송지를 삭제하시겠습니까?") == true){
+				$.get("/address/get/" + num, function(){
+					location.reload(true);
+				});
+			}else{
+				return;
+			}
+		});
+	});
 	
 });
+
+
 </script>
 </head>
 <body>

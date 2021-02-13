@@ -230,6 +230,12 @@ public class OrderServiceImpl implements OrderService{
 		// TODO Auto-generated method stub 
 		return mapper.searchByDate(start, end, memId);
 	}
+	
+	@Override
+	public List<Order> cancelSearchByDate(String start, String end, String memId) {
+		return mapper.cancelSearchByDate(start, end, memId);
+	}
+
 
 	@Override
 	public List<OrderDetail> sortingOrderDetail(String id) {
@@ -254,5 +260,11 @@ public class OrderServiceImpl implements OrderService{
 		return mapper.updatePaymentState(state, id);
 	}
 
+	@Override
+	public List<Order> selectCancelOrderById(String id) {
+		return mapper.selectCancelOrderById(id);
+	}
+
+	
 
 }

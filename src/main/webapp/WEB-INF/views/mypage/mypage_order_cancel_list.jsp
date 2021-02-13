@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
-
 <style>
 .wrapper {margin:0 auto; padding:50px;}
 </style>
@@ -102,52 +101,19 @@ $(document).ready(function(){
 		if(start_val == "" || end_val == ""){
 			alert('날짜를 선택하세요.')
 		}else{
-			location.href='/mypage/mypage_order_list/start='+start_val + '/end=' + end_val;
+			location.href='/mypage/mypage_order_cancel_list/start='+start_val + '/end=' + end_val;
 		}
 		
 	});
 	
-	$(document).on('click', '[id=order_cancel]', function(){
-		if(confirm('주문을 취소하시겠습니까?') == true){
-			var pay_id = $('#pay_id').val();
-			var pay_price = $('#pay_price').val();
-			var order_id = $('#order_id').val();
-			var name = $('#first_pdt').val();
-			var order_qtt = $('#order_qtt').val();
-			
-			var data = {
-				tid: pay_id, 
-				partner_order_id: order_id,
-				cancel_amount: pay_price,
-				first_pdt: name,
-				order_qtt: order_qtt
-			};
-			//post 전송
-			$.ajax({
-				url: '/kakao-cancel',
-				type: "post",
-				contentType: "application/json; charset=utf-8",
-				data : JSON.stringify(data),
-				success: function() {
-					alert('주문 취소 완료');
-					location.reload();
-				},
-				error: function(request,status,error){
-					alert('에러' + request.status+request.responseText+error);
-				}
-			});
-			
-		}else{
-			return;
-		}
-	});
+	
 	
 });
 
 
 </script>
 <div class="wrapper">
-	<h2 id="subTitle">주문 내역</h2>
+	<h2 id="subTitle">취소/환불 내역</h2>
 	<div class="order_list_search_div">
 		조회 기간 
 		<input type="button" value="오늘" id="today">
@@ -273,4 +239,5 @@ $(document).ready(function(){
 </div>
 </div>
 
+<jsp:include page="/resources/include/footer.jsp"/>
 <jsp:include page="/resources/include/footer.jsp"/>

@@ -204,4 +204,6 @@ UPDATE MALL_PAYMENT SET PAY_STATE = '환불요청';
 SELECT * FROM MALL_MILEAGE ORDER BY id desc;
 
 
-
+SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+		and mem_id = 'test' and state = '환불완료' ORDER BY regdate desc

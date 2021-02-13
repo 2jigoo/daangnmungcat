@@ -5,6 +5,8 @@
 <%@ include file="/resources/include/header.jsp" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script>
 $(document).ready(function(){
 	
@@ -75,10 +77,26 @@ function check(a){
     
 }
 
+function execPostCode(){
+	daum.postcode.load(function(){
+      new daum.Postcode({
+          oncomplete: function(data) {
+				//변수값 없을때는 ''
+				var addr = '';
+				$('#zipcode').attr('value', data.zonecode);
+				$('#address1').attr('value', data.address);
+          	}
+          }).open();
+  });
+}
+
+
+
+
 </script>
 
-<div class="pre_order">
-<h3 style="text-align:center; padding:20px">주문서 작성 / 결제 </h3>
+
+<h3 style="text-align:center; padding:50px">주문서 작성 / 결제 </h3>
 <form method="post" id="form" action="/kakao-pay" enctype="multipart/form-data" accept-charset="utf-8">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<!-- 넘어가는 data -->
@@ -89,84 +107,89 @@ function check(a){
 	<input type="text" name="total_qtt" value="${total_qtt}"> <!-- 총 수량 -->
 	<input type="text" name="plus_mile" value="${mileage}"> <!-- 적립예정 -->
 	
-	
-	<table class="pre_order_table">
-		<colgroup>
-			<col width="50px">
-			<col width="200px">
-			<col width="50px">
-			<col width="50px">
-			<col width="50px">
-			<col width="50px">
-			<col width="100px">
-		</colgroup>
-		<thead>
-			<tr>
-				<th></th>	
-				<th>상품/옵션 정보</th>
-				<th>수량</th>
-				<th>상품금액</th>
-				<th>적립금액</th>
-				<th>합계금액</th>
-				<th>배송비</th>
-			</tr>
-		</thead>
-		<tbody>
-		<c:forEach var="cart" items="${cart}" varStatus="status">
-			<tr>
-				<td><img id="pdt_img" src="/resources/images/no_image.jpg" width="100%"></td>
-				<td>
-					<input type="text" id="pdt_id" name="pdt_id" value="${cart.product.id}">
-					${cart.product.name}
-				</td>
-				<td>${cart.quantity }</td>
-				<td><span class="price" value="${cart.product.price }">${cart.product.price}</span></td>
-				<td><fmt:formatNumber value="${cart.product.price * 0.01}" /></td>
-				<td>${cart.product.price * cart.quantity}</td>
-				<td>
-					<c:choose>
-						<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
-							<c:if test="${conditionalDeliveryFee eq 0}">
-									무료배송
-							</c:if>
-							<c:if test="${conditionalDeliveryFee ne 0}">
-								<fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
-							</c:if>
-								<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매 시 무료)
-						</c:when>
-						<c:when test="${cart.product.deliveryKind eq '유료배송' }">
-								개당 ${cart.product.deliveryPrice}원
-						</c:when>
-						<c:otherwise>
-								${cart.product.deliveryKind}
-						</c:otherwise>
-					</c:choose>
-				</td>
-			</tr>
-		</c:forEach>
-			</tbody>
+	<div class="pre_order_cart_div">
+		<table class="pre_order_table">
+			<colgroup>
+				<col width="50px">
+				<col width="200px">
+				<col width="50px">
+				<col width="50px">
+				<col width="50px">
+				<col width="50px">
+				<col width="100px">
+			</colgroup>
+			<thead>
+				<tr>
+					<th></th>	
+					<th>상품/옵션 정보</th>
+					<th>수량</th>
+					<th>상품금액</th>
+					<th>적립금액</th>
+					<th>합계금액</th>
+					<th>배송비</th>
+				</tr>
+			</thead>
+			<tbody>
+			<c:forEach var="cart" items="${cart}" varStatus="status">
+				<tr>
+					<td><img id="pdt_img" src="/resources/images/no_image.jpg" width="100%"></td>
+					<td>
+						<input type="hidden" id="pdt_id" name="pdt_id" value="${cart.product.id}">
+						${cart.product.name}
+					</td>
+					<td>${cart.quantity }</td>
+					<td><span class="price" value="${cart.product.price }">${cart.product.price}</span></td>
+					<td><fmt:formatNumber value="${cart.product.price * 0.01}" /></td>
+					<td>${cart.product.price * cart.quantity}</td>
+					<td>
+						<c:choose>
+							<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
+								<c:if test="${conditionalDeliveryFee eq 0}">
+										무료배송
+								</c:if>
+								<c:if test="${conditionalDeliveryFee ne 0}">
+									<fmt:formatNumber value="${cart.product.deliveryPrice}"/>원
+								</c:if>
+									<br>(<fmt:formatNumber value="${cart.product.deliveryCondition}"/>원 이상 구매 시 무료)
+							</c:when>
+							<c:when test="${cart.product.deliveryKind eq '유료배송' }">
+									개당 ${cart.product.deliveryPrice}원
+							</c:when>
+							<c:otherwise>
+									${cart.product.deliveryKind}
+							</c:otherwise>
+						</c:choose>
+					</td>
+				</tr>
+			</c:forEach>
+				</tbody>
 		</table>
-		<input type="button" value="장바구니로 가기" onclick="location.href='/mall/cart/list'">
-
+	
+		
+		<div class="pre_order_go_cart_btn">
+			<input type="button" value="장바구니로 가기" onclick="location.href='/mall/cart/list'">
+		</div>
+	</div>	
+	
 	<div class="pre_order_box">
 		<div class="box1">
 			총 ${size}개의 상품금액 <br>
-			<span class="">${total}원</span> 
+			<span class=""><fmt:formatNumber value="${total}" />원</span> 
 		</div>
 		<div class="box2">
 			배송비<br> 
-			${totalDeliveryFee}
+			<fmt:formatNumber value="${totalDeliveryFee}" />
 		</div>
 		<div class="box3">
 			합계 <br>
-			${total + totalDeliveryFee }원<br>
+			<fmt:formatNumber value="${total + totalDeliveryFee }" />원<br>
 			적립예정 마일리지: <fmt:formatNumber value="${mileage}" />원
 		</div>
 	</div>
 	
-	<div class="pre_order_mem_info">
+<div class="order_detail_info_div">
 		<h4>주문자 정보</h4>
-		<table>
+		<table id="pre_order_info_table">
 			<tr>
 				<td>주문하시는 분</td> 
 				<td><input type="text" value="${member.name}" name=""></td> 
@@ -189,11 +212,9 @@ function check(a){
 				<td><input type="text" value="${member.email}" name=""></td> 
 			</tr>
 		</table>
-	</div>
 	
-	<div class="pre_order_deli_info">
 		<h4>배송정보</h4>
-			<table>
+			<table id="pre_order_info_table">
 				<tr>
 					<td>배송지 확인</td> 
 					<td>
@@ -210,7 +231,7 @@ function check(a){
 					<td>받으실 곳</td> 
 					<td>
 						<input type="text" value="${member.zipcode}" id="zipcode" name="zipcode">
-						<input type="button" value="우편번호 검색" id="add_btn">
+						<input type="button" value="우편번호 검색" onclick="execPostCode()">
 						<br>
 						<input type="text" value="${member.address1}" id="address1" name="address1">
 						<input type="text" value="${member.address2}" id="address2" name="address2">
@@ -229,44 +250,44 @@ function check(a){
 					<td><input type="text" id="order_memo" name="order_memo"></td> 
 				</tr>
 			</table>
-	</div>
+
 	
-	<div class="pre_order_pay_info">
+	
 		<h4>결제정보</h4>
-		<table>
+		<table id="pre_order_info_table">
 			<tr>
 				<td>합계금액</td>
-				<td><span id="total_price">${total}</span></td>
+				<td><span id="total_price"><fmt:formatNumber value="${total}" /></span></td>
 			</tr>
 			<tr>
 				<td>배송비</td>
-				<td><span id="shipping_price">${totalDeliveryFee}</span></td>
+				<td><span id="shipping_price"><fmt:formatNumber value="${totalDeliveryFee}"/></span></td>
 			</tr>
 			<tr>
 				<td>적립액</td>
-				<td><span id="mileage_info"><fmt:formatNumber value="${mileage}" /></span></td>
+				<td><span id="mileage_info"><fmt:formatNumber value="${mileage}"/></span></td>
 			</tr>
 			<tr>
 				<td>마일리지 사용</td>
 				<td><input type="text" id="use_mileage" name="use_mileage" value="">
-				<input type="checkbox" id="mile_chk">전액 사용하기 (보유 마일리지:${memberMileage}원)
+				<input type="checkbox" id="mile_chk">전액 사용하기 
+										(보유 마일리지:<fmt:formatNumber value="${memberMileage}"/>원)
 				<input type="hidden" value="${memberMileage}" id="mem_mile"></td>
 			</tr>
 			<tr>
 				<td>최종 결제 금액</td>
-				<td><span id="final_price">${final_price}</span></td>
+				<td><span id="final_price">${final_price}</span>
+					
+				</td>
 			</tr>
 		</table>
-	</div>
-	
-	<span></span>
+</div>	
 	
 	<div class="pre_order_btn">
-		<div class="pre_order_info"></div>
 		<input type="button" value="결제" id="order_btn">
 	</div>
 	</form>
-</div>
+
 
 <jsp:include page="/resources/include/footer.jsp"/>
 	

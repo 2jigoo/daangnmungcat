@@ -308,7 +308,7 @@ private static final String HOST = "https://kapi.kakao.com";
         	int res2 = orderService.updateOrderDetailState("환불완료", order.getId());
         	int res3 = orderService.updatePaymentState("환불완료", tid);
         	
-        	System.out.println("환불상태처리: " + res1 + res2 + res3);
+        	System.out.println("state변경:" + res1 + res2 + res3);
         	
         	Mileage plus = new Mileage();
         	plus.setOrder(order);
@@ -325,7 +325,7 @@ private static final String HOST = "https://kapi.kakao.com";
     		int res4 = mileService.insertMilegeInfo(plus);
     		int res5 = mileService.insertMilegeInfo(minus);
     		
-        	System.out.println("mileage 2? " + res4 + res5); 
+        	System.out.println("mileage:" + res4 + res5); 
         	
         	return "/kakaoPayCancelSuccess";
 

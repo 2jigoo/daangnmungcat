@@ -21,6 +21,8 @@ import daangnmungcat.dto.Payment;
 public interface OrderService {
 
 	List<Order> selectOrderById(String id);
+	List<Order> selectCancelOrderById(String id);
+	
 	Order getOrderByNo(String id);
 	
 	int insertOrder(Order order);
@@ -35,6 +37,7 @@ public interface OrderService {
 	List<OrderDetail> sortingOrderDetail(String id);
 	
 	List<Order> searchByDate(String start, String end, String memId);
+	List<Order> cancelSearchByDate(String start, String end,String memId);
 	
 	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
 	

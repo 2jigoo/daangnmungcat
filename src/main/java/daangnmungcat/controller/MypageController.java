@@ -163,7 +163,7 @@ public class MypageController {
 	}
 	
 	
-//주문내역 mv
+/////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
 	public ModelAndView orderList(HttpSession session, HttpServletRequest request) {
@@ -230,8 +230,51 @@ public class MypageController {
 		return mv;
 	}
 	
-	//입금대기 -> 바로 주문취소가능
-	//결제완료 -> 따로 환불요청 -> 환불완료
+	
+	@GetMapping("/mypage/mypage_order_cancel_list")
+	public ModelAndView getCancelOrder(HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		
+		List<Order> list = orderService.selectCancelOrderById(member.getId());
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.setViewName("/mypage/mypage_order_cancel_list");
+		return mv;
+		
+	}
 
+	
+	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
+	public ModelAndView searchCancelOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		System.out.println(start +"/"+ end);
+		
+		List<Order> list = orderService.cancelSearchByDate(start, end, member.getId());
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("list", list);
+		mv.setViewName("/mypage/mypage_order_cancel_list");
+		return mv;
+	}
 	
 }

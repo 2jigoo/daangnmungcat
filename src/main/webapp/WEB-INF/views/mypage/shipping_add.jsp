@@ -12,16 +12,6 @@
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
 <script>
-	//spring security -> ajax post 타입 전송시 필요
-	var csrfToken = $("meta[name='_csrf']").attr("content");
-	console.log(csrfToken);
-	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
-	    if (options['type'].toLowerCase() === "post") {
-	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-	    }
-	});
-</script>
-<script>
 //주소 api
 function execPostCode(){
 	daum.postcode.load(function(){
@@ -37,6 +27,15 @@ function execPostCode(){
 }
 
 $(document).ready(function(){
+	
+	//spring security -> ajax post 타입 전송시 필요
+	var csrfToken = $("meta[name='_csrf']").attr("content");
+	console.log(csrfToken);
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
 	
 	var id;
 	var contextPath = "<%=request.getContextPath()%>";
@@ -64,7 +63,7 @@ $(document).ready(function(){
 			return;
 		}else if($('#addr_phone').val() == ""){
 			alert('전화번호를 입력하세요');
-			return;ㄴ
+			return;
 		}else if($('#address2').val() == ""){
 			alert('상세주소를 입력하세요');
 			return;
