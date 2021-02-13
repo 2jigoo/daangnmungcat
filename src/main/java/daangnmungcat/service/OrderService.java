@@ -34,8 +34,13 @@ public interface OrderService {
 
 	List<OrderDetail> sortingOrderDetail(String id);
 	
-	List<Order> searchByDate(String start, String end, Member member);
+	List<Order> searchByDate(String start, String end, String memId);
 	
 	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
+	
+	int updateOrderDetailState(String state,String orderId);
+	int updateOrderState(int price, String state, String id);
+	int updatePaymentState(String state, String id);
+	
 	
 }

@@ -37,6 +37,7 @@ public class Order {
 	private int finalPrice;
 	private int plusMileage;
 	private int deliveryPrice;
+	private String trackingNumber;
 	private int addDeliveryPrice;
 	private int cancelPrice;
 	private int returnPrice;

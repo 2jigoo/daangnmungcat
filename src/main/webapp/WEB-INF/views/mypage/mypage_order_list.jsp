@@ -7,6 +7,12 @@
 </style>
 <script>
 $(document).ready(function(){
+	var csrfToken = $("meta[name='_csrf']").attr("content");
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
 	
 	 $(".gubun").each(function () {
 	    var rows = $(".gubun:contains('" + $(this).text() + "')");
@@ -100,12 +106,44 @@ $(document).ready(function(){
 		}
 		
 	});
-	 
+	
+	$(document).on('click', '[id=order_cancel]', function(){
+		if(confirm('주문을 취소하시겠습니까?') == true){
+			var pay_id = $('#pay_id').val();
+			var pay_price = $('#pay_price').val();
+			var order_id = $('#order_id').val();
+			var name = $('#first_pdt').val();
+			var order_qtt = $('#order_qtt').val();
+			
+			var data = {
+				tid: pay_id, 
+				partner_order_id: order_id,
+				cancel_amount: pay_price,
+				first_pdt: name,
+				order_qtt: order_qtt
+			};
+			//post 전송
+			$.ajax({
+				url: '/kakao-cancel',
+				type: "post",
+				contentType: "application/json; charset=utf-8",
+				data : JSON.stringify(data),
+				success: function() {
+					alert('주문 취소 완료');
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
+			});
+		}else{
+			return;
+		}
+	});
+	
 });
 
 
 </script>
-
 <div class="wrapper">
 	<h2 id="subTitle">주문 내역</h2>
 	<div class="order_list_search_div">
@@ -121,6 +159,8 @@ $(document).ready(function(){
 	</div>
 
 <div>	
+	
+	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<table id="order_list_table">
 		<colgroup>
 			<col width="200px">
@@ -141,29 +181,36 @@ $(document).ready(function(){
 			</tr>
 		</thead>
 		<tbody>
+		
 		<c:if test="${empty list}">
 			<tr>
 				<td colspan="6" style="padding:50px">주문 내역이 없습니다.</td>
 			</tr>
 		</c:if>
+		
 			<c:forEach var="order" items="${list}" varStatus="status">
 				<c:forEach var="od" items="${order.details}" varStatus="odstatus">
+				
             		<tr>
             			<c:if test="${od.partcnt > 1}">
             				<td class="gubun order_num">
+            						<input type="hidden" id="order_id" value="${order.id}">
             					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
-	            					<br> ${order.id}
+	            					<br> ${order.id}<br>
+	            					<input type="hidden" id="first_pdt" value="${od.pdt.name}">
             					</span>
             				</td>
             			</c:if>
             			<c:if test="${od.partcnt == 1}">
             				<td class="order_num">
+            						<input type="hidden" id="order_id" value="${order.id}">
             					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
-	            					<br> ${order.id}
+	            					<br> ${order.id} <br>
+	            					<input type="hidden" id="first_pdt" value="${od.pdt.name}">
 	            				</span>
             				</td>
             			</c:if>
@@ -184,8 +231,16 @@ $(document).ready(function(){
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
             					<fmt:formatNumber value="${order.finalPrice}"/>
+            					<input type="hidden" value="${order.finalPrice}" name="pay_price" id="pay_price">
+            					<input type="hidden" id="order_qtt" value="${od.partcnt}">
             					<br>
-            					<input type="button" value="주문취소">
+            					<c:if test="${od.orderState.label == '결제완료'}">
+									<input type="button" value="주문취소" id="order_cancel">
+									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
+								</c:if>
+								<c:if test="${od.orderState.label == '배송완료'}">
+									<input type="button" value="구매확정" id="purchase_complited">
+								</c:if>
             					</td>
 						</c:if>
 						<c:if test="${od.partcnt == 1}">
@@ -193,13 +248,23 @@ $(document).ready(function(){
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<input type="hidden" value="${order.finalPrice }" name="pay_price" id="pay_price">
+	            				<input type="hidden" id="order_qtt" value="${od.partcnt}">
 	            				<br>
-            					<input type="button" value="주문취소">
+            					<c:if test="${od.orderState.label == '결제완료'}">
+									<input type="button" value="주문취소" id="order_cancel">
+									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
+								</c:if>
+								<c:if test="${od.orderState.label == '배송완료'}">
+									<input type="button" value="구매확정" id="purchase_complited">
+								</c:if>
             				</td>
             			</c:if>
 						
 					</tr>
+					
 				</c:forEach>
+				
 			</c:forEach>
 		</tbody>
 	</table>

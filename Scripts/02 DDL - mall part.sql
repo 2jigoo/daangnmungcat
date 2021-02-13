@@ -139,6 +139,7 @@ CREATE TABLE MALL_ORDER (
 	final_price NUMBER(10) NOT NULL, /* 최종가격 */
 	plus_mileage NUMBER(10) NOT NULL, /* 마일리지적립금액 */
 	delivery_price NUMBER(10) NOT NULL, /* 배송비 */
+	tracking_number varchar2(20),
 	add_delivery_price NUMBER(10), /* 추가배송비 */
 	pay_id varchar2(30) NOT NULL, /* 결제번호 */
 	regdate DATE DEFAULT SYSDATE, 

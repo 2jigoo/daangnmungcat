@@ -161,10 +161,10 @@ SELECT TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') PREV_MONTH --이전달
   FROM DUAL;
   
 SELECT * FROM MALL_ORDER_DETAIL ORDER BY id desc;
-INSERT INTO mall_order VALUES(mall_order_seq.nextval, 'test', '관리자', 'admin@admin.co.kr', '관리자','010-5616-6004', '13536', '주소주소주소주소', '201호', '010-5656-5656', '010-5656-5656', '메모', 56000, 0, 54000, 0, 0, 0, 21, to_date('2021-01-07', 'yyyy-mm-dd'), NULL, NULL, 'y' );
-INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, 1, 'test', 4, 1, 23000, 20000);
-INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, 1, 'test', 2, 1, 23000, 20000);
-INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, 1, 'test', 1, 2, 23000, 20000);
+INSERT INTO mall_order VALUES('212121','test', '관리자', 'admin@admin.co.kr', '관리자','010-5616-6004', '13536', '주소주소주소주소', '201호', '010-5656-5656', '010-5656-5656', '메모', 56000, 0, 54000, 0, 0, 0, 21, to_date('2021-01-07', 'yyyy-mm-dd'), NULL, NULL, '결제완료' );
+INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, '212121', 'test', 4, 1, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, '212121', 'test', 2, 1, 23000, 20000);
+INSERT INTO MALL_ORDER_DETAIL(ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) VALUES(mall_order_detail_seq.nextval, '212121', 'test', 1, 2, 23000, 20000);
 
 SELECT * FROM MALL_ORDER ORDER BY id desc;
 SELECT * FROM MALL_ORDER_DETAIL ORDER BY id desc;
@@ -175,9 +175,9 @@ SELECT * FROM mall_order
 		and mem_id = 'test' ORDER BY id DESC;
 		
 SELECT * FROM mall_pdt;
-SELECT * FROM MALL_PAYMENT WHERE id = 'T2860982504896912820';
-SELECT * FROM mall_order WHERE PAY_ID = 'T2860982504896912820';
-SELECT * FROM MALL_ORDER_DETAIL WHERE ORDER_ID = '20210208311560';
+SELECT * FROM MALL_PAYMENT ORDER BY pay_date DESC;
+SELECT * FROM mall_order ORDER BY regdate DESC;
+SELECT * FROM MALL_ORDER_DETAIL ORDER BY id DESC;
 
 SELECT ID, 
 			ORDER_ID, 
@@ -188,8 +188,20 @@ SELECT ID,
 			TOTAL_PRICE, 
 			order_state,
 			COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT 
-		FROM mall_order_detail where order_id = '20210208311560' ORDER BY id DESC;
+		FROM mall_order_detail where order_id = '20210213813223' ORDER BY id DESC;
 		
 SELECT * FROM mall_order 
 		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
 		and mem_id = 'test' ORDER BY id DESC;
+	
+SELECT * FROM MALL_PAYMENT;
+SELECT * FROM MALL_ORDER_DETAIL ORDER BY id DESC;
+UPDATE MALL_ORDER_DETAIL SET ORDER_STATE = '입금대기' WHERE ORDER_id = '20210213813223';
+UPDATE MALL_ORDER_DETAIL SET ORDER_STATE = '배송완료' WHERE ORDER_id = '20210214589092';
+
+UPDATE MALL_PAYMENT SET PAY_STATE = '환불요청';
+
+SELECT * FROM MALL_MILEAGE ORDER BY id desc;
+
+
+

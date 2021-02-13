@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,6 +67,7 @@ public class KakaoPayController {
 		return "redirect:" + kakaoService.kakaoPayReady(request,session);
 	}
 	
+	
 	@GetMapping("/kakaoPaySuccess")
 	public ModelAndView kakaoPaySuccess(@RequestParam("pg_token") String pg_token, HttpServletRequest request, HttpSession session) {
 		ModelAndView mv = new ModelAndView();
@@ -77,17 +79,50 @@ public class KakaoPayController {
 		orderService.orderTransaction(kakao, request, session);
 		mv.setViewName("/mall/order/pay_success");
 		mv.addObject("info", kakao);
-  
+		
 		return mv;
 	}
 	
 	@GetMapping("/kakaoPayCancel")
 	public String payCancel(Model model) {
-		return "";
+		return "/mall/cart/mall_cart_list";
 	}
 	
 	@GetMapping("kakaoPaySuccessFail")
 	public String paySuccessFail(Model model) {
-		return "";
+		return "/mall/cart/mall_cart_list";
+	}
+	
+	//취소
+	@PostMapping("kakao-cancel")
+	public String kakaoCancel(@RequestBody Map<String, String> map, HttpServletRequest request, HttpSession session) {
+		log.info("kakao-cancel - post");
+		session.setAttribute("map", map);
+		return "redirect:" + kakaoService.kakaoPayCancel(map, request,session);
+	}
+	
+	@GetMapping("/kakaoPayCancelSuccess")
+	public ModelAndView payCancelSuccess(Model model, HttpSession session, HttpServletRequest request) {
+		log.info("kakaoPayCancel - success");
+	
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = memberService.selectMemberById(loginUser.getId());
+		
+		List<Order> list = orderService.selectOrderById(member.getId());
+		
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+
+		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("list", list);
+		mv.setViewName("redirect:/mypage/mypage_order_list");
+		return mv;
 	}
 }

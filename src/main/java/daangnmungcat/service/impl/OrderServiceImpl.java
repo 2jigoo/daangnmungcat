@@ -25,6 +25,7 @@ import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
+import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
@@ -45,7 +46,7 @@ public class OrderServiceImpl implements OrderService{
 	private MileageService mileService;
 	
 	@Autowired
-	private MallPdtService pdtService;
+	private KakaoPayService kakaoService;
 	
 	@Autowired
 	private OrderMapper mapper;
@@ -103,11 +104,11 @@ public class OrderServiceImpl implements OrderService{
 		
 		for(Cart c: cartList) {
 			OrderDetail od = new OrderDetail();
-			od.setOrderId(order.getId());
+			od.setOrderId(nextNo);
+			System.out.println(nextNo);
 			od.setPdt(c.getProduct());
 			od.setMember(loginUser);
 			od.setQuantity(c.getQuantity());
-			System.out.println("quantity" + c.getQuantity());
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
 			detailList.add(od);
 			mapper.insertOrderDetail(od);
@@ -183,17 +184,12 @@ public class OrderServiceImpl implements OrderService{
 		System.out.println("처리 후 현재마일리지:" + afterMile);
 		log.info("마일리지 set / 내역테이블 insert");
 		
-//		session.setAttribute("usedMile", usedMile);
-//		session.setAttribute("plusMile", plus_mile);
-//		session.setAttribute("delivery", deli);
-		
 		// 주문완료된 상품 카트에서 삭제
 		List<MallProduct> pdtList = detailList.stream().map(OrderDetail::getPdt).collect(Collectors.toList());
-		System.out.println("카트에서 삭제할 목록");
-		pdtList.forEach(System.out::println);
 		cartService.deleteAfterOrdered(loginUser.getId(), pdtList);
 		
 		log.info("..........end..........");
+		
 	}
 	
 	@Override
@@ -220,7 +216,6 @@ public class OrderServiceImpl implements OrderService{
 
 	@Override
 	public List<Order> selectOrderById(String id) {
-		
 		return mapper.selectOrderById(id);
 	}
 
@@ -231,18 +226,33 @@ public class OrderServiceImpl implements OrderService{
 
 
 	@Override
-	public List<Order> searchByDate(String start, String end, Member member) {
+	public List<Order> searchByDate(String start, String end, String memId) {
 		// TODO Auto-generated method stub 
-		return mapper.searchByDate(start, end, member);
+		return mapper.searchByDate(start, end, memId);
 	}
 
 	@Override
 	public List<OrderDetail> sortingOrderDetail(String id) {
 		// TODO Auto-generated method stub
-		return null;
+		return mapper.sortingOrderDetail(id);
 	}
 
 	
+
+	@Override
+	public int updateOrderDetailState(String state,String orderId) {
+		return mapper.updateOrderDetailState(state, orderId);
+	}
+
+	@Override
+	public int updateOrderState(int price, String state,String id) {
+		return mapper.updateOrderState(price, state, id);
+	}
+
+	@Override
+	public int updatePaymentState(String state,String id) {
+		return mapper.updatePaymentState(state, id);
+	}
 
 
 }

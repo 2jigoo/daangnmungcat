@@ -15,4 +15,6 @@ public interface KakaoPayService {
 	String kakaoPayReady(HttpServletRequest request, HttpSession session);
 	
 	KakaoPayApprovalVO kakaoPayInfo(String pg_token, HttpServletRequest request, HttpSession session);
+
+	String kakaoPayCancel(Map<String, String> map, HttpServletRequest request, HttpSession session);
 }

@@ -62,15 +62,6 @@ public class MypageController {
 	@Autowired
 	private MemberService service;
 	
-	@Autowired
-	private CartService cartService;
-	
-	@Autowired
-	private MallPdtService pdtService;
-	
-	@Autowired
-	private OrderMapper mapper;
-	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
 	public int defaultSetProfile(HttpServletRequest request, HttpSession session) {
@@ -171,28 +162,24 @@ public class MypageController {
 		return res;
 	}
 	
+	
 //주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView deleteShipping(HttpSession session, HttpServletRequest request) {
+	public ModelAndView orderList(HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		
-		
 		List<Order> list = orderService.selectOrderById(member.getId());
-		System.out.println(list);
 		
 		for(Order o: list) {
-			System.out.println(o.getId());
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			System.out.println(odList);
 			o.setDetails(odList);
 			for(OrderDetail od: odList) {
 				od.setOrderId(o.getId());
 			}
 		}
-	
 		
 		ModelAndView mv = new ModelAndView();
 		
@@ -208,7 +195,7 @@ public class MypageController {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		
-		List<Order> list = orderService.searchByDate(start, end, member);
+		List<Order> list = orderService.searchByDate(start, end, member.getId());
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
@@ -216,8 +203,7 @@ public class MypageController {
 				od.setOrderId(o.getId());
 			}
 		}
-		System.out.println(list);
-	
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
@@ -238,12 +224,14 @@ public class MypageController {
 			od.setOrderId(order.getId());
 		}
 		ModelAndView mv = new ModelAndView();
-		System.out.println(order);
-		
+		mv.addObject("first_pdt", odList.get(0));
 		mv.addObject("order", order);
 		mv.setViewName("/mypage/mypage_order_detail");
 		return mv;
 	}
 	
+	//입금대기 -> 바로 주문취소가능
+	//결제완료 -> 따로 환불요청 -> 환불완료
+
 	
 }

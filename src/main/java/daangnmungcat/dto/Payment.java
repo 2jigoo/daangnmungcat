@@ -25,4 +25,5 @@ public class Payment {
 	private KakaoPayApprovalVO kakao;
 	private String payType;
 	private int quantity;
+	private String payState;
 }

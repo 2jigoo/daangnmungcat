@@ -29,74 +29,8 @@
 		<result property="state" column="state"></result>
 		
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
-		<collection property="details" resultMap="odRes"></collection>
 		
 	</resultMap>
-
-	<resultMap type="OrderDetail" id="odRes">
-		<id property="id" column="id"></id>
-		<result property="orderId" column="order_id" />
-		<result property="member.id" column="mem_id"></result>
-		<result property="pdt.id" column="pdt_id" />
-		<result property="quantity" column="quantity" />
-		<result property="pdt.price" column="price" />
-		<result property="totalPrice" column="total_price" />
-		<result property="orderState" column="ORDER_STATE" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.OrderState$TypeHandler"/>
-	
-		<association property="pdt" column="pdt_id" select="daangnmungcat.mapper.MallPdtMapper.getProductById" fetchType="lazy"></association>
-		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
-	</resultMap>
-	
-	<!-- sql -->
-	<sql id="orderSql">
-		SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ZIPCODE,
-		ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
-		USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE,
-		ADD_DELIVERY_PRICE, PAY_ID, REGDATE, CANCEL_PRICE, RETURN_PRICE,
-		STATE
-	</sql>
-	<sql id="odSql">
-		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE
-	</sql>
-
-	<!-- query -->
-
-	<select id="getOrderDetail" resultMap="odRes" parameterType="string">
-		<include refid="odSql"></include> 
-		from mall_order_detail where order_id = #{orderId}
-	</select>
-
-	<insert id="insertOrderDetail">
-		<selectKey keyProperty="id" resultType="int" order="BEFORE">
-			SELECT mall_order_detail_seq.nextval FROM DUAL
-		</selectKey>
-		INSERT INTO mall_order_detail(ID, MEM_ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) 
-		VALUES (#{id}, #{member.id}, #{orderId}, #{pdt.id}, #{quantity}, #{pdt.price}, #{totalPrice})
-		
-	</insert>
-	<insert id="insertOrder">
-			insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
-				ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
-				TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, PAY_ID)
-			values (#{id}, #{member.id}, #{member.name}, #{member.email}, #{member.phone}, #{addName},
-				#{zipcode}, #{address1}, #{address2}, #{addPhone1}, #{addPhone2}, #{addMemo}, 
-				#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{payId} ) 
-	</insert>
-	
-	<insert id="insertPayment">
-		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
-		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
-	</insert>
-	
-	<select id="selectOrderById" resultMap="orderRes" parameterType="string">
-		SELECT * FROM mall_order 
-		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-		and mem_id = #{member.id} ORDER BY id desc
-	</select>
-	
-	<select id="getOrderByNo" resultMap="orderRes">
-		SELECT * FROM mall_order where id = #{id} ORDER BY id
-	</select>
 	
 <!-- 내 주문내역에서만 씀 -->	
 	<resultMap type="OrderDetail" id="sortRes">
@@ -113,27 +47,85 @@
 		<association property="pdt" column="pdt_id" select="daangnmungcat.mapper.MallPdtMapper.getProductById" fetchType="lazy"></association>
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 	</resultMap>
+
 	
-	<select  id="sortingOrderDetail" resultMap="sortRes">
-		SELECT ID, 
-			ORDER_ID, 
-			MEM_ID, 
-			PDT_ID, 
-			QUANTITY, 
-			PRICE, 
-			TOTAL_PRICE, 
-			order_state,
-			COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT 
-		FROM mall_order_detail where order_id = #{orderId} ORDER BY id desc
+	<!-- sql -->
+	<sql id="orderSql">
+		SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ZIPCODE,
+		ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+		USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+		ADD_DELIVERY_PRICE, PAY_ID, REGDATE, CANCEL_PRICE, RETURN_PRICE,
+		STATE
+	</sql>
+	<sql id="odSql">
+		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE,
+		COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT
+	</sql>
+
+	<!-- query -->
+
+	<select id="getOrderDetail" resultMap="sortRes" parameterType="String">
+		<include refid="odSql"></include> 
+		from mall_order_detail where order_id = #{orderId}
 	</select>
-<!-- -->	
+
+	<insert id="insertOrderDetail">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT mall_order_detail_seq.nextval FROM DUAL
+		</selectKey>
+		INSERT INTO mall_order_detail(ID, MEM_ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) 
+		VALUES (#{id}, #{member.id}, #{orderId}, #{pdt.id}, #{quantity}, #{pdt.price}, #{totalPrice})
+		
+	</insert>
+	<insert id="insertOrder">
+			insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
+				ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
+				TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, PAY_ID)
+			values (#{id}, #{member.id}, #{member.name}, #{member.email}, #{member.phone}, #{addName},
+				#{zipcode}, #{address1}, #{address2}, #{addPhone1}, #{addPhone2}, #{addMemo}, 
+				#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{trackingNumber}, #{payId} ) 
+	</insert>
+	
+	<insert id="insertPayment">
+		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
+		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
+	</insert>
+	
+	<select id="selectOrderById" resultMap="orderRes" parameterType="string">
+		SELECT * FROM mall_order 
+		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+		and mem_id = #{member.id} ORDER BY regdate desc
+	</select>
+	
+	<select id="getOrderByNo" resultMap="orderRes">
+		SELECT * FROM mall_order where id = #{id} ORDER BY regdate desc
+	</select>
+
+	<select  id="sortingOrderDetail" resultMap="sortRes" parameterType="daangnmungcat.dto.Order">
+		<include refid="odSql"></include>
+		FROM mall_order_detail where order_id = #{orderId}
+	</select>
 	
 	<select id="searchByDate" parameterType="String" resultMap="orderRes">
 		<include refid="orderSql"></include>
 		FROM mall_order 
 		WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
 								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
-		and mem_id = #{member.id} order by id desc
+		and mem_id = #{mem_id} order by regdate desc
 	</select>
+	
+	<update id="updateOrderDetailState">
+		update mall_order_detail set order_state = #{orderState} where order_id = #{orderId}
+	</update>
+	
+	<update id="updateOrderState">
+		update mall_order set return_price = #{returnPrice}, state = #{state}
+		where id = #{id}
+	</update>
+	
+	<update id="updatePaymentState">
+		update mall_payment set pay_state = #{payState} where id = #{id}
+	</update>
+	
 	
 </mapper>

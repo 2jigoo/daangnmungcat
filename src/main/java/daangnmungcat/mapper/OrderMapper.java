@@ -26,7 +26,11 @@ public interface OrderMapper {
 	int insertOrder(Order order);
 	int insertPayment(Payment pay);
 	
-	List<OrderDetail> sortingOrderDetail(@Param("orderId")String orderId);
+	List<OrderDetail> sortingOrderDetail(@Param("orderId")String id);
 	
-	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, Member member);
+	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);
+
+	int updateOrderDetailState(@Param("orderState")String state, @Param("orderId") String id);
+	int updateOrderState(@Param("returnPrice") int price, @Param("state")String state, @Param("id") String id);
+	int updatePaymentState(@Param("payState")String state, @Param("id") String id);
 }
