@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
-import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
 import daangnmungcat.service.KakaoPayService;
@@ -205,7 +205,7 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<OrderDetail> getOrderDetail(String orderNo) {
 		// TODO Auto-generated method stub
-		return mapper.getOrderDetail(orderNo);
+		return mapper.selectOrderDetailByOrderNo(orderNo);
 	}
 
 	@Override
@@ -246,8 +246,8 @@ public class OrderServiceImpl implements OrderService{
 	
 
 	@Override
-	public int updateOrderDetailState(String state,String orderId) {
-		return mapper.updateOrderDetailState(state, orderId);
+	public int updateAllOrderDetailState(String state,String orderId) {
+		return mapper.updateAllOrderDetailState(state, orderId);
 	}
 
 	@Override
@@ -263,6 +263,16 @@ public class OrderServiceImpl implements OrderService{
 	@Override
 	public List<Order> selectCancelOrderById(String id) {
 		return mapper.selectCancelOrderById(id);
+	}
+
+	@Override
+	public int updatePartOrderDetailState(String state, String id) {
+		return mapper.updatePartOrderDetailState(state, id);
+	}
+
+	@Override
+	public OrderDetail getOrderDetailById(String id) {
+		return mapper.getOrderDetailById(id);
 	}
 
 	

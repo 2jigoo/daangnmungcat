@@ -22,7 +22,8 @@ public interface OrderMapper {
 	List<Order> selectCancelOrderById(String id);
 	
 	Order getOrderByNo(String id);
-	List<OrderDetail> getOrderDetail(String orderId);
+	List<OrderDetail> selectOrderDetailByOrderNo(String orderId);
+	OrderDetail getOrderDetailById(String id);
 	
 	int insertOrderDetail(OrderDetail od);
 	int insertOrder(Order order);
@@ -33,7 +34,8 @@ public interface OrderMapper {
 	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);
 	List<Order> cancelSearchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);
 
-	int updateOrderDetailState(@Param("orderState")String state, @Param("orderId") String id);
+	int updateAllOrderDetailState(@Param("orderState")String state, @Param("orderId") String id);
+	int updatePartOrderDetailState(@Param("orderState")String state, @Param("id") String id);
 	int updateOrderState(@Param("returnPrice") int price, @Param("state")String state, @Param("id") String id);
 	int updatePaymentState(@Param("payState")String state, @Param("id") String id);
 }

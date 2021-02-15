@@ -178,7 +178,7 @@ SELECT * FROM mall_pdt;
 SELECT * FROM MALL_PAYMENT ORDER BY pay_date DESC;
 SELECT * FROM mall_order ORDER BY regdate DESC;
 SELECT * FROM MALL_ORDER_DETAIL ORDER BY id DESC;
-
+SELECT * FROM MALL_MILEAGE WHERE mem_id = 'test';
 SELECT ID, 
 			ORDER_ID, 
 			MEM_ID, 
@@ -207,3 +207,6 @@ SELECT * FROM MALL_MILEAGE ORDER BY id desc;
 SELECT * FROM mall_order 
 		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
 		and mem_id = 'test' and state = '환불완료' ORDER BY regdate desc
+
+		
+UPDATE MALL_ORDER_DETAIL SET ORDER_STATE = '결제완료' WHERE order_id = '20210215455786';

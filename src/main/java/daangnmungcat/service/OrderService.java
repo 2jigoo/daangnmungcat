@@ -11,11 +11,11 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
-import daangnmungcat.dto.KakaoPayApprovalVO;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 
 @Service
 public interface OrderService {
@@ -24,6 +24,7 @@ public interface OrderService {
 	List<Order> selectCancelOrderById(String id);
 	
 	Order getOrderByNo(String id);
+	OrderDetail getOrderDetailById(String id);
 	
 	int insertOrder(Order order);
 	
@@ -41,7 +42,8 @@ public interface OrderService {
 	
 	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
 	
-	int updateOrderDetailState(String state,String orderId);
+	int updateAllOrderDetailState(String state,String orderId);
+	int updatePartOrderDetailState(String state,String id);
 	int updateOrderState(int price, String state, String id);
 	int updatePaymentState(String state, String id);
 	

@@ -27,17 +27,18 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
-import daangnmungcat.dto.KakaoPayApprovalVO;
-import daangnmungcat.dto.KakaoPayCancel;
-import daangnmungcat.dto.KakaoPayReadyVO;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
+import daangnmungcat.dto.kakao.KakaoPayCancel;
+import daangnmungcat.dto.kakao.KakaoPayReadyVO;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
@@ -47,7 +48,8 @@ import lombok.extern.java.Log;
 @Service
 @Log
 public class KakaoPayServiceImpl implements KakaoPayService {
-private static final String HOST = "https://kapi.kakao.com";
+	
+	private static final String HOST = "https://kapi.kakao.com";
     
 	@Autowired
 	private OrderService orderService;
@@ -176,7 +178,7 @@ private static final String HOST = "https://kapi.kakao.com";
         
     }
     
-    public KakaoPayApprovalVO kakaoPayInfo(String pg_token, HttpServletRequest request, HttpSession session) {
+    public KakaoPayApprovalVO kakaoPayApprovalInfo(String pg_token, HttpServletRequest request, HttpSession session) {
     	
     	
         log.info("KakaoPayInfoVO............................................");
@@ -232,7 +234,10 @@ private static final String HOST = "https://kapi.kakao.com";
 	@Override
 	@Transactional
 	public String kakaoPayCancel(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
-
+		
+		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 
+		//금액오버시 오류 자동
+		
 		log.info("kakao-cancel ");
 		
 		Map<String, String> json = (Map<String, String>) session.getAttribute("map") ;
@@ -305,7 +310,7 @@ private static final String HOST = "https://kapi.kakao.com";
         	System.out.println("plus:" + plusMileage);
         	
         	int res1 = orderService.updateOrderState(Integer.parseInt(cancel_amount), "환불완료", order.getId());
-        	int res2 = orderService.updateOrderDetailState("환불완료", order.getId());
+        	int res2 = orderService.updateAllOrderDetailState("환불완료", order.getId());
         	int res3 = orderService.updatePaymentState("환불완료", tid);
         	
         	System.out.println("state변경:" + res1 + res2 + res3);
@@ -323,6 +328,7 @@ private static final String HOST = "https://kapi.kakao.com";
         	minus.setContent("상품 구매 사용");
         	
     		int res4 = mileService.insertMilegeInfo(plus);
+    		
     		int res5 = mileService.insertMilegeInfo(minus);
     		
         	System.out.println("mileage:" + res4 + res5); 
@@ -338,6 +344,141 @@ private static final String HOST = "https://kapi.kakao.com";
 		return null;
       
 	}
+	
+	@Transactional
+	public String kakaoPayPartCancel(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		
+		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 -> 안해도되는듯
+		//전체 결제 금액오버시 exceiption 자동
+		//받은 상품 가격의 취소금만큼 마일리지 마이너스, 상태 부분취소로 변경
+		
+		log.info("kakao - part cancel ");
+		
+		Map<String, String> json = (Map<String, String>) session.getAttribute("map") ;
+		
+		String tid = json.get("tid");
+		String partner_order_id = json.get("partner_order_id");
+		String cancel_amount = json.get("cancel_amount");
+		String first_pdt = json.get("first_pdt");
+		String qtt =  json.get("order_qtt");
+		String od_id = json.get("od_id");
+		int order_qtt = Integer.parseInt(qtt);
+		System.out.println(cancel_amount);
+		
+		RestTemplate restTemplate = new RestTemplate();
+        
+        // 서버로 요청할 Header
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "KakaoAK " + "64eac7ea0faa7f908904ee07ec3f2a67");
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
+        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+       
+        
+        // 서버로 요청할 Body
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+       
+        params.add("cid", "TC0ONETIME");
+        params.add("tid", tid);
+        params.add("cancel_amount", cancel_amount);
+        params.add("cancel_tax_free_amount", "0");
+        //params.add("cancel_vat_amount", cancel_vat_amount);
+        params.add("partner_order_id", partner_order_id);
+        params.add("partner_user_id", member.getId());
+        
+        String name;
+        if(order_qtt <= 1) {
+        	name = first_pdt;
+        }else {
+        	name = first_pdt + " 외 " +(order_qtt - 1) + "건";
+        }
+        
+        params.add("item_name", name);
+        
+         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
+         System.out.println("body" + body);
+         
+        try {
+        	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
+        	 kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayReadyVO.class);
+        	 log.info("" + kakaoPayReadyVO);
+        	
+        	//받은 상품 가격의 취소금만큼 마일리지 마이너스, 상태 부분취소로 변경
+        	//payment 테이블 변경
+        	 
+        	Order order = orderService.getOrderByNo(partner_order_id);
+         	List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
+         	order.setDetails(odList);
+         	
+         	OrderDetail od = orderService.getOrderDetailById(od_id);
+         	System.out.println(od.getQuantity());
+         	
+         	int minus  = (int) Math.floor(Integer.parseInt(cancel_amount) * 0.01);
+         	System.out.println("부분 차감할 마일리지:" + minus);
+         	String minusMile = String.valueOf("-" + minus);
+         	
+         	int res1 = orderService.updatePartOrderDetailState("부분취소", od_id);
+         	
+         	System.out.println("orderState 변경: "+res1);
+         	
+         	Mileage mileSet = new Mileage();
+         	mileSet.setOrder(order);
+         	mileSet.setMember(member);
+         	mileSet.setMileage(Integer.parseInt(minusMile));
+         	mileSet.setContent("부분 취소 적립");
+         	int mileRes = mileService.insertMilegeInfo(mileSet);
+        	System.out.println("mileRes:" + mileRes);
+        	
+        	return "/kakaoPayPartCancelSuccess";
+
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        
+		return null;
+	}
+
+	@Override
+	public KakaoPayApprovalVO kakaoPayInfo(String tid, HttpServletRequest request, HttpSession session) {
+		log.info("kakao - info");
+		System.out.println(tid);
+		RestTemplate restTemplate = new RestTemplate();
+		
+		// 서버로 요청할 Header
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "KakaoAK " + "64eac7ea0faa7f908904ee07ec3f2a67");
+        headers.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
+        headers.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
+        
+        // 서버로 요청할 Body
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
+       
+        params.add("cid", "TC0ONETIME");
+        params.add("tid", tid);
+        
+        
+        HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
+        System.out.println("body" + body);
+       
+		 try {
+	        	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
+			kakaoPayApprovalVo = restTemplate.postForObject(new URI(HOST + "/v1/payment/order"), body, KakaoPayApprovalVO.class);
+			
+			return kakaoPayApprovalVo;
+			
+		 } catch (RestClientException e) {
+	            e.printStackTrace();
+	        } catch (URISyntaxException e) {
+	            e.printStackTrace();
+	     }
+		 
+		return null;
+	}
+
+	
 
 }
  

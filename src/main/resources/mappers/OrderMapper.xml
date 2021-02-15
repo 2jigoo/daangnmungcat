@@ -64,10 +64,16 @@
 
 	<!-- query -->
 
-	<select id="getOrderDetail" resultMap="sortRes" parameterType="String">
+	<select id="selectOrderDetailByOrderNo" resultMap="sortRes" parameterType="String">
 		<include refid="odSql"></include> 
 		from mall_order_detail where order_id = #{orderId}
 	</select>
+	
+	<select id="getOrderDetailById" resultMap="sortRes" parameterType="String">
+		<include refid="odSql"></include> 
+		from mall_order_detail where id = #{id}
+	</select>
+	
 
 	<insert id="insertOrderDetail">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
@@ -128,8 +134,12 @@
 		and mem_id = #{mem_id} and state = '환불완료' order by regdate desc
 	</select>
 	
-	<update id="updateOrderDetailState">
+	<update id="updateAllOrderDetailState">
 		update mall_order_detail set order_state = #{orderState} where order_id = #{orderId}
+	</update>
+	
+	<update id="updatePartOrderDetailState">
+		update mall_order_detail set order_state = #{orderState} where id = #{id}
 	</update>
 	
 	<update id="updateOrderState">
