@@ -351,7 +351,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 -> 안해도되는듯
-		//전체 결제 금액오버시 exceiption 자동
+		//전체 결제 금액오버시 exceiption 자동, 모두 부분취소 -> cancel_pay로 됨
 		//받은 상품 가격의 취소금만큼 마일리지 마이너스, 상태 부분취소로 변경
 		
 		log.info("kakao - part cancel ");
@@ -412,7 +412,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
          	order.setDetails(odList);
          	
          	OrderDetail od = orderService.getOrderDetailById(od_id);
-         	System.out.println(od.getQuantity());
+         	System.out.println(od);
          	
          	int minus  = (int) Math.floor(Integer.parseInt(cancel_amount) * 0.01);
          	System.out.println("부분 차감할 마일리지:" + minus);

@@ -290,14 +290,17 @@ ${vo.tid}
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
 						<td>
 							${od.orderState.label}<br>
+							<c:if test="${od.orderState.label ne '부분취소'}">
 								<input type="button" value="부분취소" id="part_cancel"
 										pay_id="${order.payId}" 
 										od_price="${od.pdt.price}" 
 										first_pdt="${od.pdt.name}" 
 										order_qtt="${od.quantity}"  
 										order_id="${order.id}"
-										od_id = "${od.id}" ></td>
-						
+										od_id = "${od.id}" >
+							</c:if>
+						</td>
+							
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
