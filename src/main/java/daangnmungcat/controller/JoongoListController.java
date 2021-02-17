@@ -134,7 +134,7 @@ public class JoongoListController {
 	
 	
 	//insertForm용 - > 바로글쓰기버튼
-	@GetMapping("/joongoSale/addList")
+	@GetMapping("joongoSale/addList")
 	public String addListForm(Model model, HttpSession session) {
 		return "joongoSale/addList";
 	}

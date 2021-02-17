@@ -54,12 +54,12 @@ $(function(){
 	});
 	
 		
-		$('#dongne1').val(dong).attr("selected","selected");
+ 		$('#dongne1').val(dong).attr("selected","selected");
 		setTimeout(function(){
 		      if (dong != ""){
 		         $.get(contextPath+"/dongne2/"+ dong, function(json){
 		            var datalength = json.length; 
-		            var sCont = "<option>동네를 선택하세요</option>";
+		            var sCont = "";
 		            for(i=0; i<datalength; i++){
 		               if (json[i].name == $('#dong2Name').val()){
 		                  sCont += '<option value="' + json[i].id + '" selected>';
@@ -74,12 +74,13 @@ $(function(){
 		            $("select[name='dongne2.id']").val(nae).attr("selected", "selected");
 		         });
 		      }
-		   }, 50);
+		   }, 50); 
 
 	$("select[name='dongne1.id']").change(function(){
 		$("select[name='dongne2.id']").find('option').remove();
 			var dong1 = $("select[name='dongne1.id']").val();
 		$.get(contextPath+"/dongne2/"+dong1, function(json){
+			var datalength = json.length; 
 			var sCont = "";
 			for(i=0; i<datalength; i++){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
@@ -109,6 +110,80 @@ $(function(){
 	    
 	    return false;
 	})
+	
+	 function success(position) { //성공시
+	       var lat=position.coords["latitude"];
+	       var lon=position.coords["longitude"];
+	       console.log("1 : "+ lat)
+	       console.log("1 : "+ lon)
+	       
+	      var test = {lat:lat, lon:lon}
+	      console.log(test);
+	       $.ajax({
+	         type:"post",
+	         contentType:"application/json; charset=utf-8",
+	         url:contextPath+"/gpsToAddress",
+	         cache:false,
+	         dataType: "json",
+	         data:JSON.stringify(test),
+	         beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	         },
+	           success:function(data){
+	            console.log(data);
+	            if(confirm("검색된 주소로 검색하시겠습니다? - "+ data.address1+" "+ data.address2) == true){
+	            	var buttonDong = $('#dongne1 option:contains('+ data.address1 +')').val();
+				       $('#dongne1').val(buttonDong).attr("selected","selected");
+						setTimeout(function(){
+				         $.get(contextPath+"/dongne2/"+ buttonDong, function(json){
+				            var datalength = json.length; 
+				            var sCont = "";
+				            for(i=0; i<datalength; i++){
+				               if (json[i].name == data.address2){
+				                  sCont += '<option value="' + json[i].id + '" selected>';
+				                  $('#dongne1').val(buttonDong).attr("selected","selected");
+				               } else {
+				                  sCont += '<option value="' + json[i].id + '">';
+				               }
+				               sCont += json[i].name;
+				               sCont += '</option>';
+				            }
+				            $("select[name='dongne2.id']").append(sCont);
+				            var buttonNae =  $('#dongne2 option:contains('+ data.address2 +')').val();
+				            $("select[name='dongne2.id']").val(buttonNae).attr("selected", "selected");
+				         });
+				   }, 50); 
+	            }
+	             else{
+	                 return ;
+	             }
+	           }, 
+	           error: function(){
+	            alert("에러");
+	         }
+	      })
+	      console.log(contextPath+"/gpsToAddress")
+	   }
+	   
+	    function fail(err){
+	       switch (err.code){
+	           case err.PERMISSION_DENIED:
+	              alert("사용자 거부");
+	           break;
+	    
+	           case err.PERMISSION_UNAVAILABLE:
+	              alert("지리정보를 얻을 수 없음");
+	           break;
+	    
+	           case err.TIMEOUT:
+	              alert("시간초과");
+	           break;
+	    
+	           case err.UNKNOWN_ERROR:
+	              alert("알 수 없는 오류 발생");
+	           break;
+	       }
+	    }
 	
 	 
 	 $('#checkFree').change(function(e){
