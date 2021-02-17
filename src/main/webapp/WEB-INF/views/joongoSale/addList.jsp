@@ -39,7 +39,8 @@ $(function(){
 		var nae = document.getElementById("naeName").value
         //	$('#dongne1').val(dong).prop("selected",true);
        // 	$('#dongne2').val(nae).prop("selected",true);
-	
+       
+       
 	$.get(contextPath+"/dongne1", function(json){
 		console.log(json)
 		var datalength = json.length; 
@@ -49,15 +50,36 @@ $(function(){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
 			}
 			$("select[name='dongne1.id']").append(sCont);
-			//$('#dongne1').val(dong).attr("selected","selected");
 		}
 	});
 	
+		
+		$('#dongne1').val(dong).attr("selected","selected");
+		setTimeout(function(){
+		      if (dong != ""){
+		         $.get(contextPath+"/dongne2/"+ dong, function(json){
+		            var datalength = json.length; 
+		            var sCont = "<option>동네를 선택하세요</option>";
+		            for(i=0; i<datalength; i++){
+		               if (json[i].name == $('#dong2Name').val()){
+		                  sCont += '<option value="' + json[i].id + '" selected>';
+		                  $('#dongne1').val(dong).attr("selected","selected");
+		               } else {
+		                  sCont += '<option value="' + json[i].id + '">';
+		               }
+		               sCont += json[i].name;
+		               sCont += '</option>';
+		            }
+		            $("select[name='dongne2.id']").append(sCont);
+		            $("select[name='dongne2.id']").val(nae).attr("selected", "selected");
+		         });
+		      }
+		   }, 50);
+
 	$("select[name='dongne1.id']").change(function(){
 		$("select[name='dongne2.id']").find('option').remove();
-		var dong1 = $("select[name='dongne1.id']").val();
+			var dong1 = $("select[name='dongne1.id']").val();
 		$.get(contextPath+"/dongne2/"+dong1, function(json){
-			var datalength = json.length; 
 			var sCont = "";
 			for(i=0; i<datalength; i++){
 				sCont += '<option value="' + json[i].id + '">' + json[i].name + '</option>';
@@ -191,6 +213,7 @@ function handleThumImgs(){
 					<input type="text" id="memId" value="${loginUser.getId()}" readonly="readonly" style="border: none;">
 					<input type="text" id="dongName" style="display: none;" value="${loginUser.getDongne1().getId()}">
 					<input type="text" id="naeName" style="display: none;" value="${loginUser.getDongne2().getId()}">
+					<input type="text" id="dong2Name" style="display: none;" value="${loginUser.getDongne2().getName()}">
 				</td>
 					
 			</tr>

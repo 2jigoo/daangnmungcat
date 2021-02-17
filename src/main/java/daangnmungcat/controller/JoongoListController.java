@@ -136,18 +136,18 @@ public class JoongoListController {
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("/joongoSale/addList")
 	public String addListForm(Model model, HttpSession session) {
-			return "joongoSale/addList";
-		}
+		return "joongoSale/addList";
+	}
 	
 	//insertForm용  -> 동네1 선택
 	@GetMapping("/joongoSale/addList/dongne1")
-	public ResponseEntity<Object> dongne1() {
+	public ResponseEntity<Object> dongne1(HttpSession session) {
 		return ResponseEntity.ok(memberService.Dongne1List());
 	}
 	
 	//insertForm용 -> 동네2선택 후
 	@GetMapping("joongoSale/addList/dongne2/{dongne1}")
-	public ResponseEntity<Object> dongne2(@PathVariable int dongne1) {
+	public ResponseEntity<Object> dongne2(@PathVariable int dongne1, HttpSession session) {
 		return ResponseEntity.ok(memberService.Dongne2List(dongne1));
 	}
 	
