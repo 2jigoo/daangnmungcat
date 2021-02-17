@@ -221,7 +221,7 @@ $(function(){
 			alert('동네를 선택하세요.');
 			return false; 
 		}else if($('#thumImgInput').val() == ""){
-			alert("대표사진 업로드는 필수입니다.")
+			alert("대표사진 업로드는 필수입니다.");
 			return false;
 		}
 		 

@@ -222,29 +222,30 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		
 		// 상세 이미지 추가
 		for (MultipartFile multipartFile : fileList) {
-			String uploadFileName = multipartFile.getOriginalFilename().trim();
-			int num = list.size() + 1;
-			uploadFileName = num + "_" + uploadFileName;
+			if(multipartFile.getOriginalFilename() != null) {
+				String uploadFileName = multipartFile.getOriginalFilename().trim();
+				int num = list.size() + 1;
+				uploadFileName = num + "_" + uploadFileName;
+					
+				File saveFile = new File(uploadFolder, uploadFileName);
+	
+				//파일 db저장 
+				FileForm fileForm = new FileForm();
+				fileForm.setSale(sale);
+				fileForm.setFileName("upload/joongosale/"+uploadFileName);
 				
-			File saveFile = new File(uploadFolder, uploadFileName);
-
-			//파일 db저장 
-			FileForm fileForm = new FileForm();
-			fileForm.setSale(sale);
-			fileForm.setFileName("upload/joongosale/"+uploadFileName);
-			
-			res += fileMapper.insertSaleFile(fileForm);
-			
-			try {
-				multipartFile.transferTo(saveFile);
-				num++;
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				res += fileMapper.insertSaleFile(fileForm);
+				
+				try {
+					multipartFile.transferTo(saveFile);
+					num++;
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
 		if(res != (fileList.length + 1)) {
 			throw new RuntimeException(); // 업로드 갯수 불일치
 		}

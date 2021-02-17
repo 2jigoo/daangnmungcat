@@ -251,8 +251,20 @@ $(function(){
 		}else if($('#dongne2').val() == "0"){
 			alert('동네를 선택하세요.');
 			return false; 
+		}else if($('#thumImgInput').val() == "" && $('.checkThum').length == 0){
+			alert("대표사진 업로드는 필수입니다.");
+			return false;
 		}
 	});
+	 
+	 
+	 $("#thumImgInput").on("click", function(){
+		    if($('.checkThum').length > 0){
+		    	alert("기존 대표사진 삭제 후 추가하세요.");
+		    	return false;
+		    } 
+		})
+	 
 	 
 	 
 	 //클릭한 사진 db에서 삭제
@@ -377,7 +389,7 @@ function handleThumImgs(){
 						<c:forEach items="${flist }" var="flist" begin="0" end="0">
 							<div id="preview2">
 							<c:if test="${ not empty thumImg.thumName}">
-								<a href="<%=request.getContextPath()%>/joongoSale/pic/delete?id=${param.id }&fileName=${flist.fileName}" id="sale_pic_delete_btn"><img src="<%=request.getContextPath()%>/resources/${thumImg.thumName}"></a></c:if>
+								<a href="<%=request.getContextPath()%>/joongoSale/pic/delete?id=${param.id }&fileName=${flist.fileName}" id="sale_pic_delete_btn" class="checkThum"><img src="<%=request.getContextPath()%>/resources/${thumImg.thumName}"></a></c:if>
 							</div>
 					
 						</c:forEach>
