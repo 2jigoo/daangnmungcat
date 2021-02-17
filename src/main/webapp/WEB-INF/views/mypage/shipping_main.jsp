@@ -41,6 +41,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '[id=delete_addr]', function(){
 		var num = $(this).attr('addrId');
+		console.log(num)
 		$.get(contextPath +"/address/" + num, function(add){
 			if (confirm("["+ add.subject + "] 배송지를 삭제하시겠습니까?") == true){
 				$.get(contextPath +"/address/get/" + num, function(){

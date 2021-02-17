@@ -1,28 +1,19 @@
 package daangnmungcat.controller;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.xml.ws.Response;
 
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.parser.ParseException;
-import org.springframework.asm.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,21 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
-import daangnmungcat.dto.Sale;
-import daangnmungcat.dto.SaleState;
+import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
-import daangnmungcat.mapper.OrderMapper;
-import daangnmungcat.service.CartService;
-import daangnmungcat.service.MallPdtService;
+import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.OrderService;
-import oracle.net.aso.m;
 
 @RestController
 @Controller
@@ -63,13 +48,7 @@ public class MypageController {
 	private MemberService service;
 	
 	@Autowired
-	private CartService cartService;
-	
-	@Autowired
-	private MallPdtService pdtService;
-	
-	@Autowired
-	private OrderMapper mapper;
+	private KakaoPayService kakaoService;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -171,28 +150,24 @@ public class MypageController {
 		return res;
 	}
 	
-//주문내역 mv
+	
+/////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView deleteShipping(HttpSession session, HttpServletRequest request) {
+	public ModelAndView orderList(HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		
-		
 		List<Order> list = orderService.selectOrderById(member.getId());
-		System.out.println(list);
 		
 		for(Order o: list) {
-			System.out.println(o.getId());
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			System.out.println(odList);
 			o.setDetails(odList);
 			for(OrderDetail od: odList) {
 				od.setOrderId(o.getId());
 			}
 		}
-	
 		
 		ModelAndView mv = new ModelAndView();
 		
@@ -208,7 +183,7 @@ public class MypageController {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		
-		List<Order> list = orderService.searchByDate(start, end, member);
+		List<Order> list = orderService.searchByDate(start, end, member.getId());
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
@@ -216,8 +191,7 @@ public class MypageController {
 				od.setOrderId(o.getId());
 			}
 		}
-		System.out.println(list);
-	
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
@@ -238,12 +212,68 @@ public class MypageController {
 			od.setOrderId(order.getId());
 		}
 		ModelAndView mv = new ModelAndView();
-		System.out.println(order);
-		
+		mv.addObject("first_pdt", odList.get(0));
 		mv.addObject("order", order);
 		mv.setViewName("/mypage/mypage_order_detail");
 		return mv;
 	}
 	
 	
+	@GetMapping("/mypage/mypage_order_cancel_list")
+	public ModelAndView getCancelOrder(HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		
+		List<Order> list = orderService.selectCancelOrderById(member.getId());
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", list);
+		mv.setViewName("/mypage/mypage_order_cancel_list");
+		return mv;
+		
+	}
+
+	
+	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
+	public ModelAndView searchCancelOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
+		session = request.getSession();
+		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		Member member = service.selectMemberById(loginUser.getId());
+		System.out.println(start +"/"+ end);
+		
+		List<Order> list = orderService.cancelSearchByDate(start, end, member.getId());
+		for(Order o: list) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+		
+		ModelAndView mv = new ModelAndView();
+		
+		mv.addObject("list", list);
+		mv.setViewName("/mypage/mypage_order_cancel_list");
+		return mv;
+	}
+	
+	//결제정보 조회
+	@GetMapping("/kakao-info/{tid}/")
+	public ModelAndView kakaoPayinfo(@PathVariable String tid, HttpServletRequest request, HttpSession session) {
+		KakaoPayApprovalVO vo = kakaoService.kakaoPayInfo(tid, request, session);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("info", vo);
+		mv.setViewName("/mypage/pay_info");
+		
+		return mv;
+	}
 }

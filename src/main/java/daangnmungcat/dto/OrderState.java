@@ -21,8 +21,9 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public enum OrderState implements CodeEnum{
 	
-	PAID("결제완료"), CANCEL("주문취소"),
-	SHIPPING("배송중"), DELIVERED("배송완료"), PURCHASE_COMPLETED("구매확정"),
+	CANCEL("주문취소"), PART_CANCEL("부분취소"),
+	PAID("결제완료"), SHIPPING("배송중"), DELIVERED("배송완료"), 
+	PURCHASE_COMPLETED("구매확정"),
 	REFUND_REQUEST("환불요청"), REFUNDED("환불완료");
 
 	private String code;

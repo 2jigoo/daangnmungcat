@@ -27,6 +27,9 @@ public class MemberMapperTest {
 	@Autowired
 	private MemberMapper mapper;
 	
+	@Autowired 
+	private OrderMapper orderMapper;
+	
 	@After
 	public void tearDown() throws Exception {
 		System.out.println();
@@ -71,9 +74,14 @@ public class MemberMapperTest {
 		log.debug(dongne2.toString());
 	}
 	
-	@Test
+	//@Test
 	public void selectMember() {
 		Member member = mapper.selectMemberById("chattest1");
 		System.out.println(member);
+	}
+	
+	@Test 
+	public void order() {
+		
 	}
 }

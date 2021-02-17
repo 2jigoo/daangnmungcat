@@ -1,21 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/resources/include/header.jsp" %>
-
 <style>
 .wrapper {margin:0 auto; padding:50px;}
 </style>
-
 <script>
 $(document).ready(function(){
-	
 	var csrfToken = $("meta[name='_csrf']").attr("content");
 	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
 	    if (options['type'].toLowerCase() === "post") {
 	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
 	    }
 	});
-
+	
 	 $(".gubun").each(function () {
 	    var rows = $(".gubun:contains('" + $(this).text() + "')");
 	    if (rows.length > 1) {
@@ -104,103 +101,10 @@ $(document).ready(function(){
 		if(start_val == "" || end_val == ""){
 			alert('날짜를 선택하세요.')
 		}else{
-			location.href='/mypage/mypage_order_list/start='+start_val + '/end=' + end_val;
+			location.href='/mypage/mypage_order_cancel_list/start='+start_val + '/end=' + end_val;
 		}
 		
 	});
-	
-
-	$(document).on('click', '#order_cancel', function(){
-		
-		var pay_id = $(this).attr('pay_id');
-		var pay_price = $(this).attr('pay_price');
-		var order_id = $(this).attr('order_id');
-		var name = $(this).attr('first_pdt');
-		var order_qtt = $(this).attr('order_qtt');
-		
-		var data = {
-				tid: pay_id, 
-				partner_order_id: order_id,
-				cancel_amount: pay_price,
-				first_pdt: name,
-				order_qtt: order_qtt
-			};
-			
-		console.log(data);
-		
-		if(confirm('주문을 취소하시겠습니까?') == true){
-			//post 전송
-			$.ajax({
-				url: '/kakao-cancel',
-				type: "post",
-				contentType: "application/json; charset=utf-8",
-				data : JSON.stringify(data),
-				success: function() {
-					alert('주문 취소 완료');
-					location.reload();
-				},
-				error: function(request,status,error){
-					alert('에러' + request.status+request.responseText+error);
-				}
-			});
-			
-		}else{
-			return;
-		}
-	});
-	
-	
-	
-	
-	
-	//부분취소
-	$(document).on('click', '#part_cancel', function(){
-			
-			var pay_id = $(this).attr('pay_id');
-			var od_price = $(this).attr('od_price');
-			var order_id = $(this).attr('order_id');
-			var name = $(this).attr('first_pdt');
-			var order_qtt = $(this).attr('order_qtt');
-			var od_id = $(this).attr('od_id');
-			
-			var data = {
-					tid: pay_id, 
-					partner_order_id: order_id,
-					cancel_amount: od_price,
-					first_pdt: name,
-					order_qtt: order_qtt,
-					od_id: od_id
-				};
-				
-			console.log(data);
-			
-			if(confirm('주문을 취소하시겠습니까?') == true){
-				//post 전송
-				$.ajax({
-					url: '/kakao-part',
-					type: "post",
-					contentType: "application/json; charset=utf-8",
-					data : JSON.stringify(data),
-					success: function() {
-						alert('주문 취소 완료');
-						location.reload();
-					},
-					error: function(request,status,error){
-						alert('에러' + request.status+request.responseText+error);
-					}
-				});
-				
-			}else{
-				return;
-			}	
-	});
-	
-	//결쩨정보
-	$(document).on('click', '#order_info', function(){
-		var tid = $(this).attr('tid');
-		location.href= "/kakao-info/" + tid + "/";
-	});
-	
 	
 	
 	
@@ -209,8 +113,7 @@ $(document).ready(function(){
 
 </script>
 <div class="wrapper">
-${vo.tid}
-	<h2 id="subTitle">주문 내역</h2>
+	<h2 id="subTitle">취소/환불 내역</h2>
 	<div class="order_list_search_div">
 		조회 기간 
 		<input type="button" value="오늘" id="today">
@@ -263,19 +166,20 @@ ${vo.tid}
             					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
-	            					<br> ${order.id}<br>	
+	            					<br> ${order.id}<br>
+	            					<input type="hidden" id="first_pdt" value="${od.pdt.name}">
             					</span>
-            					<input type="button" value="결제정보" id="order_info" tid="${order.payId}">
             				</td>
             			</c:if>
             			<c:if test="${od.partcnt == 1}">
             				<td class="order_num">
+            						<input type="hidden" id="order_id" value="${order.id}">
             					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id} <br>
+	            					<input type="hidden" id="first_pdt" value="${od.pdt.name}">
 	            				</span>
-	            				<input type="button" value="결제정보" id="order_info" tid="${order.payId}">
             				</td>
             			</c:if>
 							
@@ -288,38 +192,22 @@ ${vo.tid}
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
-						<td>
-							${od.orderState.label}<br>
-							<c:if test="${od.orderState.label ne '부분취소'}">
-								<input type="button" value="부분취소" id="part_cancel"
-										pay_id="${order.payId}" 
-										od_price="${od.pdt.price}" 
-										first_pdt="${od.pdt.name}" 
-										order_qtt="${od.quantity}"  
-										order_id="${order.id}"
-										od_id = "${od.id}" >
-							</c:if>
-						</td>
-							
+						<td>${od.orderState.label}</td>
+						
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
             					<fmt:formatNumber value="${order.finalPrice}"/>
+            					<input type="hidden" value="${order.finalPrice}" name="pay_price" id="pay_price">
+            					<input type="hidden" id="order_qtt" value="${od.partcnt}">
             					<br>
             					<c:if test="${od.orderState.label == '결제완료'}">
-									<input type="button" value="주문취소" id="order_cancel"
-										 pay_id="${order.payId}" 
-										 pay_price="${order.finalPrice}" 
-										 first_pdt="${od.pdt.name}" 
-										 order_qtt="${od.partcnt}"  
-										 order_id="${order.id}" 
-										 od_id = "${od.id}" ><br>
-									
+									<input type="button" value="주문취소" id="order_cancel">
+									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
 								</c:if>
 								<c:if test="${od.orderState.label == '배송완료'}">
-									<input type="button" value="구매확정" id="purchase_complited"><br>
-									
+									<input type="button" value="구매확정" id="purchase_complited">
 								</c:if>
             					</td>
 						</c:if>
@@ -328,20 +216,15 @@ ${vo.tid}
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<input type="hidden" value="${order.finalPrice }" name="pay_price" id="pay_price">
+	            				<input type="hidden" id="order_qtt" value="${od.partcnt}">
 	            				<br>
-	            			
             					<c:if test="${od.orderState.label == '결제완료'}">
-									<input type="button" value="주문취소" id="order_cancel"
-										 pay_id="${order.payId}" 
-										 pay_price="${order.finalPrice}" 
-										 first_pdt="${od.pdt.name}" 
-										 order_qtt="${od.partcnt}"
-										 order_id="${order.id}" ><br>
-									
+									<input type="button" value="주문취소" id="order_cancel">
+									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
 								</c:if>
 								<c:if test="${od.orderState.label == '배송완료'}">
-									<input type="button" value="구매확정" id="purchase_complited"> <br>
-								
+									<input type="button" value="구매확정" id="purchase_complited">
 								</c:if>
             				</td>
             			</c:if>
@@ -356,4 +239,5 @@ ${vo.tid}
 </div>
 </div>
 
+<jsp:include page="/resources/include/footer.jsp"/>
 <jsp:include page="/resources/include/footer.jsp"/>

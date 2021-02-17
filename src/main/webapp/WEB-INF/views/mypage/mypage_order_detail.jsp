@@ -9,18 +9,52 @@
 $(document).ready(function(){
 	
 	$(".gubun").each(function () {
-		    var rows = $(".gubun:contains('" + $(this).text() + "')");
-		    if (rows.length > 1) {
-		        rows.eq(0).prop("rowspan", rows.length);
-		        rows.not(":eq(0)").remove();
+	 	var rows = $(".gubun:contains('" + $(this).text() + "')");
+		if (rows.length > 1) {
+		     rows.eq(0).prop("rowspan", rows.length);
+		     rows.not(":eq(0)").remove();
 		        
-		    } 
+		} 
 	});
+	
+	$(document).on('click', '[id=order_cancel]', function(){
+		if(confirm('주문을 취소하시겠습니까?') == true){
+			var pay_id = $('#pay_id').val();
+			var pay_price = $('#pay_price').val();
+			var order_id = $('#order_id').val();
+			var name = $('#first_pdt').val();
+			var order_qtt = $('#order_qtt').val();
+			
+			var data = {
+				tid: pay_id, 
+				partner_order_id: order_id,
+				cancel_amount: pay_price,
+				first_pdt: name,
+				order_qtt: order_qtt
+			};
+			//post 전송
+			$.ajax({
+				url: '/kakao-cancel',
+				type: "post",
+				contentType: "application/json; charset=utf-8",
+				data : JSON.stringify(data),
+				success: function() {
+					alert('주문 취소 완료');
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
+			});
+		}else{
+			return;
+		}
+	});
+	
 });
 </script>
 
 <div class="wrapper">
-<h2 id="subTitle">주문 상세내역</h2>
+<h2 id="subTitle">주문 상세</h2>
 	<table id="order_list_table">
 		<colgroup>
 			<col width="200px">
@@ -45,20 +79,24 @@ $(document).ready(function(){
 				<tr>
 					<c:if test="${od.partcnt > 1}">
             				<td class="gubun order_num">
+            				<input type="hidden" id="order_id" value="${od.orderId}">
             					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id}
             					</span>
+            				<input type="hidden" id="first_pdt" value="${od.pdt.name}">
             				</td>
             			</c:if>
             			<c:if test="${od.partcnt == 1}">
             				<td class="order_num">
+            				<input type="hidden" id="order_id" value="${od.orderId}">
             					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id}
 	            				</span>
+	            				<input type="hidden" id="first_pdt" value="${od.pdt.name}">
             				</td>
             			</c:if>
             			<td class="tl" >
@@ -77,21 +115,34 @@ $(document).ready(function(){
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
             					<fmt:formatNumber value="${order.finalPrice}"/>
+            					<input type="hidden" value="${order.finalPrice}" name="pay_price" id="pay_price">
+            					<input type="hidden" id="order_qtt" value="${od.partcnt}">
             					<br>
-            					<input type="button" value="주문취소">
-            				</td>
-            					
+            					<c:if test="${od.orderState.label == '결제완료'}">
+									<input type="button" value="주문취소" id="order_cancel">
+									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
+								</c:if>
+								<c:if test="${od.orderState.label == '배송완료'}">
+									<input type="button" value="구매확정" id="purchase_complited">
+								</c:if>
+            					</td>
 						</c:if>
 						<c:if test="${od.partcnt == 1}">
             				<td class="final_price">
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<input type="hidden" value="${order.finalPrice }" name="pay_price" id="pay_price">
+	            				<input type="hidden" id="order_qtt" value="${od.partcnt}">
 	            				<br>
-								<input type="button" value="주문취소">
-            				
+            					<c:if test="${od.orderState.label == '결제완료'}">
+									<input type="button" value="주문취소" id="order_cancel">
+									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
+								</c:if>
+								<c:if test="${od.orderState.label == '배송완료'}">
+									<input type="button" value="구매확정" id="purchase_complited">
+								</c:if>
             				</td>
-            				
             			</c:if>
 				</tr>
 			</c:forEach>
@@ -145,29 +196,61 @@ $(document).ready(function(){
 					<td>${order.addMemo}</td>
 				</tr>
 		</table>
-	
-		<span class="tableTitle">결제 정보</span>
-		<table  class="order_detail_table">
-			<tr>
-				<td>상품 합계 금액</td>
-				<td><fmt:formatNumber value="${order.totalPrice}"/></td>
-			</tr>
-			<tr>
-				<td>배송비</td>
-				<td><fmt:formatNumber value="${order.deliveryPrice}"/></td>
-			</tr>
-			<tr>
-				<td>총 결제 금액</td>
-				<td><fmt:formatNumber value="${order.finalPrice}"/></td>
-			</tr>
-			<tr>
-				<td>마일리지</td>
-				<td>
-					적립된 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
-					사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
-				</td>
-			</tr>
-		</table>
+		
+		<c:if test="${order.state != '환불완료' }">
+			<span class="tableTitle">결제 정보</span>
+			<table  class="order_detail_table">
+				<tr>
+					<td>상품 합계 금액</td>
+					<td><fmt:formatNumber value="${order.totalPrice}"/></td>
+				</tr>
+				<tr>
+					<td>배송비</td>
+					<td><fmt:formatNumber value="${order.deliveryPrice}"/></td>
+				</tr>
+				<tr>
+					<td>총 결제 금액</td>
+					<td><fmt:formatNumber value="${order.finalPrice}"/></td>
+				</tr>
+				<tr>
+					<td>마일리지</td>
+					<td>
+						적립된 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
+						사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
+					</td>
+				</tr>
+			</table>
+		</c:if>
+		
+		<c:if test="${order.state == '환불완료' }">
+			<span class="tableTitle">환불 정보</span>
+			<table  class="order_detail_table">
+				<tr>
+					<td>환불 금액</td>
+					<td><fmt:formatNumber value="${order.returnPrice}"/></td>
+				</tr>
+				<tr>
+					<td>환불 상태</td>
+					<td>${order.state}</td>
+				</tr>
+				<tr>
+					<td>배송비</td>
+					<td><fmt:formatNumber value="${order.deliveryPrice}"/></td>
+				</tr>
+				<tr>
+					<td>총 결제 금액</td>
+					<td><fmt:formatNumber value="${order.finalPrice}"/></td>
+				</tr>
+				<tr>
+					<td>마일리지</td>
+					<td>
+						차감된 마일리지 : -<fmt:formatNumber value="${order.plusMileage}"/><br> 
+						회복된 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
+					</td>
+				</tr>
+			</table>
+		</c:if>
+		
 	<input type="button" value="목록으로" onclick='location.href="/mypage/mypage_order_list"' >
 	</div>
 </div>

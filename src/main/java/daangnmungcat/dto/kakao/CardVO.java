@@ -1,4 +1,4 @@
-package daangnmungcat.dto;
+package daangnmungcat.dto.kakao;
 
 import lombok.Data;
 
