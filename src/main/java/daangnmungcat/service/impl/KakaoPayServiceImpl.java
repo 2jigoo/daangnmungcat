@@ -29,7 +29,9 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import daangnmungcat.controller.CartController;
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
@@ -56,10 +58,9 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
 	@Autowired
 	private MemberService service;
-	
+
 	@Autowired
 	private MileageService mileService;
-	
 
     private KakaoPayReadyVO  kakaoPayReadyVO;
     private KakaoPayApprovalVO kakaoPayApprovalVo;
@@ -160,6 +161,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         try {
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
             kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
+           
             
             log.info("" + kakaoPayReadyVO);
             return kakaoPayReadyVO.getNext_redirect_pc_url();
@@ -174,10 +176,12 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         
         //결제창가면 끊긴ㄷㅏ,,
       
-        return "/pay";
+        return null;
         
     }
     
+    
+    @Transactional
     public KakaoPayApprovalVO kakaoPayApprovalInfo(String pg_token, HttpServletRequest request, HttpSession session) {
     	
     	
@@ -189,6 +193,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		String finalPrice = (String) session.getAttribute("final_price");
 		String nextNo = (String) session.getAttribute("nextOrderNo");
+		String usedMile = (String) session.getAttribute("usedMile");
 		
         RestTemplate restTemplate = new RestTemplate();
         
@@ -215,7 +220,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         	KakaoPayApprovalVO kakaoPayApprovalVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVO.class);
             log.info("" + kakaoPayApprovalVO);
             
-            return kakaoPayApprovalVO;
+            //결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
+            orderService.orderTransaction(kakaoPayApprovalVO, request, session);
+    		
+           return kakaoPayApprovalVO;
         
         } catch (RestClientException e) {
             // TODO Auto-generated catch block
@@ -287,52 +295,49 @@ public class KakaoPayServiceImpl implements KakaoPayService {
          
         try {
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
-        	 kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayReadyVO.class);
-        	 log.info("" + kakaoPayReadyVO);
-        	 
         	//redirect page 안쓰므로 여기서 함
-        	 
         	// order-detail -> 환불완료
         	// order -> 환불완료 
         	// payment -> 환불완료 
-        	// mileage 되돌리기
+        	// mileage -> 사용한 마일리지 회복
         	
         	Order order = orderService.getOrderByNo(partner_order_id);
         	List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
         	order.setDetails(odList);
         	System.out.println(order);
         	
-        	//plus한 금액 다시 차감 -> minus한 금액 되돌림
-        	String minusMile = String.valueOf("-" + order.getPlusMileage());
-        	int minusMileage = Integer.parseInt(minusMile);
-        	int plusMileage = order.getUsedMileage();
-        	System.out.println("minus:" + minusMileage);
-        	System.out.println("plus:" + plusMileage);
+        	order.setReturnPrice(Integer.parseInt(cancel_amount));
+        	order.setState("환불완료");
         	
-        	int res1 = orderService.updateOrderState(Integer.parseInt(cancel_amount), "환불완료", order.getId());
-        	int res2 = orderService.updateAllOrderDetailState("환불완료", order.getId());
-        	int res3 = orderService.updatePaymentState("환불완료", tid);
+        	//order의 final_price 어케 처리할지,,
+        	int finalPrice = order.getFinalPrice();
+        	order.setFinalPrice(finalPrice - Integer.parseInt(cancel_amount));
+        	int res1 = orderService.updateOrder(order, order.getId());
         	
-        	System.out.println("state변경:" + res1 + res2 + res3);
+        	
+        	int res2 = 0;
+        	for(OrderDetail od:odList) {
+        		od.setOrderState(OrderState.REFUNDED);
+        		res2 = orderService.updateAllOrderDetail(od, order.getId());
+        	}
+        	
+        	Payment pay = orderService.getPaymentById(tid);
+        	pay.setPayState("환불완료");
+        	int res3 = orderService.updatePayment(pay, tid);
+        	System.out.println("pay 정보:" + pay);
         	
         	Mileage plus = new Mileage();
-        	plus.setOrder(order);
-        	plus.setMember(member);
-        	plus.setMileage(plusMileage);
-        	plus.setContent("상품 구매 적립");
+    		plus.setMember(member);
+    		plus.setOrder(order);
+    		plus.setMileage(order.getUsedMileage());
+    		plus.setContent("상품 구매 적립");
+    		mileService.insertMilegeInfo(plus);
         	
-        	Mileage minus = new Mileage();
-        	minus.setMember(member);
-        	minus.setOrder(order);
-        	minus.setMileage(minusMileage);
-        	minus.setContent("상품 구매 사용");
-        	
-    		int res4 = mileService.insertMilegeInfo(plus);
-    		
-    		int res5 = mileService.insertMilegeInfo(minus);
-    		
-        	System.out.println("mileage:" + res4 + res5); 
-        	
+        	System.out.println("orderstate:" + res1 + "/ od 총 " +odList.size() + "개 = " + res2 + "/ paystate:" + res3);
+
+        	kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayReadyVO.class);
+        	log.info("" + kakaoPayReadyVO);
+        	 
         	return "/kakaoPayCancelSuccess";
 
         } catch (RestClientException e) {
@@ -345,14 +350,15 @@ public class KakaoPayServiceImpl implements KakaoPayService {
       
 	}
 	
+	
 	@Transactional
 	public String kakaoPayPartCancel(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
 		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 -> 안해도되는듯
-		//전체 결제 금액오버시 exceiption 자동, 모두 부분취소 -> cancel_pay로 됨
-		//받은 상품 가격의 취소금만큼 마일리지 마이너스, 상태 부분취소로 변경
+		//전체 결제 금액오버시 exception 자동, 모두 부분취소 -> cancel_pay로 됨
+		//부분취소시 total_price에서만 빼놓고 final은 배송비 추가 있을 수 있으니 admin에서 수정하는걸로,,
 		
 		log.info("kakao - part cancel ");
 		
@@ -360,12 +366,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		String tid = json.get("tid");
 		String partner_order_id = json.get("partner_order_id");
-		String cancel_amount = json.get("cancel_amount");
+		//String cancel_amount = json.get("cancel_amount");
 		String first_pdt = json.get("first_pdt");
 		String qtt =  json.get("order_qtt");
 		String od_id = json.get("od_id");
-		int order_qtt = Integer.parseInt(qtt);
-		System.out.println(cancel_amount);
 		
 		RestTemplate restTemplate = new RestTemplate();
         
@@ -379,6 +383,20 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         // 서버로 요청할 Body
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
        
+        List<OrderDetail> newOdList = orderService.selectOrderDetailUsingPartCancelByOrderId(partner_order_id); 
+        
+        kakaoPayApprovalVo = kakaoPayInfo(tid, request, session);
+        kakaoPayApprovalVo.setItem_name(first_pdt);
+        
+        String cancel_amount = null;
+    	if(newOdList.size() == 1) {
+    		cancel_amount = String.valueOf(kakaoPayApprovalVo.getCancel_available_amount().getTotal());
+    		System.out.println("1개남았을때 남은금액:" + cancel_amount);
+    	} else {
+    		cancel_amount = json.get("cancel_amount");
+    	}
+    	System.out.println(cancel_amount);
+        
         params.add("cid", "TC0ONETIME");
         params.add("tid", tid);
         params.add("cancel_amount", cancel_amount);
@@ -386,49 +404,75 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         //params.add("cancel_vat_amount", cancel_vat_amount);
         params.add("partner_order_id", partner_order_id);
         params.add("partner_user_id", member.getId());
+        //params.add("item_name", first_pdt);
         
-        String name;
-        if(order_qtt <= 1) {
-        	name = first_pdt;
-        }else {
-        	name = first_pdt + " 외 " +(order_qtt - 1) + "건";
-        }
-        
-        params.add("item_name", name);
         
          HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
          System.out.println("body" + body);
          
         try {
-        	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
-        	 kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayReadyVO.class);
-        	 log.info("" + kakaoPayReadyVO);
         	
-        	//받은 상품 가격의 취소금만큼 마일리지 마이너스, 상태 부분취소로 변경
-        	//payment 테이블 변경
+        	// order detail 취소건만 상태 부분취소로 변경
+        	//payment 가격 변경, order 결제가격 변경 -> 상태 부분취소
+        	//사용한 마일리지 복구
+        	//부분취소시 배송비?? -> total만 수정하고 admin에서 알아서..
+        	System.out.println("취소할 상품 이름:" + first_pdt);
+        	
+        	params.add("item_name", first_pdt);
         	 
         	Order order = orderService.getOrderByNo(partner_order_id);
          	List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
          	order.setDetails(odList);
          	
          	OrderDetail od = orderService.getOrderDetailById(od_id);
-         	System.out.println(od);
+         	od.setOrderState(OrderState.PART_CANCEL);
+         
+         	order.setState("부분취소");
+         	order.setReturnPrice(order.getReturnPrice() + Integer.parseInt(cancel_amount));
+        	
+         	int total;
+         	int finalPrice;
+         	int mileRes = 0; 
          	
-         	int minus  = (int) Math.floor(Integer.parseInt(cancel_amount) * 0.01);
-         	System.out.println("부분 차감할 마일리지:" + minus);
-         	String minusMile = String.valueOf("-" + minus);
-         	
-         	int res1 = orderService.updatePartOrderDetailState("부분취소", od_id);
-         	
-         	System.out.println("orderState 변경: "+res1);
-         	
-         	Mileage mileSet = new Mileage();
-         	mileSet.setOrder(order);
-         	mileSet.setMember(member);
-         	mileSet.setMileage(Integer.parseInt(minusMile));
-         	mileSet.setContent("부분 취소 적립");
-         	int mileRes = mileService.insertMilegeInfo(mileSet);
-        	System.out.println("mileRes:" + mileRes);
+         	//결제완료가 하나인데 그것도 취소할때 -> 걍 하나면 주문취소로 하기
+         	if(newOdList.size() == 1) {
+        		total = 0 ;
+        		finalPrice = 0;
+        		order.setState("환불완료");
+        		order.setTotalPrice(total);
+             	order.setFinalPrice(finalPrice);
+        		order.setDeliveryPrice(0);
+        		
+        		Mileage plus = new Mileage();
+        		plus.setMember(member);
+        		plus.setOrder(order);
+        		plus.setMileage(order.getUsedMileage());
+        		plus.setContent("상품 구매 적립");
+        		mileRes = mileService.insertMilegeInfo(plus);
+        		
+        	} else {
+        		total = order.getTotalPrice() - Integer.parseInt(cancel_amount);
+        		order.setTotalPrice(total);
+        		
+        		finalPrice = order.getTotalPrice() + order.getDeliveryPrice() - order.getUsedMileage();
+        		order.setFinalPrice(finalPrice);
+        	}
+        	
+        	Payment pay = orderService.getPaymentById(tid);
+        	pay.setPayState("부분취소");
+        	pay.setOrder(order);
+
+        	
+        	
+        	int res1= orderService.updatePartOrderDetail(od, od.getId());
+        	int res2 = orderService.updateOrder(order, order.getId());
+        	int res3 = orderService.updatePayment(pay, tid);
+        	
+        	System.out.println("orderstate:" + res1 + "/ od:" + res2 + "/ paystate:" + res3 + "/ mile:" + mileRes);
+        	
+        	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
+       		kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayReadyVO.class);
+       		log.info("" + kakaoPayReadyVO);
         	
         	return "/kakaoPayPartCancelSuccess";
 
@@ -441,6 +485,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		return null;
 	}
 
+	//결제 정보
 	@Override
 	public KakaoPayApprovalVO kakaoPayInfo(String tid, HttpServletRequest request, HttpSession session) {
 		log.info("kakao - info");

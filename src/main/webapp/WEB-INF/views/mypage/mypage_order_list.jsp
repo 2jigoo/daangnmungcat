@@ -192,7 +192,7 @@ $(document).ready(function(){
 				
 			}else{
 				return;
-			}	
+			}
 	});
 	
 	//결쩨정보
@@ -283,14 +283,17 @@ ${vo.tid}
 							<div class="order_img_wrapper">
 									<c:if test="${od.pdt.image1 eq null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
 									<c:if test="${od.pdt.image1 ne null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources${od.pdt.image1}" class="order_list_img"></a></c:if>
-								<span style="margin-left:30px; line-height:100px"><a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a></span></div>
+								<span style="margin-left:30px; line-height:100px" id="part_pdt" pdt="${od.pdt.name}">
+									<a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a>
+								</span>
+							</div>
 							
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
 						<td>
 							${od.orderState.label}<br>
-							<c:if test="${od.orderState.label ne '부분취소'}">
+							<c:if test="${od.orderState.label ne '부분취소' and od.orderState.label ne '환불완료' and od.partcnt != 1 }">
 								<input type="button" value="부분취소" id="part_cancel"
 										pay_id="${order.payId}" 
 										od_price="${od.pdt.price}" 
@@ -303,41 +306,60 @@ ${vo.tid}
 							
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
+            					<span style="display:none;">
+            						<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
+	            					<br> ${order.id}<br>	
+            					</span>
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-            					<fmt:formatNumber value="${order.finalPrice}"/>
-            					<br>
-            					<c:if test="${od.orderState.label == '결제완료'}">
-									<input type="button" value="주문취소" id="order_cancel"
+	            				${order.state}
+	            				<br>
+            					<c:if test="${order.state == '결제완료' || order.state == '부분취소'}">
+            						<fmt:formatNumber value="${order.finalPrice}"/>
+            						<br>
+									<input type="button" value="전체취소" id="order_cancel"
 										 pay_id="${order.payId}" 
 										 pay_price="${order.finalPrice}" 
 										 first_pdt="${od.pdt.name}" 
 										 order_qtt="${od.partcnt}"  
 										 order_id="${order.id}" 
 										 od_id = "${od.id}" ><br>
-									
+								</c:if>
+								<c:if test="${order.state == '환불완료'}">
+									<fmt:formatNumber value="${order.returnPrice}"/>
+            						<br>
 								</c:if>
 								<c:if test="${od.orderState.label == '배송완료'}">
-									<input type="button" value="구매확정" id="purchase_complited"><br>
-									
+									<input type="button" value="구매확정" id="purchase_complited"><br>	
 								</c:if>
             					</td>
 						</c:if>
 						<c:if test="${od.partcnt == 1}">
             				<td class="final_price">
+            					<span style="display:none;">
+            						<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
+	            					<br> ${order.id}<br>	
+            					</span>
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-	            				<fmt:formatNumber value="${order.finalPrice}"/>
-	            				<br>
-	            			
-            					<c:if test="${od.orderState.label == '결제완료'}">
-									<input type="button" value="주문취소" id="order_cancel"
+	            				${order.state}
+            					<br>
+            					<c:if test="${order.state == '결제완료' || order.state == '부분취소'}">
+            						<fmt:formatNumber value="${order.finalPrice}"/>
+            						<br>
+									<input type="button" value="전체취소" id="order_cancel"
 										 pay_id="${order.payId}" 
 										 pay_price="${order.finalPrice}" 
 										 first_pdt="${od.pdt.name}" 
 										 order_qtt="${od.partcnt}"
-										 order_id="${order.id}" ><br>
-									
+										 order_id="${order.id}" 
+										 od_id = "${od.id}" ><br>
+								</c:if>
+								<c:if test="${order.state == '환불완료'}">
+									<fmt:formatNumber value="${order.returnPrice}"/>
+            						<br>
 								</c:if>
 								<c:if test="${od.orderState.label == '배송완료'}">
 									<input type="button" value="구매확정" id="purchase_complited"> <br>

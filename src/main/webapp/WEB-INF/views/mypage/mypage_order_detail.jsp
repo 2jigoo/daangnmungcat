@@ -215,7 +215,7 @@ $(document).ready(function(){
 				<tr>
 					<td>마일리지</td>
 					<td>
-						적립된 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
+						적립 예정 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
 						사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
 					</td>
 				</tr>
@@ -244,7 +244,6 @@ $(document).ready(function(){
 				<tr>
 					<td>마일리지</td>
 					<td>
-						차감된 마일리지 : -<fmt:formatNumber value="${order.plusMileage}"/><br> 
 						회복된 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
 					</td>
 				</tr>
