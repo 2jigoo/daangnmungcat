@@ -204,7 +204,7 @@ SELECT mall_mileage_seq.nextval, id, 2000, '이벤트'
 FROM MEMBER;
 
 
-SELECT * FROM JOONGO_REVIEW jr ;
+SELECT * FROM JOONGO_CHAT_MSG ORDER BY regdate DESC;
 
 SELECT * FROM mall_cart ORDER BY id;
 
@@ -219,3 +219,62 @@ SET
 	), 0)
 WHERE MEMBER_ID = 'chattest1';
 --a.PRODUCT_ID IN (SELECT PRODUCT_ID FROM mall_cart WHERE BASKET_ID = 'dc2e9747-878b-4631-8994-51ddcf7f6710');
+
+
+SELECT * FROM grade;
+
+SELECT rnum, a.*
+	FROM (
+		SELECT
+			rownum AS rnum,
+			js.ID,
+			js.MEM_ID,
+			nickname	as mem_nickname,
+			grade		as mem_grade,
+			DOG_CATE,
+			CAT_CATE,
+			TITLE,
+			CONTENT,
+			PRICE,
+			d1.ID		AS dongne1_id,
+			d1.NAME		AS dongne1_name,
+			d2.ID		AS dongne2_id,
+			BUY_MEM_ID,
+			SALE_STATE,
+			js.REGDATE,
+			REDATE,
+			HITS,
+			CHAT_COUNT,
+			HEART_COUNT,
+			h.mem_id		as heart_mem_id,
+			h.regdate		as heart_regdate
+  		FROM JOONGO_SALE js
+  			LEFT OUTER JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+  			LEFT OUTER JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+  			LEFT OUTER JOIN MEMBER m On js.mem_id = m.id
+  			LEFT OUTER JOIN joongo_heart h ON js.id = h.sale_id
+  		WHERE h.mem_id = 'chattest1'
+  		ORDER BY h.regdate desc
+	) a
+WHERE a.rnum BETWEEN 2 AND 10
+ORDER BY a.rnum;
+		
+SELECT *
+FROM (
+	SELECT
+		rownum AS rnum,
+		m.id, pwd, m.name, nickname, email, phone, grade,
+		DONGNE1 AS dongne1_id,
+		d1.name AS dongne1_name,
+		dongne2 AS dongne2_id,
+		d2.name AS dongne2_name,
+		profile_pic, profile_text, regdate, birthday,
+		zipcode, address1, address2, use_yn, 
+		NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
+	FROM MEMBER m
+		LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+		LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
+	WHERE m.id like '%' || 'test' || '%'
+) a
+WHERE a.rnum BETWEEN 1 AND 3
+ORDER BY a.rnum

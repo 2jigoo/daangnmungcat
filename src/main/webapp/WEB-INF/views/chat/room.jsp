@@ -114,6 +114,10 @@
 				location.href = "/joongo/review/write?saleId=${chat.sale.id}";
 			}
 		});
+		
+		$("#customFile").on("change", function() {
+			sendImage();
+		});
 	});
 </script>
 <div>

@@ -12,7 +12,7 @@
 	<result column="regdate" property="regdate"/>
 	
 	<result column="profile_pic" property="member.profilePic"/>
-	<result column="grade" property="member.grade" />
+	<association column="grade" property="member.grade" select="daangnmungcat.mapper.GradeMapper.selectGradeByCode" />
 </resultMap>
 
 <select id="selectJoongoCommentByAllPage" parameterType="map" resultMap="saleCommentResult">

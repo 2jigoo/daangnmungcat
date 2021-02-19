@@ -9,6 +9,7 @@ import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.SearchCriteria;
 
 public interface MemberMapper {
 	List<Member> selectMemberByAll();
@@ -46,5 +47,9 @@ public interface MemberMapper {
 	int deleteAddress(String id);
 	
 	int selectMileage(String id);
+	
+	// admin
+	List<Member> selectMemberBySearch(SearchCriteria scri);
+	int selectMemberCountBySearch(SearchCriteria scri);
 	
 }

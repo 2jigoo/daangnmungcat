@@ -59,7 +59,6 @@
 	<result column="mem_nickname" property="member.nickname"/>
 	<result column="dongne1_name" property="dongne1.name"/>
 	<result column="dongne2_name" property="dongne2.name"/>
-	<result column="grade" property="member.grade"/>
 	<result column="profile_pic" property="member.profilePic"/>
 	<result column="DOG_CATE" property="dogCate"/>
 	<result column="CAT_CATE" property="catCate"/>
@@ -73,6 +72,8 @@
 	<result column="CHAT_COUNT" property="chatCount"/>
 	<result column="HEART_COUNT" property="heartCount"/>
 	<result column="THUM_NAME" property="thumImg"/>
+	
+	<association column="grade" property="member.grade" select="daangnmungcat.mapper.GradeMapper.selectGradeByCode" />
 </resultMap>
 
 <select id="selectJoongoSaleByAll" resultMap="saleResult">

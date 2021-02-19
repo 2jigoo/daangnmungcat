@@ -12,6 +12,7 @@
 	var chatId = 0;
 	var memberId = "${loginUser.id}";
 	var memberNickname = "${loginUser.nickname}";
+	var sale = {id: ${sale.id}, member: {id: "${sale.member.id}"}};
 	
 	var page = 1;
 	var perPage = 20;
@@ -28,8 +29,6 @@
 		$("#messageForm").on("submit", function(e) {
 			e.preventDefault();
 			
-			var sale = {id: ${sale.id}, member: {id: "${sale.member.id}"}};
-			
 			if(isCreated == false) {
 				$.ajax({
 					url: contextPath + "/chat/room",
@@ -38,13 +37,12 @@
 					data: JSON.stringify(sale),
 					dataType: "text",
 					success: function(data) {
-						console.log(data);
+						isCreated = true;
 						chatId = data;
 						
 						subscribe_for_new();
 						sendMessage(e);
 						messageForm.addEventListener('submit', sendMessage, true);
-						isCreated = true;
 					},
 					error: function(error) {
 						console.log(error);
@@ -53,8 +51,32 @@
 			}
 		});
 		
-		
+		$("#customFile").on("change", function() {
+			if(isCreated == false) {
+				$.ajax({
+					url: contextPath + "/chat/room",
+					type: "post",
+					contentType:"application/json;charset=UTF-8",
+					data: JSON.stringify(sale),
+					dataType: "text",
+					success: function(data) {
+						isCreated = true;
+						chatId = data;
+						
+						subscribe_for_new();
+						sendImage();
+						messageForm.addEventListener('submit', sendMessage, true);
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+			} else {
+				sendImage();
+			}
+		});
 	});
+	
 </script>
 <div>
 	<article>

@@ -201,12 +201,12 @@ public class ChatServiceImpl implements ChatService {
 
 	// 이미지 첨부한 채팅 메시지 보내기
 	@Override
-	public String uploadImageMessage(ChatMessage message, MultipartFile file, HttpSession session) {
+	public String uploadImageMessage(ChatMessage message, MultipartFile file, File realPath) {
 		
 		String path = UPLOAD_PATH + File.separator + message.getChat().getId();
 		
 		/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
-		File dir = new File(session.getServletContext().getRealPath(path)); 
+		File dir = new File(realPath, path);
 		
 		if(!dir.exists()) {
 			dir.mkdirs();
