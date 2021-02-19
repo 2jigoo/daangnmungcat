@@ -46,10 +46,7 @@ $(document).ready(function(){
 		<td>남은 취소 가능 금액</td>
 		<td> ${info.cancel_available_amount.total}</td>
 	</tr>
-	<tr>
-		<td>취소 후 적립된 마일리지</td>
-		<td><fmt:parseNumber value="${info.canceled_amount.total * 0.01}" integerOnly="true" /></td>
-	</tr>
+	
 	<tr>
 		<td>상품 이름</td>
 		<td>${info.item_name}</td>

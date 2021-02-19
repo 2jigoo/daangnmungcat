@@ -39,7 +39,6 @@ public class Order {
 	private int deliveryPrice;
 	private String trackingNumber;
 	private int addDeliveryPrice;
-	private int cancelPrice;
 	private int returnPrice;
 	private String payId;
 	private LocalDateTime payDate;

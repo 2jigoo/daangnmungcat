@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
@@ -87,7 +88,6 @@ public class OrderServiceImpl implements OrderService{
 		
 		System.out.println("session으로 받은 no:" + nextNo);
 		
-		System.out.println(nextNo);
 		
 		if(usedMile.equals("")) {
 			usedMile = "0";
@@ -163,12 +163,14 @@ public class OrderServiceImpl implements OrderService{
 			usedMile = usedMile.replace("-", "");
 		}
 		
+		/*
 		Mileage plus = new Mileage();
 		plus.setMember(loginUser);
 		plus.setOrder(order);
 		plus.setMileage(Integer.parseInt(plus_mile));
 		plus.setContent("상품 구매 적립");
 		mileService.insertMilegeInfo(plus);
+		*/
 		
 		Mileage minus = new Mileage();
 		minus.setMember(loginUser);
@@ -243,36 +245,107 @@ public class OrderServiceImpl implements OrderService{
 		return mapper.sortingOrderDetail(id);
 	}
 
+	@Override
+	public int updatePartOrderDetail(OrderDetail orderDetail, int id) {
+		return mapper.updatePartOrderDetail(orderDetail);
+	}
+
+	@Override
+	public int updateAllOrderDetail(OrderDetail orderDetail, String id) {
+		return mapper.updateAllOrderDetail(orderDetail);
+	}
+
+	@Override
+	public int updateOrder(Order order, String id) {
+		return mapper.updateOrder(order);
+	}
+
+	@Override
+	public int updatePayment(Payment pay, String id) {
+		return mapper.updatePayment(pay);
+	}
+
 	
-
-	@Override
-	public int updateAllOrderDetailState(String state,String orderId) {
-		return mapper.updateAllOrderDetailState(state, orderId);
-	}
-
-	@Override
-	public int updateOrderState(int price, String state,String id) {
-		return mapper.updateOrderState(price, state, id);
-	}
-
-	@Override
-	public int updatePaymentState(String state,String id) {
-		return mapper.updatePaymentState(state, id);
-	}
-
 	@Override
 	public List<Order> selectCancelOrderById(String id) {
 		return mapper.selectCancelOrderById(id);
 	}
 
-	@Override
-	public int updatePartOrderDetailState(String state, String id) {
-		return mapper.updatePartOrderDetailState(state, id);
-	}
-
+	
 	@Override
 	public OrderDetail getOrderDetailById(String id) {
 		return mapper.getOrderDetailById(id);
+	}
+
+	@Override
+	public Payment getPaymentById(String tid) {
+		// TODO Auto-generated method stub
+		return mapper.getPaymentById(tid);
+	}
+
+	@Override
+	public List<OrderDetail> selectOrderDetailUsingPartCancelByOrderId(String orderId) {
+		// TODO Auto-generated method stub
+		return mapper.selectOrderDetailUsingPartCancelByOrderId(orderId);
+	}
+	
+	@Override
+	public Map<String, Integer> calculateDeliveryFee(List<Cart> list) {
+		Map<String, Integer> deliveryFee = new HashMap<>();
+		
+		// 총 배송비
+		int totalDeliveryFee = 0;
+		
+		// 무료배송, 유료상품 존재 여부
+		boolean hasFreeDelivery = list.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("무료배송"));
+		boolean hasChargedDelivery = list.stream().anyMatch(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"));
+		
+		// 조건부 무료배송 총 상품금액 합계 구하기
+		int totalPriceOfCondiFeePdt = list.stream()
+											.filter(cart -> cart.getProduct().getDeliveryKind().equals("조건부 무료배송"))
+											.collect(Collectors.summingInt(Cart::getAmount));
+		
+		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
+		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+			totalDeliveryFee = 3000;
+		}
+		
+		// 유료배송 상품이 있는 경우
+		int chargedDeliveryFee = 0;
+		if(hasChargedDelivery == true) {
+			List<Cart> listOfChargedFee = list.stream()
+												.filter(cart -> cart.getProduct().getDeliveryKind().equals("유료배송"))
+												.collect(Collectors.toList());
+			// 모든 유료배송 상품의 합계 배송비
+			for(Cart cart : listOfChargedFee) {
+				chargedDeliveryFee += cart.getQuantity() * cart.getProduct().getDeliveryPrice();
+			}
+			
+			totalDeliveryFee += chargedDeliveryFee;
+		}
+		
+		System.out.println(totalDeliveryFee + " = " + chargedDeliveryFee + " + " + (totalDeliveryFee - chargedDeliveryFee));
+		
+		deliveryFee.put("total", totalDeliveryFee);
+		deliveryFee.put("conditional", totalDeliveryFee - chargedDeliveryFee);
+		deliveryFee.put("charged", chargedDeliveryFee);
+		
+		
+		return deliveryFee;
+	}
+
+////////////////admin
+	
+	@Override
+	public List<Order> selectOrderAll(Criteria cri) {
+		// TODO Auto-generated method stub
+		return mapper.selectOrderAll(cri);
+	}
+
+	@Override
+	public int listCount() {
+		// TODO Auto-generated method stub
+		return mapper.listCount();
 	}
 
 	

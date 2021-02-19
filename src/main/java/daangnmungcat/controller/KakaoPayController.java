@@ -67,7 +67,6 @@ public class KakaoPayController {
 	@PostMapping("/kakao-pay")
 	public String kakaoPost(HttpServletRequest request, HttpSession session) {
 		log.info("kakao - post");
-		
 		return "redirect:" + kakaoService.kakaoPayReady(request,session);
 	}
 	
@@ -79,8 +78,6 @@ public class KakaoPayController {
 		KakaoPayApprovalVO kakao = kakaoService.kakaoPayApprovalInfo(pg_token, request, session);
 		log.info("kakaoPaySuccess - 결제정보 :" + kakao);
 		
-		//결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
-		orderService.orderTransaction(kakao, request, session);
 		mv.setViewName("/mall/order/pay_success");
 		mv.addObject("info", kakao);
 		
@@ -88,7 +85,7 @@ public class KakaoPayController {
 //
 //		while(se.hasMoreElements()){
 //		String getSession = se.nextElement()+"";
-//		System.out.println("@@@@@@@ session : "+getSession+" : " + (String)session.getValue(getSession));
+//		System.out.println(" session : "+getSession+" : " + (String)session.getValue(getSession));
 //		}
 
 		return mv;

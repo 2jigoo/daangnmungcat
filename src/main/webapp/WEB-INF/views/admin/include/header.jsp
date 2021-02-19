@@ -108,7 +108,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="/admin/category/list">카테고리 관리</a>
                         <a class="collapse-item" href="/admin/product/list">상품 관리</a>
-                        <a class="collapse-item" href="#">주문 관리</a>
+                        <a class="collapse-item" href="/admin/order/list">주문 관리</a>
                         <a class="collapse-item" href="#">배송 관리</a>
                         <a class="collapse-item" href="/admin/mileage/list">마일리지 관리</a>
                     </div>

@@ -143,7 +143,6 @@ CREATE TABLE MALL_ORDER (
 	add_delivery_price NUMBER(10), /* 추가배송비 */
 	pay_id varchar2(30) NOT NULL, /* 결제번호 */
 	regdate DATE DEFAULT SYSDATE, 
-	cancel_price NUMBER(10), /* 취소금액 */
 	return_price NUMBER(10), /* 반품/품절금액 */
 	state VARCHAR2(20) DEFAULT '결제완료' /* 주문상태 */
 );

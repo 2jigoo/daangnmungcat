@@ -22,14 +22,26 @@
 		<result property="plusMileage" column="plus_mileage"></result>
 		<result property="deliveryPrice" column="delivery_price"></result>
 		<result property="addDeliveryPrice" column="add_delivery_price"></result>
-		<result property="cancelPrice" column="cancel_price"></result>
 		<result property="returnPrice" column="return_price"></result>
 		<result property="payId" column="pay_id"></result>
 		<result property="payDate" column="regdate"></result>
 		<result property="state" column="state"></result>
 		
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
+	</resultMap>
+	
+	<resultMap type="Payment" id="payRes">
+		<id property="id" column="id"></id>
+		<result property="member.id" column="mem_id" />
+		<result property="order.id" column="order_id" />
+		<result property="kakao.amount.total" column="pay_price" />
+		<result property="order.payDate" column="pay_date" />
+		<result property="kakao.payment_method_type" column="pay_type" />
+		<result property="kakao.quantity" column="pay_quantity" />
+		<result property="payState" column="pay_state" />
 		
+		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
+		<association property="order" column="order_id" select="getOrderByNo" fetchType="lazy"/>
 	</resultMap>
 	
 <!-- 내 주문내역에서만 씀 -->	
@@ -49,20 +61,32 @@
 	</resultMap>
 
 	
+	
 	<!-- sql -->
+	
+	
 	<sql id="orderSql">
 		SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ZIPCODE,
 		ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 		USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-		ADD_DELIVERY_PRICE, PAY_ID, REGDATE, CANCEL_PRICE, RETURN_PRICE,
+		ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
 		STATE
 	</sql>
 	<sql id="odSql">
 		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE,
 		COUNT(*)OVER(PARTITION BY ORDER_ID) AS PARTCNT
 	</sql>
-
+	<sql id="paymentSql">
+		select ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_DATE, PAY_TYPE, PAY_QUANTITY, PAY_STATE
+	</sql>
+	
+	
+	
 	<!-- query -->
+	<select id="getPaymentById" resultMap="payRes">
+		<include refid="paymentSql"></include>
+		from mall_payment where id = #{id}
+	</select>
 
 	<select id="selectOrderDetailByOrderNo" resultMap="sortRes" parameterType="String">
 		<include refid="odSql"></include> 
@@ -134,22 +158,64 @@
 		and mem_id = #{mem_id} and state = '환불완료' order by regdate desc
 	</select>
 	
-	<update id="updateAllOrderDetailState">
-		update mall_order_detail set order_state = #{orderState} where order_id = #{orderId}
+	<update id="updateAllOrderDetail">
+		update mall_order_detail set 
+		<if test="orderState != null"> order_state = #{orderState.label} </if>
+		where order_id = #{orderId}
 	</update>
 	
-	<update id="updatePartOrderDetailState">
-		update mall_order_detail set order_state = #{orderState} where id = #{id}
-	</update>
-	
-	<update id="updateOrderState">
-		update mall_order set return_price = #{returnPrice}, state = #{state}
+	<update id="updatePartOrderDetail">
+		update mall_order_detail set 
+		<if test="orderState != null"> order_state = #{orderState.label} </if>
 		where id = #{id}
 	</update>
 	
-	<update id="updatePaymentState">
-		update mall_payment set pay_state = #{payState} where id = #{id}
+	<update id="updateOrder">
+		update mall_order
+		<set>
+			<if test="returnPrice != null"> return_price = #{returnPrice}, </if>
+			<if test="state != null"> state = #{state}, </if>
+			<if test="finalPrice != null"> final_price = #{finalPrice}, </if>
+			<if test="totalPrice != null"> total_price = #{totalPrice} </if>
+		</set>
+		where id = #{id}
 	</update>
 	
+	<update id="updatePayment">
+		update mall_payment
+		<set>
+			<if test="payState != null"> pay_state = #{payState}, </if>
+			<if test="order.finalPrice != null"> pay_price = #{order.finalPrice} </if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="selectOrderDetailUsingPartCancelByOrderId" resultMap="sortRes" parameterType="string">
+		<include refid="odSql"></include>
+		from mall_order_detail WHERE ORDER_STATE = '결제완료' 
+			AND ORDER_ID = #{orderId} ORDER BY id DESC
+	</select>
+	
+	<select id="selectOrderAll" resultMap="orderRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
+					STATE FROM MALL_ORDER ORDER BY regdate desc )B)A
+			WHERE A.RNUM BETWEEN #{rowStart} AND #{rowEnd}
+			ORDER BY A.RNUM
+	</select>
+	
+	<select id="listCount" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
+					STATE FROM MALL_ORDER )B)A
+	</select>
 	
 </mapper>
