@@ -24,7 +24,7 @@ $(document).ready(function(){
 		<td><a href="<c:url value="/mypage/mypage_pwd" />">비밀번호 변경</a></td> <td>내 판매글</td> <td><a href="<c:url value="/mypage/mypage_order_list" />">주문내역</a></td> <td>내 댓글</td>
 	</tr>
 	<tr>
-		<td><a href="<c:url value="/mypage/shipping_main" />">배송지 관리</a></td> <td>내 댓글</td> <td><a href="<c:url value="/mypage/mypage_order_cancel_list" />">취소/환불내역</a></td> <td>마일리지</td>
+		<td><a href="<c:url value="/mypage/shipping_main" />">배송지 관리</a></td> <td><a href="/joongo/review/list?memId=${loginUser.id}">내 댓글</a></td> <td><a href="<c:url value="/mypage/mypage_order_cancel_list" />">취소/환불내역</a></td> <td>마일리지</td>
 	</tr>
 	<tr>
 		<td><a href="<c:url value="/mypage/mypage_withdraw" />">회원 탈퇴</a></td> <td><a href="<c:url value="/joongo/heart/list"/>">찜 목록</a></td> <td>상품 후기</td> <td></td>
