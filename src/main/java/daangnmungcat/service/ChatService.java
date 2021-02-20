@@ -1,9 +1,7 @@
 package daangnmungcat.service;
 
+import java.io.File;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +25,7 @@ public interface ChatService {
 	
 	int createNewChat(Chat chat);
 	int sendMessage(Chat chat, ChatMessage message);
-	String uploadImageMessage(ChatMessage message, MultipartFile file, HttpSession session);
+	String uploadImageMessage(ChatMessage message, MultipartFile file, File realPath);
 	
 	String readChat(int chat, String memberId);
 	int readChatMessage(int message, String memberId);

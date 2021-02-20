@@ -8,7 +8,7 @@
 		d1.name AS dongne1_name,
 		dongne2 AS dongne2_id,
 		d2.name AS dongne2_name,
-		grade, profile_pic, profile_text, regdate, birthday,
+		profile_pic, profile_text, regdate, birthday,
 		zipcode, address1, address2, use_yn, 
 		NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
 	FROM MEMBER m
@@ -34,7 +34,6 @@
 		<result column="nickname" property="nickname"></result>
 		<result column="email" property="email"></result>
 		<result column="phone" property="phone"></result>
-		<result column="grade" property="grade"></result>
 		<result column="profile_pic" property="profilePic"></result>
 		<result column="profile_text" property="profileText"></result>
 		<result column="regdate" property="regdate"></result>
@@ -45,6 +44,7 @@
 		<result column="mileage" property="mileage"></result>
 		<result column="use_yn" property="useYn"/>
 		
+		<association property="grade" column="grade" select="daangnmungcat.mapper.GradeMapper.selectGradeByCode" />
 		<association property="dongne1" columnPrefix="dongne1_" resultMap="dongne1Result" />
 		<association property="dongne2" columnPrefix="dongne2_" resultMap="dongne2Result" />
 	</resultMap>
@@ -223,4 +223,65 @@
 		GROUP BY mem_id
 		having mem_id = #{id}
 	</select> -->
+	
+	<!-- admin -->
+	<sql id="whereSearchSql">
+		<where>
+			<if test="searchType != null" > 
+				<if test="searchType eq 'id'">
+					and m.id like '%' || #{keyword} || '%'
+				</if>
+				<if test="searchType eq 'nickname'">
+					and nickname like '%' || #{keyword} || '%'
+				</if>
+				<if test="searchType eq 'name'">
+					and m.name like '%' || #{keyword} || '%'
+				</if>
+				<if test="searchType eq 'email'">
+					and email like '%' || #{keyword} || '%'
+			   	</if>        
+				<if test="searchType eq 'phone'">
+					and phone like '%' || #{keyword} || '%'
+				</if>
+			 </if>
+		 </where>
+	</sql>
+	
+	<select id="selectMemberBySearch" parameterType="SearchCriteria" resultMap="memberResult">
+		SELECT *
+		FROM (
+			SELECT
+				rownum AS rnum,
+				m.id, pwd, m.name, nickname, email, phone, grade,
+				DONGNE1 AS dongne1_id,
+				d1.name AS dongne1_name,
+				dongne2 AS dongne2_id,
+				d2.name AS dongne2_name,
+				profile_pic, profile_text, regdate, birthday,
+				zipcode, address1, address2, use_yn, 
+				NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
+			FROM MEMBER m
+				LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+				LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
+			<if test="searchType != null">
+				<where>
+					m.${searchType} like '%' || #{keyword} || '%'					
+				</where>
+				ORDER BY m.${searchType}
+			</if>
+		) a
+		WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		ORDER BY a.rnum
+	</select>
+	
+	<select id="selectMemberCountBySearch" parameterType="SearchCriteria" resultType="int">
+		SELECT COUNT(*)
+		FROM member
+		<if test="searchType != null">
+			<where>
+				${searchType} like '%' || #{keyword} || '%'					
+			</where>
+		</if>
+	</select>
+	
 </mapper>

@@ -29,7 +29,7 @@ public class Member {
 	private String nickname;
 	private String email;
 	private String phone;
-	private String grade;
+	private Grade grade;
 	private Dongne1 dongne1;
 	private Dongne2 dongne2;
 	private String profilePic;
@@ -50,8 +50,7 @@ public class Member {
 		this.id = id;
 	}
 
-	public Member(String id, String nickname, String grade, Dongne1 dongne1, Dongne2 dongne2, String profilePic) {
-		super();
+	public Member(String id, String nickname, Grade grade, Dongne1 dongne1, Dongne2 dongne2, String profilePic) {
 		this.id = id;
 		this.nickname = nickname;
 		this.grade = grade;

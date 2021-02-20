@@ -8,7 +8,14 @@ var connectingElement = document.querySelector('.connecting');
 
 var stompClient = null;
 
+var colors = [
+    '#2196F3', '#32c787', '#00BCD4', '#ff5652',
+    '#ffc107', '#ff85af', '#FF9800', '#39bbb0'
+];
+
 function connect() {
+    // username = document.querySelector('#name').value.trim();
+	
     var socket = new SockJS('/ws');
     stompClient = Stomp.over(socket);
 
@@ -17,9 +24,16 @@ function connect() {
 
 
 function onConnected() {
+    // Subscribe to the Public Topic
     stompClient.subscribe('/topic/chat/' + chatId, onMessageReceived);
 	readChat();
-	
+    // Tell your username to the server
+    /*
+    stompClient.send('/app/chat/' + chatId + '.addUser',
+    	{},
+        JSON.stringify({sender: username, type: 'JOIN'})
+    )
+    */
     console.log('연결됨');
     connectingElement.classList.add('hidden');
 }
@@ -53,50 +67,46 @@ function sendMessage(event) {
 	event.preventDefault();
 	
     var messageContent = messageInput.value.trim();
+    var customFile = $('#customFile').val();
     
-    if(messageContent) {
-	    var chatMessage = {
-            chat: {id: chatId},
-            member: {id: memberId, nickname: memberNickname},
-            content: messageInput.value,
-        };
-	    
-	    sendChatMessage(chatMessage);
-    
-    }
-}
-
-function sendImage() {
-	var customFile = $('#customFile').val();
-	
+    if(messageContent || customFile)
     var chatMessage = {
             chat: {id: chatId},
             member: {id: memberId, nickname: memberNickname},
-    };
-	
-	if (customFile != "") {
+            content: messageInput.value,
+            regdate: dayjs().format("YYYY-MM-DD hh:mm:ss")
+        };
+    
+    if (customFile != "") {
     	var form = $('#messageForm')[0];
     	var form_data = new FormData(form);
-	    
-		$.ajax({
-			type: 'post',
-			enctype: 'multipart/form-data',
-			url: contextPath + '/chat/' + chatId + '/upload',
-			data: form_data,
-			processData: false,
-			contentType: false,
-			cache: false,
-			timeout: 600000,
-			success: function(data) {
-				chatMessage.image = data;
-				sendChatMessage(chatMessage);
-			},
-			error: function(error) {
-				alert("사진을 전송하는 데 실패했습니다.");
-				console.log(error);
-			}
-		});
-	}
+    	
+    	sendImage(form_data, chatMessage); // 텍스트랑 사진 같이 보냈을 때
+    	return;
+    }
+    
+    sendChatMessage(chatMessage); // 텍스트만 보냈을 때
+}
+
+function sendImage(form_data, chatMessage) {
+	$.ajax({
+		type: 'post',
+		enctype: 'multipart/form-data',
+		url: contextPath + '/chat/' + chatId + '/upload',
+		data: form_data,
+		processData: false,
+		contentType: false,
+		cache: false,
+		timeout: 600000,
+		success: function(data) {
+			chatMessage.image = data;
+			sendChatMessage(chatMessage);
+		},
+		error: function(error) {
+			console.log(error);
+		}
+		
+	})
 }
 
 function sendChatMessage(chatMessage) {
@@ -132,7 +142,7 @@ function onMessageReceived(payload) {
 		if(msg.content != null) {
 			li_str += msg.content;
 		} else {
-			li_str += "<img src='" + contextPath + "/resources/upload/chat/" + chatId + "/" + msg.image + "'>";
+			li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
 		}
 		li_str += "</p><span class='read_yn' read_yn='" + msg.readYn + "'>";
 		li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + "</span>";
@@ -148,7 +158,7 @@ function onMessageReceived(payload) {
 		if(msg.content != null) {
 			li_str += msg.content;
 		} else {
-			li_str += "<img src='" + contextPath + "/resources/upload/chat/" + chatId + "/" + msg.image + "'>";
+			li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
 		}
 		li_str += "</p>";
 		li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";

@@ -1,5 +1,6 @@
 package daangnmungcat.controller;
 
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,6 @@ import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
-import daangnmungcat.dto.SaleState;
 import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.service.JoongoSaleReviewService;
@@ -166,7 +166,7 @@ public class ChatController {
 		try {
 			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			message.setChat(new Chat(id));
-			fileName = chatService.uploadImageMessage(message, file, session);
+			fileName = chatService.uploadImageMessage(message, file, getRealPath(session));
 		} catch(Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -191,6 +191,10 @@ public class ChatController {
 		}
 		
 		return ResponseEntity.ok(res);
+	}
+	
+	private File getRealPath(HttpSession session) {
+		return new File(session.getServletContext().getRealPath("")); 
 	}
 	
 }

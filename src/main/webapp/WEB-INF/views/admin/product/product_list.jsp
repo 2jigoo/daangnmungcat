@@ -88,7 +88,17 @@ $(function(){
 					</td>
 					<td>${list.dogCate.name}</td>
 					<td>${list.catCate.name}</td>
-					<td class="tc"><fmt:formatNumber value="${list.price}" /> 원</td>
+					<td class="tc">
+						<c:choose>
+							<c:when test="${list.price eq 0 }">
+								무료나눔
+							</c:when>
+							<c:otherwise>
+								<fmt:formatNumber value="${list.price}" /> 원
+							</c:otherwise>
+						</c:choose>
+					
+					</td>
 					<td rowspan="2"  class="tc">${list.saleYn}</td>
 					<td rowspan="2">
 						<a href="<%=request.getContextPath() %>/admin/product/update?id=${list.id}">수정</a>

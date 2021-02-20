@@ -67,4 +67,18 @@ public class PageMaker {
 
 		return uriComponents.toUriString();
 	}
+	
+	public String makeSearch(int page) {
+		UriComponents uriComponents =
+				UriComponentsBuilder.newInstance()
+				.queryParam("searchType", ((SearchCriteria) cri).getSearchType())
+				.queryParam("keyword", ((SearchCriteria) cri).getKeyword())
+				.queryParam("startDate", ((SearchCriteria) cri).getStartDate())
+				.queryParam("endDate", ((SearchCriteria) cri).getEndDate())
+				.queryParam("page", page)
+				.queryParam("perPageNum", cri.getPerPageNum())
+				.build();
+
+		return uriComponents.toUriString();
+	}
 }

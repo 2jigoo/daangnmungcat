@@ -14,6 +14,7 @@ import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.SearchCriteria;
 
 @Service
 public interface MemberService {
@@ -54,4 +55,7 @@ public interface MemberService {
 	int deleteShippingAddress(String id);
 	
 
+	// admin
+	List<Member> search(SearchCriteria scri);
+	int getTotalBySearch(SearchCriteria scri);
 }

@@ -66,7 +66,7 @@
 				MEMBER
             </div>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/admin/member/list">
                     <i class="fas fa-fw fa-user"></i>
                     <span>회원 관리</span></a>
             </li>

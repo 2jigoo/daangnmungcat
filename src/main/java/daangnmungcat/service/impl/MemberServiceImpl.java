@@ -19,6 +19,7 @@ import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
+import daangnmungcat.dto.SearchCriteria;
 import daangnmungcat.mapper.MemberMapper;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
@@ -264,5 +265,17 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.deleteAddress(id);
 	}
 
+	// admin
+	@Override
+	public List<Member> search(SearchCriteria scri) {
+		List<Member> list = mapper.selectMemberBySearch(scri);
+		return list;
+	}
+	
+	@Override
+	public int getTotalBySearch(SearchCriteria scri) {
+		int count = mapper.selectMemberCountBySearch(scri);
+		return count;
+	}
 
 }

@@ -1,99 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
-<script>
-	$(document).ready(function() {
-		loadSelectBoxes();
-	});
-	
-	$(function() {
-		$("#selbox-dongne1").on("change", function(){
-			var dongne1 = this.value;
-			if(dongne1 == "") {
-				resetDongne2SelectBox();
-				$("#selbox-dongne2").prop("disabled", true);
-			} else {
-				$("#selbox-dongne2").prop("disabled", false);
-				loadDongne2List(this.value);
-			}
-		});
-	})
-	
-	function loadSelectBoxes() {
-		// 회원 등급 불러오기
-		$.ajax({
-			url: "/api/grade",
-			type: "get",
-			dataType: "json",
-			success: function(data) {
-				appendGradeSelectBox(data);
-			},
-			error: function(error) {
-				console.log("failed to load grades");
-				console.log(error);
-			}
-		});
-		
-		$.ajax({
-			url: "/dongne1",
-			type: "get",
-			dataType: "json",
-			success: function(data) {
-				appendDongne1SelectBox(data);
-			},
-			error: function(error) {
-				console.log("failed to load dongne1 options");
-				console.log(error);
-			}
-		});
-	}
-	
-	function loadDongne2List(dongne1) {
-		$.ajax({
-			url: "/dongne2/" + dongne1,
-			type: "get",
-			dataType: "json",
-			success: function(data) {
-				appendDongne2SelectBox(data);
-			},
-			error: function(error) {
-				console.log("failed to load dongne2 options");
-				console.log(error);
-			}
-		});
-	}
 
-	function resetDongne2SelectBox() {
-		//$("#selbox-dongne2").empty();
-		$("#selbox-dongne2").html("<option value=''>전체</option>");
-	}
-	
-	function appendDongne1SelectBox(data) {
-		var options = "";
-		$.each(data, function(idx, item) {
-			options += "<option value='" + item.id + "'>" + item.name + "</option>";			
-		});
-		$("#selbox-dongne1").append(options);
-	}
-	
-	function appendDongne2SelectBox(data) {
-		var options = "";
-		$.each(data, function(idx, item) {
-			options += "<option value='" + item.id + "'>" + item.name + "</option>";			
-		});
-		resetDongne2SelectBox();
-		$("#selbox-dongne2").append(options);
-	}
-	
-	function appendGradeSelectBox(data) {
-		var options = "";
-		$.each(data, function(idx, item) {
-			options += "<option value='" + item.code + "'>" + item.name + "</option>";			
-		});
-		$("#selbox-grade").append(options);
-	}
-	
-</script>
+<script src="booking/admin_booking_list.js"></script>
 <!-- Page Heading -->
 <!--<h1 class="h3 mb-2 text-gray-800 font-weight">목록 템플릿</h1>
 <p class="mb-4">
@@ -128,104 +37,108 @@
 			<!-- bootStrap table wrapper-->
 			<div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
 				<!-- 테이블 상단 필터링 시작 -->
-				<form autocomplete="off" action="/admin/member/list" name="searchForm">
-					<div class="row m-0 mb-2">
-						<div class="col-sm-12 col-md-12 p-0">
-							<div class="form-inline justify-content-center">
-								<i class="far fa-calendar-alt mr-3" style="font-size: 22px;"></i>
-								<div class="input-group input-group-sm mr-3">
-									<div class="input-group-prepend">
-										<input type="text" class="form-control" id="startDate" name="startDate" style="width: 120px;" placeholder="시작일">
-									</div>
-									<div class="input-group-prepend">
-										<label class="input-group-text">~</label>
-									</div>
-									<div class="input-group-prepend">
-										<input type="text" class="form-control" id="endDate" name="endDate" style="width: 120px;" placeholder="종료일">
-									</div>
+				<form autocomplete="off" action="bookingList.do" name="searchForm">
+						
+				<div class="row m-0 mb-2">
+					<div class="col-sm-12 col-md-12 p-0">
+						<div class="form-inline justify-content-center">
+							<i class="far fa-calendar-alt mr-3" style="font-size: 22px;"></i>
+							<div class="input-group input-group-sm mr-3">
+								<div class="input-group-prepend">
+									<input type="text" class="form-control" id="startDate" name="startDate" style="width: 120px;" placeholder="시작일">
 								</div>
-								<button type="submit" class="form-control btn-primary btn-sm" id="dateBtn">조회</button>
+								<div class="input-group-prepend">
+									<label class="input-group-text">~</label>
+								</div>
+								<div class="input-group-prepend">
+									<input type="text" class="form-control" id="endDate" name="endDate" style="width: 120px;" placeholder="종료일">
+								</div>
+							</div>
+							<button type="submit" class="form-control btn-primary btn-sm" id="dateBtn">조회</button>
+						</div>
+					</div>
+				</div>
+				<div class="row m-0">
+					<div class="col-sm-12 col-md-12 p-0">
+						<div class="form-inline justify-content-center" style="height: 32px;">
+							<div class="btn-group btn-group-sm" role="group" aria-label="Basic example" style>
+							  <span class="btn btn-sm btn-outline-secondary active" style="cursor: default;">예약일 기준</span>
+							  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="1" id="todayBtn">오늘</button>
+							  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="7" id="aWeekBtn">1주</button>
+							  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="14" id="twoWeeksBtn">2주</button>
+							  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="31" id="aMonthBtn">1개월</button>
 							</div>
 						</div>
 					</div>
-					<div class="row m-0">
-						<div class="col-sm-12 col-md-12 p-0">
-							<div class="form-inline justify-content-center" style="height: 32px;">
-								<div class="btn-group btn-group-sm" role="group" aria-label="Basic example" style>
-								  <span class="btn btn-sm btn-outline-secondary active" style="cursor: default;">가입일 기준</span>
-								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="1" id="todayBtn">오늘</button>
-								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="7" id="aWeekBtn">1주</button>
-								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="14" id="twoWeeksBtn">2주</button>
-								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="31" id="aMonthBtn">1개월</button>
-								</div>
-							</div>
-						</div>
-					</div>
-					<hr>
-					<div class="row m-0 mb-2">
-						<div class="col-sm-12 col-md-8 p-0">
-							<div class="dataTables_length form-inline" id="dataTable_length">
-								<div class="input-group input-group-sm mr-3">
-									<select name="perPageNum" aria-controls="dataTable" class="custom-select custom-select-sm">
-										<option value="10">10줄 보기</option>
-										<option value="25">25줄 보기</option>
-										<option value="50">50줄 보기</option>
-										<option value="100">100줄 보기</option>
-									</select>
-								</div>
-								<div class="input-group input-group-sm mr-3">
-									<div class="input-group-sm input-group-prepend">
-										<label class="input-group-text" for="sorter">등급</label>
-									</div>
-									<select id="selbox-grade" name="grade" aria-controls="dataTable" class="custom-select custom-select-sm">
-										<option selected value="">전체</option>
-									</select>
-								</div>
-								<div class="input-group input-group-sm">
-									<div class="input-group-sm input-group-prepend">
-										<label class="input-group-text" for="dongne">동네</label>
-									</div>
-									<select id="selbox-dongne1" name="dongne1" aria-controls="dataTable" class="custom-select custom-select-sm">
-										<option selected value="">전체</option>
-									</select>
-									<select id="selbox-dongne2" name="dongne2" aria-controls="dataTable" class="custom-select custom-select-sm" disabled>
-										<option selected value="">전체</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-12 col-md-4 p-0">
-							<div id="dataTable_filter" class="dataTables_filter" style="float: right;">
-								<select class="custom-select custom-select-sm" name="searchType" style="width: 80px;">
-									<option value="">기준</option>
-									<option value="id">아이디</option>
-									<option value="nickname">닉네임</option>
-									<option value="name">이름</option>
-									<option value="email">이메일</option>
-									<option value="phone">연락처</option>
+				</div>
+				<hr>
+				<div class="row m-0 mb-2">
+					<div class="col-sm-12 col-md-6 p-0">
+						<div class="dataTables_length form-inline" id="dataTable_length">
+							<div class="input-group input-group-sm mr-3">
+								<select name="cntPerPage" aria-controls="dataTable" class="custom-select custom-select-sm">
+									<option value="10">10줄 보기</option>
+									<option value="25">25줄 보기</option>
+									<option value="50">50줄 보기</option>
+									<option value="100">100줄 보기</option>
 								</select>
-								<label>
-									<input type="search" name="keyword" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
-								</label>
-								<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
-								<input type="hidden" name="page" value="1">
+							</div>
+							<div class="input-group input-group-sm mr-3">
+								<div class="input-group-sm input-group-prepend">
+									<label class="input-group-text" for="sorter">예약상태</label>
+								</div>
+								<select name="sorter" aria-controls="dataTable" class="custom-select custom-select-sm">
+									<option selected value="">전체</option>
+									<option value="1">예약완료</option>
+									<option value="2">주문완료</option>
+									<option value="0">예약취소</option>
+									<option value="-1">미방문</option>
+								</select>
+							</div>
+							<div class="input-group input-group-sm">
+								<div class="input-group-sm input-group-prepend">
+									<label class="input-group-text" for="designer">담당 디자이너</label>
+								</div>
+								<select name="designer" aria-controls="dataTable" class="custom-select custom-select-sm">
+									<option selected value="">전체</option>
+									<%-- <c:forEach var="de" items="${ dList}">
+										<option value="${de.deNo }">${de.deNickname } ${de.deLevel }</option>
+									</c:forEach> --%>
+								</select>
 							</div>
 						</div>
 					</div>
+					<div class="col-sm-12 col-md-6 p-0">
+						<div id="dataTable_filter" class="dataTables_filter ">
+							<select class="custom-select custom-select-sm" name="where" style="width: 80px;">
+								<option value="">기준</option>
+								<option value="guestId">아이디</option>
+								<option value="guestName">고객명</option>
+								<option value="guestPhone">연락처</option>
+							</select>
+							<label>
+								<input type="search" class="form-control form-control-sm" name="query" placeholder="" aria-controls="dataTable">
+							</label>
+							<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
+						</div>
+					</div>
+				</div>
 				</form>
 				<!-- 테이블 상단 필터링 끝 -->
 				<!-- 테이블 시작 -->
 				<table class="table table-bordered text-center text-gray-700" id="dataTable" width="100%" cellspacing="0">
 					<thead>
 						<tr>
-							<th width="50px"></th>
+							<th>선택</th>
 							<th>아이디</th>
-							<th>닉네임</th>
 							<th>이름</th>
+							<th>닉네임</th>
 							<th>이메일</th>
+							<th>연락처</th>
 							<th>내 동네</th>
 							<th>등급</th>
 							<th>마일리지</th>
+							<th>생일</th>
 							<th>가입일</th>
 							<th>상태</th>
 							<th style="width: 100px; min-width:100px; max-width:100px;">상세보기</th>
@@ -235,7 +148,7 @@
 					<tbody>
 						<c:if test="${list eq null }">
 						<tr>
-							<td colspan="12" style="height: 80px; vertical-align: middle;">해당 조건에 부합하는 회원이 존재하지 않습니다.</td>
+							<td colspan="11" style="height: 80px;">해당 조건에 부합하는 예약건이 없습니다.</td>
 						</tr>
 						</c:if>
 						<c:forEach var="member" items="${list }">
@@ -244,13 +157,14 @@
 								<input type="checkbox" class="ckbox" value="${member.id }">
 							</td>
 							<td>${member.id }</td>
-							<td>${member.nickname }</td>
 							<td>${member.name }</td>
+							<td>${member.nickname }</td>
 							<td>${member.email}</td>
-							<%-- <td>${member.phone}</td> --%>
+							<td>${member.phone}</td>
 							<td>${member.dongne1.name } ${member.dongne2.name }</td>
-							<td>${member.grade.name}</td>
-							<td>${member.mileage}</td>
+							<td>${member.grade}</td>
+							<td>${member.milage}</td>
+							<td>${member.birthday}</td>
 							<td>${member.regdate }</td>
 							<td>${member.useYn }</td>
 							<td>
@@ -341,9 +255,9 @@
 								</div>
 							</c:if>
 						
-						</div>
+						</div> --%>
 					</div>
-				</div> --%>
+				</div>
 				<!-- 페이징 -->
 			</div>
 			<!-- bootStrap table wrapper-->
