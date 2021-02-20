@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="daangnmungcat.mapper.OrderMapper">
 
-	<!-- resultMap -->
+<!-- resultMap -->
 	<resultMap type="Order" id="orderRes">
 		<id property="id" column="id"></id>
 		<result property="member.id" column="mem_id"></result>
@@ -26,6 +26,7 @@
 		<result property="payId" column="pay_id"></result>
 		<result property="payDate" column="regdate"></result>
 		<result property="state" column="state"></result>
+		<result property="ordercnt" column="order_cnt" />
 		
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 	</resultMap>
@@ -62,7 +63,7 @@
 
 	
 	
-	<!-- sql -->
+<!-- sql -->
 	
 	
 	<sql id="orderSql">
@@ -82,7 +83,7 @@
 	
 	
 	
-	<!-- query -->
+<!-- query -->
 	<select id="getPaymentById" resultMap="payRes">
 		<include refid="paymentSql"></include>
 		from mall_payment where id = #{id}
@@ -196,16 +197,20 @@
 			AND ORDER_ID = #{orderId} ORDER BY id DESC
 	</select>
 	
+	
+	
+<!-- admin -->	
+	
 	<select id="selectOrderAll" resultMap="orderRes">
 		SELECT A.*
-			FROM (SELECT ROWNUM AS RNUM, B.*
-				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
-					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
-					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-					STATE FROM MALL_ORDER ORDER BY regdate desc )B)A
-			WHERE A.RNUM BETWEEN #{rowStart} AND #{rowEnd}
-			ORDER BY A.RNUM
+		FROM (SELECT ROWNUM AS RNUM, B.*
+			FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+				ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+				USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+				ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
+				STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER ORDER BY REGDATE desc )B)A
+			WHERE A.RNUM BETWEEN  #{rowStart} AND  #{rowEnd}
+				ORDER BY A.RNUM
 	</select>
 	
 	<select id="listCount" resultType="int">
@@ -215,7 +220,43 @@
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
 					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-					STATE FROM MALL_ORDER )B)A
+					STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER )B)A
+	</select>
+	
+	<select id="selectOrderBySearch" resultMap="orderRes" >
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
+					STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+					FROM MALL_ORDER
+					<where>
+						<if test="content != null and word != null ">
+							${content} like '%'|| #{word} ||'%' 
+						</if>
+					</where> 
+					ORDER BY regdate DESC )B)A
+				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+			ORDER BY A.RNUM
+	</select>
+	
+	<select id="searchListCount" resultType="int">
+		SELECT count(a.id)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+			FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+				ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+				USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+				ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
+				STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM MALL_ORDER 
+			<where>
+				<if test="content != null and word != null ">
+						${content} like '%'|| #{word} ||'%' 
+				</if>
+			</where> 
+			)B)A
 	</select>
 	
 </mapper>

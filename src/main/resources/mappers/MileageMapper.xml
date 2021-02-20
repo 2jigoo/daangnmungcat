@@ -24,7 +24,7 @@
 			SELECT mall_mileage_seq.nextval FROM DUAL
 		</selectKey>
 			INSERT INTO MALL_MILEAGE(ID, OD_ID, MEM_ID, MILEAGE, CONTENT)
-			VALUES(#{id}, <if test="order.id != null">#{order.id},</if> #{member.id}, #{mileage}, #{content})
+			VALUES(#{id}, <if test="order.id != null and order.id != ''">#{order.id},</if> #{member.id}, #{mileage}, #{content})
 	</insert>
 	
 	<!-- member select할 때 조회해옴 -->

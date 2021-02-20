@@ -348,6 +348,17 @@ public class OrderServiceImpl implements OrderService{
 		return mapper.listCount();
 	}
 
+	@Override
+	public List<Order> selectOrderBySearch(String content, String word, Criteria cri) {
+		// TODO Auto-generated method stub
+		return mapper.selectOrderBySearch(cri, content, word);
+	}
+
+	@Override
+	public int searchListCount(String content, String word) {
+		return mapper.searchListCount(content, word);
+	}
+
 	
 
 }

@@ -13,6 +13,7 @@ import org.apache.ibatis.annotations.Param;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
@@ -21,6 +22,9 @@ public interface OrderMapper {
 	
 	List<Order> selectOrderAll(Criteria cri);
 	int listCount();
+	
+	List<Order> selectOrderBySearch(@Param("cri")Criteria cri, @Param("content")String content, @Param("word")String word);
+	int searchListCount(@Param("content")String content, @Param("word")String word);
 	
 	/////////////////////
 	List<Order> selectOrderById(String id);
