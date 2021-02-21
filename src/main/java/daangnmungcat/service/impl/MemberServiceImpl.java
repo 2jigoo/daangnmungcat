@@ -267,14 +267,14 @@ public class MemberServiceImpl implements MemberService {
 
 	// admin
 	@Override
-	public List<Member> search(SearchCriteria scri) {
-		List<Member> list = mapper.selectMemberBySearch(scri);
+	public List<Member> search(SearchCriteria scri, Member member) {
+		List<Member> list = mapper.selectMemberBySearch(scri, member);
 		return list;
 	}
 	
 	@Override
-	public int getTotalBySearch(SearchCriteria scri) {
-		int count = mapper.selectMemberCountBySearch(scri);
+	public int getTotalBySearch(SearchCriteria scri, Member member) {
+		int count = mapper.selectMemberCountBySearch(scri, member);
 		return count;
 	}
 

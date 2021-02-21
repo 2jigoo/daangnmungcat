@@ -227,27 +227,73 @@
 	<!-- admin -->
 	<sql id="whereSearchSql">
 		<where>
-			<if test="searchType != null" > 
-				<if test="searchType eq 'id'">
-					and m.id like '%' || #{keyword} || '%'
+			<if test="scri.searchType != null" > 
+				<if test="scri.searchType eq 'id'">
+					and m.id like '%' || #{scri.keyword} || '%'
 				</if>
-				<if test="searchType eq 'nickname'">
-					and nickname like '%' || #{keyword} || '%'
+				<if test="scri.searchType eq 'nickname'">
+					and nickname like '%' || #{scri.keyword} || '%'
 				</if>
-				<if test="searchType eq 'name'">
-					and m.name like '%' || #{keyword} || '%'
+				<if test="scri.searchType eq 'name'">
+					and m.name like '%' || #{scri.keyword} || '%'
 				</if>
-				<if test="searchType eq 'email'">
-					and email like '%' || #{keyword} || '%'
+				<if test="scri.searchType eq 'email'">
+					and email like '%' || #{scri.keyword} || '%'
 			   	</if>        
-				<if test="searchType eq 'phone'">
-					and phone like '%' || #{keyword} || '%'
+				<if test="scri.searchType eq 'phone'">
+					and phone like '%' || #{scri.keyword} || '%'
 				</if>
+			 </if>
+			 <if test="member.grade != null">
+			 	and grade = #{member.grade.code}
+			 </if>
+			 <if test="member.dongne1 != null">
+			 	and dongne1_id = #{member.dongne1.id}
+			 </if>
+			 <if test="member.dongne2 != null">
+			 	and dongne2_id = #{member.dongne2.id}
+			 </if>
+			 <if test="scri.startDate != null and scri.startDate != '' and scri.endDate != null and scri.endDate != ''">
+			 	and regdate between #{scri.startDate} and #{scri.endDate}
 			 </if>
 		 </where>
 	</sql>
 	
-	<select id="selectMemberBySearch" parameterType="SearchCriteria" resultMap="memberResult">
+	<sql id="whereCountSql">
+		<where>
+			<if test="scri.searchType != null" > 
+				<if test="scri.searchType eq 'id'">
+					and m.id like '%' || #{scri.keyword} || '%'
+				</if>
+				<if test="scri.searchType eq 'nickname'">
+					and nickname like '%' || #{scri.keyword} || '%'
+				</if>
+				<if test="scri.searchType eq 'name'">
+					and m.name like '%' || #{scri.keyword} || '%'
+				</if>
+				<if test="scri.searchType eq 'email'">
+					and email like '%' || #{scri.keyword} || '%'
+			   	</if>        
+				<if test="scri.searchType eq 'phone'">
+					and phone like '%' || #{scri.keyword} || '%'
+				</if>
+			 </if>
+			 <if test="member.grade != null">
+			 	and grade = #{member.grade.code}
+			 </if>
+			 <if test="member.dongne1 != null">
+			 	and dongne1 = #{member.dongne1.id}
+			 </if>
+			 <if test="member.dongne2 != null">
+			 	and dongne2 = #{member.dongne2.id}
+			 </if>
+			 <if test="scri.startDate != null and scri.startDate != '' and scri.endDate != null and scri.endDate != ''">
+			 	and regdate between #{scri.startDate} and #{scri.endDate}
+			 </if>
+		 </where>
+	</sql>
+	
+	<select id="selectMemberBySearch" resultMap="memberResult">
 		SELECT *
 		FROM (
 			SELECT
@@ -264,18 +310,18 @@
 				LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
 				LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
 			<include refid="whereSearchSql"/>
-			<if test="searchType != null and !searchType.equal('') and keyword != null and !keyword.equal('')">
-				ORDER BY m.${searchType}
+			<if test="scri.searchType != null and !scri.searchType.equals('') and scri.keyword != null and !scri.keyword.equals('')">
+				ORDER BY m.${scri.searchType}
 			</if>
 		) a
-		WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
+		WHERE a.rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
 		ORDER BY a.rnum
 	</select>
 	
-	<select id="selectMemberCountBySearch" parameterType="SearchCriteria" resultType="int">
+	<select id="selectMemberCountBySearch" resultType="int">
 		SELECT COUNT(*)
 		FROM member m
-		<include refid="whereSearchSql"/>
+		<include refid="whereCountSql"/>
 	</select>
 	
 </mapper>

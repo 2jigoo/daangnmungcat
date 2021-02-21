@@ -4,22 +4,49 @@
 <script>
 	$(document).ready(function() {
 		document.title += ' - 회원 목록';
+	});
+	
+	
+	$(function() {
 		loadSelectBoxes();
 		
 		/* 기간 설정 관련 */
 		$("#startDate").datepicker({
 			format: "yyyy-mm-dd",
+			endDate: '0d',
 			language: "ko",
 			todayBtn: "linked",
-			clearBtn: true
+			clearBtn: true,
+			autoClose: true,
+		}).on("changeDate", function(selected) {
+			var startDate = new Date(selected.date.valueOf());
+			$("#endDate").datepicker("setStartDate", startDate);
+		}).on("clearDate", function(selected) {
+			$("#endDate").datepicker("setStartDate", null);
 		});
 
 		$("#endDate").datepicker({
 			format: "yyyy-mm-dd",
+			endDate: '0d',
 			language: "ko",
 			todayBtn: "linked",
-			clearBtn: true
+			clearBtn: true,
+			autoClose: true
+		}).on("changeDate", function(selected) {
+			var endDate = new Date(selected.date.valueOf());
+			$("#startDate").datepicker("setEndDate", endDate);
+		}).on("clearDate", function(selected) {
+			$("#startDate").datepicker("setEndDate", null);
 		});
+		
+		$("#endDate").datepicker("update", dateToString(new Date()));
+		/* $("#startDate").change(function(){
+			console.log("startDate: " + this.value);
+			$("#endDate").datepicker({
+				startDate: $("#startDate").val()
+			});
+		}); */
+		
 		
 		$("select[name=grade]").change(function(){
 			document.searchForm.submit();
@@ -32,10 +59,7 @@
 		$("select[name=dongne2]").change(function(){
 			document.searchForm.submit();
 		});
-	});
-	
-	
-	$(function() {
+		
 		$("#selbox-dongne1").on("change", function(){
 			var dongne1 = this.value;
 			if(dongne1 == "") {
@@ -51,14 +75,19 @@
 			setDateValue($(this).val() - 1);
 		});
 		
+		$("#allBtn").click(function() {
+			$("#startDate").datepicker('setDate', null);
+			$("#endDate").datepicker('setDate', null);
+		});
+		
 		$("#aMonthBtn").click(function() {
 			var today = new Date();
 			var wantDate = new Date();
-			wantDate.setMonth(wantDate.getMonth() + 1);
-			wantDate.setDate(wantDate.getDate() - 1);
+			wantDate.setMonth(wantDate.getMonth() - 1);
+			wantDate.setDate(wantDate.getDate() + 1);
 			
-			$("#startDate").datepicker("update", dateToString(today));
-			$("#endDate").datepicker("update", dateToString(wantDate));
+			$("#endDate").datepicker("update", dateToString(today));
+			$("#startDate").datepicker("update", dateToString(wantDate));
 		});
 		
 		$("select[name=perPageNum]").change(function(){
@@ -205,10 +234,10 @@
 	function setDateValue(days) {
 		var today = new Date();
 		var wantDate = new Date();
-		wantDate.setDate(wantDate.getDate() + days);
+		wantDate.setDate(wantDate.getDate() - days);
 		
-		$("#startDate").datepicker("update", dateToString(today));
-		$("#endDate").datepicker("update", dateToString(wantDate));
+		$("#endDate").datepicker("update", dateToString(today));
+		$("#startDate").datepicker("update", dateToString(wantDate));
 	};
 
 	function dateToString(date) {
@@ -287,6 +316,7 @@
 							<div class="form-inline justify-content-center" style="height: 32px;">
 								<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
 								  <span class="btn btn-sm btn-outline-secondary active" style="cursor: default;">가입일 기준</span>
+								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" id="allBtn">전체</button>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="1" id="todayBtn">오늘</button>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="7" id="aWeekBtn">1주</button>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="14" id="twoWeeksBtn">2주</button>

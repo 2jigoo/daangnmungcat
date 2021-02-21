@@ -56,6 +56,6 @@ public interface MemberService {
 	
 
 	// admin
-	List<Member> search(SearchCriteria scri);
-	int getTotalBySearch(SearchCriteria scri);
+	List<Member> search(SearchCriteria scri, Member member);
+	int getTotalBySearch(SearchCriteria scri, Member member);
 }
