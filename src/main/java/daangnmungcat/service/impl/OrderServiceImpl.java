@@ -349,14 +349,14 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<Order> selectOrderBySearch(String content, String word, Criteria cri) {
+	public List<Order> selectOrderBySearch(String content, String word, String state,String start, String end, Criteria cri) {
 		// TODO Auto-generated method stub
-		return mapper.selectOrderBySearch(cri, content, word);
+		return mapper.selectOrderBySearch(cri, content, word, state, start, end);
 	}
 
 	@Override
-	public int searchListCount(String content, String word) {
-		return mapper.searchListCount(content, word);
+	public int searchListCount(String content, String word, String state, String start, String end) {
+		return mapper.searchListCount(content, word, state, start, end);
 	}
 
 	

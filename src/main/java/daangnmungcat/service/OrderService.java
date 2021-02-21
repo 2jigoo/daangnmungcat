@@ -24,8 +24,8 @@ public interface OrderService {
 	
 	List<Order> selectOrderAll(Criteria cri);
 	int listCount();
-	List<Order> selectOrderBySearch(String content, String word, Criteria cri);
-	int searchListCount(String content, String word);
+	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, Criteria cri);
+	int searchListCount(String content, String query, String state, String start, String end);
 	
 	/////////////////////////////////////
 	List<Order> selectOrderById(String id);
@@ -58,6 +58,7 @@ public interface OrderService {
 	
 	List<OrderDetail> selectOrderDetailUsingPartCancelByOrderId(String orderId);
 	Map<String, Integer> calculateDeliveryFee(List<Cart> list);
+	
 	
 	
 	

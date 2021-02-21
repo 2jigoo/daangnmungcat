@@ -233,8 +233,15 @@
 					STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 					FROM MALL_ORDER
 					<where>
-						<if test="content != null and word != null ">
-							${content} like '%'|| #{word} ||'%' 
+						<if test="content != '' and content != null and word != '' and word != null">
+							${content} like '%'|| #{word} ||'%'
+						</if>
+						<if test="stateStr != null ">
+							and state like '%'|| #{stateStr} ||'%' 
+						</if>
+						<if test="start != null and end != null ">
+							and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
+								AND TO_date(#{end}, 'yyyy-MM-dd')+1 
 						</if>
 					</where> 
 					ORDER BY regdate DESC )B)A
@@ -251,11 +258,18 @@
 				ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
 				STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 			FROM MALL_ORDER 
-			<where>
-				<if test="content != null and word != null ">
-						${content} like '%'|| #{word} ||'%' 
-				</if>
-			</where> 
+				<where>
+						<if test="content != '' and content != null and word != '' and word != null">
+							${content} like '%'|| #{word} ||'%'
+						</if>
+						<if test="stateStr != null ">
+							and state like '%'|| #{stateStr} ||'%' 
+						</if>
+						<if test="start != null and end != null ">
+							and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
+								AND TO_date(#{end}, 'yyyy-MM-dd')+1 
+						</if>
+					</where> 
 			)B)A
 	</select>
 	

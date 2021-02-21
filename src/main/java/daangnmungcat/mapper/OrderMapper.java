@@ -23,8 +23,11 @@ public interface OrderMapper {
 	List<Order> selectOrderAll(Criteria cri);
 	int listCount();
 	
-	List<Order> selectOrderBySearch(@Param("cri")Criteria cri, @Param("content")String content, @Param("word")String word);
-	int searchListCount(@Param("content")String content, @Param("word")String word);
+	List<Order> selectOrderBySearch(@Param("cri")Criteria cri, @Param("content")String content, @Param("word")String word, 
+									@Param("stateStr") String state, @Param("start") String start, @Param("end") String end);
+	
+	int searchListCount(@Param("content")String content, @Param("word")String word, 
+						@Param("stateStr") String state, @Param("start") String start, @Param("end") String end);
 	
 	/////////////////////
 	List<Order> selectOrderById(String id);

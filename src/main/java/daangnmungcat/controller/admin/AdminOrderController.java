@@ -25,21 +25,29 @@ public class AdminOrderController {
 	
 	
 	@GetMapping("/admin/order/list")
-	public ModelAndView orderList(Criteria cri, @Nullable @RequestParam String content, @Nullable @RequestParam String query) {
+	public ModelAndView orderList(Criteria cri, @Nullable @RequestParam String content, @Nullable @RequestParam String query,
+			@Nullable @RequestParam String state,
+			@Nullable @RequestParam String start, @Nullable @RequestParam String end) {
+		System.out.println(content);
+		System.out.println(query);
+		System.out.println(state);
+		System.out.println(start + "/"+ end);
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		
 		List<Order> list = null;
 		
-		if(content != null  || query != null ) {
-			list = orderService.selectOrderBySearch(content, query, cri);
-			pageMaker.setTotalCount(orderService.searchListCount(content, query));
+		if(content != null  || query != null || state != null ||  start != null || end != null) {
+			list = orderService.selectOrderBySearch(content, query, state,  start, end, cri);
+			pageMaker.setTotalCount(orderService.searchListCount(content, query, state, start, end));
+			System.out.println(orderService.searchListCount(content, query, state, start, end));
 		}else {
 			list = orderService.selectOrderAll(cri);
 			pageMaker.setTotalCount(orderService.listCount());
+			System.out.println(orderService.listCount());
 		}
-
+		
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
@@ -55,6 +63,10 @@ public class AdminOrderController {
 		mv.addObject("pageMaker", pageMaker);
 		mv.addObject("content", content);
 		mv.addObject("query", query);
+		mv.addObject("state", state);
+		mv.addObject("start", start);
+		mv.addObject("end", end);
+	
 		mv.setViewName("/admin/order/order_list");
 		
 		return mv;

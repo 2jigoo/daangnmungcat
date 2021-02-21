@@ -2,18 +2,60 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 
-
+   
 <script>
+
 $(document).ready(function(){
+ 	
+	var state;
+	var start = getParameter('start');
+	var end = getParameter('end');
+	var stateStr = getParameter('state');
+	var content = getParameter('content');
+	var query = getParameter('query');
+	
+	$('input[name=order_state]').change(function(){
+		state = $(this).val(); 
+	});
+	
+	$('input[id=start_date]').change(function(){
+		start = $(this).val(); 
+	});
+	
+	$('input[id=end_date]').change(function(){
+		end = $(this).val(); 
+	});
+	
+	
+	if(start != null || end != null){
+		$("#start_date").attr("value", start);
+		$("#end_date").attr("value", end);
+	}
+	
+	if(stateStr != null){
+		$('input:radio[name="order_state"][value="' + stateStr + '"]').prop('checked', true);
+	}
+	
+	if(content != null || query !=null){
+		$("select[name='search'").val(content).prop("selected", true);
+		$('#query').prop('value', query);  
+	}
+	
+	
 	
 	$('#searchBtn').on('click', function(){
 		var keyword = $("select[name=search]").val();
 		var query = $('#query').val();
+		
+		var start_val = $("#start_date").val();
+		var end_val = $("#end_date").val();
+		
 		if(query == ""){
 			alert('검색어를 입력하세요.');
 			return;
 		}
-		location.href='/admin/order/list?content=' + keyword + '&query=' + query;
+		var add = '/admin/order/list?content=' + keyword + '&query=' + query;
+		location.href= add;
 	});
 	
 	$("select[name=search]").change(function(){
@@ -24,103 +66,121 @@ $(document).ready(function(){
 		}
 	});
 	
-	$("input[name=order_state]").change(function(){
-		var query = $(this).val();
-		if(query == '전체'){
-			location.href='/admin/order/list';
-		}else {
-			location.href='/admin/order/list?content=state&query=' + query;
+	
+	$(document).on('click', '#search', function(){
+		
+		var start_val = $("#start_date").val();
+		var end_val = $("#end_date").val();
+	
+		var add = '/admin/order/list';
+		if(start_val == "" && end_val == "" && state == undefined){
+			alert('상태나 날짜를 선택하세요.');
+			return;
+		
+		}else if (start_val == "" || end_val == "" ){
+			if(state == '전체'){
+				add = add;
+			}else{
+				add += '?start='+ start_val + '&end=' + end_val;
+			}
+		}else if(state == undefined ){
+			add += '?start='+ start_val + '&end=' + end_val;
+		}else if(state != null || getParameter('state') != null ){
+			if( state== '전체'){
+				console.log('전체')
+				add += '?start='+ start_val + '&end=' + end_val;
+			}else{
+				add += '?state=' + state + '&start='+ start_val + '&end=' + end_val;	
+			}
+			
 		}
-	});
-	
-	
-	$.datepicker.setDefaults($.datepicker.regional['ko']); 
-	
-	$('#start_date').datepicker({
-		dateFormat: 'yy-mm-dd',	//날짜 포맷이다. 보통 yy-mm-dd 를 많이 사용하는것 같다.
-        prevText: '이전 달',	// 마우스 오버시 이전달 텍스트
-        nextText: '다음 달',	// 마우스 오버시 다음달 텍스트
-        closeText: '닫기', // 닫기 버튼 텍스트 변경
-        currentText: '오늘', // 오늘 텍스트 변경
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],	//한글 캘린더중 월 표시를 위한 부분
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],	//한글 캘린더 중 월 표시를 위한 부분
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],	//한글 캘린더 요일 표시 부분
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],	//한글 요일 표시 부분
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],	// 한글 요일 표시 부분
-        showMonthAfterYear: true,	// true : 년 월  false : 월 년 순으로 보여줌
-        yearSuffix: '년',	//
-        showButtonPanel: true,	// 오늘로 가는 버튼과 달력 닫기 버튼 보기 옵션
-//        buttonImageOnly: true,	// input 옆에 조그만한 아이콘으로 캘린더 선택가능하게 하기
-//        buttonImage: "images/calendar.gif",	// 조그만한 아이콘 이미지
-//        buttonText: "Select date"
-	})
-	
-	$('#end_date').datepicker({
-		dateFormat: 'yy-mm-dd',	//날짜 포맷이다. 보통 yy-mm-dd 를 많이 사용하는것 같다.
-        prevText: '이전 달',	// 마우스 오버시 이전달 텍스트
-        nextText: '다음 달',	// 마우스 오버시 다음달 텍스트
-        closeText: '닫기', // 닫기 버튼 텍스트 변경
-        currentText: '오늘', // 오늘 텍스트 변경
-        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],	//한글 캘린더중 월 표시를 위한 부분
-        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],	//한글 캘린더 중 월 표시를 위한 부분
-        dayNames: ['일', '월', '화', '수', '목', '금', '토'],	//한글 캘린더 요일 표시 부분
-        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],	//한글 요일 표시 부분
-        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],	// 한글 요일 표시 부분
-        showMonthAfterYear: true,	// true : 년 월  false : 월 년 순으로 보여줌
-        yearSuffix: '년',	//
-        showButtonPanel: true,	// 오늘로 가는 버튼과 달력 닫기 버튼 보기 옵션
-//        buttonImageOnly: true,	// input 옆에 조그만한 아이콘으로 캘린더 선택가능하게 하기
-//        buttonImage: "images/calendar.gif",	// 조그만한 아이콘 이미지
-//        buttonText: "Select date"
+		
+		location.href= add;
 		
 	});
 	
+
+	var date = getDateStr(new Date());
+	
 	$('#today').on('click', function(){
-		$("#start_date").datepicker("setDate", 'today');
-		$("#end_date").datepicker("setDate", 'today');
+		$("#start_date").attr("value", date);
+		$("#end_date").attr("value", date);
 	});
 	
 	$('#7days_ago').on('click', function(){
-		$("#start_date").datepicker("setDate", 'today-7');
-		$("#end_date").datepicker("setDate", 'today');
+		var today = new Date();
+		var date =  getDateStr(new Date());
+		var dayOfMonth = today.getDate();
+		today.setDate(dayOfMonth - 7);
+		var todayStr =  getDateStr(today);
+
+		$("#start_date").attr("value", todayStr);
+		$("#end_date").attr("value",date);
 	});
 	
 	$('#15days_ago').on('click', function(){
-		$("#start_date").datepicker("setDate", 'today-15');
-		$("#end_date").datepicker("setDate", 'today');
+		var today = new Date();
+		var dayOfMonth = today.getDate();
+		today.setDate(dayOfMonth - 15);
+
+		$("#start_date").attr("value", getDateStr(today));
+		$("#end_date").attr("value", date);
 	});
 	
 	$('#1month_ago').on('click', function(){
-		$("#start_date").datepicker("setDate", '-1M');
-		$("#end_date").datepicker("setDate", 'today');
+		var d = new Date()
+		var monthOfYear = d.getMonth()
+		d.setMonth(monthOfYear - 1);
+		
+		$("#start_date").attr("value", getDateStr(d));
+		$("#end_date").attr("value",date);
 	});
 	
 	$('#6month_ago').on('click', function(){
-		$("#start_date").datepicker("setDate", '-6M');
-		$("#end_date").datepicker("setDate", 'today');
+		var d = new Date()
+		var monthOfYear = d.getMonth()
+		d.setMonth(monthOfYear - 6);
+
+		$("#start_date").attr("value",  getDateStr(d));
+		$("#end_date").attr("value", date);
 	});
 	
 	$('#1years_ago').on('click', function(){
-		$("#start_date").datepicker("setDate", '-1Y');
-		$("#end_date").datepicker("setDate", 'today');
+		var d = new Date()
+		var monthOfYear = d.getFullYear();
+		d.setFullYear(monthOfYear - 1);
+
+		$("#start_date").attr("value", getDateStr(d));
+		$("#end_date").attr("value", date);
 	});
 	
-	$('#search').on('click', function(){
-		
-		var start_val = $("#start_date").datepicker({dateFormat:"yy-mm-dd"}).val();
-		var end_val = $("#end_date").datepicker({dateFormat:"yy-mm-dd"}).val(); 
-		
-		if(start_val == "" || end_val == ""){
-			alert('날짜를 선택하세요.')
-		}else{
-			location.href='/mypage/mypage_order_list/start='+start_val + '/end=' + end_val;
-		}
-		
-	});
+	
+	
+	
 	
 	
 });
+
+function getParameter(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function getDateStr(myDate){
+	var year = myDate.getFullYear();
+	var month = (myDate.getMonth() + 1);
+	var day = myDate.getDate();
+	
+	month = (month < 10) ? "0" + String(month) : month;
+	day = (day < 10) ? "0" + String(day) : day;
+	
+	return  year + '-' + month + '-' + day;
+}
+
 </script>
+
 
 <div class="card shadow mb-4">
 	<div class="card-header py-2">
@@ -135,7 +195,7 @@ $(document).ready(function(){
 		<div class="col-sm-12 col-md-6 p-0">
 			<div><a href="/admin/order/list">전체 목록</a> | 전체 주문내역  ${totalCnt}건</div>
 			<div>
-				<select class="custom-select custom-select-sm" name="search" style="width: 100px;">
+				<select class="custom-select custom-select-sm" name="search" style="width:100px;">
 					<option value="id">주문번호</option>
 					<option value="mem_id">회원 ID</option>
 					<option value="mem_name">주문자</option>
@@ -150,6 +210,7 @@ $(document).ready(function(){
 				<input type="button" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
 			</div>
 		</div>
+		<hr>
 		<div class="col-sm-12 col-md-6 p-0">
 			<div>
 				<span style="font-weight:bold; margin-right:20px;">주문상태 </span> 
@@ -161,18 +222,18 @@ $(document).ready(function(){
 				<input type="radio" name="order_state" value="부분취소">부분취소
 				<input type="radio" name="order_state" value="환불완료">환불완료
 			</div>
-			<div>
+		</div>
+		<div style="width:100%">
 				<span style="font-weight:bold; margin-right:20px;"> 주문일자 </span> 
-				<input type="text" id="start_date"> ~ <input type="text" id="end_date">
-				<div class="order_list_search_div">
+				<input type="date" id="start_date"> ~ <input type="date" id="end_date">
 				<input type="button" value="오늘" id="today">
 				<input type="button" value="7일" id="7days_ago">
 				<input type="button" value="15일" id="15days_ago">
 				<input type="button" value="1개월" id="1month_ago">
 				<input type="button" value="6개월" id="6month_ago">
 				<input type="button" value="1년" id="1years_ago">
-				<input type="button" value="검색" id="search">
-	</div>
+				<input type="button" value="조회" id="search">
+		
 			</div>
 		</div>
 	</div>
@@ -243,7 +304,8 @@ $(document).ready(function(){
 		</table>
 		
 		<div class="board_page">
-			<c:if test="${content != null || query != null}">
+		<c:choose>
+			<c:when test="${content != null || query != null}">
 			    <c:if test="${pageMaker.prev}">
 			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&content=${content}&query=${query}">이전</a></p>
 			    </c:if> 
@@ -258,9 +320,62 @@ $(document).ready(function(){
 				  	
 				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&content=${content}&query=${query}">다음</a></p>
 				  </c:if> 
-			 </c:if> 
+			 </c:when> 
 			 
-			  <c:if test="${content == null || query == null}">
+			 <c:when test="${state != null }">
+			    <c:if test="${pageMaker.prev}">
+			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&state=${state}">이전</a></p>
+			    </c:if> 
+				<ul>
+				
+				  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+				  	<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&state=${state}">${idx}</a></li>
+				  </c:forEach>
+				</ul>
+				
+				  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+				  	
+				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&state=${state}">다음</a></p>
+				  </c:if> 
+			 </c:when> 
+			 
+			 
+			 <c:when test="${ start != null || end != null }">
+			    <c:if test="${pageMaker.prev}">
+			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&start=${start}&end=${end}">이전</a></p>
+			    </c:if> 
+				<ul>
+				
+				  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+				  	<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&start=${start}&end=${end}">${idx}</a></li>
+				  </c:forEach>
+				</ul>
+				
+				  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+				  	
+				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&start=${start}&end=${end}">다음</a></p>
+				  </c:if> 
+			 </c:when> 
+			 
+			  <c:when test="${ state != null && start != null && end != null }">
+			    <c:if test="${pageMaker.prev}">
+			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&state=${state}&start=${start}&end=${end}">이전</a></p>
+			    </c:if> 
+				<ul>
+				
+				  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+				  	<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&state=${state}&start=${start}&end=${end}">${idx}</a></li>
+				  </c:forEach>
+				</ul>
+				
+				  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+				  	
+				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&state=${state}&start=${start}&end=${end}">다음</a></p>
+				  </c:if> 
+			 </c:when> 
+			 
+			 
+			  <c:otherwise>
 			   		<c:if test="${pageMaker.prev}">
 			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 			    	</c:if> 
@@ -274,7 +389,7 @@ $(document).ready(function(){
 				  	<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
 				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 				  </c:if> 
-			  
-			  </c:if>
+			   </c:otherwise>
+		</c:choose>
 		</div>
 <%@ include file="/WEB-INF/views/admin/include/footer.jsp" %>
