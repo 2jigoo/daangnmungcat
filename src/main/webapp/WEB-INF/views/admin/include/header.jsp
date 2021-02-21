@@ -12,6 +12,12 @@
 
     <title>당근멍캣 - Admin</title>
 
+    <script src="/resources/vendor/jquery/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+    	<script src="/resources/vendor/datepicker/bootstrap-datepicker.js"></script>
+	<script src="/resources/vendor/datepicker/bootstrap-datepicker.ko.min.js"></script>
+    
     <!-- Custom fonts for this template-->
     <link href="/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -19,13 +25,11 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
-    
     <link href="/resources/css/admin_common.css" rel="stylesheet">
-    
-    
-	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
-	<script src="<c:url value="/resources/js/admin_common.js" />" type="text/javascript" ></script>
+	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.css" rel="stylesheet">
+ 	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.standalone.css" rel="stylesheet">
 </head>
 <body id="page-top">
 

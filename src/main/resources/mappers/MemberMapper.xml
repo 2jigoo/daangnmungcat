@@ -263,10 +263,8 @@
 			FROM MEMBER m
 				LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
 				LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
-			<if test="searchType != null">
-				<where>
-					m.${searchType} like '%' || #{keyword} || '%'					
-				</where>
+			<include refid="whereSearchSql"/>
+			<if test="searchType != null and keyword != null">
 				ORDER BY m.${searchType}
 			</if>
 		) a
@@ -276,12 +274,8 @@
 	
 	<select id="selectMemberCountBySearch" parameterType="SearchCriteria" resultType="int">
 		SELECT COUNT(*)
-		FROM member
-		<if test="searchType != null">
-			<where>
-				${searchType} like '%' || #{keyword} || '%'					
-			</where>
-		</if>
+		FROM member m
+		<include refid="whereSearchSql"/>
 	</select>
 	
 </mapper>

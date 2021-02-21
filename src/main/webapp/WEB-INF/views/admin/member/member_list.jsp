@@ -3,8 +3,37 @@
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
 	$(document).ready(function() {
+		document.title += ' - 회원 목록';
 		loadSelectBoxes();
+		
+		/* 기간 설정 관련 */
+		$("#startDate").datepicker({
+			format: "yyyy-mm-dd",
+			language: "ko",
+			todayBtn: "linked",
+			clearBtn: true
+		});
+
+		$("#endDate").datepicker({
+			format: "yyyy-mm-dd",
+			language: "ko",
+			todayBtn: "linked",
+			clearBtn: true
+		});
+		
+		$("select[name=grade]").change(function(){
+			document.searchForm.submit();
+		});
+
+		$("select[name=dongne1]").change(function(){
+			document.searchForm.submit();
+		});
+		
+		$("select[name=dongne2]").change(function(){
+			document.searchForm.submit();
+		});
 	});
+	
 	
 	$(function() {
 		$("#selbox-dongne1").on("change", function(){
@@ -17,7 +46,35 @@
 				loadDongne2List(this.value);
 			}
 		});
+		
+		$(".dateBtn").not("#aMonthBtn").click(function() {
+			setDateValue($(this).val() - 1);
+		});
+		
+		$("#aMonthBtn").click(function() {
+			var today = new Date();
+			var wantDate = new Date();
+			wantDate.setMonth(wantDate.getMonth() + 1);
+			wantDate.setDate(wantDate.getDate() - 1);
+			
+			$("#startDate").datepicker("update", dateToString(today));
+			$("#endDate").datepicker("update", dateToString(wantDate));
+		});
+		
+		$("select[name=perPageNum]").change(function(){
+			document.searchForm.submit();
+		});
+		
+		$("#searchBtn").click(function(e) {
+			if($("select[name=searchType]").val() == undefined || $("input[name=keyword]").val() == "") {
+				e.preventDefault();
+			}
+		});
+		
 	})
+	
+	
+	 
 	
 	function loadSelectBoxes() {
 		// 회원 등급 불러오기
@@ -34,6 +91,7 @@
 			}
 		});
 		
+		// 동네1 목록 불러오기
 		$.ajax({
 			url: "/dongne1",
 			type: "get",
@@ -74,6 +132,7 @@
 			options += "<option value='" + item.id + "'>" + item.name + "</option>";			
 		});
 		$("#selbox-dongne1").append(options);
+		setFilteringPaging();
 	}
 	
 	function appendDongne2SelectBox(data) {
@@ -92,6 +151,81 @@
 		});
 		$("#selbox-grade").append(options);
 	}
+	
+	function setFilteringPaging() {
+		
+		var thisUrlStr = window.location.href;
+		var thisUrl = new URL(thisUrlStr);
+
+		console.log("setFilteringPaging!");
+		console.log(thisUrlStr);
+		//startDate=&endDate=&perPageNum=10&grade=&dongne1=&searchType=phone&keyword=010&page=1
+		var perPageNum = thisUrl.searchParams.get("perPageNum");
+		var grade = thisUrl.searchParams.get("grade");
+		var dongne1 = thisUrl.searchParams.get("dongne1");
+		var dongne2 = thisUrl.searchParams.get("dongne2");
+		var searchType = thisUrl.searchParams.get("searchType");
+		var keyword = thisUrl.searchParams.get("keyword");
+		var startDate = thisUrl.searchParams.get("startDate");
+		var endDate = thisUrl.searchParams.get("endDate");
+		
+		
+		if(perPageNum != null) {
+			$("select[name=perPageNum]").val(perPageNum);
+		}
+		if(!searchType) {
+		} else if(searchType.length != 0) {
+			$("select[name=searchType]").val(searchType);
+			$("input[name=keyword]").val(keyword);
+		}
+		if(!grade) {
+		} else if(grade.length != 0) {
+			console.log("있잖아요...?");
+			console.log(grade);
+			$("select[name=grade]").val(grade);
+		}
+		if(!dongne1) {
+		} else if(dongne1.length != 0) {
+			$("select[name=dongne1]").val(dongne1);
+		}
+		if(!dongne2) {
+		} else if(dongne2.length != 0) {
+			$("select[name=dongne2]").val(dongne2);
+		}
+		if(!startDate) {
+		} else if(startDate.length != 0) {
+			$("#startDate").datepicker("update", startDate);
+		}
+		if(!endDate) {
+		} else if(endDate.length != 0) {
+			$("#endDate").datepicker("update", endDate);
+		}
+	}
+	
+	function setDateValue(days) {
+		var today = new Date();
+		var wantDate = new Date();
+		wantDate.setDate(wantDate.getDate() + days);
+		
+		$("#startDate").datepicker("update", dateToString(today));
+		$("#endDate").datepicker("update", dateToString(wantDate));
+	};
+
+	function dateToString(date) {
+		var year = date.getFullYear(); 
+		var month = new String(date.getMonth()+1); 
+		var day = new String(date.getDate()); 
+
+		// 한자리수일 경우 0을 채워준다. 
+		if(month.length == 1){ 
+		  month = "0" + month; 
+		} 
+		if(day.length == 1){ 
+		  day = "0" + day; 
+		} 
+		
+		return year + "-" + month + "-" + day;
+	};
 	
 </script>
 <!-- Page Heading -->
@@ -151,7 +285,7 @@
 					<div class="row m-0">
 						<div class="col-sm-12 col-md-12 p-0">
 							<div class="form-inline justify-content-center" style="height: 32px;">
-								<div class="btn-group btn-group-sm" role="group" aria-label="Basic example" style>
+								<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
 								  <span class="btn btn-sm btn-outline-secondary active" style="cursor: default;">가입일 기준</span>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="1" id="todayBtn">오늘</button>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="7" id="aWeekBtn">1주</button>
@@ -223,6 +357,7 @@
 							<th>닉네임</th>
 							<th>이름</th>
 							<th>이메일</th>
+							<th>연락처</th>
 							<th>내 동네</th>
 							<th>등급</th>
 							<th>마일리지</th>
@@ -233,7 +368,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:if test="${list eq null }">
+						<c:if test="${empty list }">
 						<tr>
 							<td colspan="12" style="height: 80px; vertical-align: middle;">해당 조건에 부합하는 회원이 존재하지 않습니다.</td>
 						</tr>
@@ -247,12 +382,12 @@
 							<td>${member.nickname }</td>
 							<td>${member.name }</td>
 							<td>${member.email}</td>
-							<%-- <td>${member.phone}</td> --%>
+							<td>${member.phone}</td>
 							<td>${member.dongne1.name } ${member.dongne2.name }</td>
 							<td>${member.grade.name}</td>
 							<td>${member.mileage}</td>
 							<td>${member.regdate }</td>
-							<td>${member.useYn }</td>
+							<td>${member.useYn ? "" : "탈퇴"}</td>
 							<td>
 								<a href="#" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">회원 정보</span></a>
 							</td>
