@@ -9,7 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>당근멍캣 - Admin</title>
 
     <script src="/resources/vendor/jquery/jquery.min.js"></script>
@@ -30,6 +29,8 @@
     <link href="/resources/css/admin_common.css" rel="stylesheet">
 	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.css" rel="stylesheet">
  	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.standalone.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    
 </head>
 <body id="page-top">
 

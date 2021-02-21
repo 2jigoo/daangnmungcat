@@ -43,6 +43,7 @@ public class Order {
 	private String payId;
 	private LocalDateTime payDate;
 	private String state;
+	private int ordercnt;
 
 	
 	public Order(String id) {
