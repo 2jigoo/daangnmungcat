@@ -387,7 +387,7 @@
 							<td>${member.grade.name}</td>
 							<td>${member.mileage}</td>
 							<td>${member.regdate }</td>
-							<td>${member.useYn ? "" : "탈퇴"}</td>
+							<td>${member.useYn eq "y" ? "" : "탈퇴"}</td>
 							<td>
 								<a href="#" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">회원 정보</span></a>
 							</td>

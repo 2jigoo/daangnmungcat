@@ -264,7 +264,7 @@
 				LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
 				LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
 			<include refid="whereSearchSql"/>
-			<if test="searchType != null and keyword != null">
+			<if test="searchType != null and !searchType.equal('') and keyword != null and !keyword.equal('')">
 				ORDER BY m.${searchType}
 			</if>
 		) a
