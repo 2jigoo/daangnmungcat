@@ -183,6 +183,10 @@
 		WHERE id = #{id}
 	</update>
 	
+	<delete id="deleteJoongoSale">
+		delete from joongo_sale where id = #{id}
+	</delete>
+	
 	<select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">
 		SELECT rownum AS rnum, a.*
 		FROM (

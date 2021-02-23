@@ -200,6 +200,14 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+	
+	$("#delBtn").click(function(){
+		if (confirm("정말 삭제하시겠습니까??") == true){
+		} else{
+		    return false;
+		}
+	})
+	
 	   
 	   /* 글쓴 시간 가져오기
 	   var inDate = document.getElementById('regdate').innerHTML;

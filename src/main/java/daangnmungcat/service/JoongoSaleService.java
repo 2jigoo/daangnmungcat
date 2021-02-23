@@ -29,7 +29,8 @@ public interface JoongoSaleService {
 
 	int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, HttpServletRequest request) throws Exception;
 	int updateJoongoSale(Sale sale, MultipartFile[] fileList,   MultipartFile file, HttpServletRequest request) throws Exception;
-
+	int deleteJoongoSale(int id);
+	
 	List<FileForm> selectImgPath(int id);
 	FileForm selectThumImgPath(int id);
 

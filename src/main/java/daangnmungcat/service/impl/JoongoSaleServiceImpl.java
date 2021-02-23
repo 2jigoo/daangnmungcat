@@ -340,5 +340,11 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		list.forEach(sale -> log.debug(sale.getId() + ": " + sale.getChatCount()));
 	}
 
+	@Override
+	public int deleteJoongoSale(int id) {
+		fileMapper.deleteSaleFileBySaleId(id);
+		return joongoListMapper.deleteJoongoSale(id);
+	}
+
 	
 }
