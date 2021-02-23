@@ -3,6 +3,8 @@ package daangnmungcat.controller.admin;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
@@ -66,4 +68,11 @@ public class AdminJoongoSaleController {
 		
 		return "/admin/joongo/joongo_list";
 	}
+	
+	@GetMapping("joongoSale/admin/delete")
+	public String adminSaleDelete(HttpSession session, Model model, @RequestParam int id) {
+		service.deleteJoongoSale(id);
+		return "redirect:/admin/joongo/list";
+	}
+	
 }
