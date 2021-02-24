@@ -176,6 +176,12 @@ public class JoongoListController {
 		return ResponseEntity.ok(memberService.Dongne2List(dongne1));
 	}
 	
+	@GetMapping("joongoSale/delete")
+	public String saleDelete(HttpSession session, Model model, @RequestParam int id) {
+		saleService.deleteJoongoSale(id);
+		return "redirect:/joongo_list/all";
+	}
+	
 	@PostMapping("/joongoSale/insert")
 	public String add(HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");

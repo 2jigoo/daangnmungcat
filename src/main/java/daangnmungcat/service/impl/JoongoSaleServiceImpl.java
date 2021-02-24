@@ -41,9 +41,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	private JoongoListMapper joongoListMapper;
 	
 	@Autowired
-	private JoongoListMapper listMapper;
-	
-	@Autowired
 	private FileFormMapper fileMapper;
 	
 	@Autowired
@@ -110,7 +107,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		
-		int res = listMapper.insertJoongoSale(sale);
+		int res = joongoListMapper.insertJoongoSale(sale);
 
 		String uploadFolder = getFolder(request);
 		System.out.println("uploadPath:" + uploadFolder);
@@ -193,7 +190,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 
 	@Override
 	public int updateJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile  file, HttpServletRequest request) throws Exception {
-		int res = listMapper.updateJoongoSale(sale);
+		int res = joongoListMapper.updateJoongoSale(sale);
 
 		String uploadFolder = getFolder(request);
 		
@@ -265,7 +262,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	
 	@Override
 	public List<Sale> getHeartedList(String memberId, Criteria criteria) {
-		List<Sale> list = listMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
+		List<Sale> list = joongoListMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
 		setChatCount(list);
 		return list;
 	}
@@ -338,6 +335,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		System.out.println(list);
 		list.forEach(sale -> sale.setChatCount(chatService.getChatCounts(sale.getId())));
 		list.forEach(sale -> log.debug(sale.getId() + ": " + sale.getChatCount()));
+	}
+
+	@Override
+	public int deleteJoongoSale(int id) {
+		fileMapper.deleteSaleFileBySaleId(id);
+		return joongoListMapper.deleteJoongoSale(id);
 	}
 
 	

@@ -56,6 +56,14 @@ public class Criteria {
 		return rowEnd;
 	}
 
+	public void setRowStart(int rowStart) {
+		this.rowStart = rowStart;
+	}
+
+	public void setRowEnd(int rowEnd) {
+		this.rowEnd = rowEnd;
+	}
+
 	@Override
 	public String toString() {
 		return "Criteria [page=" + page + ", perPageNum=" + perPageNum + ", rowStart=" + rowStart + ", rowEnd=" + rowEnd
