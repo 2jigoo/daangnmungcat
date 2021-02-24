@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
 	$(document).ready(function() {
@@ -53,6 +54,7 @@
 		});
 
 		$("select[name=dongne1]").change(function(){
+			$("select[name=dongne2]").val("");
 			document.searchForm.submit();
 		});
 		
@@ -66,7 +68,6 @@
 				resetDongne2SelectBox();
 				$("#selbox-dongne2").prop("disabled", true);
 			} else {
-				$("#selbox-dongne2").prop("disabled", false);
 				loadDongne2List(this.value);
 			}
 		});
@@ -142,6 +143,15 @@
 			dataType: "json",
 			success: function(data) {
 				appendDongne2SelectBox(data);
+				
+				var thisUrlStr = window.location.href;
+				var thisUrl = new URL(thisUrlStr);
+
+				var dongne2 = thisUrl.searchParams.get("dongne2");
+				if(!dongne2) {
+				} else if(dongne2.length != 0) {
+					$("select[name=dongne2]").val(dongne2);
+				}
 			},
 			error: function(error) {
 				console.log("failed to load dongne2 options");
@@ -151,7 +161,6 @@
 	}
 
 	function resetDongne2SelectBox() {
-		//$("#selbox-dongne2").empty();
 		$("#selbox-dongne2").html("<option value=''>전체</option>");
 	}
 	
@@ -170,6 +179,7 @@
 			options += "<option value='" + item.id + "'>" + item.name + "</option>";			
 		});
 		resetDongne2SelectBox();
+		$("#selbox-dongne2").prop("disabled", false);
 		$("#selbox-dongne2").append(options);
 	}
 	
@@ -188,11 +198,10 @@
 
 		console.log("setFilteringPaging!");
 		console.log(thisUrlStr);
-		//startDate=&endDate=&perPageNum=10&grade=&dongne1=&searchType=phone&keyword=010&page=1
+		
 		var perPageNum = thisUrl.searchParams.get("perPageNum");
 		var grade = thisUrl.searchParams.get("grade");
 		var dongne1 = thisUrl.searchParams.get("dongne1");
-		var dongne2 = thisUrl.searchParams.get("dongne2");
 		var searchType = thisUrl.searchParams.get("searchType");
 		var keyword = thisUrl.searchParams.get("keyword");
 		var startDate = thisUrl.searchParams.get("startDate");
@@ -209,17 +218,12 @@
 		}
 		if(!grade) {
 		} else if(grade.length != 0) {
-			console.log("있잖아요...?");
-			console.log(grade);
 			$("select[name=grade]").val(grade);
 		}
 		if(!dongne1) {
 		} else if(dongne1.length != 0) {
 			$("select[name=dongne1]").val(dongne1);
-		}
-		if(!dongne2) {
-		} else if(dongne2.length != 0) {
-			$("select[name=dongne2]").val(dongne2);
+			loadDongne2List(dongne1);
 		}
 		if(!startDate) {
 		} else if(startDate.length != 0) {
@@ -399,6 +403,7 @@
 					</thead>
 					<tbody>
 						<c:if test="${empty list }">
+						<javatime:setZoneId value="Asia/Bangkok" />
 						<tr>
 							<td colspan="12" style="height: 80px; vertical-align: middle;">해당 조건에 부합하는 회원이 존재하지 않습니다.</td>
 						</tr>
@@ -416,7 +421,7 @@
 							<td>${member.dongne1.name } ${member.dongne2.name }</td>
 							<td>${member.grade.name}</td>
 							<td>${member.mileage}</td>
-							<td>${member.regdate }</td>
+							<td><javatime:format value="${member.regdate }" pattern="yyyy-MM-dd"/></td>
 							<td>${member.useYn eq "y" ? "" : "탈퇴"}</td>
 							<td>
 								<a href="#" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">회원 정보</span></a>
@@ -432,6 +437,78 @@
 				<!-- 테이블 끝 -->
 				
 				<!-- 페이징 시작 -->
+				<div class="row">
+					<div class="col-sm-12 col-md-12" style="text-align: center;">
+						<div class="dataTables_info">
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.startPage lt pageMaker.cri.page and pageMaker.startPage ne 1}">
+										<a href="/admin/member/list?${pageMaker.makeSearch(pageMaker.startPage-pageMaker.cri.perPageNum)}">
+											<i class="fas fa-angle-double-left"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
+										<i class="fas fa-angle-double-left"></i>
+									</c:otherwise>
+								</c:choose>
+							</div>
+								
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.cri.page gt 1 }">
+										<a href="/admin/member/list?${pageMaker.makeSearch(pageMaker.cri.page - 1) }">
+											<i class="fas fa-angle-left"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
+										<i class="fas fa-angle-left"></i>
+									</c:otherwise>
+								</c:choose>
+							</div>
+							<c:if test="${pageMaker.endPage eq 0 }">
+								<div class="paging-line text-primary" style="font-weight: 1000;">1</div>
+							</c:if>
+							<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage }" var="idx">
+								<c:choose>
+									<c:when test="${pageMaker.cri.page eq idx }">
+										<div class="paging-line text-primary" style="font-weight: 1000;">${idx }</div>
+									</c:when>
+									<c:otherwise>
+										<div class="paging-line" style="font-weight: 600;">
+											<a href="/admin/member/list${pageMaker.makeSearch(idx)}">${idx}</a>
+										</div>
+									</c:otherwise>
+								</c:choose>
+							</c:forEach>
+							
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.cri.page lt pageMaker.lastPage }">
+										<a href="/admin/member/list${pageMaker.makeSearch(pageMaker.cri.page + 1) }">
+											<i class="fas fa-angle-right"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
+										<i class="fas fa-angle-right"></i>
+									</c:otherwise>
+								</c:choose>
+							</div>
+							
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.next eq true}">
+										<a href="/admin/member/list${pageMaker.makeSearch(pageMaker.endPage + 1) }" >
+											<i class="fas fa-angle-double-right"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
+										<i class="fas fa-angle-double-right"></i>
+									</c:otherwise>
+								</c:choose>
+							</div>
+						</div>
+					</div>
+				</div>
 				<%-- <div class="row">
 					<div class="col-sm-12 col-md-12" style="text-align: center;">
 						<div class="dataTables_info paging-line">

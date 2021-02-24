@@ -28,9 +28,10 @@
     <!-- Custom styles for this template-->
     <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="/resources/css/admin_common.css" rel="stylesheet">
+    <link href="/resources/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.css" rel="stylesheet">
  	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.standalone.css" rel="stylesheet">
+    <link href="/resources/css/admin_common.css" rel="stylesheet">
     
 </head>
 <body id="page-top">

@@ -57,3 +57,7 @@
 
 .history_back_btn {display:inline-block; margin-top:20px; padding:0 30px; color:#fff; line-height:45px; font-family:'S-CoreDream'; background:#808080; text-decoration:none !important;}
 .history_back_btn:hover {color:#fff;}
+
+/* 페이징 버튼 */
+.paging-line { width:20px; display:inline-block;}
+.paging-line a {text-decotation:none; }
