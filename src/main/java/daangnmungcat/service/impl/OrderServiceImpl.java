@@ -1,10 +1,12 @@
 package daangnmungcat.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
+import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.mapper.OrderMapper;
@@ -47,14 +50,11 @@ public class OrderServiceImpl implements OrderService{
 	private MileageService mileService;
 	
 	@Autowired
-	private KakaoPayService kakaoService;
-	
-	@Autowired
 	private OrderMapper mapper;
 
 	@Transactional
 	@Override
-	public void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session) {
+	public void kakaoOrderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session) {
 		
 		//order, payment의 pay - id
 		System.out.println("TID:" + kakao.getTid());
@@ -110,6 +110,7 @@ public class OrderServiceImpl implements OrderService{
 			od.setMember(loginUser);
 			od.setQuantity(c.getQuantity());
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
+			od.setOrderState(OrderState.PAID);
 			detailList.add(od);
 			mapper.insertOrderDetail(od);
 		}
@@ -131,6 +132,8 @@ public class OrderServiceImpl implements OrderService{
 		order.setPlusMileage(Integer.parseInt(plus_mile));
 		order.setDeliveryPrice(deli);
 		order.setPayId(kakao.getTid());
+		order.setSettleCase("카카오페이");
+		order.setState(OrderState.PAID.getLabel());
 		log.info("insert order..........................................");
 		mapper.insertOrder(order);
 		
@@ -358,7 +361,146 @@ public class OrderServiceImpl implements OrderService{
 	public int searchListCount(String content, String word, String state, String start, String end) {
 		return mapper.searchListCount(content, word, state, start, end);
 	}
-
 	
+
+	@Transactional
+	@Override
+	public String accountOrderTransaction(HttpServletRequest request, HttpSession session) {
+		
+		// od, order, mileage 처리 -> admin에서 입금완료로 상태 변경하면 payment 테이블에 추가
+		
+		session = request.getSession();
+		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+		Member loginUser = memberService.selectMemberById(info.getId());
+
+		//pre-order -> 주문한거만 담은 새로운 cartList
+		List<Cart> cartList =  (ArrayList)session.getAttribute("cart");
+		System.out.println(cartList);
+		
+		//form -> parameter로 온 것
+		String total = request.getParameter("total");
+		String deli = request.getParameter("deli");
+		String finalPrice = request.getParameter("final");
+		String name = request.getParameter("add_name");
+		String zipcode = request.getParameter("zipcode");
+		String add1 = request.getParameter("address1");
+		String add2 = request.getParameter("address2");
+		String phone1 = request.getParameter("phone1");
+		String phone2 = request.getParameter("phone2");
+		String memo = request.getParameter("order_memo");
+		String usedMile = request.getParameter("use_mileage");
+		String plus_mile = request.getParameter("plus_mile"); 
+		
+		//새로운 주문번호
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		String today = sdf.format(new Date());
+		Random rand = new Random();
+		String numStr = "";
+		for (int i = 0; i < 6; i++) {
+			String ran = Integer.toString(rand.nextInt(10));
+			numStr += ran;
+		}
+		String nextNo = today + numStr;
+		
+		
+		if(usedMile.equals("")) {
+			usedMile = "0";
+		}
+
+		//order insert
+		
+		Order order = new Order();
+		order.setId(nextNo);
+		order.setMember(loginUser);
+		
+		//주문할 리스트 -> detail에 추가
+		List<OrderDetail> detailList = new ArrayList<OrderDetail>();
+		
+		
+		for(Cart c: cartList) {
+			OrderDetail od = new OrderDetail();
+			od.setOrderId(nextNo);
+			System.out.println(nextNo);
+			od.setPdt(c.getProduct());
+			od.setMember(loginUser);
+			od.setQuantity(c.getQuantity());
+			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
+			od.setOrderState(OrderState.DEPOSIT_REQUEST);
+			detailList.add(od);
+			mapper.insertOrderDetail(od);
+		}
+		System.out.println(detailList);
+		log.info("insert od..........................................");
+		
+		
+		order.setDetails(detailList);
+		order.setAddName(name);
+		order.setZipcode(Integer.parseInt(zipcode));
+		order.setAddress1(add1);
+		order.setAddress2(add2);
+		order.setAddPhone1(phone1);
+		order.setAddPhone2(phone2);
+		order.setAddMemo(memo);
+		order.setTotalPrice(Integer.parseInt(total));
+		order.setUsedMileage(Integer.parseInt(usedMile));
+		order.setFinalPrice(Integer.parseInt(finalPrice));
+		order.setPlusMileage(Integer.parseInt(plus_mile));
+		order.setDeliveryPrice(Integer.parseInt(deli));
+		order.setSettleCase("무통장");
+		order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
+		order.setMisu(Integer.parseInt(finalPrice));
+		log.info("insert order..........................................");
+		mapper.insertOrder(order);
+		System.out.println(order);
+		
+		int myMileage = mileService.getMileage(loginUser.getId());
+		
+		//현재마일리지
+		System.out.println("현재 마일리지: " + myMileage);
+		
+		//보유금액 -일때
+		if(usedMile.contains("-")) {
+			usedMile = usedMile.replace("-", "");
+		}
+		
+		
+		Mileage minus = new Mileage();
+		minus.setMember(loginUser);
+		minus.setOrder(order);
+		minus.setMileage(Integer.parseInt("-"+usedMile));
+		minus.setContent("상품 구매 사용");
+		
+		if(!usedMile.equals("0")) {
+			mileService.insertMilegeInfo(minus);
+		}
+		
+		int afterMile = mileService.getMileage(loginUser.getId());
+		System.out.println("처리 후 현재마일리지:" + afterMile);
+		log.info("마일리지 set / 내역테이블 insert");
+		
+		// 주문완료된 상품 카트에서 삭제
+		List<MallProduct> pdtList = detailList.stream().map(OrderDetail::getPdt).collect(Collectors.toList());
+		cartService.deleteAfterOrdered(loginUser.getId(), pdtList);
+		
+		log.info("..........end..........");
+		session.setAttribute("orderNo", nextNo);
+		
+		return "/accountPaySuccess";
+		
+	}
+
+	@Override
+	public int insertAccountPayment(Payment pay) {
+		// TODO Auto-generated method stub
+		return mapper.insertAccountPayment(pay);
+	}
+
+	@Override
+	public Payment selectAccountPaymentByOrderId(String orderId) {
+		// TODO Auto-generated method stub
+		return mapper.selectAccountPaymentByOrderId(orderId);
+	}
+
+
 
 }
