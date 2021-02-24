@@ -61,3 +61,6 @@
 /* 페이징 버튼 */
 .paging-line { width:20px; display:inline-block;}
 .paging-line a {text-decotation:none; }
+
+.table.padding-sm tbody td {padding: .325rem;}
+.table.middle td {vertical-align: middle;}

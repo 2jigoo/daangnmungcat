@@ -55,7 +55,7 @@ public class PageMaker {
 	}
 
 	private void calcData() {
-		lastPage = (int) (Math.ceil(totalCount / cri.getPerPageNum()));
+		lastPage = (int) (Math.ceil(totalCount / (double)cri.getPerPageNum()));
 		endPage = (int) (Math.ceil(cri.getPage() / (double) displayPageNum) * displayPageNum);
 		startPage = (endPage - displayPageNum) + 1;
 

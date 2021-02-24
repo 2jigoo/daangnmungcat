@@ -26,7 +26,7 @@ public class AdminMemberController {
 	private MemberService memberService;
 	
 	@GetMapping("/admin/member/list")
-	public String memberListPage(SearchCriteria scri, String grade, String dongne1, String dongne2, Model model) {
+	public String memberListPage(SearchCriteria scri, String grade, String dongne1, String dongne2, String state, Model model) {
 		log.info("컨트롤러 처음 받아 온 scri: " + scri);
 		
 		if(scri.getPerPageNum() == scri.DEFAULT_PERPAGE_NUM) {
@@ -37,6 +37,7 @@ public class AdminMemberController {
 		paramsMap.put("grade", grade);
 		paramsMap.put("dongne1", dongne1);
 		paramsMap.put("dongne2", dongne2);
+		paramsMap.put("state", state);
 		scri.setParams(paramsMap);
 		
 		Member member = new Member();
@@ -44,16 +45,17 @@ public class AdminMemberController {
 		if(dongne1 != null && dongne1.length() != 0) {
 			member.setDongne1(new Dongne1(Integer.parseInt(dongne1)));
 		}
-		
 		if(dongne2 != null && dongne2.length() != 0) {
 			member.setDongne2(new Dongne2(Integer.parseInt(dongne2)));
 		}
-		
 		if(grade != null && grade.length() != 0) {
 			member.setGrade(new Grade(grade));
 		}
+		if(state != null && state.length() != 0) {
+			member.setUseYn(state);
+		}
 		
-		log.info("member: " + member.getDongne1() + ", " + member.getDongne2() + ", " + member.getGrade());
+		log.info("member: " + member.getDongne1() + ", " + member.getDongne2() + ", " + member.getGrade() + ", " + member.getUseYn());
 		
 		int total = memberService.getTotalBySearch(scri, member);
 		
