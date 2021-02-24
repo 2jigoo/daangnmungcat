@@ -248,10 +248,13 @@
 			 	and grade = #{member.grade.code}
 			 </if>
 			 <if test="member.dongne1 != null">
-			 	and dongne1_id = #{member.dongne1.id}
+			 	and dongne1 = #{member.dongne1.id}
 			 </if>
 			 <if test="member.dongne2 != null">
-			 	and dongne2_id = #{member.dongne2.id}
+			 	and dongne2 = #{member.dongne2.id}
+			 </if>
+			 <if test="member.useYn != null and (member.useYn.equalsIgnoreCase('y') || member.useYn.equalsIgnoreCase('n'))">
+			 	and use_yn = #{member.useYn}
 			 </if>
 			 <if test="scri.startDate != null and scri.startDate != '' and scri.endDate != null and scri.endDate != ''">
 			 	and regdate between #{scri.startDate} and #{scri.endDate}
@@ -287,6 +290,9 @@
 			 <if test="member.dongne2 != null">
 			 	and dongne2 = #{member.dongne2.id}
 			 </if>
+			 <if test="member.useYn != null and (member.useYn.equalsIgnoreCase('y') || member.useYn.equalsIgnoreCase('n'))">
+			 	and use_yn = #{member.useYn}
+			 </if>
 			 <if test="scri.startDate != null and scri.startDate != '' and scri.endDate != null and scri.endDate != ''">
 			 	and regdate between #{scri.startDate} and #{scri.endDate}
 			 </if>
@@ -310,9 +316,12 @@
 				LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
 				LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
 			<include refid="whereSearchSql"/>
-			<if test="scri.searchType != null and !scri.searchType.equals('') and scri.keyword != null and !scri.keyword.equals('')">
-				ORDER BY m.${scri.searchType}
-			</if>
+			<choose>
+				<when test="scri.searchType != null and !scri.searchType.equals('') and scri.keyword != null and !scri.keyword.equals('')">
+					ORDER BY m.${scri.searchType} ASC, regdate DESC
+				</when>
+				<otherwise>ORDER BY regdate DESC</otherwise>
+			</choose>
 		) a
 		WHERE a.rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
 		ORDER BY a.rnum
@@ -321,7 +330,7 @@
 	<select id="selectMemberCountBySearch" resultType="int">
 		SELECT COUNT(*)
 		FROM member m
-		<include refid="whereCountSql"/>
+		<include refid="whereSearchSql"/>
 	</select>
 	
 </mapper>

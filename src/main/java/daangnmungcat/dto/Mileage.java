@@ -20,6 +20,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
+@JsonInclude(Include.NON_DEFAULT)
 public class Mileage {
 	private int id; 
 	private Order order;
@@ -27,4 +28,6 @@ public class Mileage {
 	private int mileage;
 	private String content;
 	private LocalDateTime regDate;
+	
+	
 }

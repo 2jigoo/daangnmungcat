@@ -60,12 +60,6 @@
 .history_back_btn:hover {color:#fff;}
 
 
-.order_detail_info_div {width:100%; margin:0 auto; padding-top:100px; text-align:center;}
-.tableTitle {text-align:center; font-weight:bold; margin-left:30px;}
-.order_detail_table {width:80%; margin:0 auto; padding:100px; text-align:left; }
-.order_detail_table td {padding:10px; border:1px solid black; }
-.order_detail_table tr td:nth-child(1) {width:20%;}
-
 
 .admin_od_img {width:10%; text-align:left;}
 .order_img_wrapper {display: inline-block !important; over-flow: hidden !important; vertical-align:middle !important; width:30% !important;  }
@@ -91,4 +85,12 @@
 .admin_od_pay_info .info_form tbody td:nth-child(1)  { background-color:#f5f5f5;  width:30%}
 .admin_od_pay_info_btn {padding:50px;}
 .admin_order_title {margin-top:50px; font-weight:bold;}
+
+
+/* 페이징 버튼 */
+.paging-line { width:20px; display:inline-block;}
+.paging-line a {text-decotation:none; }
+
+.table.padding-sm tbody td {padding: .325rem;}
+.table.middle td {vertical-align: middle;}
 

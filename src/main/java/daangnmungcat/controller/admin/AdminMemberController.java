@@ -1,12 +1,13 @@
 package daangnmungcat.controller.admin;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
@@ -25,8 +26,19 @@ public class AdminMemberController {
 	private MemberService memberService;
 	
 	@GetMapping("/admin/member/list")
-	public String memberListPage(SearchCriteria scri, String grade, String dongne1, String dongne2, Model model) {
-		log.info("scri: " + scri);
+	public String memberListPage(SearchCriteria scri, String grade, String dongne1, String dongne2, String state, Model model) {
+		log.info("컨트롤러 처음 받아 온 scri: " + scri);
+		
+		if(scri.getPerPageNum() == scri.DEFAULT_PERPAGE_NUM) {
+			scri.setPerPageNum(10);
+		}
+		
+		Map<String, String> paramsMap = new HashMap<>();
+		paramsMap.put("grade", grade);
+		paramsMap.put("dongne1", dongne1);
+		paramsMap.put("dongne2", dongne2);
+		paramsMap.put("state", state);
+		scri.setParams(paramsMap);
 		
 		Member member = new Member();
 		
@@ -39,8 +51,11 @@ public class AdminMemberController {
 		if(grade != null && grade.length() != 0) {
 			member.setGrade(new Grade(grade));
 		}
+		if(state != null && state.length() != 0) {
+			member.setUseYn(state);
+		}
 		
-		log.info("member: " + member.getDongne1() + ", " + member.getDongne2() + ", " + member.getGrade());
+		log.info("member: " + member.getDongne1() + ", " + member.getDongne2() + ", " + member.getGrade() + ", " + member.getUseYn());
 		
 		int total = memberService.getTotalBySearch(scri, member);
 		
@@ -52,6 +67,11 @@ public class AdminMemberController {
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", pageMaker);
+		model.addAttribute("dongne1", dongne1);
+		model.addAttribute("dongne2", dongne2);
+		model.addAttribute("grade", grade);
+		
+		log.info("페이징 계산 끝난 scri: " + scri);
 		
 		return "/admin/member/member_list";
 	}
