@@ -33,7 +33,6 @@ public class HomeController {
 	@RequestMapping(value= "/" ,method={RequestMethod.POST,RequestMethod.GET})
 	public String main(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		List<Sale> saleList = saleService.getLists();
-		System.out.println("이거");
 		System.out.println(saleList);
 		Criteria cri = new Criteria();
 		cri.setRowStart(1);

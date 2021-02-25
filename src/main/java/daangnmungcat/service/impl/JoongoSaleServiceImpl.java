@@ -125,7 +125,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		*/
 		int cnt = 2;
 		
-		
 		//썸네일 이미지 추가
 			try {
 				String thumFileName = "1_" + file.getOriginalFilename().trim();
@@ -141,33 +140,32 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				e.printStackTrace();
 			}
 			
+			
 		// 상세 이미지 추가
 		for (MultipartFile multipartFile : fileList) {
-			String uploadFileName = multipartFile.getOriginalFilename();
-			uploadFileName = cnt + "_" + uploadFileName.trim();
 			
-			File saveFile = new File(uploadFolder, uploadFileName);
-			
-			//db저장
-			FileForm fileForm = new FileForm();
-			fileForm.setSale(sale);
-			fileForm.setFileName("upload/joongosale/"+uploadFileName);
-			res += fileMapper.insertSaleFile(fileForm);
-			
-			try {
-				multipartFile.transferTo(saveFile);
-				cnt++;
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(multipartFile.isEmpty() == false) {
+				String uploadFileName = multipartFile.getOriginalFilename();
+				uploadFileName = cnt + "_" + uploadFileName.trim();
+				
+				File saveFile = new File(uploadFolder, uploadFileName);
+				
+				//db저장
+				FileForm fileForm = new FileForm();
+				fileForm.setSale(sale);
+				fileForm.setFileName("upload/joongosale/"+uploadFileName);
+				res += fileMapper.insertSaleFile(fileForm);
+				
+				try {
+					multipartFile.transferTo(saveFile);
+					cnt++;
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
-		if(res != (fileList.length + 1)) {
-			throw new RuntimeException(); // 업로드 갯수 불일치
-		}
-		
 		return res;
 	}
 
@@ -219,7 +217,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		
 		// 상세 이미지 추가
 		for (MultipartFile multipartFile : fileList) {
-			if(multipartFile.getOriginalFilename() != null) {
+			if(multipartFile.isEmpty() == false) {
 				String uploadFileName = multipartFile.getOriginalFilename().trim();
 				int num = list.size() + 1;
 				uploadFileName = num + "_" + uploadFileName;
@@ -242,9 +240,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 					e.printStackTrace();
 				}
 			}
-		}
-		if(res != (fileList.length + 1)) {
-			throw new RuntimeException(); // 업로드 갯수 불일치
 		}
 		
 		return res;
