@@ -8,15 +8,15 @@
 <script>
 
 </script>
-<form method="post" action="login">
+<form method="post" action="/doLogin">
 <div class="login-wrapper">
 	<div class="id">
-		<label>id</label>
+		<label for="id">id</label>
 		<input type="text" name="id">
 	</div>
 	<div class="pw">
-		<label>pw</label>
-		<input type="password" name="pwd">
+		<label for="password">pw</label>
+		<input type="password" name="password">
 	</div>
 	<div class="btn">
 		<input type="submit" value="로그인">

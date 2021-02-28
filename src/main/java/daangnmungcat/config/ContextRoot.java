@@ -11,7 +11,8 @@ import daangnmungcat.typehandler.CodeEnumTypeHandler;
 @ComponentScan(basePackages = {
 		"daangnmungcat.mapper",
 		"daangnmungcat.service",
-		"daangnmungcat.websocket"})
+		"daangnmungcat.websocket",
+		"daangnmungcat.handler"})
 public class ContextRoot {
 	
 	

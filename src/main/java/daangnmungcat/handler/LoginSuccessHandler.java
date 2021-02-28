@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import oracle.security.o3logon.a;
+
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
@@ -20,8 +22,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			Authentication auth) throws IOException, ServletException {
 		
 		List<String> roleNames = new ArrayList<>();
-		auth.getAuthorities().forEach(authority -> {roleNames.add(authority.getAuthority());
+		auth.getAuthorities().forEach(authority -> {
+			roleNames.add(authority.getAuthority());
 		});
+		
+		System.out.println("auth: " + auth.getName());
 		
 		//사용자가 admin권한이면 바로 admin 페이지로
 		if(roleNames.contains("ROLE_ADMIN")) {
@@ -29,15 +34,12 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 			return;
 		}
 		
-		if(roleNames.contains("ROLE_MEMBER")) {
-			response.sendRedirect("/member");
+		if(roleNames.contains("ROLE_USER")) {
+			response.sendRedirect("/chat");
 			return;
 		}
 		
 		response.sendRedirect("/");
-		
-		
-		
 		
 	}
 

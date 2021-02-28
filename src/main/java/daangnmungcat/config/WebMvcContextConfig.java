@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -138,6 +139,10 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 				    	HttpMethod.DELETE.name());
 	}
 	
-	
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(new AuthInfoMethodArgumentResolver());
+		WebMvcConfigurer.super.addArgumentResolvers(resolvers);
+	}
 	
 }

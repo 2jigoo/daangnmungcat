@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="loginUser"/>
+</sec:authorize>
 
 <!DOCTYPE html>
 <html>
@@ -28,6 +33,8 @@
 	<script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 	
 	<script>
+	//${loginUser}
+	//${loginUser.id}
 	$.ajaxSetup({
 	    error: function(jqXHR, exception) {
 	        if (jqXHR.status === 0) {
@@ -117,20 +124,21 @@
 		</div>
 		
 		<div class="h_util_wrap">
-			<c:if test="${loginUser eq null}">
+			<sec:authorize access="isAnonymous()">
 			<ul class="h_util">
 				<li><a href="<c:url value="/login" />">로그인</a></li>
 				<li><a href="<c:url value="/sign/contract" />">회원가입</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 			</ul>
-			</c:if>
-			<c:if test="${loginUser ne null}">
+			</sec:authorize>
+			
+			<sec:authorize access="isAuthenticated()">
 				<ul class="h_util">
 				<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
 				</ul>
-			</c:if>
+			</sec:authorize>
 			<ul class="h_util2">
 				<li><a href="#"><img src="/resources/images/ico_salesarticle.png"><span>판매글</span></a></li>
 				<li><a href="<c:url value="/chat" />"><img src="/resources/images/ico_chatting.png"><span>채팅</span></a></li>
@@ -148,20 +156,20 @@
 	</div>
 	<nav id="gnb">
 		<div>
-			<c:if test="${loginUser eq null}">
+			<sec:authorize access="isAnonymous()">
 			<ul>
 				<li><a href="<c:url value="/login" />">로그인</a></li>
 				<li><a href="<c:url value="/contract" />">회원가입</a></li>
 				<li><a href="/mypage/mypage_main">마이페이지</a></li>
 			</ul>
-			</c:if>
-			<c:if test="${loginUser ne null}">
+			</sec:authorize>
+			<sec:authorize access="isAuthenticated()">
 			<ul>
 				<li><a href="#">${loginUser.getId()}님</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 			</ul>
-			</c:if>
+			</sec:authorize>
 		</div>
 		<ul>
 			<li><a href="<c:url value="/joongo_list" />">중고</a></li>

@@ -10,10 +10,12 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Address;
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Authority;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
@@ -21,6 +23,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.SearchCriteria;
 import daangnmungcat.mapper.MemberMapper;
+import daangnmungcat.service.AuthoritiesService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import net.nurigo.java_sdk.api.Message;
@@ -32,6 +35,8 @@ public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private MemberMapper mapper;
 	
+	@Autowired
+	private AuthoritiesService authoritesService;
 	
 	@Autowired
 	private MileageService mService;
@@ -58,14 +63,25 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	@Transactional
 	public int registerMember(Member member) {
 		Mileage mile = new Mileage();
 		mile.setMileage(1000);
 		mile.setOrder(null);
 		mile.setContent("회원가입");
 		mile.setMember(member);
-		mService.insertMilegeInfo(mile);
-		return mapper.insertMember(member);
+		
+		Authority authority = new Authority(member.getId(), "USER");
+		
+		int res = mService.insertMilegeInfo(mile);
+		res += mapper.insertMember(member);
+		res += authoritesService.registerAuthorityIntoMember(authority);
+		
+		if(res != 3) {
+			throw new RuntimeException();
+		}
+		
+		return res;
 	}
 
 	@Override

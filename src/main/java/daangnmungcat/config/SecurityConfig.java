@@ -6,12 +6,16 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import daangnmungcat.handler.LoginSuccessHandler;
+import daangnmungcat.security.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
@@ -21,15 +25,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		System.out.println("security 작동");
 		http.authorizeRequests()
-			.antMatchers("/#").permitAll()
-			.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/member").access("hasRole('ROLE_MEMBER')");
+			.antMatchers("/").permitAll()
+			.antMatchers("/chat/**").hasRole("USER")
+			.antMatchers("/admin/**").hasRole("ADMIN");
+		//.antMatchers("/**").permitAll();
 		
 		http.cors().configurationSource(corsConfigurationSource());
 		
-		//admin access denined -> login page로 이동하여 로그인
-		//loginPage("뷰이름").loginProcessingUrl("경로");
-		http.formLogin().loginPage("/login").loginProcessingUrl("/sample/login");
+		http.formLogin()
+			.loginPage("/login")
+			.usernameParameter("id")
+			.loginProcessingUrl("/doLogin");
+		
+		http.logout().logoutUrl("logout").logoutSuccessUrl("/");
 		
 		// 동일 도메인에서 iframe SockJS 지원하게끔
 		http.headers()
@@ -38,17 +46,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //		http.csrf().disable();
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//{noop} -> 패스워드 인코딩처리 없이 사용
-		auth.inMemoryAuthentication().withUser("admin").password("{noop}1234").roles("ADMIN");
-		auth.inMemoryAuthentication().withUser("member").password("{noop}member").roles("member");
+	
+	@Bean
+	protected UserDetailsService userDetailsService() {
+		return new CustomUserDetailService();
 	}
 	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler() {
 		return new LoginSuccessHandler();
 	}
+	
 	
 	
 	// CORS 허용 적용
@@ -66,5 +74,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 	
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+    	return NoOpPasswordEncoder.getInstance();
+    }
 	
 }

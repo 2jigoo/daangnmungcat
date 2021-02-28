@@ -51,7 +51,7 @@ public interface MemberService {
 	List<Address> myAddress(String id);
 	int insertAddress(Address address);
 	int updateMyAddress(Member member);
-	Address getAddress(String id);
+	Address getAddress(String id);	
 	int updateShippingAddress(Address address);
 	int deleteShippingAddress(String id);
 	

@@ -40,7 +40,6 @@ public class SignUpControllor {
 	@PostMapping("/sign-up")
 	public ResponseEntity<Object> newMember(@RequestBody Member member) {
 		try {
-			
 			return ResponseEntity.ok(service.registerMember(member));
 		} catch (DuplicateMemberException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();

@@ -1,6 +1,7 @@
 package daangnmungcat.controller;
 
 import java.io.File;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,20 +47,27 @@ public class ChatController {
 	private JoongoSaleReviewService reviewService;
 	
 	@GetMapping("/chat")
-	public String myChatList(Model model, HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String myChatList(Model model, AuthInfo loginUser) {
+		/*
+		Enumeration<String> e = session.getAttributeNames();
+		while(e.hasMoreElements()) {
+			String name = e.nextElement();
+			System.out.printf("%s - %s", name, session.getAttribute(name).toString());
+		}
+		*/
+		
 		log.debug("loginUser's ID: " + loginUser.getId());
 		
 		List<Chat> list = chatService.getMyChatsList(loginUser.getId());
 		list.stream().forEach(chat -> log.debug(chat.toString()));
+		
 		model.addAttribute("list", list);
 		
 		return "/chat/mychats";
 	}
 	
 	@GetMapping("/chat/sale/{id}")
-	public String myChatList(@PathVariable("id") int id, Model model, HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String myChatList(@PathVariable("id") int id, Model model, AuthInfo loginUser) {
 		log.debug("loginUser's ID: " + loginUser.getId());
 		
 		List<Chat> list = chatService.getMyChatsList(id);
@@ -71,9 +79,7 @@ public class ChatController {
 	
 	
 	@GetMapping("/chat/{id}")
-	public String chatView(@PathVariable("id") int id, Model model, HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		
+	public String chatView(@PathVariable("id") int id, Model model, AuthInfo loginUser) {
 		chatService.readChat(id, loginUser.getId());
 		
 		Criteria cri = new Criteria(1, 20);
@@ -91,8 +97,7 @@ public class ChatController {
 	
 	@ResponseBody
 	@GetMapping("/api/chat/message")
-	public List<ChatMessage> chatList(@RequestParam(value = "id", required = true) int chatId, @RequestParam(value = "page", defaultValue = "1") int page, HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public List<ChatMessage> chatList(@RequestParam(value = "id", required = true) int chatId, @RequestParam(value = "page", defaultValue = "1") int page, AuthInfo loginUser) {
 		
 		Criteria criteria = new Criteria(page, 20);
 		chatService.getChatMessages(chatId, criteria);
@@ -103,14 +108,13 @@ public class ChatController {
 	
 	
 	@GetMapping("/go-to-chat")
-	public String goToChatFromSale(@RequestParam(value = "id") int saleId, HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+	public String goToChatFromSale(@RequestParam(value = "id") int saleId, AuthInfo loginUser, RedirectAttributes redirectAttributes, Model model) {
 		
 		Sale sale = null;
 		String loginUserId = null;
 
 		// 로그아웃 상태이거나 해당 글이 없는 경우
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			loginUserId = loginUser.getId();
 			sale = saleService.getSaleById(saleId);
 		} catch (Exception e) {
@@ -136,14 +140,13 @@ public class ChatController {
 	
 	@PostMapping("/chat/room")
 	@ResponseBody
-	public ResponseEntity<Object> createNewRoom(@RequestBody Sale sale, HttpSession session) {
+	public ResponseEntity<Object> createNewRoom(@RequestBody Sale sale, AuthInfo loginUser) {
 		
 		// #{id}, #{sale.id}, #{sale.member.id}, #{buyer.id}
 		Member buyer = null;
 		int chatId = 0;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			buyer = new Member(loginUser.getId());
 			Chat chat = new Chat(sale, buyer);
 			log.debug(chat.toString());
@@ -159,12 +162,11 @@ public class ChatController {
 	
 	@PostMapping("/chat/{id}/upload")
 	@ResponseBody
-	public ResponseEntity<Object> uploadImageFile(@PathVariable(value = "id") int id, @RequestParam(value="imageFile") MultipartFile file, ChatMessage message, HttpSession session) {
+	public ResponseEntity<Object> uploadImageFile(@PathVariable(value = "id") int id, @RequestParam(value="imageFile") MultipartFile file, ChatMessage message, HttpSession session, AuthInfo loginUser) {
 		System.out.println(">> uploadImageFile()");
 		String fileName = null;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			message.setChat(new Chat(id));
 			fileName = chatService.uploadImageMessage(message, file, getRealPath(session));
 		} catch(Exception e) {
@@ -177,12 +179,12 @@ public class ChatController {
 	
 	
 	@PostMapping("/chat/{id}/sold-out")
-	public ResponseEntity<Object> soldOut(@PathVariable(value = "id") int id, HttpServletRequest request) {
+	public ResponseEntity<Object> soldOut(@PathVariable(value = "id") int id, HttpServletRequest request, AuthInfo loginUser) {
 		int res = 0;
 		try {
-			String loginUser = ((AuthInfo) request.getSession().getAttribute("loginUser")).getId();
+			String loginUserID = loginUser.getId();
 			Chat chat = chatService.getChatInfo(id);
-			if(!loginUser.equals(chat.getSale().getMember().getId()) && !loginUser.equals(chat.getBuyer().getId())) {
+			if(!loginUserID.equals(chat.getSale().getMember().getId()) && !loginUserID.equals(chat.getBuyer().getId())) {
 				return ResponseEntity.status(HttpStatus.CONFLICT).body("해당 채팅의 참여자가 아닙니다.");
 			}
 			res = saleService.soldOut(chat.getBuyer(), chat.getSale());

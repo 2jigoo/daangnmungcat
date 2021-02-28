@@ -42,11 +42,10 @@ public class LoginController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login(HttpSession session) {
-		//session.removeAttribute("loginUser");
 		return "/login";
 	}
 	
-	@RequestMapping(value="/login", method=RequestMethod.POST)
+	/*@RequestMapping(value="/login", method=RequestMethod.POST)
 	public String submit(Member member, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		HttpSession session = null;
@@ -70,7 +69,7 @@ public class LoginController {
 			request.setAttribute("msg", "아이디나 비밀번호가 맞지 않습니다.");
 			return "/login";
 		}
-	}
+	}*/
 	
 	@RequestMapping("/logout")
 	public String logout(HttpSession session) {
