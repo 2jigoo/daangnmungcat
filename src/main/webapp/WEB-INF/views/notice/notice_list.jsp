@@ -37,7 +37,7 @@ $(function(){
 
 			<!-- 글 없는 경우 -->
 			<c:if test="${empty notice}">
-				<li class="no_date">등록된 글이 없습니다.</li>
+				<td colspan="3" class="no_date">등록된 글이 없습니다.</td>
 			</c:if>
 		</table>
 	</div>
