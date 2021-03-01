@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.logging.Log;
@@ -14,10 +13,12 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +51,9 @@ public class MypageController {
 	
 	@Autowired
 	private KakaoPayService kakaoService;
+	
+	@Autowired
+	private PasswordEncoder encoder;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -86,6 +90,54 @@ public class MypageController {
 		return map;
 		
 	}
+	
+	//비밀번호 일치 확인
+	@PostMapping("/member/checkPwd")
+	public ResponseEntity<Object> checkPwd(AuthInfo loginUser, @RequestBody Map<String, Object> data) {
+		try {
+			String pwd = (String) data.get("pwd");
+			System.out.println("pwd: " + pwd);
+			
+			Member member = service.selectMemberById(loginUser.getId());
+			boolean res = encoder.matches(pwd, member.getPwd());
+			System.out.println(res);
+			if(res == true) {
+				return ResponseEntity.ok(res);
+			} else {
+				return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	//비밀번호 수정
+	@PutMapping("/member/pwd")
+	public ResponseEntity<Object> updatePwd(AuthInfo loginUser, @RequestBody Map<String, Object> data) {
+		try {
+			String nowPwd = (String) data.get("now_pwd");
+			String newPwd = (String) data.get("new_pwd");
+			
+			System.out.println("nowPwd: " + nowPwd);
+			System.out.println("newPwd: " + newPwd);
+			
+			Member member = service.selectMemberById(loginUser.getId());
+			boolean res = encoder.matches(nowPwd, member.getPwd());
+			System.out.println(res);
+			
+			if(res == true) {
+				member.setPwd(encoder.encode(newPwd));
+				return ResponseEntity.ok(service.updatePwd(member));
+			} else {
+				return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
 	
 	//멤버 모든 정보
 	@GetMapping("/member/info")
@@ -124,7 +176,7 @@ public class MypageController {
 	
 	//비밀번호 변경
 	@PostMapping("/pwd/post")
-	public int updatePwd(@RequestBody String json,AuthInfo info) {
+	public int updatePwd(@RequestBody String json, AuthInfo info) {
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		String pwd = json.toString();
@@ -135,10 +187,25 @@ public class MypageController {
 	
 	//탈퇴
 	@PostMapping("/withdrawal")
-	public int withdraw(@RequestBody String id, HttpSession session) {
-		int res = service.deleteMember(id);
-		session.invalidate();
-		return res;
+	public ResponseEntity<Object> withdraw(AuthInfo loginUser, @RequestBody Map<String, String> data, HttpSession session) {
+		try {
+			String pwd = (String) data.get("pwd");
+			System.out.println("pwd: " + pwd);
+			
+			Member member = service.selectMemberById(loginUser.getId());
+			boolean matches = encoder.matches(pwd, member.getPwd());
+			System.out.println(matches);
+			if(matches == true) {
+				int res = service.deleteMember(member.getId());
+				session.invalidate();
+				return ResponseEntity.ok(res);
+			} else {
+				return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 	
 	

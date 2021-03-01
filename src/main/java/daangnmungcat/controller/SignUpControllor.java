@@ -3,6 +3,7 @@ package daangnmungcat.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,13 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
-import daangnmungcat.service.MileageService;
 import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Log4j2
 public class SignUpControllor {
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	private MemberService service;
 	
@@ -35,6 +38,8 @@ public class SignUpControllor {
 	@PostMapping("/sign-up")
 	public ResponseEntity<Object> newMember(@RequestBody Member member) {
 		try {
+			String password = passwordEncoder.encode(member.getPwd());
+			member.setPwd(password);
 			return ResponseEntity.ok(service.registerMember(member));
 		} catch (DuplicateMemberException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();

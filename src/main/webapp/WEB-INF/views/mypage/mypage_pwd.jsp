@@ -49,27 +49,25 @@ $(function(){
 		}else if(pwd_status == 0){
 			alert('새 비밀번호가 일치하지 않습니다.')
 		}else {
-			if (confirm("비밀번호를 변경하시겠습니까?") == true){
-				$.get(contextPath +"/member/info", function(member){
-					var now = $('#now_pwd').val();
-					if(member.member.pwd != now){
-						alert('현재 비밀번호가 맞지 않습니다.')
-					}else{
-						var pwd = $('#new_pwd').val();
-						$.ajax({
-							url: contextPath + "/pwd/post",
-							type: "post",
-							contentType:"application/json; charset=utf-8",
-							dataType: "json",
-							cache : false,
-							data : JSON.stringify(pwd),
-							success: function() {
-								alert('비밀번호가 변경되었습니다.');
-							},
-							error: function(request,status,error){
-								alert('에러' + request.status+request.responseText+error);
-							}
-						});
+			if (confirm("비밀번호를 변경하시겠습니까?") == true) {
+				var pwd = {
+					now_pwd: $('#now_pwd').val(),
+					new_pwd: $('#new_pwd').val()
+				};
+			
+				$.ajax({
+					url: contextPath + "/member/pwd",
+					type: "PUT",
+					data: JSON.stringify(pwd),
+					contentType: "application/json",
+					success: function(res) {
+						if(res == 1){
+							alert("비밀번호가 변경되었습니다.");
+							location.href = "/mypage/mypage_main";
+						}
+					},
+					error: function(e) {
+						alert("비밀번호가 일치하지 않습니다.");
 					}
 				});
 			} else {

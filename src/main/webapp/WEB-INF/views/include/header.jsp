@@ -142,7 +142,7 @@
 				<ul class="h_util">
 				<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
-				<li><a href="<c:url value="/logout" />"> 로그아웃</a></li>
+				<li><form action="/logout" method="post"><input type="submit" value="로그아웃"></form></li>
 				</ul>
 			</sec:authorize>
 			<ul class="h_util2">

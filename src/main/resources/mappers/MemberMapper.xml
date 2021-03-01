@@ -139,7 +139,7 @@
 	</update>
 	
 	<update id="updatePwd">
-		update member set pwd = #{pwd} where id = #{id}
+		update member set pwd = #{pwd} where id = #{id}	
 	</update>
 	
 	<update id="dongneUpdate" parameterType="map">
