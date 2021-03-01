@@ -1,12 +1,7 @@
 package daangnmungcat.controller.admin;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
@@ -30,7 +21,10 @@ import daangnmungcat.dto.PageMaker;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
+import lombok.extern.log4j.Log4j2;
 
+
+@Log4j2
 @Controller
 public class AdminMileageController {
 	
@@ -106,6 +100,7 @@ public class AdminMileageController {
 	@PostMapping("/admin/mileage/write")
 	public ResponseEntity<Object> writeMileage (@RequestBody Mileage mileage ) {
 		try {
+			log.info(mileage.toString());
 			if(mileage.getMember().getId().equals("all")) {
 				return ResponseEntity.ok(service.insertEventMilege(mileage));
 			}else {
@@ -114,6 +109,5 @@ public class AdminMileageController {
 		} catch (DuplicateMemberException e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
-
 	}
 }

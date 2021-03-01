@@ -199,9 +199,10 @@
 	</delete>
 	
 	<select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">
-		SELECT rownum AS rnum, a.*
+		SELECT *
 		FROM (
 			SELECT
+				rownum AS rnum,
 				js.ID,
 				js.MEM_ID,
 				nickname	as mem_nickname,

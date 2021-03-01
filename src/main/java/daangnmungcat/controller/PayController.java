@@ -45,7 +45,7 @@ import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @Controller
-public class KakaoPayController {
+public class PayController {
 	
 	@Autowired
 	private MemberService memberService;
@@ -56,8 +56,6 @@ public class KakaoPayController {
 	@Autowired
 	private OrderService orderService;
 	
-	@Autowired
-	private MileageService mileService;
 	
 	@GetMapping("/kakao-pay")
 	public void kakaoGet(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
@@ -80,13 +78,6 @@ public class KakaoPayController {
 		
 		mv.setViewName("/mall/order/pay_success");
 		mv.addObject("info", kakao);
-		
-//		Enumeration se = session.getAttributeNames();
-//
-//		while(se.hasMoreElements()){
-//		String getSession = se.nextElement()+"";
-//		System.out.println(" session : "+getSession+" : " + (String)session.getValue(getSession));
-//		}
 
 		return mv;
 	}
@@ -165,6 +156,28 @@ public class KakaoPayController {
 		mv.addObject("list", list);
 		mv.setViewName("/mypage/mypage_order_list");
 	
+		return mv;
+	}
+	
+	//무통장
+	@PostMapping("/accountPay")
+	public String accountPay (HttpServletRequest request, HttpSession session) {
+		log.info("무통장입금 ");
+		return "redirect:" + orderService.accountOrderTransaction(request, session);
+	}
+	
+	@GetMapping("/accountPaySuccess")
+	public ModelAndView accountPaySuccess (HttpServletRequest request, HttpSession session) {
+		log.info("무통장입금 - success");
+		String nextNo = (String) session.getAttribute("orderNo");
+		
+		Order order = orderService.getOrderByNo(nextNo);
+		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
+		order.setDetails(odList);
+		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("order", order);
+		mv.setViewName("/mall/order/pay_account");
 		return mv;
 	}
 	

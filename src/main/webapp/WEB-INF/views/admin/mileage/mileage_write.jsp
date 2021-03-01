@@ -19,6 +19,7 @@ $(function(){
  
 	
 	$("#mileage_add_btn").click(function(e){
+		e.preventDefault();
 		
 		if($("input[name='member.id']").val() == "") {
 			alert("회원 이름을 입력해주세요.")
@@ -51,36 +52,33 @@ $(function(){
 		
 		
 		var mileageWrite = {
-			member : {
-				id : $('#add_member').val()
-			},
-			order : {
-				id : $('#add_odId').val()
-			},
-			content : $('#add_content').val(),
-			mileage : $('#add_mileage').val()
+				member : {
+					id : $('#add_member').val()
+				},
+				order : {
+					id : $('#add_odId').val()
+				},
+				content : $('#add_content').val(),
+				mileage : parseInt($('#add_mileage').val())
 		};
 		
+		
+		console.log(mileageWrite);
 		alert(JSON.stringify(mileageWrite));
-
+		console.log(JSON.stringify(mileageWrite));
 		
 		$.ajax({
 			url: contextPath + "/admin/mileage/write",
 			type: "POST",
-			contentType:"application/json; charset=UTF-8",
-			dataType: "json",
 			cache : false,
 			data : JSON.stringify(mileageWrite),
-			beforeSend : function(xhr)
-	        {   //데이터를 전송하기 전에 헤더에 csrf값을 설정한다
-	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-	        },
+			contentType:"application/json",
 			success: function() {
 				alert('완료되었습니다.');
 				window.location.replace(contextPath+"/admin/mileage/list");
 			},
-			error: function(request,status,error){
-				alert('에러!!!!' + request.status+request.responseText+error);
+			error: function(e){
+				console.log(e);
 			}
 		});
 		console.log(contextPath+"/admin/mileage/write");	

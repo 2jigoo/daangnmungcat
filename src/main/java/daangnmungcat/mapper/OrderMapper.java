@@ -34,6 +34,9 @@ public interface OrderMapper {
 	List<Order> selectCancelOrderById(String id);
 	
 	Payment getPaymentById(String tid);
+	
+	Payment selectAccountPaymentByOrderId(String orderId);
+	
 	Order getOrderByNo(String id);
 	List<OrderDetail> selectOrderDetailByOrderNo(String orderId);
 	OrderDetail getOrderDetailById(String id);
@@ -41,6 +44,7 @@ public interface OrderMapper {
 	int insertOrderDetail(OrderDetail od);
 	int insertOrder(Order order);
 	int insertPayment(Payment pay);
+	int insertAccountPayment(Payment pay);
 	
 	List<OrderDetail> sortingOrderDetail(@Param("orderId")String id);
 	

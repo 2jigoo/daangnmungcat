@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+	<meta name="_csrf" content="${_csrf.token}">
     <title>당근멍캣 - Admin</title>
 
 	<!-- jQuery & DatePicker -->
@@ -19,6 +20,55 @@
    	<script src="/resources/vendor/datepicker/bootstrap-datepicker.js"></script>
 	<script src="/resources/vendor/datepicker/bootstrap-datepicker.ko.min.js"></script>
     
+    <script>
+	    $.ajaxSetup({
+		    error: function(jqXHR, exception) {
+		        if (jqXHR.status === 0) {
+		            alert('Not connect.\n Verify Network.');
+		        } 
+		        else if (jqXHR.status == 400) {
+		            alert('Server understood the request, but request content was invalid. [400]');
+		        } 
+		        else if (jqXHR.status == 401) {
+		            alert("로그인 후 이용해주세요. [401]");
+		        } 
+		        else if (jqXHR.status == 403) {
+		            alert('Forbidden resource can not be accessed. [403]');
+		        } 
+		        else if (jqXHR.status == 404) {
+		            alert('Requested page not found. [404]');
+		        } 
+		        else if (jqXHR.status == 500) {
+		            alert('Internal server error. [500]');
+		        } 
+		        else if (jqXHR.status == 503) {
+		            alert('Service unavailable. [503]');
+		        } 
+		        else if (exception === 'parsererror') {
+		            alert('Requested JSON parse failed. [Failed]');
+		        } 
+		        else if (exception === 'timeout') {
+		            alert('Time out error. [Timeout]');
+		        } 
+		        else if (exception === 'abort') {
+		            alert('Ajax request aborted. [Aborted]');
+		        } 
+		        else {
+		            alert('Uncaught Error.n' + jqXHR.responseText);
+		        }
+		        console.log(exception);
+		    }
+		});
+		
+		var csrfToken = $("meta[name='_csrf']").attr("content");
+		console.log(csrfToken);
+		$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+		    if (options['type'].toLowerCase() === "post" || "put" || "delete") {
+		        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+		    }
+		});
+    </script>
+    
     <!-- Custom fonts for this template-->
     <link href="/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -28,9 +78,10 @@
     <!-- Custom styles for this template-->
     <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="/resources/css/admin_common.css" rel="stylesheet">
+    <link href="/resources/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.css" rel="stylesheet">
  	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.standalone.css" rel="stylesheet">
+    <link href="/resources/css/admin_common.css" rel="stylesheet">
     
 </head>
 <body id="page-top">

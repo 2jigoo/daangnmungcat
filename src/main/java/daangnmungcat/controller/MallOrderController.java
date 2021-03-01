@@ -109,7 +109,6 @@ public class MallOrderController {
 			}
 			
 			totalDeliveryFee += chargedDeliveryFee;
-			System.out.println("합치면:" + totalDeliveryFee);
 		}
 		
 		// 총 배송비
@@ -205,7 +204,6 @@ public class MallOrderController {
 		}
 				
 		totalDeliveryFee += chargedDeliveryFee;
-			System.out.println("합치면:" + totalDeliveryFee);
 		}
 
 
