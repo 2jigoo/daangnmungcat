@@ -1,7 +1,8 @@
 <%@page import="daangnmungcat.dto.Member"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
+
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 #mypage_table { width:800px; margin:0 auto; padding:20px}
@@ -40,4 +41,4 @@ $(document).ready(function(){
 회원 등급 : ${loginUser.getGrade()}
 
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

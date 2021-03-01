@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <div id="subContent">
 	<h2 id="subTitle">${loginUser.nickname}님의 중고 리스트</h2>
@@ -61,4 +61,4 @@
 </div>
 
 
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

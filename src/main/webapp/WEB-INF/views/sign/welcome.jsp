@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 .wrapper {width:800px; margin:0 auto; text-align:center; padding:50px}
 </style>
@@ -11,4 +11,4 @@
  	 	<input type="button" class="button" value="로그인" onclick="location.href='/daangnmungcat/login'"> 
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-<%@ include file="/resources/include/header.jsp" %>
-
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 
    #section_img {
@@ -666,4 +664,4 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		   
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
 td, th {
@@ -447,4 +447,4 @@ function handleThumImgs(){
 	
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

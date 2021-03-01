@@ -47,8 +47,7 @@ public class CartController {
 	
 	// 장바구니 목록
 	@GetMapping("/mall/cart/list")
-	public String cart(@CookieValue(name = "basket_id", required = false) String cookie, HttpSession session, Model model) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String cart(@CookieValue(name = "basket_id", required = false) String cookie, AuthInfo loginUser, Model model) {
 		List<Cart> list = null;
 		Map<String, Integer> deliveryFee = null;
 		
@@ -61,7 +60,6 @@ public class CartController {
 		} else {
 			// 회원
 			list = cartService.getCart(loginUser.getId());
-			
 		}
 		
 		if (list != null) {
@@ -123,12 +121,11 @@ public class CartController {
 	// 장바구니 목록 json
 	@GetMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<List<Cart>> cart(HttpSession session) {
+	public ResponseEntity<List<Cart>> cart(AuthInfo loginUser) {
 		
 		List<Cart> list = null;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			list = cartService.getCart(loginUser.getId());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -141,13 +138,10 @@ public class CartController {
 	// 장바구니 추가
 	@PostMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+	public ResponseEntity<Object> addCartItem(@RequestBody Cart cart, HttpServletRequest request, HttpServletResponse response, AuthInfo loginUser) {
 		// product.id, quantity 넘어옴
 		
 		int res = 0;
-		AuthInfo loginUser = null;
-		
-		loginUser = (AuthInfo) session.getAttribute("loginUser");
 		
 		if(loginUser == null) {
 			Optional<Cookie> cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("basket_id")).findAny();
@@ -218,11 +212,10 @@ public class CartController {
 	// 필요한지는 모르겠음
 	@GetMapping("/mall/cart/{id}")
 	@ResponseBody
-	public ResponseEntity<Cart> getCartItem(@PathVariable("id") int productId, HttpSession session) {
+	public ResponseEntity<Cart> getCartItem(@PathVariable("id") int productId, AuthInfo loginUser) {
 		Cart cart = null;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			cart = cartService.getCartItem(loginUser.getId(), productId);
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -236,12 +229,10 @@ public class CartController {
 	
 	@PutMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Object> modifyCartItem(@RequestBody Cart cart, HttpSession session) {
+	public ResponseEntity<Object> modifyCartItem(@RequestBody Cart cart, AuthInfo loginUser) {
 		int res = 0;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-//			cart.setMember(new Member(loginUser.getId()));
 			log.debug("modify: id - " + cart.getId() + ", quantity: " + cart.getQuantity());
 			res = cartService.modifyQuantity(cart);
 		} catch(Exception e) {
@@ -255,12 +246,10 @@ public class CartController {
 	
 	@DeleteMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Object> deleteCartItem(@RequestBody Cart cart, HttpSession session) {
+	public ResponseEntity<Object> deleteCartItem(@RequestBody Cart cart, AuthInfo loginUser) {
 		int res = 0;
 		
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-//			cart.setMember(new Member(loginUser.getId()));
 			res = cartService.deleteCartItem(cart);
 		} catch(Exception e) {
 			e.printStackTrace();

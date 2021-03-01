@@ -47,8 +47,7 @@ public class JoongoListController {
 	private JoongoSaleService saleService;
 
 	@GetMapping("/joongo_list")
-	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String list(Model model, Criteria cri, AuthInfo loginUser) throws UnsupportedEncodingException {
 		if (loginUser == null) {
 			return "redirect:/joongo_list/all";
 		} else {
@@ -62,10 +61,9 @@ public class JoongoListController {
 	}
 	
 	@GetMapping("/joongo_list/all")
-	public String listAll(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
+	public String listAll(Model model, Criteria cri, AuthInfo loginUser) throws UnsupportedEncodingException {
 		System.out.println(cri);
 		List<Sale> list = saleService.getLists(cri);
-		System.out.println(list);
 		model.addAttribute("list", list);
 		
 		PageMaker pageMaker = new PageMaker();
@@ -136,25 +134,25 @@ public class JoongoListController {
 	
 	//insertForm용 - > 바로글쓰기버튼
 	@GetMapping("joongoSale/addList")
-	public String addListForm(Model model, HttpSession session) {
+	public String addListForm(Model model) {
 		return "joongoSale/addList";
 	}
 	
 	//insertForm용  -> 동네1 선택
 	@GetMapping("/joongoSale/addList/dongne1")
-	public ResponseEntity<Object> dongne1(HttpSession session) {
+	public ResponseEntity<Object> dongne1() {
 		return ResponseEntity.ok(memberService.Dongne1List());
 	}
 	
 	//insertForm용 -> 동네2선택 후
 	@GetMapping("joongoSale/addList/dongne2/{dongne1}")
-	public ResponseEntity<Object> dongne2(@PathVariable int dongne1, HttpSession session) {
+	public ResponseEntity<Object> dongne2(@PathVariable int dongne1) {
 		return ResponseEntity.ok(memberService.Dongne2List(dongne1));
 	}
 	
 	//update용  
 	@GetMapping("/joongoSale/modiList")
-	public String updateForm(@RequestParam int id, Model model, HttpSession session) {
+	public String updateForm(@RequestParam int id, Model model) {
 		Sale sale = saleService.getSaleById(id);
 		List<FileForm> flist = saleService.selectImgPath(id);
 		FileForm thumImg = saleService.selectThumImgPath(id);
@@ -178,16 +176,15 @@ public class JoongoListController {
 	}
 	
 	@GetMapping("joongoSale/delete")
-	public String saleDelete(HttpSession session, Model model, @RequestParam int id) {
+	public String saleDelete(@RequestParam int id) {
 		saleService.deleteJoongoSale(id);
 		return "redirect:/joongo_list/all";
 	}
 	
 	@PostMapping("/joongoSale/insert")
-	public String add(HttpSession session, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
+	public String add(AuthInfo loginUser, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
-		System.out.println("왔나?");
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+		
 		switch (category) {
 		case 1:
 			sale.setDogCate("y");
@@ -204,7 +201,8 @@ public class JoongoListController {
 		}
 
 		sale.setMember(new Member(loginUser.getId()));
-		saleService.insertJoongoSale(sale, fileList, file, request);
+		int res = saleService.insertJoongoSale(sale, fileList, file, request);
+		System.out.println("중고글 작성 결과: " + res);
 		int id = sale.getId();
 		String textUrl = "detailList?id=" + id;
 		model.addAttribute("msg", "등록되었습니다.");
@@ -213,10 +211,9 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/modify")
-	public String modify(HttpSession session, @RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
+	public String modify(@RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		request.setCharacterEncoding("UTF-8");
-		//s.deleteSaleFileBySaleId(id);
-		
+
 		switch (category) {
 		case 1:
 			sale.setDogCate("y");
@@ -241,10 +238,10 @@ public class JoongoListController {
 	
 	// 판매상태 변경
 	@PutMapping("/joongo/sale/{id}/state")
-	public ResponseEntity<Object> modifySaleState(HttpSession session, @PathVariable("id") int id, @RequestBody Sale sale) {
+	public ResponseEntity<Object> modifySaleState(AuthInfo loginUser, @PathVariable("id") int id, @RequestBody Sale sale) {
 		int res = 0;
 		try {
-			Member member = new Member(((AuthInfo) session.getAttribute("loginUser")).getId());
+			Member member = new Member(loginUser.getId());
 			sale.setId(id);
 			sale.setMember(member);
 			log.info("변경할 saleState: " + sale.getSaleState());
@@ -264,7 +261,7 @@ public class JoongoListController {
 
 	@GetMapping("/mypage/joongo/list")
 	public String MypageList(Model model, @RequestParam @Nullable String memId, Criteria cri) {
-		if (!memId.equals("")) {
+		if (memId.length() != 0) {
 			Sale sale = new Sale();
 			sale.setMember(new Member(memId));
 			System.out.println("memID : "+ memId);

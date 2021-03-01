@@ -2,7 +2,7 @@
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <script>
 $(document).ready(function(){
 	
@@ -64,4 +64,4 @@ $(document).ready(function(){
 		</article>
 	</div>
 </div>
-<%@ include file="/resources/include/footer.jsp" %>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

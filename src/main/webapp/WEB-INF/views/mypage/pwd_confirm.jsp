@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 </style>
@@ -32,4 +32,4 @@ $(function(){
 	<input type="button" id="pwd_confirm" value="인증하기">
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

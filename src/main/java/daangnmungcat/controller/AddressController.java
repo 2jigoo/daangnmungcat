@@ -28,11 +28,8 @@ public class AddressController {
 	
 	//배송지관리 - 리스트
 	@GetMapping("/address-list")
-	public List<Address> address(HttpSession session, HttpServletRequest request){
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member loginUser = service.selectMemberById(info.getId());
-		List<Address> list = service.myAddress(loginUser.getId());
+	public List<Address> address(AuthInfo info){
+		List<Address> list = service.myAddress(info.getId());
 		list.stream().forEach(System.out::println);
 		return list;
 	}
@@ -48,9 +45,7 @@ public class AddressController {
 	}
 	//배송지 수정
 	@PostMapping("/member/adddress/post")
-	public int updateMyAddress(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+	public int updateMyAddress(@RequestBody Map<String, Object> map, AuthInfo info, HttpServletRequest request) {
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		String zipcode = map.get("zipcode").toString();

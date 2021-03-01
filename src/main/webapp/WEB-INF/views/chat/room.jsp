@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <script src="${pageContext.request.contextPath }/resources/js/stomp.js"></script>
 <script src="${pageContext.request.contextPath }/resources/js/sockjs.min.js"></script>
 <script>
@@ -272,4 +272,4 @@
 	
 </div>
 <script src="${pageContext.request.contextPath }/resources/js/chat_stomp.js"></script>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

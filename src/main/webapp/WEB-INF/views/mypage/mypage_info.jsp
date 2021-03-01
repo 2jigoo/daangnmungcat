@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 #myPic, #preview {border-radius: 50px; width:40px; height:40px;}
@@ -494,4 +494,4 @@ function execPostCode(){
 </div>
 
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

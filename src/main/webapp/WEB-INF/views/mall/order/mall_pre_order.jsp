@@ -2,7 +2,7 @@
 <%@page import="daangnmungcat.service.MileageService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -298,5 +298,4 @@ function execPostCode(){
 	</form>
 
 
-<jsp:include page="/resources/include/footer.jsp"/>
-	
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

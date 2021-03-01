@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 table {width:800px; margin:0 auto; padding:20px;}
@@ -107,4 +107,4 @@ $(function(){
 
 <input type="button" value="변경" id="pwd_update">
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>
