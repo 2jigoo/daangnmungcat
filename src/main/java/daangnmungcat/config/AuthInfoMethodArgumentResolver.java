@@ -29,7 +29,6 @@ public class AuthInfoMethodArgumentResolver implements HandlerMethodArgumentReso
 			return null;
 		}
 		
-		log.info("HERE IS resolveArgument()");
 		Object principal = auth.getPrincipal();
 		Class<?> parameterType = parameter.getParameterType();
 		if(principal instanceof AuthInfo) {

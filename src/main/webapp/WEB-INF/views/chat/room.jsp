@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="javatime" uri="http://sargue.net/jsptags/time" %>
-<jsp:include page="/resources/include/header.jsp"/>
+<%@ include file="/resources/include/header.jsp" %>
 <script src="${pageContext.request.contextPath }/resources/js/stomp.js"></script>
 <script src="${pageContext.request.contextPath }/resources/js/sockjs.min.js"></script>
 <script>
