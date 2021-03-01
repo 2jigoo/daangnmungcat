@@ -6,9 +6,11 @@ public class Criteria {
 	private int rowStart;
 	private int rowEnd;
 
+	public final static int DEFAULT_PERPAGE_NUM = 20;
+	
 	public Criteria() {
 		this.page = 1;
-		this.perPageNum = 20; // 한 페이지당 보일 수
+		this.perPageNum = DEFAULT_PERPAGE_NUM; // 한 페이지당 보일 수
 	}
 	
 	public Criteria(int page, int perPageNum) {

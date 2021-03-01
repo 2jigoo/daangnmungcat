@@ -21,17 +21,22 @@
 		<result property="finalPrice" column="final_price"></result>
 		<result property="plusMileage" column="plus_mileage"></result>
 		<result property="deliveryPrice" column="delivery_price"></result>
+		<result property="trackingNumber" column="tracking_number"></result>
+		<result property="shippingDate" column="shipping_date"></result>
 		<result property="addDeliveryPrice" column="add_delivery_price"></result>
+		<result property="settleCase" column="settle_case"></result>
 		<result property="returnPrice" column="return_price"></result>
 		<result property="payId" column="pay_id"></result>
-		<result property="payDate" column="regdate"></result>
+		<result property="payDate" column="pay_date"></result>
 		<result property="state" column="state"></result>
-		<result property="ordercnt" column="order_cnt" />
+		<result property="ordercnt" column="order_cnt"></result>
+		<result property="misu" column="misu"></result>
+		<result property="regDate" column="regdate"></result>
 		
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 	</resultMap>
 	
-	<resultMap type="Payment" id="payRes">
+	<resultMap type="Payment" id="kakaoRes">
 		<id property="id" column="id"></id>
 		<result property="member.id" column="mem_id" />
 		<result property="order.id" column="order_id" />
@@ -40,6 +45,20 @@
 		<result property="kakao.payment_method_type" column="pay_type" />
 		<result property="kakao.quantity" column="pay_quantity" />
 		<result property="payState" column="pay_state" />
+		
+		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
+		<association property="order" column="order_id" select="getOrderByNo" fetchType="lazy"/>
+	</resultMap>
+	
+	<resultMap type="Payment" id="payRes">
+		<id property="id" column="id"></id>
+		<result property="member.id" column="mem_id" />
+		<result property="order.id" column="order_id" />
+		<result property="payPrice" column="pay_price" />
+		<result property="payType" column="pay_type" />
+		<result property="quantity" column="pay_quantity" />
+		<result property="payState" column="pay_state" />
+		<result property="payDate" column="pay_date" />
 		
 		<association property="member" column="mem_id" select="daangnmungcat.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 		<association property="order" column="order_id" select="getOrderByNo" fetchType="lazy"/>
@@ -65,13 +84,12 @@
 	
 <!-- sql -->
 	
-	
 	<sql id="orderSql">
-		SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ZIPCODE,
-		ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
-		USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-		ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-		STATE
+		SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
+			ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
+			TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, 
+			SETTLE_CASE, TRACKING_NUMBER, SHIPPING_DATE, ADD_DELIVERY_PRICE, 
+			PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, STATE, MISU, 
 	</sql>
 	<sql id="odSql">
 		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE,
@@ -84,11 +102,16 @@
 	
 	
 <!-- query -->
-	<select id="getPaymentById" resultMap="payRes">
+	<select id="getPaymentById" resultMap="kakaoRes">
 		<include refid="paymentSql"></include>
 		from mall_payment where id = #{id}
 	</select>
 
+	<select id="selectAccountPaymentByOrderId" resultMap="payRes" parameterType="String">
+		<include refid="paymentSql"></include>
+		FROM MALL_PAYMENT WHERE ORDER_ID = #{order.id}
+	</select>
+	
 	<select id="selectOrderDetailByOrderNo" resultMap="sortRes" parameterType="String">
 		<include refid="odSql"></include> 
 		from mall_order_detail where order_id = #{orderId}
@@ -104,22 +127,29 @@
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT mall_order_detail_seq.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO mall_order_detail(ID, MEM_ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE) 
-		VALUES (#{id}, #{member.id}, #{orderId}, #{pdt.id}, #{quantity}, #{pdt.price}, #{totalPrice})
+		INSERT INTO mall_order_detail(ID, MEM_ID, ORDER_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE) 
+		VALUES (#{id}, #{member.id}, #{orderId}, #{pdt.id}, #{quantity}, #{pdt.price}, #{totalPrice}, #{orderState.label})
 		
 	</insert>
 	<insert id="insertOrder">
 			insert into mall_order(ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, 
 				ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
-				TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, PAY_ID)
+				TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, PAY_ID, pay_date, settle_case, state, misu)
 			values (#{id}, #{member.id}, #{member.name}, #{member.email}, #{member.phone}, #{addName},
 				#{zipcode}, #{address1}, #{address2}, #{addPhone1}, #{addPhone2}, #{addMemo}, 
-				#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{trackingNumber}, #{payId} ) 
+				#{totalPrice}, #{usedMileage}, #{finalPrice}, #{plusMileage}, #{deliveryPrice}, #{trackingNumber}, 
+				#{payId}, #{payDate},
+				#{settleCase}, #{state}, #{misu} ) 
 	</insert>
 	
 	<insert id="insertPayment">
 		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
 		values (#{id}, #{member.id}, #{kakao.partner_order_id}, #{kakao.amount.total}, #{kakao.payment_method_type}, #{kakao.quantity})
+	</insert>
+	
+	<insert id="insertAccountPayment">
+		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
+		values (#{id}, #{member.id}, #{order.id}, #{payPrice}, #{payType}, #{quantity})
 	</insert>
 	
 	<select id="selectOrderById" resultMap="orderRes" parameterType="string">
@@ -193,7 +223,7 @@
 	
 	<select id="selectOrderDetailUsingPartCancelByOrderId" resultMap="sortRes" parameterType="string">
 		<include refid="odSql"></include>
-		from mall_order_detail WHERE ORDER_STATE = '결제완료' 
+		from mall_order_detail WHERE ORDER_STATE = '결제완료' or order_state = '입금대기' 
 			AND ORDER_ID = #{orderId} ORDER BY id DESC
 	</select>
 	
@@ -207,8 +237,8 @@
 			FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 				ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 				USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-				ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-				STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER ORDER BY REGDATE desc )B)A
+				ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+				STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER ORDER BY REGDATE desc )B)A
 			WHERE A.RNUM BETWEEN  #{rowStart} AND  #{rowEnd}
 				ORDER BY A.RNUM
 	</select>
@@ -219,8 +249,8 @@
 		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-					STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER )B)A
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER )B)A
 	</select>
 	
 	<select id="selectOrderBySearch" resultMap="orderRes" >
@@ -229,17 +259,17 @@
 				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-					STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 					FROM MALL_ORDER
 					<where>
 						<if test="content != '' and content != null and word != '' and word != null">
 							${content} like '%'|| #{word} ||'%'
 						</if>
-						<if test="stateStr != null ">
+						<if test="stateStr != null and stateStr != ''">
 							and state like '%'|| #{stateStr} ||'%' 
 						</if>
-						<if test="start != null and end != null ">
+						<if test="start != null and start != '' and end != null and end != '' ">
 							and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
 								AND TO_date(#{end}, 'yyyy-MM-dd')+1 
 						</if>
@@ -255,21 +285,21 @@
 			FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 				ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 				USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-				ADD_DELIVERY_PRICE, PAY_ID, REGDATE, RETURN_PRICE,
-				STATE, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+				ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+				STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 			FROM MALL_ORDER 
 				<where>
-						<if test="content != '' and content != null and word != '' and word != null">
-							${content} like '%'|| #{word} ||'%'
-						</if>
-						<if test="stateStr != null ">
-							and state like '%'|| #{stateStr} ||'%' 
-						</if>
-						<if test="start != null and end != null ">
-							and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
-								AND TO_date(#{end}, 'yyyy-MM-dd')+1 
-						</if>
-					</where> 
+					<if test="content != '' and content != null and word != '' and word != null">
+						${content} like '%'|| #{word} ||'%'
+					</if>
+					<if test="stateStr != null and stateStr != ''">
+						and state like '%'|| #{stateStr} ||'%' 
+					</if>
+					<if test="start != null and start != '' and end != null and end != '' ">
+						and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
+							AND TO_date(#{end}, 'yyyy-MM-dd')+1 
+					</if>
+				</where> 
 			)B)A
 	</select>
 	

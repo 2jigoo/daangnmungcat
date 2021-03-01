@@ -147,6 +147,17 @@
 	  ORDER BY js.id desc) b) a
 	</select>
 	
+	<select id="listSearchCount" parameterType="Sale" resultType="int">
+	SELECT count(a.id)
+	  FROM (SELECT rownum AS rnum, b.*
+	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	  <where>
+	  	<if test="member != null">and MEM_ID LIKE '%'||#{member.id}||'%' </if>
+	  </where>
+	  ORDER BY js.id desc) b) a
+	</select>
+	
 	<select id="listCount1" parameterType="map" resultType="int">
 	SELECT count(a.id)
 	  FROM (SELECT rownum AS rnum, b.*

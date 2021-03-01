@@ -5,6 +5,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 public class PageMaker {
 	private int totalCount;
+	private int lastPage;
 	private int startPage;
 	private int endPage;
 	private boolean prev;
@@ -25,6 +26,10 @@ public class PageMaker {
 		return totalCount;
 	}
 
+	public int getLastPage() {
+		return lastPage;
+	}
+	
 	public int getStartPage() {
 		return startPage;
 	}
@@ -50,6 +55,7 @@ public class PageMaker {
 	}
 
 	private void calcData() {
+		lastPage = (int) (Math.ceil(totalCount / (double)cri.getPerPageNum()));
 		endPage = (int) (Math.ceil(cri.getPage() / (double) displayPageNum) * displayPageNum);
 		startPage = (endPage - displayPageNum) + 1;
 
@@ -69,16 +75,22 @@ public class PageMaker {
 	}
 	
 	public String makeSearch(int page) {
-		UriComponents uriComponents =
-				UriComponentsBuilder.newInstance()
-				.queryParam("searchType", ((SearchCriteria) cri).getSearchType())
-				.queryParam("keyword", ((SearchCriteria) cri).getKeyword())
-				.queryParam("startDate", ((SearchCriteria) cri).getStartDate())
-				.queryParam("endDate", ((SearchCriteria) cri).getEndDate())
-				.queryParam("page", page)
-				.queryParam("perPageNum", cri.getPerPageNum())
-				.build();
+		SearchCriteria scri = (SearchCriteria) cri;
+		UriComponentsBuilder builder = 
+			UriComponentsBuilder.newInstance()
+			.queryParam("searchType", scri.getSearchType())
+			.queryParam("keyword", scri.getKeyword())
+			.queryParam("startDate", scri.getStartDate())
+			.queryParam("endDate", scri.getEndDate())
+			.queryParam("page", page)
+			.queryParam("perPageNum", scri.getPerPageNum());
+		
+		if(scri.getParams() != null) {
+			for( String key : scri.getParams().keySet() ){
+	            builder.queryParam(key, scri.getParams().get(key));
+	        }
+		}
 
-		return uriComponents.toUriString();
+		return builder.build().toString();
 	}
 }

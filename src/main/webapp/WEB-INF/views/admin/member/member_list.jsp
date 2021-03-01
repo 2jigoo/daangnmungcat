@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
 	$(document).ready(function() {
@@ -48,11 +49,16 @@
 		}); */
 		
 		
+		$("select[name=state]").change(function(){
+			document.searchForm.submit();
+		});
+		
 		$("select[name=grade]").change(function(){
 			document.searchForm.submit();
 		});
 
 		$("select[name=dongne1]").change(function(){
+			$("select[name=dongne2]").val("");
 			document.searchForm.submit();
 		});
 		
@@ -66,7 +72,6 @@
 				resetDongne2SelectBox();
 				$("#selbox-dongne2").prop("disabled", true);
 			} else {
-				$("#selbox-dongne2").prop("disabled", false);
 				loadDongne2List(this.value);
 			}
 		});
@@ -142,6 +147,15 @@
 			dataType: "json",
 			success: function(data) {
 				appendDongne2SelectBox(data);
+				
+				var thisUrlStr = window.location.href;
+				var thisUrl = new URL(thisUrlStr);
+
+				var dongne2 = thisUrl.searchParams.get("dongne2");
+				if(!dongne2) {
+				} else if(dongne2.length != 0) {
+					$("select[name=dongne2]").val(dongne2);
+				}
 			},
 			error: function(error) {
 				console.log("failed to load dongne2 options");
@@ -151,7 +165,6 @@
 	}
 
 	function resetDongne2SelectBox() {
-		//$("#selbox-dongne2").empty();
 		$("#selbox-dongne2").html("<option value=''>전체</option>");
 	}
 	
@@ -170,6 +183,7 @@
 			options += "<option value='" + item.id + "'>" + item.name + "</option>";			
 		});
 		resetDongne2SelectBox();
+		$("#selbox-dongne2").prop("disabled", false);
 		$("#selbox-dongne2").append(options);
 	}
 	
@@ -188,11 +202,11 @@
 
 		console.log("setFilteringPaging!");
 		console.log(thisUrlStr);
-		//startDate=&endDate=&perPageNum=10&grade=&dongne1=&searchType=phone&keyword=010&page=1
+		
 		var perPageNum = thisUrl.searchParams.get("perPageNum");
+		var state = thisUrl.searchParams.get("state");
 		var grade = thisUrl.searchParams.get("grade");
 		var dongne1 = thisUrl.searchParams.get("dongne1");
-		var dongne2 = thisUrl.searchParams.get("dongne2");
 		var searchType = thisUrl.searchParams.get("searchType");
 		var keyword = thisUrl.searchParams.get("keyword");
 		var startDate = thisUrl.searchParams.get("startDate");
@@ -202,6 +216,10 @@
 		if(perPageNum != null) {
 			$("select[name=perPageNum]").val(perPageNum);
 		}
+		if(!state) {
+		} else if(state.length != 0) {
+			$("select[name=state]").val(state);
+		}
 		if(!searchType) {
 		} else if(searchType.length != 0) {
 			$("select[name=searchType]").val(searchType);
@@ -209,17 +227,12 @@
 		}
 		if(!grade) {
 		} else if(grade.length != 0) {
-			console.log("있잖아요...?");
-			console.log(grade);
 			$("select[name=grade]").val(grade);
 		}
 		if(!dongne1) {
 		} else if(dongne1.length != 0) {
 			$("select[name=dongne1]").val(dongne1);
-		}
-		if(!dongne2) {
-		} else if(dongne2.length != 0) {
-			$("select[name=dongne2]").val(dongne2);
+			loadDongne2List(dongne1);
 		}
 		if(!startDate) {
 		} else if(startDate.length != 0) {
@@ -339,7 +352,17 @@
 								</div>
 								<div class="input-group input-group-sm mr-3">
 									<div class="input-group-sm input-group-prepend">
-										<label class="input-group-text" for="sorter">등급</label>
+										<label class="input-group-text" for="state">상태</label>
+									</div>
+									<select id="selbox-state" name="state" aria-controls="dataTable" class="custom-select custom-select-sm">
+										<option selected value="">전체</option>
+										<option value="y">정상</option>
+										<option value="n">탈퇴</option>
+									</select>
+								</div>
+								<div class="input-group input-group-sm mr-3">
+									<div class="input-group-sm input-group-prepend">
+										<label class="input-group-text" for="grade">등급</label>
 									</div>
 									<select id="selbox-grade" name="grade" aria-controls="dataTable" class="custom-select custom-select-sm">
 										<option selected value="">전체</option>
@@ -379,7 +402,7 @@
 				</form>
 				<!-- 테이블 상단 필터링 끝 -->
 				<!-- 테이블 시작 -->
-				<table class="table table-bordered text-center text-gray-700" id="dataTable" width="100%" cellspacing="0">
+				<table class="table table-bordered text-center text-gray-700 padding-sm middle" id="dataTable" width="100%" cellspacing="0">
 					<thead>
 						<tr>
 							<th width="50px"></th>
@@ -393,14 +416,15 @@
 							<th>마일리지</th>
 							<th>가입일</th>
 							<th>상태</th>
-							<th style="width: 100px; min-width:100px; max-width:100px;">상세보기</th>
+							<th style="width: 104px; min-width:104px; max-width:104px;">상세보기</th>
 							<th style="width: 180px; min-width:180px; max-width:180px;"></th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:if test="${empty list }">
+						<javatime:setZoneId value="Asia/Bangkok" />
 						<tr>
-							<td colspan="12" style="height: 80px; vertical-align: middle;">해당 조건에 부합하는 회원이 존재하지 않습니다.</td>
+							<td colspan="13" style="height: 80px; vertical-align: middle;">해당 조건에 부합하는 회원이 존재하지 않습니다.</td>
 						</tr>
 						</c:if>
 						<c:forEach var="member" items="${list }">
@@ -416,8 +440,8 @@
 							<td>${member.dongne1.name } ${member.dongne2.name }</td>
 							<td>${member.grade.name}</td>
 							<td>${member.mileage}</td>
-							<td>${member.regdate }</td>
-							<td>${member.useYn eq "y" ? "" : "탈퇴"}</td>
+							<td><javatime:format value="${member.regdate }" pattern="yyyy-MM-dd"/></td>
+							<td>${member.useYn eq "y" ? "정상" : "탈퇴"}</td>
 							<td>
 								<a href="#" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">회원 정보</span></a>
 							</td>
@@ -432,83 +456,78 @@
 				<!-- 테이블 끝 -->
 				
 				<!-- 페이징 시작 -->
-				<%-- <div class="row">
+				<div class="row">
 					<div class="col-sm-12 col-md-12" style="text-align: center;">
-						<div class="dataTables_info paging-line">
-							<!-- << -->
+						<div class="dataTables_info">
 							<div class="paging-line">
-								<c:if test="${paging.startPage > 1}">
-									<a href="bookingList.do?nowPage=${paging.startPage -1}&cntPerPage=${paging.cntPerPage}&startDate=${startDate }&endDate=${endDate}&sorter=${sorter}&designer=${designer }&where=${where }&query=${query}">
+								<c:choose>
+									<c:when test="${pageMaker.startPage lt pageMaker.cri.page and pageMaker.startPage ne 1}">
+										<a href="/admin/member/list?${pageMaker.makeSearch(pageMaker.startPage-pageMaker.cri.perPageNum)}">
+											<i class="fas fa-angle-double-left"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
 										<i class="fas fa-angle-double-left"></i>
-									</a>
-								</c:if>
-								<c:if test="${paging.startPage == 1}">
-									<i class="fas fa-angle-double-left"></i>
-								</c:if>
+									</c:otherwise>
+								</c:choose>
 							</div>
-							
-							<!-- 이전페이지 -->
-							<c:choose>
-								<c:when test="${paging.nowPage > 1}">
-									<div class="paging-line">
-										<a href="bookingList.do?nowPage=${paging.nowPage-1}&cntPerPage=${paging.cntPerPage}&startDate=${startDate }&endDate=${endDate}&sorter=${sorter}&designer=${designer }&where=${where }&query=${query}"><i class="fas fa-angle-left"></i></a>
-									</div>
-								</c:when>
-								<c:when test="${paging.nowPage == 1}">
-									<div class="paging-line">
+								
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.cri.page gt 1 }">
+										<a href="/admin/member/list?${pageMaker.makeSearch(pageMaker.cri.page - 1) }">
+											<i class="fas fa-angle-left"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
 										<i class="fas fa-angle-left"></i>
-									</div>
-								</c:when>
-							</c:choose>
-							
-							<!-- 페이지 숫자 -->
-							<c:if test="${paging.total eq 0 }">
+									</c:otherwise>
+								</c:choose>
+							</div>
+							<c:if test="${pageMaker.endPage eq 0 }">
 								<div class="paging-line text-primary" style="font-weight: 1000;">1</div>
 							</c:if>
-							<c:forEach begin="${paging.startPage}" end="${paging.endPage }" var="p">
+							<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage }" var="idx">
 								<c:choose>
-									<c:when test="${p == paging.nowPage }">
-										<div class="paging-line text-primary" style="font-weight: 1000;">${p}</div>
+									<c:when test="${pageMaker.cri.page eq idx }">
+										<div class="paging-line text-primary" style="font-weight: 1000;">${idx }</div>
 									</c:when>
-									<c:when test="${p != paging.nowPage }">
+									<c:otherwise>
 										<div class="paging-line" style="font-weight: 600;">
-										<a href="bookingList.do?nowPage=${p}&cntPerPage=${paging.cntPerPage}&startDate=${startDate }&endDate=${endDate}&sorter=${sorter}&designer=${designer }&where=${where }&query=${query}">${p}</a></div>
-									</c:when>
+											<a href="/admin/member/list${pageMaker.makeSearch(idx)}">${idx}</a>
+										</div>
+									</c:otherwise>
 								</c:choose>
 							</c:forEach>
 							
-							
-							
-							<!-- 다음페이지 -->
-							<c:choose>
-								<c:when test="${paging.nowPage < paging.lastPage}">
-									<div class="paging-line">
-										<a href="bookingList.do?nowPage=${paging.nowPage+1}&cntPerPage=${paging.cntPerPage}&startDate=${startDate }&endDate=${endDate}&sorter=${sorter}&designer=${designer }&where=${where }&query=${query}"><i class="fas fa-angle-right"></i></a>
-									</div>
-								</c:when>
-								<c:when test="${paging.nowPage >= paging.lastPage}">
-									<div class="paging-line">
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.cri.page lt pageMaker.lastPage }">
+										<a href="/admin/member/list${pageMaker.makeSearch(pageMaker.cri.page + 1) }">
+											<i class="fas fa-angle-right"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
 										<i class="fas fa-angle-right"></i>
-									</div>	
-								</c:when>
-							</c:choose>	
+									</c:otherwise>
+								</c:choose>
+							</div>
 							
-							<!-- >> -->
-							<c:if test="${paging.endPage < paging.lastPage }">
-								<div class="paging-line">
-								<a href="bookingList.do?nowPage=${paging.endPage+1 }&cntPerPage=${paging.cntPerPage}&startDate=${startDate }&endDate=${endDate}&sorter=${sorter}&designer=${designer }&where=${where }&query=${query}">
-									<i class="fas fa-angle-double-right"></i></a>
-								</div>
-							</c:if>
-							<c:if test="${paging.endPage == paging.lastPage }">
-								<div class="paging-line">
-									<i class="fas fa-angle-double-right"></i>
-								</div>
-							</c:if>
-						
+							<div class="paging-line">
+								<c:choose>
+									<c:when test="${pageMaker.next eq true}">
+										<a href="/admin/member/list${pageMaker.makeSearch(pageMaker.endPage + 1) }" >
+											<i class="fas fa-angle-double-right"></i>
+										</a>
+									</c:when>
+									<c:otherwise>
+										<i class="fas fa-angle-double-right"></i>
+									</c:otherwise>
+								</c:choose>
+							</div>
 						</div>
 					</div>
-				</div> --%>
+				</div>
 				<!-- 페이징 -->
 			</div>
 			<!-- bootStrap table wrapper-->
@@ -517,9 +536,16 @@
 	</div>
 	<!-- cardBody-->
 	<div class="card-footer">
-		<%-- <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-			전체 ${paging.total }개 중 ${paging.cntPerPage*(paging.nowPage-1) + 1} - ${paging.nowPage > (paging.total/paging.cntPerPage) ? (paging.nowPage-1)*paging.cntPerPage + paging.total%paging.cntPerPage : paging.nowPage*paging.cntPerPage}
-		</div> --%>
+		<div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
+			<c:choose>
+				<c:when test="${empty list }">
+					전체 0개		
+				</c:when>
+				<c:otherwise>
+					전체 ${pageMaker.totalCount }개 중 ${pageMaker.cri.pageStart + 1} - ${pageMaker.cri.page >= pageMaker.lastPage ? pageMaker.cri.pageStart + pageMaker.totalCount%pageMaker.cri.perPageNum : pageMaker.cri.pageStart + pageMaker.cri.perPageNum}
+				</c:otherwise>
+			</c:choose>
+		</div>
 	</div>
 </div>
 

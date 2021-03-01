@@ -221,7 +221,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
             log.info("" + kakaoPayApprovalVO);
             
             //결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
-            orderService.orderTransaction(kakaoPayApprovalVO, request, session);
+            orderService.kakaoOrderTransaction(kakaoPayApprovalVO, request, session);
     		
            return kakaoPayApprovalVO;
         

@@ -24,7 +24,9 @@ public class Payment {
 	private Member member;
 	private Order order; //id, final_price, date
 	private KakaoPayApprovalVO kakao;
+	private int	payPrice; //무통장
 	private String payType;
 	private int quantity;
 	private String payState;
+	private LocalDateTime payDate;
 }

@@ -6,7 +6,8 @@
 <script>
 
 $(document).ready(function(){
- 	
+
+	
 	var state;
 	var start = getParameter('start');
 	var end = getParameter('end');
@@ -40,7 +41,6 @@ $(document).ready(function(){
 		$("select[name='search'").val(content).prop("selected", true);
 		$('#query').prop('value', query);  
 	}
-	
 	
 	
 	$('#searchBtn').on('click', function(){
@@ -211,19 +211,32 @@ function getDateStr(myDate){
 			</div>
 		</div>
 		<hr>
-		<div class="col-sm-12 col-md-6 p-0">
+		<div>
 			<div>
 				<span style="font-weight:bold; margin-right:20px;">주문상태 </span> 
-				<input type="radio" name="order_state" value="전체">전체
-				<input type="radio" name="order_state" value="결제완료">결제완료
-				<input type="radio" name="order_state" value="배송중">배송중
-				<input type="radio" name="order_state" value="배송완료">배송완료
-				<input type="radio" name="order_state" value="구매확정">구매확정
-				<input type="radio" name="order_state" value="부분취소">부분취소
-				<input type="radio" name="order_state" value="환불완료">환불완료
+				<input type="radio" name="order_state" value="전체" checked> 전체 
+				<input type="radio" name="order_state" value="입금대기"> 입금대기 
+				<input type="radio" name="order_state" value="결제완료"> 결제완료 
+				<input type="radio" name="order_state" value="배송중"> 배송중 
+				<input type="radio" name="order_state" value="배송완료"> 배송완료 
+				<input type="radio" name="order_state" value="구매확정"> 구매확정 
+				<input type="radio" name="order_state" value="부분취소"> 부분취소 
+				<input type="radio" name="order_state" value="환불완료"> 환불완료 
 			</div>
-		</div>
-		<div style="width:100%">
+			<hr>
+			<div style="width:100%;">
+				<span style="font-weight:bold; margin-right:20px;"> 결제수단 </span> 
+				<input type="radio" name="pay_type" value="전체" checked> 전체 
+				<input type="radio" name="pay_type" value="무통장"> 무통장
+				<input type="radio" name="pay_type" value="카카오"> KAKAOPAY
+			</div>
+			<hr>
+			<div style="width:100%">
+				<span style="font-weight:bold; margin-right:20px;"> 기타선택 </span> 
+				<input type="radio" name="other" value="미수금"> 미수금
+			</div>
+			<hr>
+			<div style="width:100%">
 				<span style="font-weight:bold; margin-right:20px;"> 주문일자 </span> 
 				<input type="date" id="start_date"> ~ <input type="date" id="end_date">
 				<input type="button" value="오늘" id="today">
@@ -233,11 +246,10 @@ function getDateStr(myDate){
 				<input type="button" value="6개월" id="6month_ago">
 				<input type="button" value="1년" id="1years_ago">
 				<input type="button" value="조회" id="search">
-		
 			</div>
+			<hr>
 		</div>
-	</div>
-		<table class="adm_table_style1">
+		<table class="adm_table_style1" style="padding:20px;">
 			<colgroup>
 				<col width="5%">
 				<col width="12%">
@@ -249,55 +261,67 @@ function getDateStr(myDate){
 				<col width="10%">
 				<col width="15%">
 				<col width="10%">
+				<col width="10%">
 			</colgroup>
 			<thead>
 				<tr>
 					<th rowspan="3">번호</th>
-					<th>주문 번호</th>
+					<th colspan="2">주문 번호</th>
 					<th>주문자</th>
 					<th>주문자전화</th>
 					<th>받는 분</th>
 					<th rowspan="3">결제합계<br>배송비포함</th>
 					<th rowspan="3">주문취소</th>
+					<th rowspan="3">미수금</th>
 					<th rowspan="3">사용한<br>마일리지</th>
 					<th rowspan="3">주문일</th>
 					<th rowspan="3">관리</th>
 				</tr>
 				<tr>
-					<th rowspan="2">결제정보</th>
-					<th>아이디</th>
+					<th rowspan="2">상태</th>
+					<th rowspan="2">결제 수단</th>
+					<th rowspan="2">아이디</th>
 					<th>상품 수</th>
 					<th>누적주문수</th>
+				</tr>
+				<tr>
+					<th>운송장번호</th>
+					<th>배송 일시</th>
 				</tr>
 				
 			</thead>
 			<tbody>
 				<c:forEach var="order" items="${list}" varStatus="status">	
 				<tr>
-				
-					<td rowspan="2">${pageMaker.totalCount - ((pageMaker.cri.page -1) * pageMaker.cri.perPageNum + status.index)}</td>
-					<td>${order.id }</td>
+
+					<td rowspan="3">${pageMaker.totalCount - ((pageMaker.cri.page -1) * pageMaker.cri.perPageNum + status.index)}</td>
+					<td  colspan="2">${order.id }</td>
 					<td>${order.member.name}</td>
 					<td>${order.member.phone}</td>
 					<td>${order.addName}</td>
-					<td rowspan="2">${order.finalPrice }</td>
-					<td rowspan="2">${order.returnPrice}</td>
-					<td rowspan="2">${order.usedMileage}</td>
-					<td rowspan="2">
+					<td rowspan="3">${order.finalPrice }</td>
+					<td rowspan="3">${order.returnPrice}</td>
+					<td rowspan="3">${order.misu}</td>
+					<td rowspan="3">${order.usedMileage}</td>
+					<td rowspan="3">
 						<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            		<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
 					</td>
-					<td rowspan="2">
-						<input type="button" value="보기">
+					<td rowspan="3">
+						<a href="/admin/order?id=${order.id}">보기</a>
 					</td>
 				</tr>
 				<tr>
-					<td>${order.state}</td>
-					<td>${order.member.id}</td>
+					<td rowspan="2">${order.state}</td>
+					<td rowspan="2">${order.settleCase}</td>
+					<td rowspan="2" >${order.member.id}</td>
 					<td>${order.details.size()}</td>
 					<td>${order.ordercnt}건</td>
 				</tr>
-				
+				<tr>
+					<td>${order.trackingNumber} 번호</td>
+					<td>${order.shippingDate} 일시</td>
+				</tr>
 					</c:forEach>
 				
 			</tbody>
@@ -391,5 +415,6 @@ function getDateStr(myDate){
 				  </c:if> 
 			   </c:otherwise>
 		</c:choose>
+	</div>
 		</div>
 <%@ include file="/WEB-INF/views/admin/include/footer.jsp" %>

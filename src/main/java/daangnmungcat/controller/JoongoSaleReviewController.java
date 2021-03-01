@@ -46,6 +46,20 @@ public class JoongoSaleReviewController {
 		return "joongoSale/review_list";
 	}
 	
+	@GetMapping("/mypage/joongo/review/list")
+	public String mypageListReive(Model model, @RequestParam @Nullable String memId) {
+		if (!memId.equals("")) {
+			List<SaleReview> list = service.selectMypageJoongoReviewBySaleMemId(memId);
+			Member saleMember = memberService.selectMemberById(memId);
+			int countMemId = service.countBuyMemId(memId);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("saleMember", saleMember);
+			model.addAttribute("countMemId", countMemId);
+		}
+		return "joongoSale/review_list";
+	}
+	
 	@GetMapping("/joongo/review/write")
 	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId) {
 		if (saleId != null) {

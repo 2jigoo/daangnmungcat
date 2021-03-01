@@ -112,8 +112,14 @@
 		<h1 id="logo"><a href="<c:url value="/" />">당근멍캣</a></h1>
 
 		<div class="h_search">
-			<input type="text" class="text">
-			<input type="submit" class="btn">
+			<form action="/search" method="get">
+				<select name="type">
+					<option value="중고">중고</option>
+					<option value="몰">몰</option>
+				</select>
+				<input type="text" class="text" name="search">
+				<input type="submit" class="btn">
+			</form>
 		</div>
 		
 		<div class="h_util_wrap">

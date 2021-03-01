@@ -28,18 +28,21 @@ public interface OrderService {
 	int searchListCount(String content, String query, String state, String start, String end);
 	
 	/////////////////////////////////////
+	
 	List<Order> selectOrderById(String id);
 	List<Order> selectCancelOrderById(String id);
 	
 	Order getOrderByNo(String id);
 	OrderDetail getOrderDetailById(String id);
 	Payment getPaymentById(String tid);
+	Payment selectAccountPaymentByOrderId(String orderId);
 	
 	int insertOrder(Order order);
 	
 	List<OrderDetail> getOrderDetail(String orderNo);
 
 	int insertPayment(Payment pay);
+	int insertAccountPayment(Payment pay);
 
 	int insertOrderDetail(OrderDetail orderDetail);
 
@@ -49,7 +52,8 @@ public interface OrderService {
 	List<Order> searchByDate(String start, String end, String memId);
 	List<Order> cancelSearchByDate(String start, String end,String memId);
 	
-	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
+	void kakaoOrderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
+	String accountOrderTransaction(HttpServletRequest request, HttpSession session);
 	
 	int updateAllOrderDetail(OrderDetail od, String orderId);
 	int updatePartOrderDetail(OrderDetail od, int id);
