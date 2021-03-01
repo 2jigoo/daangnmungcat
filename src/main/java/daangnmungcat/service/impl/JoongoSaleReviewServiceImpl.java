@@ -58,4 +58,14 @@ public class JoongoSaleReviewServiceImpl implements daangnmungcat.service.Joongo
 		return mapper.deleteJoongoSaleReview(id);
 	}
 
+	@Override
+	public List<SaleReview> selectMypageJoongoReviewBySaleMemId(String memId) {
+		return mapper.selectMypageJoongoReviewBySaleMemId(memId);
+	}
+
+	@Override
+	public int countBuyMemId(String memId) {
+		return mapper.countBuyMemId(memId);
+	}
+
 }

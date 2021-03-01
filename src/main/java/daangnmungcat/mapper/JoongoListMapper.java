@@ -24,6 +24,7 @@ public interface JoongoListMapper {
 	List<Sale> selectDongne2ByAll(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	
 	int listCount();
+	int listSearchCount(Sale sale);
 	int listCount1(@Param("dongne1") String dongne1);
 	int listCount2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	

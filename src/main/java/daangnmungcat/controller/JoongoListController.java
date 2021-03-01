@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -259,5 +260,25 @@ public class JoongoListController {
 	public String picDel(@RequestParam int id, @RequestParam String fileName) throws Exception {
 		saleService.deleteSaleFile(fileName);
 		return "redirect:/joongoSale/modiList?id="+id;
+	}
+
+	@GetMapping("/mypage/joongo/list")
+	public String MypageList(Model model, @RequestParam @Nullable String memId, Criteria cri) {
+		if (!memId.equals("")) {
+			Sale sale = new Sale();
+			sale.setMember(new Member(memId));
+			System.out.println("memID : "+ memId);
+			List<Sale> list = saleService.getListsSearchedBy(sale, cri);
+			model.addAttribute("list", list);
+			
+			PageMaker pageMaker = new PageMaker();
+			pageMaker.setCri(cri);
+			pageMaker.setTotalCount(saleService.listSearchCount(sale));
+			model.addAttribute("pageMaker", pageMaker);
+			
+			System.out.println("listCount : "+ saleService.listSearchCount(sale));
+		}
+		
+		return "/mypage/joongo_list";
 	}
 }

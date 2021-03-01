@@ -18,8 +18,11 @@ public interface JoongoSaleCommentService {
 	
 	List<SaleComment> selectJoongoCommentByAllPage2(Criteria cri);
 	
+	List<SaleComment> selectJoongoCommentSearchByAllPage(@Param("saleComment") SaleComment saleComment, @Param("cri") Criteria cri);
+	
 	int commentCount(int saleId);
 	int commentCount2();
+	int commentSearchCount(SaleComment saleComment);
 	
 	int deleteComment(int commentId);
 	
