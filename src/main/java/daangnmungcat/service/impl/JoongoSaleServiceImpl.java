@@ -346,5 +346,10 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return joongoListMapper.deleteJoongoSale(id);
 	}
 
+	@Override
+	public int listSearchCount(Sale sale) {
+		return joongoListMapper.listSearchCount(sale);
+	}
+
 	
 }

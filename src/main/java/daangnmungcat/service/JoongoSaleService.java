@@ -51,6 +51,7 @@ public interface JoongoSaleService {
 	
 	
 	int listCount();
+	int listSearchCount(Sale sale);
 	int listCountByDongne1(String dongne1);
 	int listCountByDongne2(String dongne1, String dongne2);
 }

@@ -24,6 +24,10 @@
 		<include refid="selectSQL" /> WHERE SALE_MEM_ID = #{memId}
 	</select>
 	
+	<select id="selectMypageJoongoReviewBySaleMemId" resultMap="reviewResult">
+		<include refid="selectSQL" /> WHERE BUY_MEM_ID = #{memId}
+	</select>
+	
 	<select id="selectJoongoReviewBySaleId" resultMap="reviewResult">
 		<include refid="selectSQL" /> WHERE SALE_ID = #{saleId}
 	</select>
@@ -49,5 +53,9 @@
 	
 	<select id="countMemId" resultType="int">
 		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW WHERE SALE_MEM_ID = #{memId}
+	</select>
+	
+	<select id="countBuyMemId" resultType="int">
+		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW WHERE BUY_MEM_ID = #{memId}
 	</select>
 </mapper>

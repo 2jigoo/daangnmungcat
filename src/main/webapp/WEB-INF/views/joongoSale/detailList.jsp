@@ -497,6 +497,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		               </div>
 		            </div>
 		         </a>
+		         <a href="/joongo/review/list?memId=${sale.member.id}">거래후기 보기</a>
 		      </section>
 		      
 		      <section id="section_description">
