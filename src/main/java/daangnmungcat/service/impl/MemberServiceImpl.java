@@ -32,6 +32,8 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 @Service
 public class MemberServiceImpl implements MemberService {
 
+	private static final String UPLOAD_PATH = "resources" + File.separator + "upload" + File.separator + "profile";
+	
 	@Autowired
 	private MemberMapper mapper;
 	
@@ -143,11 +145,16 @@ public class MemberServiceImpl implements MemberService {
 
 	
 	@Override
-	public int deleteProfilePic( HttpServletRequest request, HttpSession session) {		
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = selectMemberById(loginUser.getId());
+	public int deleteProfilePic(String id, File realPath) {		
+		Member member = selectMemberById(id);
 		
-		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
+		/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
+		File dir = new File(realPath, UPLOAD_PATH);
+		
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
 		System.out.println("delete할 Path:" + dir);
 		
 		File files[] = dir.listFiles();
@@ -172,18 +179,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int updateProfilePic(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member member = selectMemberById(info.getId());
+	public int updateProfilePic(String id, MultipartFile[] uploadFile, File realPath) {
+		Member member = selectMemberById(id);
 		
-		String uploadFolder = getFolder(request);
-		System.out.println("uploadPath:" + uploadFolder);
+		/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
+		File dir = new File(realPath, UPLOAD_PATH);
 		
-		File uploadPath = new File(uploadFolder, getFolder(request));
-		
-		if(!uploadPath.exists()) {
-			uploadPath.mkdirs();
+		if(!dir.exists()) {
+			dir.mkdirs();
 		}
 		
 		for(MultipartFile multipartFile : uploadFile) {
@@ -204,7 +207,7 @@ public class MemberServiceImpl implements MemberService {
 			//UUID uuid = UUID.randomUUID();
 			//uploadFileName = uuid.toString() + "_" + uploadFileName;
 			
-			File saveFile = new File(uploadFolder, uploadFileName);
+			File saveFile = new File(dir, uploadFileName);
 			
 			try {
 				multipartFile.transferTo(saveFile);
@@ -219,11 +222,11 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.updateProfilePic(member);
 	}
 	
-	
+	/*
 	private String getFolder(HttpServletRequest request) {
 		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
 		return path;
-	}
+	}*/
 
 	@Override
 	public int updateProfileText(Member member) {

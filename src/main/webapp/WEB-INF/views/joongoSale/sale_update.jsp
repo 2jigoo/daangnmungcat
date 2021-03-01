@@ -31,6 +31,7 @@ textarea {
 	float: left;
 }
 
+
 #hidden{
 	color:#ff7e15;
 }

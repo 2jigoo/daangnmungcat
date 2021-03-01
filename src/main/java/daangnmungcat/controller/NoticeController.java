@@ -34,7 +34,7 @@ public class NoticeController {
 	private MileageService mService;
 	
 	@GetMapping("/notice")
-	public String list(Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
+	public String list(Model model, Criteria cri) throws UnsupportedEncodingException {
 
 		System.out.println(cri);
 		List<Notice> notice = mapper.selectNoticeByAllPage(cri);
@@ -49,8 +49,8 @@ public class NoticeController {
 		return "/notice/notice_list";
 	}
 	
-	@RequestMapping(value = "notice/view", method = RequestMethod.GET)
-	public String list2(@RequestParam int id,Model model, Criteria cri, HttpSession session) throws UnsupportedEncodingException {
+	@GetMapping("/notice/view")
+	public String list2(@RequestParam int id,Model model, Criteria cri) throws UnsupportedEncodingException {
 		
 		Notice notice = mapper.selectNoticeByNo(id);
 		model.addAttribute("notice", notice);

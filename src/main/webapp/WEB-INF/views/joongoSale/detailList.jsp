@@ -569,7 +569,13 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 			               <c:forEach items="${mlist }" var="mlist">
 			                  <li>
 			                     <a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
-			                        <div class="section_img"><img src="<%=request.getContextPath()%>/resources/${mlist.thumImg}"></div>
+			                        <div class="section_img">
+			                        	<c:if test="${empty mlist.thumImg}">
+											<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg"></div>
+										</c:if>
+										<c:if test="${not empty mlist.thumImg}">
+											<img src="<%=request.getContextPath() %>/resources/${mlist.thumImg}"></div>
+										</c:if>
 			                        <div class="section_txt">
 			                           <p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
 			                           <p class="section_subject">${mlist.title}</p>

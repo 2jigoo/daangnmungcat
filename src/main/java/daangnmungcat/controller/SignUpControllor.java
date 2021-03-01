@@ -1,11 +1,8 @@
 package daangnmungcat.controller;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,17 +13,15 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
+import lombok.extern.log4j.Log4j2;
 
 @RestController
+@Log4j2
 public class SignUpControllor {
-	private static final Log log = LogFactory.getLog(SignUpControllor.class);
 
 	@Autowired
 	private MemberService service;
 	
-	@Autowired
-	private MileageService mileService;
-
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
 		return ResponseEntity.ok(service.Dongne1List());

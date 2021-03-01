@@ -54,14 +54,11 @@ public class OrderServiceImpl implements OrderService{
 
 	@Transactional
 	@Override
-	public void kakaoOrderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session) {
-		
+	public void kakaoOrderTransaction(String memberId, String pg_token, KakaoPayApprovalVO kakao, HttpSession session) {
 		//order, payment의 pay - id
 		System.out.println("TID:" + kakao.getTid());
 		
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member loginUser = memberService.selectMemberById(info.getId());
+		Member loginUser = memberService.selectMemberById(memberId);
 
 		//pre-order -> 주문한거만 담은 새로운 cartList
 		List<Cart> cartList =  (ArrayList)session.getAttribute("cart");
@@ -139,7 +136,7 @@ public class OrderServiceImpl implements OrderService{
 		
 		
 		//결제정보 얻어오기
-		String pg_token = request.getParameter("pg_token");
+//		String pg_token = request.getParameter("pg_token");
 		System.out.println("pg_token: " + pg_token);
 		System.out.println("결제정보:" + kakao);
 		
@@ -365,13 +362,11 @@ public class OrderServiceImpl implements OrderService{
 
 	@Transactional
 	@Override
-	public String accountOrderTransaction(HttpServletRequest request, HttpSession session) {
+	public String accountOrderTransaction(String memberId, HttpServletRequest request, HttpSession session) {
 		
 		// od, order, mileage 처리 -> admin에서 입금완료로 상태 변경하면 payment 테이블에 추가
 		
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member loginUser = memberService.selectMemberById(info.getId());
+		Member loginUser = memberService.selectMemberById(memberId);
 
 		//pre-order -> 주문한거만 담은 새로운 cartList
 		List<Cart> cartList =  (ArrayList)session.getAttribute("cart");

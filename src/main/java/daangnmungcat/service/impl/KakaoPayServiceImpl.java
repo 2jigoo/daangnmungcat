@@ -21,17 +21,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
 
-import daangnmungcat.controller.CartController;
-import daangnmungcat.dto.AuthInfo;
-import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
@@ -67,11 +62,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     private KakaoPayCancel kakaoPayCancel;
     
     
-    public String kakaoPayReady(HttpServletRequest request, HttpSession session) {
+    @Override
+    public String kakaoPayReady(String memberId, HttpServletRequest request, HttpSession session) {
     	log.info("kakao - ready");
-    	AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = service.selectMemberById(loginUser.getId());
-
+		Member member = service.selectMemberById(memberId);
     	
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String today = sdf.format(new Date());
@@ -162,7 +156,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
             kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/ready"), body, KakaoPayReadyVO.class);
            
-            
             log.info("" + kakaoPayReadyVO);
             return kakaoPayReadyVO.getNext_redirect_pc_url();
  
@@ -180,16 +173,15 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         
     }
     
-    
+    @Override
     @Transactional
-    public KakaoPayApprovalVO kakaoPayApprovalInfo(String pg_token, HttpServletRequest request, HttpSession session) {
+    public KakaoPayApprovalVO kakaoPayApprovalInfo(String memberId, String pg_token, HttpServletRequest request, HttpSession session) {
     	
     	
         log.info("KakaoPayInfoVO............................................");
         log.info("-----------------------------");
         
-        AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = service.selectMemberById(loginUser.getId());
+		Member member = service.selectMemberById(memberId);
 		
 		String finalPrice = (String) session.getAttribute("final_price");
 		String nextNo = (String) session.getAttribute("nextOrderNo");
@@ -221,7 +213,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
             log.info("" + kakaoPayApprovalVO);
             
             //결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
-            orderService.kakaoOrderTransaction(kakaoPayApprovalVO, request, session);
+            orderService.kakaoOrderTransaction(memberId, pg_token, kakaoPayApprovalVO, session);
     		
            return kakaoPayApprovalVO;
         
@@ -241,25 +233,24 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     
 	@Override
 	@Transactional
-	public String kakaoPayCancel(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
+	public String kakaoPayCancel(String memberId, @RequestBody Map<String, String> map) {
 		
 		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 
 		//금액오버시 오류 자동
 		
 		log.info("kakao-cancel ");
 		
-		Map<String, String> json = (Map<String, String>) session.getAttribute("map") ;
+//		Map<String, String> json = (Map<String, String>) session.getAttribute("map") ;
 		
-		String tid = json.get("tid");
-		String partner_order_id = json.get("partner_order_id");
-		String cancel_amount = json.get("cancel_amount");
-		String first_pdt = json.get("first_pdt");
-		String qtt =  json.get("order_qtt");
+		String tid = map.get("tid");
+		String partner_order_id = map.get("partner_order_id");
+		String cancel_amount = map.get("cancel_amount");
+		String first_pdt = map.get("first_pdt");
+		String qtt =  map.get("order_qtt");
 		int order_qtt = Integer.parseInt(qtt);
 		System.out.println(cancel_amount);
 		
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = service.selectMemberById(loginUser.getId());
+		Member member = service.selectMemberById(memberId);
 
 		RestTemplate restTemplate = new RestTemplate();
         
@@ -351,10 +342,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	}
 	
 	
+	@Override
 	@Transactional
-	public String kakaoPayPartCancel(@RequestBody Map<String, String> map,HttpServletRequest request, HttpSession session) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = service.selectMemberById(loginUser.getId());
+	public String kakaoPayPartCancel(String memberId, Map<String, String> map) {
+		Member member = service.selectMemberById(memberId);
 		
 		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 -> 안해도되는듯
 		//전체 결제 금액오버시 exception 자동, 모두 부분취소 -> cancel_pay로 됨
@@ -362,14 +353,14 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		log.info("kakao - part cancel ");
 		
-		Map<String, String> json = (Map<String, String>) session.getAttribute("map") ;
+//		Map<String, String> json = (Map<String, String>) session.getAttribute("map") ;
 		
-		String tid = json.get("tid");
-		String partner_order_id = json.get("partner_order_id");
+		String tid = map.get("tid");
+		String partner_order_id = map.get("partner_order_id");
 		//String cancel_amount = json.get("cancel_amount");
-		String first_pdt = json.get("first_pdt");
-		String qtt =  json.get("order_qtt");
-		String od_id = json.get("od_id");
+		String first_pdt = map.get("first_pdt");
+		String qtt =  map.get("order_qtt");
+		String od_id = map.get("od_id");
 		
 		RestTemplate restTemplate = new RestTemplate();
         
@@ -385,7 +376,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
        
         List<OrderDetail> newOdList = orderService.selectOrderDetailUsingPartCancelByOrderId(partner_order_id); 
         
-        kakaoPayApprovalVo = kakaoPayInfo(tid, request, session);
+        kakaoPayApprovalVo = kakaoPayInfo(tid);
         kakaoPayApprovalVo.setItem_name(first_pdt);
         
         String cancel_amount = null;
@@ -393,7 +384,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
     		cancel_amount = String.valueOf(kakaoPayApprovalVo.getCancel_available_amount().getTotal());
     		System.out.println("1개남았을때 남은금액:" + cancel_amount);
     	} else {
-    		cancel_amount = json.get("cancel_amount");
+    		cancel_amount = map.get("cancel_amount");
     	}
     	System.out.println(cancel_amount);
         
@@ -487,7 +478,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
 	//결제 정보
 	@Override
-	public KakaoPayApprovalVO kakaoPayInfo(String tid, HttpServletRequest request, HttpSession session) {
+	public KakaoPayApprovalVO kakaoPayInfo(String tid) {
 		log.info("kakao - info");
 		System.out.println(tid);
 		RestTemplate restTemplate = new RestTemplate();

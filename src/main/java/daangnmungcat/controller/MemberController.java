@@ -26,12 +26,10 @@ public class MemberController {
 	
 	@PostMapping("/dongneUpdate")
 	@ResponseBody
-	public ResponseEntity<Object> dongneUpdate(@RequestBody Member member, HttpSession session){
+	public ResponseEntity<Object> dongneUpdate(@RequestBody Member member, AuthInfo loginUser){
 		try {
-			AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
 			loginUser.setDongne1(member.getDongne1());
 			loginUser.setDongne2(member.getDongne2());
-			session.setAttribute("loginUser", loginUser);
 			
 			return ResponseEntity.ok(service.dongneUpdate(member.getId(), member.getDongne1(), member.getDongne2()));
 		} catch (DuplicateMemberException e) {

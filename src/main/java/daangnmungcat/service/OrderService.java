@@ -52,8 +52,8 @@ public interface OrderService {
 	List<Order> searchByDate(String start, String end, String memId);
 	List<Order> cancelSearchByDate(String start, String end,String memId);
 	
-	void kakaoOrderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
-	String accountOrderTransaction(HttpServletRequest request, HttpSession session);
+	void kakaoOrderTransaction(String memberId, String pg_token, KakaoPayApprovalVO kakao, HttpSession session);
+	String accountOrderTransaction(String memberId, HttpServletRequest request, HttpSession session);
 	
 	int updateAllOrderDetail(OrderDetail od, String orderId);
 	int updatePartOrderDetail(OrderDetail od, int id);

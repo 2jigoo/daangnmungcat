@@ -1,5 +1,6 @@
 package daangnmungcat.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,23 +53,21 @@ public class MypageController {
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
-	public int defaultSetProfile(HttpServletRequest request, HttpSession session) {
-		int res = service.deleteProfilePic(request, session);
+	public int defaultSetProfile(AuthInfo info, HttpSession session) {
+		int res = service.deleteProfilePic(info.getId(), getRealPath(session));
 		return res;
 	}
 	
 	//프로필 사진 변경
 	@PostMapping("/profile/post")
-	public int uploadProfile(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
-		int res = service.updateProfilePic(uploadFile, session, request);
+	public int uploadProfile(AuthInfo info, MultipartFile[] uploadFile, HttpSession session) {
+		int res = service.updateProfilePic(info.getId(), uploadFile, getRealPath(session));
 		return res;
 	}
 
 	//프로필소개 변경
 	@PostMapping("/profile-text/post")
-	public int updateProfileText(@RequestBody String json, HttpSession session, HttpServletRequest request) throws ParseException {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+	public int updateProfileText(@RequestBody String json, AuthInfo info) throws ParseException {
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		String text = json.toString();
@@ -79,9 +78,7 @@ public class MypageController {
 	
 	//내 프로필사진만 가져오기
 	@GetMapping("/member/pic")
-	public Map<String, String> profilePic(HttpSession session, HttpServletRequest request) throws ParseException {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public Map<String, String> profilePic(AuthInfo loginUser) throws ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		String path = member.getProfilePic();
 		Map<String, String> map = new HashMap<>();
@@ -92,9 +89,7 @@ public class MypageController {
 	
 	//멤버 모든 정보
 	@GetMapping("/member/info")
-	public Map<String, Object> memberInfo(HttpSession session, HttpServletRequest request) throws ParseException {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public Map<String, Object> memberInfo(AuthInfo loginUser) throws ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("member", member);
@@ -117,13 +112,11 @@ public class MypageController {
 	
 	//폰번호 변경
 	@PostMapping("/phone/post")
-	public int updatePhone(@RequestBody String json, HttpSession session, HttpServletRequest request) throws ParseException {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+	public int updatePhone(@RequestBody String json, AuthInfo info) throws ParseException {
 		Member loginUser = service.selectMemberById(info.getId());
-		
 		String phone = json.toString();
 		loginUser.setPhone(phone);
+		
 		int res = service.updatePhone(loginUser);
 		System.out.println("폰번호변경:" + res);
 		return res;
@@ -131,9 +124,7 @@ public class MypageController {
 	
 	//비밀번호 변경
 	@PostMapping("/pwd/post")
-	public int updatePwd(@RequestBody String json, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
+	public int updatePwd(@RequestBody String json,AuthInfo info) {
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		String pwd = json.toString();
@@ -154,9 +145,7 @@ public class MypageController {
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView orderList(HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public ModelAndView orderList(AuthInfo loginUser) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		List<Order> list = orderService.selectOrderById(member.getId());
@@ -177,9 +166,7 @@ public class MypageController {
 	}
 	
 	@GetMapping("/mypage/mypage_order_list/start={start}/end={end}")
-	public ModelAndView searchOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public ModelAndView searchOrder(@PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		
@@ -200,9 +187,7 @@ public class MypageController {
 	}
 	
 	@GetMapping("/mypage/mypage_order_list/{id}")
-	public ModelAndView getOrderNo(@PathVariable String id, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public ModelAndView getOrderNo(@PathVariable String id, AuthInfo loginUser) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		Order order = orderService.getOrderByNo(id);
@@ -220,9 +205,7 @@ public class MypageController {
 	
 	
 	@GetMapping("/mypage/mypage_order_cancel_list")
-	public ModelAndView getCancelOrder(HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public ModelAndView getCancelOrder(AuthInfo loginUser) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		List<Order> list = orderService.selectCancelOrderById(member.getId());
@@ -243,9 +226,7 @@ public class MypageController {
 
 	
 	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
-	public ModelAndView searchCancelOrder(@PathVariable String start, @PathVariable String end, HttpSession session, HttpServletRequest request) throws java.text.ParseException {
-		session = request.getSession();
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public ModelAndView searchCancelOrder(@PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		
@@ -267,13 +248,17 @@ public class MypageController {
 	
 	//결제정보 조회
 	@GetMapping("/kakao-info/{tid}/")
-	public ModelAndView kakaoPayinfo(@PathVariable String tid, HttpServletRequest request, HttpSession session) {
-		KakaoPayApprovalVO vo = kakaoService.kakaoPayInfo(tid, request, session);
+	public ModelAndView kakaoPayinfo(@PathVariable String tid) {
+		KakaoPayApprovalVO vo = kakaoService.kakaoPayInfo(tid);
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("info", vo);
 		mv.setViewName("/mypage/pay_info");
 		
 		return mv;
+	}
+	
+	private File getRealPath(HttpSession session) {
+		return new File(session.getServletContext().getRealPath("")); 
 	}
 }

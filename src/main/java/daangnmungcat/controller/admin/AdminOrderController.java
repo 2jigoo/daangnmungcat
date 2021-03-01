@@ -80,7 +80,7 @@ public class AdminOrderController {
 	}
 	
 	@GetMapping("/admin/order")
-	public ModelAndView orderList(@RequestParam String id, HttpServletRequest request, HttpSession session) {
+	public ModelAndView orderList(@RequestParam String id) {
 		
 		System.out.println("id:" + id);
 		
@@ -96,7 +96,7 @@ public class AdminOrderController {
 		System.out.println("pay:" + pay);
 		
 		if(order.getPayId() != null) {
-			kakao = kakaoService.kakaoPayInfo(order.getPayId(), request, session);
+			kakao = kakaoService.kakaoPayInfo(order.getPayId());
 		}else {
 			pay = orderService.selectAccountPaymentByOrderId(order.getId());
 		}
