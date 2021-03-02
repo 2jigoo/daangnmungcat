@@ -1,10 +1,13 @@
 package daangnmungcat.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -163,14 +166,6 @@ public class OrderServiceImpl implements OrderService{
 			usedMile = usedMile.replace("-", "");
 		}
 		
-		/*
-		Mileage plus = new Mileage();
-		plus.setMember(loginUser);
-		plus.setOrder(order);
-		plus.setMileage(Integer.parseInt(plus_mile));
-		plus.setContent("상품 구매 적립");
-		mileService.insertMilegeInfo(plus);
-		*/
 		
 		Mileage minus = new Mileage();
 		minus.setMember(loginUser);
@@ -494,6 +489,91 @@ public class OrderServiceImpl implements OrderService{
 	public Payment selectAccountPaymentByOrderId(String orderId) {
 		// TODO Auto-generated method stub
 		return mapper.selectAccountPaymentByOrderId(orderId);
+	}
+
+	@Transactional
+	@Override
+	public int adminInsertPaymentAndOrderUpdate(Map<String, String> map) {
+		log.info("admin insert pay & update order");
+		int res = 0;
+		//2021-03-03 00:33:07
+		String price = map.get("price");
+		int payPrice = Integer.parseInt(price);
+		System.out.println(price);
+		String depositor = map.get("depositor");
+		String payDate = map.get("payDate");
+		String order = map.get("order");
+		String qtt = map.get("qtt");
+		String returnPrice = map.get("returnPrice");
+		
+		Order o = getOrderByNo(order);
+		
+		String trackingNumber = null;
+		String shippingDate = null;
+		
+		if(map.get("trackingNum") != null && map.get("trackingNum") != "") {
+			trackingNumber = map.get("trackingNum");
+			o.setTrackingNumber(trackingNumber);
+			
+		}
+		
+		if(map.get("shippingDate") != null && map.get("shippingDate") != "") {
+			shippingDate = map.get("shippingDate");
+			o.setShippingDate(LocalDateTime.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+		}
+		
+		Member member = null;
+		if(depositor != null) {
+			member = memberService.selectMemberById(depositor);
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String today = sdf.format(new Date());
+		Random rand = new Random();
+		String numStr = "";
+		for (int i = 0; i < 6; i++) {
+			String ran = Integer.toString(rand.nextInt(10));
+			numStr += ran;
+		}
+		String payId = today + numStr;
+		
+		//pay가 null이면 insert, 있으면 update
+		Payment pay = selectAccountPaymentByOrderId(o.getId());
+		System.out.println(pay);
+		if(pay != null) {
+			pay.setMember(member);
+			pay.setPayPrice(payPrice);
+			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			pay.setPayState(o.getState());
+			pay.setPayType("무통장입금");
+			pay.setQuantity(Integer.parseInt(qtt));
+			log.info("update pay");
+			res += updatePayment(pay, pay.getId());
+		}else {
+			Payment newPay = new Payment();
+			System.out.println("새로운 payId: " + payId);
+			newPay.setId(payId);
+			newPay.setMember(member);
+			newPay.setOrder(o);
+			newPay.setPayPrice(Integer.parseInt(price));
+			newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			newPay.setPayState(o.getState());
+			newPay.setPayType("무통장입금");
+			newPay.setQuantity(Integer.parseInt(qtt));
+			System.out.println(pay);
+			log.info("insert pay");
+			res += insertAccountPayment(pay);
+		}
+		
+		System.out.println(res);
+		
+		//미수금 = final - 입금액
+		o.setMisu(o.getFinalPrice() - payPrice);
+		o.setReturnPrice(Integer.parseInt(returnPrice));
+	
+		res += updateOrder(o, o.getId());
+		
+		return res;
 	}
 
 

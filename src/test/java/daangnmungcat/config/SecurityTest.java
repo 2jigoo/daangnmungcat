@@ -62,7 +62,7 @@ public class SecurityTest {
 		System.out.println(passwordEncoder.matches("password", "{bcrypt}$2a$10$7ELeUG5rUnOD.6GAY4Ivlud0MyFhFW.HsaCgcL5uW3xQERlMhUtqe"));
 	}
 	
-//	@Test
+	@Test
 	public void updatePasswordEncoded() {
 		Map encoders = new HashMap<>();
 		

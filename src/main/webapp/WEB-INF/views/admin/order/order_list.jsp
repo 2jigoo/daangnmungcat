@@ -250,43 +250,44 @@ function getDateStr(myDate){
 			<hr>
 		</div>
 		<table class="adm_table_style1" style="padding:20px;">
-			<colgroup>
-				<col width="5%">
-				<col width="12%">
-				<col width="10%">
-				<col width="12%">
-				<col width="10%">
-				<col width="12%">
-				<col width="10%">
-				<col width="10%">
+			<!-- <colgroup>
+				<col width="3%">
 				<col width="15%">
+				<col width="7%">
+				<col width="7%">
 				<col width="10%">
 				<col width="10%">
-			</colgroup>
+				<col width="7%">
+				<col width="7%">
+				<col width="7%">
+				<col width="7%">
+				<col width="12%">
+				<col width="5%">
+			</colgroup> -->
 			<thead>
 				<tr>
-					<th rowspan="3">번호</th>
-					<th colspan="2">주문 번호</th>
-					<th>주문자</th>
-					<th>주문자전화</th>
-					<th>받는 분</th>
-					<th rowspan="3">결제합계<br>배송비포함</th>
-					<th rowspan="3">주문취소</th>
-					<th rowspan="3">미수금</th>
-					<th rowspan="3">사용한<br>마일리지</th>
-					<th rowspan="3">주문일</th>
-					<th rowspan="3">관리</th>
+					<th rowspan="3" width="3%">번호</th>
+					<th colspan="2" width="15%">주문 번호</th>
+					<th width="7%">주문자</th>
+					<th width="10%">주문자전화</th>
+					<th width="7%">받는 분</th>
+					<th rowspan="3" width="7%">결제합계<br>배송비포함</th>
+					<th rowspan="3" width="7%">주문취소</th>
+					<th rowspan="3" width="7%">미수금</th>
+					<th rowspan="3" width="7%">사용한<br>마일리지</th>
+					<th rowspan="3" width="10%">주문일</th>
+					<th rowspan="3"  width="5%">관리</th>
 				</tr>
 				<tr>
-					<th rowspan="2">상태</th>
-					<th rowspan="2">결제 수단</th>
-					<th rowspan="2">아이디</th>
-					<th>상품 수</th>
-					<th>누적주문수</th>
+					<th rowspan="2" width="7%">상태</th>
+					<th rowspan="2" width="7%">결제 수단</th>
+					<th rowspan="2" width="7%">아이디</th>
+					<th width="10%">상품 수</th>
+					<th width="7%">누적주문수</th>
 				</tr>
 				<tr>
-					<th>운송장번호</th>
-					<th>배송 일시</th>
+					<th width="10%">운송장번호</th>
+					<th width="10%">배송 일시</th>
 				</tr>
 				
 			</thead>
@@ -304,7 +305,7 @@ function getDateStr(myDate){
 					<td rowspan="3">${order.misu}</td>
 					<td rowspan="3">${order.usedMileage}</td>
 					<td rowspan="3">
-						<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+						<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            		<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
 					</td>
 					<td rowspan="3">
@@ -319,8 +320,11 @@ function getDateStr(myDate){
 					<td>${order.ordercnt}건</td>
 				</tr>
 				<tr>
-					<td>${order.trackingNumber} 번호</td>
-					<td>${order.shippingDate} 일시</td>
+					<td>${order.trackingNumber}</td>
+					<td>
+						<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            		<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
+					</td>
 				</tr>
 					</c:forEach>
 				

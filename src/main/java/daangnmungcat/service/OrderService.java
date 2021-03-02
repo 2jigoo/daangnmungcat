@@ -45,7 +45,7 @@ public interface OrderService {
 	int insertAccountPayment(Payment pay);
 
 	int insertOrderDetail(OrderDetail orderDetail);
-
+	int adminInsertPaymentAndOrderUpdate(Map<String, String> map);
 
 	List<OrderDetail> sortingOrderDetail(String id);
 	

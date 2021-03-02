@@ -416,7 +416,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
          	order.setDetails(odList);
          	
          	OrderDetail od = orderService.getOrderDetailById(od_id);
-         	od.setOrderState(OrderState.PART_CANCEL);
+         	od.setOrderState(OrderState.CANCEL);
          
          	order.setState("부분취소");
          	order.setReturnPrice(order.getReturnPrice() + Integer.parseInt(cancel_amount));

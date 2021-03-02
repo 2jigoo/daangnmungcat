@@ -218,9 +218,9 @@ CREATE TABLE MALL_PAYMENT (
 	order_id varchar2(20) NOT NULL, /* 주문서아이디 */
 	pay_price NUMBER(10) NOT NULL, /* 결제금액 */
 	pay_date DATE DEFAULT SYSDATE, /* 결제일시 */
-	pay_type VARCHAR2(1500) NOT NULL, /* 결제방법 */
-	pay_quantity NUMBER(12) NOT NULL, /* 수량 */
-	pay_state VARCHAR2(30) DEFAULT '결제완료'
+	pay_type VARCHAR2(1500) , /* 결제방법 */
+	pay_quantity NUMBER(12), /* 수량 */
+	pay_state VARCHAR2(30)
 );
 
 

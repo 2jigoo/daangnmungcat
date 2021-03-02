@@ -148,8 +148,8 @@
 	</insert>
 	
 	<insert id="insertAccountPayment">
-		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY)
-		values (#{id}, #{member.id}, #{order.id}, #{payPrice}, #{payType}, #{quantity})
+		insert into mall_payment(ID, MEM_ID, ORDER_ID, PAY_PRICE, PAY_TYPE, PAY_QUANTITY, PAY_STATE, PAY_DATE)
+		values (#{id}, #{member.id}, #{order.id}, #{payPrice}, #{payType}, #{quantity}, #{payState}, #{payDate})
 	</insert>
 	
 	<select id="selectOrderById" resultMap="orderRes" parameterType="string">
@@ -204,6 +204,20 @@
 	<update id="updateOrder">
 		update mall_order
 		<set>
+			<if test="addName != null"> address_name = #{addName}, </if>
+			<if test="zipcode != null"> zipcode = #{zipcode}, </if>
+			<if test="address1 != null"> address1 = #{address1}, </if>
+			<if test="address2 != null"> address2 = #{address2}, </if>
+			<if test="addPhone1 != null"> address_phone1 = #{addPhone1}, </if>
+			<if test="addPhone2 != null"> address_phone2 = #{addPhone2}, </if>
+			<if test="addMemo != null"> address_memo = #{addMemo}, </if>
+			<if test="deliveryPrice != null"> delivery_price = #{deliveryPrice}, </if>
+			<if test="trackingNumber != null"> tracking_number = #{trackingNumber}, </if>
+			<if test="shippingDate != null"> shipping_date = #{shippingDate}, </if>
+			<if test="addDeliveryPrice != null"> add_delivery_price = #{addDeliveryPrice}, </if>
+			<if test="payId != null"> pay_id = #{payId}, </if>
+			<if test="payDate != null"> pay_date = #{payDate}, </if>
+			<if test="misu != null"> misu = #{misu}, </if>
 			<if test="returnPrice != null"> return_price = #{returnPrice}, </if>
 			<if test="state != null"> state = #{state}, </if>
 			<if test="finalPrice != null"> final_price = #{finalPrice}, </if>
@@ -215,15 +229,20 @@
 	<update id="updatePayment">
 		update mall_payment
 		<set>
+			<if test="member != null"> mem_id = #{member.id}, </if>
+			<if test="order != null"> order_id = #{order.id}, </if>
+			<if test="payPrice != null"> pay_price = #{payPrice}, </if>
+			<if test="payType != null"> pay_type = #{payType}, </if>
+			<if test="quantity != null"> pay_quantity = #{quantity}, </if>
 			<if test="payState != null"> pay_state = #{payState}, </if>
-			<if test="order.finalPrice != null"> pay_price = #{order.finalPrice} </if>
+			<if test="payDate != null"> pay_date = #{payDate}</if>
 		</set>
 		where id = #{id}
 	</update>
 	
 	<select id="selectOrderDetailUsingPartCancelByOrderId" resultMap="sortRes" parameterType="string">
 		<include refid="odSql"></include>
-		from mall_order_detail WHERE ORDER_STATE = '결제완료' or order_state = '입금대기' 
+		from mall_order_detail WHERE ORDER_STATE = '결제' or order_state = '대기' 
 			AND ORDER_ID = #{orderId} ORDER BY id DESC
 	</select>
 	

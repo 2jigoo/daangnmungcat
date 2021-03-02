@@ -1,28 +1,40 @@
 package daangnmungcat.controller.admin;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Criteria;
+import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
+import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
+import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.OrderService;
 
@@ -82,8 +94,6 @@ public class AdminOrderController {
 	@GetMapping("/admin/order")
 	public ModelAndView orderList(@RequestParam String id) {
 		
-		System.out.println("id:" + id);
-		
 		Order order = orderService.getOrderByNo(id);
 		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
 		order.setDetails(odList);
@@ -93,7 +103,6 @@ public class AdminOrderController {
 		
 		KakaoPayApprovalVO kakao = null;
 		Payment pay = null;
-		System.out.println("pay:" + pay);
 		
 		if(order.getPayId() != null) {
 			kakao = kakaoService.kakaoPayInfo(order.getPayId());
@@ -103,7 +112,6 @@ public class AdminOrderController {
 		
 		//결제완료인 물품만 다시 계산
 		List<OrderDetail> partList = orderService.selectOrderDetailUsingPartCancelByOrderId(order.getId());
-		System.out.println("odList:" + partList);
 		List<Cart> cartList = new ArrayList<Cart>();
 		for(OrderDetail od: odList) {
 			Cart cart = new Cart();
@@ -113,8 +121,8 @@ public class AdminOrderController {
 			cartList.add(cart);
 		}
 		
-		System.out.println("cartlist:" + cartList);
-		 Map<String, Integer> map = orderService.calculateDeliveryFee(cartList);
+		
+		Map<String, Integer> map = orderService.calculateDeliveryFee(cartList);
 		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("part", partList);
@@ -130,5 +138,64 @@ public class AdminOrderController {
 		return mv;
 	}
 	
+	@ResponseBody
+	@PostMapping("/admin/order/{status}")
+	public int updateOrderState(@RequestBody String[] od, @PathVariable String status){
+		
+		Order order = null;
+		int res = 0;
+		
+		for(int i=0; i<od.length; i++) {
+			
+			OrderDetail ord = orderService.getOrderDetailById(od[i]);
+			order = orderService.getOrderByNo(ord.getOrderId());
+			int price = order.getFinalPrice();
+			List<OrderDetail> odList = orderService.getOrderDetail(ord.getOrderId());
+			
+			System.out.println(order);
+			
+			if(status.equals("대기")) {
+				ord.setOrderState(OrderState.DEPOSIT_REQUEST);
+			}else if(status.equals("결제")) {
+				ord.setOrderState(OrderState.PAID);
+			}else if(status.equals("배송")) {
+				ord.setOrderState(OrderState.SHIPPING);
+			}else if(status.equals("완료")) {
+				ord.setOrderState(OrderState.DELIVERED);
+			}else if(status.equals("취소")) {
+				ord.setOrderState(OrderState.CANCEL);
+			}else if(status.equals("반품")) {
+				ord.setOrderState(OrderState.RETURN);
+			}else if(status.equals("품절")) {
+				ord.setOrderState(OrderState.SOLD_OUT);
+				//품절시 order 전체 금액에서 해당 상품 금액 빼기 -> 상태 수정시 되돌림
+				order.setFinalPrice(order.getFinalPrice() - ord.getTotalPrice());
+				order.setMisu(order.getFinalPrice() - ord.getTotalPrice());
+				orderService.updateOrder(order, order.getId());
+			}
+			
+			if(odList.size() == od.length) {
+				//모든상품
+				order.setState(status);
+			}
+			
+			res = orderService.updatePartOrderDetail(ord, ord.getId());
+		}
+		//System.out.println(list);
+		
+		return res;
+	}
 	
+	@ResponseBody
+	@PostMapping("/admin/order/post")
+	public ResponseEntity<Object> updateOrder(@RequestBody Map<String, String> map){
+		
+		try {
+			return ResponseEntity.ok(orderService.adminInsertPaymentAndOrderUpdate(map));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+	}
 }
