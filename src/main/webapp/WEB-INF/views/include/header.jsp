@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginUser"/>
@@ -142,7 +143,7 @@
 				<ul class="h_util">
 				<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
-				<li><form action="/logout" method="post"><input type="submit" value="로그아웃"></form></li>
+				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 				</ul>
 			</sec:authorize>
 			<ul class="h_util2">
