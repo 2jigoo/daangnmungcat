@@ -47,7 +47,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.headers()
 	        .frameOptions().disable();
 		
-//		http.csrf().disable();
+//		http.csrf().ignoringAntMatchers("/logout");
+		// csrf 활성화: LoginFilter에서 POST만 처리
+		// csrf 비활성화: LoginFilter에서 다 처리
 	}
 
 	

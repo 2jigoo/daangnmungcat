@@ -3,11 +3,15 @@ package daangnmungcat.config;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -86,16 +90,6 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("mall/order/pay_success").setViewName("mall/order/pay_success");
 		registry.addViewController("mypage/pay_info").setViewName("mypage/pay_info");
 	}
-	
-	/*
-	@Bean
-	public MessageSource messageSource() {
-		ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
-		ms.setBasename("message.label");
-		ms.setDefaultEncoding("UTF-8");
-		return ms;
-	}
-	*/
 	
 	//파일업로드
 	@Bean
