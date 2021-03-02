@@ -6,6 +6,7 @@
 $(document).ready(function(){
 	
 	
+	
 	$(".gubun").each(function () {
 	 	var rows = $(".gubun:contains('" + $(this).text() + "')");
 		if (rows.length > 1) {
@@ -14,6 +15,7 @@ $(document).ready(function(){
 		        
 		} 
 	});
+	
 	
 	$('#checked_all').on('click', function(){
 		if($('#checked_all').is(':checked')){
@@ -234,7 +236,7 @@ function leadingZeros(n, digits) {
 		<br>포인트로 결제한 주문은 주문상태 변경을 인해 포인트가감이 발생하는 경우 포인트관리에서 수작업으로 포인트를 맞추어 주셔야 합니다.
 	</div>	
 	
-	<span>현재 배송비: ${total }</span>
+	<span><%-- 현재 배송비: ${total } --%></span>
 	
 <!-- 주문결제내역 -->	
 	

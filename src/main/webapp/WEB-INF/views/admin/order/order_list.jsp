@@ -6,7 +6,15 @@
 <script>
 
 $(document).ready(function(){
-
+	var length = $('#order_list tbody td').length;
+	for(i=7; i<length; i+=18){
+		if($('#order_list').find("td:eq(" + i + ")").text() != '0' ){
+			for(j=(i-7); j<(i+11); j++){
+				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#ffe6e8')
+			}
+			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#ffe6e8; color:red; font-weight:bold');
+		}
+	}
 	
 	var state;
 	var start = getParameter('start');
@@ -249,7 +257,7 @@ function getDateStr(myDate){
 			</div>
 			<hr>
 		</div>
-		<table class="adm_table_style1" style="padding:20px;">
+		<table class="adm_table_style1" style="padding:20px;" id="order_list">
 			<!-- <colgroup>
 				<col width="3%">
 				<col width="15%">
@@ -302,7 +310,7 @@ function getDateStr(myDate){
 					<td>${order.addName}</td>
 					<td rowspan="3">${order.finalPrice }</td>
 					<td rowspan="3">${order.returnPrice}</td>
-					<td rowspan="3">${order.misu}</td>
+					<td rowspan="3">${order.misu }</td>
 					<td rowspan="3">${order.usedMileage}</td>
 					<td rowspan="3">
 						<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
