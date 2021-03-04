@@ -34,7 +34,6 @@ public interface OrderMapper {
 	List<Order> selectCancelOrderById(String id);
 	
 	Payment getPaymentById(String tid);
-	
 	Payment selectAccountPaymentByOrderId(String orderId);
 	
 	Order getOrderByNo(String id);
@@ -47,6 +46,7 @@ public interface OrderMapper {
 	int insertAccountPayment(Payment pay);
 	
 	List<OrderDetail> sortingOrderDetail(@Param("orderId")String id);
+	List<OrderDetail> selectNotSoldOutOrderDetailById(String id);
 	
 	List<Order> searchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);
 	List<Order> cancelSearchByDate(@Param("dateFrom")String start,  @Param("dateTo")String end, @Param("mem_id")String memId);

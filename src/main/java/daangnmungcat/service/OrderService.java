@@ -26,6 +26,7 @@ public interface OrderService {
 	int listCount();
 	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, Criteria cri);
 	int searchListCount(String content, String query, String state, String start, String end);
+	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
 	
 	/////////////////////////////////////
 	

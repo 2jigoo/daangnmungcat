@@ -111,9 +111,9 @@ public class PayController {
 	
 	//부분 취소
 	@PostMapping("/kakao-part")
-	public String kakaoPartCancel(@RequestBody Map<String, String> map, AuthInfo loginUser) {
+	public String kakaoPartCancel(@RequestBody Map<String, String> map, AuthInfo loginUser, HttpSession session) {
 		log.info("kakao- part cancel - post");
-//		session.setAttribute("map", map);
+		session.setAttribute("map", map);
 		String memberId = loginUser.getId();
 		return "redirect:" + kakaoService.kakaoPayPartCancel(memberId, map);
 	}

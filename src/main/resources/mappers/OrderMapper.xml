@@ -122,6 +122,11 @@
 		from mall_order_detail where id = #{id}
 	</select>
 	
+	<select id="selectNotSoldOutOrderDetailById" resultMap="sortRes" parameterType="String">
+		<include refid="odSql"></include>
+		from mall_order_detail where order_id = #{orderId} and order_state NOT IN ('품절', '취소', '반품')
+	</select>
+	
 
 	<insert id="insertOrderDetail">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
@@ -242,7 +247,7 @@
 	
 	<select id="selectOrderDetailUsingPartCancelByOrderId" resultMap="sortRes" parameterType="string">
 		<include refid="odSql"></include>
-		from mall_order_detail WHERE ORDER_STATE = '결제' or order_state = '대기' 
+		from mall_order_detail WHERE order_state NOT IN ('품절', '취소', '반품')
 			AND ORDER_ID = #{orderId} ORDER BY id DESC
 	</select>
 	

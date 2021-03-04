@@ -319,7 +319,7 @@ public class OrderServiceImpl implements OrderService{
 			totalDeliveryFee += chargedDeliveryFee;
 		}
 		
-		System.out.println(totalDeliveryFee + " = " + chargedDeliveryFee + " + " + (totalDeliveryFee - chargedDeliveryFee));
+		//System.out.println(totalDeliveryFee + " = " + chargedDeliveryFee + " + " + (totalDeliveryFee - chargedDeliveryFee));
 		
 		deliveryFee.put("total", totalDeliveryFee);
 		deliveryFee.put("conditional", totalDeliveryFee - chargedDeliveryFee);
@@ -491,23 +491,38 @@ public class OrderServiceImpl implements OrderService{
 		return mapper.selectAccountPaymentByOrderId(orderId);
 	}
 
+	
 	@Transactional
 	@Override
 	public int adminInsertPaymentAndOrderUpdate(Map<String, String> map) {
+		
 		log.info("admin insert pay & update order");
 		int res = 0;
 		//2021-03-03 00:33:07
-		String price = map.get("price");
-		int payPrice = Integer.parseInt(price);
-		System.out.println(price);
-		String depositor = map.get("depositor");
-		String payDate = map.get("payDate");
+		
+		String price = null;
+		String depositor = null;
+		int payPrice = 0;
+		
+		if(map.get("price") != null && map.get("depositor") != null ) {
+			price = map.get("price");
+			depositor =  map.get("depositor");
+			payPrice = Integer.parseInt(price);
+		}
+		
+		String returnPrice = null; 
+		if(map.get("returnPrice") != null) {
+			returnPrice = map.get("returnPrice");
+		}
+		
 		String order = map.get("order");
 		String qtt = map.get("qtt");
-		String returnPrice = map.get("returnPrice");
+		String payDate = map.get("payDate");
+		String deli = map.get("deli");
+		String addDeli = map.get("addDeli");
 		
 		Order o = getOrderByNo(order);
-		
+
 		String trackingNumber = null;
 		String shippingDate = null;
 		
@@ -538,42 +553,65 @@ public class OrderServiceImpl implements OrderService{
 		String payId = today + numStr;
 		
 		//pay가 null이면 insert, 있으면 update
-		Payment pay = selectAccountPaymentByOrderId(o.getId());
-		System.out.println(pay);
-		if(pay != null) {
-			pay.setMember(member);
-			pay.setPayPrice(payPrice);
-			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
-			pay.setPayState(o.getState());
-			pay.setPayType("무통장입금");
-			pay.setQuantity(Integer.parseInt(qtt));
-			log.info("update pay");
-			res += updatePayment(pay, pay.getId());
-		}else {
-			Payment newPay = new Payment();
-			System.out.println("새로운 payId: " + payId);
-			newPay.setId(payId);
-			newPay.setMember(member);
-			newPay.setOrder(o);
-			newPay.setPayPrice(Integer.parseInt(price));
-			newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
-			newPay.setPayState(o.getState());
-			newPay.setPayType("무통장입금");
-			newPay.setQuantity(Integer.parseInt(qtt));
-			System.out.println(pay);
-			log.info("insert pay");
-			res += insertAccountPayment(pay);
+		Payment pay = null;
+		Payment newPay = new Payment();
+		
+		if(o.getSettleCase().equals("카카오페이")) {
+			pay = selectAccountPaymentByOrderId(o.getPayId());
+			
+		}else if(o.getSettleCase().equals("무통장")) {
+			pay = selectAccountPaymentByOrderId(o.getId());
+			
+			if(pay != null) {
+				pay.setMember(member);
+				pay.setPayPrice(payPrice);
+				pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+				pay.setPayState(o.getState());
+				pay.setPayType("무통장");
+				pay.setQuantity(Integer.parseInt(qtt));
+				log.info("update pay");
+				res += updatePayment(pay, pay.getId());
+				System.out.println(pay);
+			}else {
+				
+				System.out.println("새로운 payId: " + payId);
+				newPay.setId(payId);
+				newPay.setMember(member);
+				newPay.setOrder(o);
+				newPay.setPayPrice(Integer.parseInt(price));
+				newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+				newPay.setPayState(o.getState());
+				newPay.setPayType("무통장입금");
+				newPay.setQuantity(Integer.parseInt(qtt));
+				System.out.println(pay);
+				log.info("insert pay");
+				res += insertAccountPayment(newPay);
+				
+				//null이면 order의 새로운 payId로 설정
+				o.setPayId(newPay.getId());
+				
+				//미수금 = 전체 금액 - 입금액
+				o.setMisu(o.getFinalPrice() - payPrice);
+				o.setReturnPrice(Integer.parseInt(returnPrice));
+				o.setDeliveryPrice(Integer.parseInt(deli));
+				o.setAddDeliveryPrice(Integer.parseInt(addDeli));
+				res += updateOrder(o, o.getId());
+				System.out.println("입금처리 후 미수금:" + o.getMisu());
+				
+				//입금액 = misu - 입금액
+				newPay.setPayPrice(o.getMisu() - payPrice);
+				res += updatePayment(newPay, newPay.getId());
+				
+			}
 		}
-		
-		System.out.println(res);
-		
-		//미수금 = final - 입금액
-		o.setMisu(o.getFinalPrice() - payPrice);
-		o.setReturnPrice(Integer.parseInt(returnPrice));
-	
-		res += updateOrder(o, o.getId());
-		
+
 		return res;
+	}
+
+	@Override
+	public List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId) {
+		// TODO Auto-generated method stub
+		return mapper.selectNotSoldOutOrderDetailById(orderId);
 	}
 
 
