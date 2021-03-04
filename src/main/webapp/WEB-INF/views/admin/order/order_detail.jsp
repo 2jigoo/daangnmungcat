@@ -2,10 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 $(document).ready(function(){
-	
-	
 	
 	$(".gubun").each(function () {
 	 	var rows = $(".gubun:contains('" + $(this).text() + "')");
@@ -49,6 +48,14 @@ $(document).ready(function(){
         }
 	});
 	
+	$('#kakao_shipping_chk').on('click', function(){
+		if($('#kakao_shipping_chk').is(':checked')){
+			$('#kakao_shipping_txt').attr('value', getTimeStamp());
+		}else{
+			$('#kakao_shipping_txt').attr('value', '');
+        }
+	});
+	
 	$(document).on('click', 'input[name=status]', function(event) {
 		var arr = [];
 		var s = $(this).val();
@@ -81,12 +88,79 @@ $(document).ready(function(){
 				trackingNum:  $('#order_shipping_num').val(),
 				shippingDate: $('#order_shipping_txt').val(),
 				qtt: ${order.details.size()},
-				order: ${order.id}
+				order: ${order.id},
+				deli: $('#deliveryPrice').val(),
+				addDeli: $('#addDeliveryPrice').val()
 		};
 		console.log(data);
 		
 		 $.ajax({
 			url: "/admin/order/post",
+			type: "POST",
+			contentType:"application/json; charset=utf-8",
+			dataType: "json",
+			cache : false,
+			data : JSON.stringify(data),
+			success: function() {
+				if(${order.usedMileage != 0}){	
+					alert("마일리지로 결제한 주문은 주문상태 변경으로 인해 마일리지가감이 발생하는 경우 마일리지관리에서 수작업으로 마일리지를 맞추어 주셔야 합니다.");
+				}
+				location.reload();
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+			}
+		});
+	});
+	
+	$('#kakao_shipping').on('click', function(){
+		var data = {
+				order: ${order.id},
+				qtt: ${order.details.size()},
+				returnPrice: $('#kakao_return').val(),
+				trackingNum: $('#kakao_shipping_num').val(),
+				shippingDate: $('#kakao_shipping_txt').val(),
+				deli: $('#kakao_delivery').val(),
+				addDeli: $('#kakao_addDelivery').val()
+		};
+		
+		console.log(data);
+		
+		 $.ajax({
+				url: "/admin/order/post",
+				type: "POST",
+				contentType:"application/json; charset=utf-8",
+				dataType: "json",
+				cache : false,
+				data : JSON.stringify(data),
+				success: function() {
+					if(${order.usedMileage != 0}){	
+						alert("마일리지로 결제한 주문은 주문상태 변경으로 인해 마일리지가감이 발생하는 경우 마일리지관리에서 수작업으로 마일리지를 맞추어 주셔야 합니다.");
+					}
+					location.reload();
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
+		});
+	});
+
+	$('#shipping_submit').on('click', function(){
+		
+		var data = {
+			id: ${order.id},
+			name: $('#addName').val(),
+			zipcode: $('#recipient_zip').val(),
+			add1: $('#recipient_add1').val(),
+			add2: $('#address2').val(),
+			phone1: $('#addPhone1').val(),
+			phone2: $('#addPhone2').val(),
+			memo: $('#addMemo').val()
+		};
+		console.log(data)
+		
+		$.ajax({
+			url: "/admin/shipping/post",
 			type: "POST",
 			contentType:"application/json; charset=utf-8",
 			dataType: "json",
@@ -101,6 +175,12 @@ $(document).ready(function(){
 		});
 	});
 	
+	$('#kakao_cancel').on('click', function(){
+		var tid = $('#tid').text();
+		window.open("/admin/order/part_cancel?oid="+${order.id}+"&tid=" + tid, "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+	});
+	
+	
 });
 
 function updateOrderState(status, arr){
@@ -113,10 +193,8 @@ function updateOrderState(status, arr){
 		dataType: "json",
 		cache : false,
 		data : JSON.stringify(arr),
-		success: function(res) {
-			if(res == 1){
-				location.reload();
-			}
+		success: function() {
+			location.reload();
 		},
 		error: function(request,status,error){
 			alert('에러' + request.status+request.responseText+error);
@@ -151,6 +229,31 @@ function leadingZeros(n, digits) {
 }
 
 
+function execPostCode1(){
+	daum.postcode.load(function(){
+      new daum.Postcode({
+          oncomplete: function(data) {
+				//변수값 없을때는 ''
+				var addr = '';
+				$('#orderer_zip').attr('value', data.zonecode);
+				$('#orderer_add').attr('value', data.address);
+          	}
+          }).open();
+  });
+}
+
+function execPostCode2(){
+	daum.postcode.load(function(){
+      new daum.Postcode({
+          oncomplete: function(data) {
+				//변수값 없을때는 ''
+				var addr = '';
+				$('#recipient_zip').attr('value', data.zonecode);
+				$('#recipient_add1').attr('value', data.address);
+          	}
+          }).open();
+  });
+}
 
 </script>
 <div class="card shadow mb-4">
@@ -171,15 +274,15 @@ function leadingZeros(n, digits) {
 		</div>
 		<table class="adm_table_style2">
 			<colgroup>
-				<col width="50px">
-				<col width="500px">
-				<col width="100px">
-				<col width="100px">
-				<col width="150px">
-				<col width="150px">
-				<col width="150px">
-				<col width="150px">
-				<col width="50px">
+				<col width="3%">
+				<col width="40%">
+				<col width="5%">
+				<col width="7%">
+				<col width="5%">
+				<col width="5%">
+				<col width="10%">
+				<col width="7%">
+				<col width="7%">
 			</colgroup>
 			<thead>
 				<tr>
@@ -210,7 +313,7 @@ function leadingZeros(n, digits) {
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
 						<td>${od.pdt.deliveryPrice}</td>
-						<td>${od.pdt.deliveryKind}
+						<td>${od.pdt.deliveryKind}</td>
 						<td>${od.totalPrice}</td>
 						<td>${od.pdt.stock}</td>
 				</tr>
@@ -233,10 +336,9 @@ function leadingZeros(n, digits) {
 	<div class="admin_od_top">
 		대기, 결제, 배송, 완료는 장바구니와 주문서 상태를 모두 변경하지만, 취소, 환불, 반품은 장바구니의 상태만 변경하며, 주문서 상태는 변경하지 않습니다.
 		<br>개별적인(이곳에서의) 상태 변경은 모든 작업을 수동으로 처리합니다. 예를 들어 입금대기에서 결제완료로 상태 변경시 입금액(결제금액)을 포함한 모든 정보는 수동 입력으로 처리하셔야 합니다.
-		<br>포인트로 결제한 주문은 주문상태 변경을 인해 포인트가감이 발생하는 경우 포인트관리에서 수작업으로 포인트를 맞추어 주셔야 합니다.
 	</div>	
 	
-	<span><%-- 현재 배송비: ${total } --%></span>
+	<span>현재 배송비: ${total}</span>
 	
 <!-- 주문결제내역 -->	
 	
@@ -300,8 +402,7 @@ function leadingZeros(n, digits) {
 					<tr>
 						<td>무통장입금액</td>
 						<td>
-							<c:if test="${pay != null}">${pay.payPrice}</c:if>
-							<c:if test="${pay == null}">${kakao}</c:if>
+							${pay.payPrice}
 						</td>
 					</tr>
 					<tr>
@@ -333,11 +434,11 @@ function leadingZeros(n, digits) {
 					</tr>
 					<tr>
 						<td>배송비</td>
-						<td><input type="text" value="${order.deliveryPrice}"></td>
+						<td><input type="text" value="${order.deliveryPrice}" id="deliveryPrice"></td>
 					</tr>
 					<tr>
 						<td>추가배송비</td>
-						<td><input type="text" value="${order.addDeliveryPrice}"></td>
+						<td><input type="text" value="${order.addDeliveryPrice}" id="addDeliveryPrice"></td>
 					</tr>
 					
 				</table>
@@ -353,7 +454,7 @@ function leadingZeros(n, digits) {
 						<td>
 							<input type="checkbox" id="order_price_chk"> 결제금액 입력 <br>
 							<c:if test="${pay == null}"><input type="text" id="order_price_txt" value="0">원</c:if>			
-							<c:if test="${pay != null}"><input type="text" id="order_price_txt" value="${pay.payPrice}">원 </c:if>
+							<c:if test="${pay != null}"><input type="text" id="order_price_txt" name="deposit_price" value="${pay.payPrice}">원 </c:if>
 						</td>
 					</tr>
 					<tr>
@@ -391,15 +492,19 @@ function leadingZeros(n, digits) {
 		</div>
 	
 		<div class="admin_od_pay_info_btn tc">
-			<input type="button" value="결제/배송내역 수정" id="pay_shipping_update">
-			<input type="button" value="목록">
+			<input type="button" value="결제/배송내역 수정" id="pay_shipping_update" class="btn btn-primary btn-sm">
+			<input type="button" value="목록" class="btn btn-secondary btn-sm">
 		</div>
 	</div>
 	</c:if>
 	
+
+
 	
-	<!-- 카카오페이일때 -->
-	<c:if test="${kakao != null }">
+<!-- 카카오페이일때 -->
+	
+	
+	<c:if test="${order.settleCase == '카카오페이' }">
 	<div class="admin_od_pay_info_div">	
 		<div class="admin_od_pay_info tl">
 			<b>결제상세정보 확인</b>
@@ -407,7 +512,7 @@ function leadingZeros(n, digits) {
 				<table class="info_confirm">
 					<tr>
 						<td>결제고유번호</td>
-						<td>${kakao.tid}</td>
+						<td id="tid">${kakao.tid}</td>
 					</tr>
 					<tr>
 						<td>가맹점 코드</td>
@@ -468,8 +573,12 @@ function leadingZeros(n, digits) {
 						<td>${kakao.canceled_at}</td>
 					</tr>
 					<tr>
-						<td>결제/취소 상세</td>
-						<td>${kakao.payment_action_details}</td>
+						<td>결제/취소 이력</td>
+						<td>
+							<c:forEach items="${kakao.payment_action_details}" var="d">
+								 ${d.approved_at} | 금액: ${d.amount} | 이력: ${d.payment_action_type} <br>
+							</c:forEach>
+						</td>
 					</tr>
 				</table>
 			</form>
@@ -477,34 +586,38 @@ function leadingZeros(n, digits) {
 		
 		<div class="admin_od_pay_info tl">
 			<b>결제상세정보 수정</b>
-			<form action="admin_pay" >
 				<table class="info_form">
 					<tr>
+						<td>취소/환불 금액</td>
+						<td><input type="text" id="kakao_return" value="${order.returnPrice}"></td>
+					</tr>
+					<tr>
+						<td>배송비</td>
+						<td><input type="text" value="${order.deliveryPrice}" id="kakao_delivery"></td>
+					</tr>
+					<tr>
+						<td>추가배송비</td>
+						<td><input type="text" value="${order.addDeliveryPrice}" id="kakao_addDelivery"></td>
+					</tr>
+					<tr>
 						<td>운송장번호</td>
-						<td><input type="text"></td>
+						<td><input type="text" id="kakao_shipping_num" value="${order.trackingNumber }"></td>
 					</tr>
 					<tr>
 						<td>배송일시</td>
 						<td>
-							<input type="checkbox"> 현재 시간으로 설정 <br>
-							<input type="text">
+							<input type="checkbox" id="kakao_shipping_chk"> 현재 시간으로 설정 <br>
+							<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
+							<input type="text" id="kakao_shipping_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>">
 						</td>
 					</tr>
-					<tr>
-						<td>배송비</td>
-						<td><input type="text"></td>
-					</tr>
-					<tr>
-						<td>추가배송비</td>
-						<td><input type="text"></td>
-					</tr>
 				</table>
-			</form>
 		</div>
 	
 		<div class="admin_od_pay_info_btn tc">
-			<input type="button" value="결제/배송내역 수정">
-			<input type="button" value="목록">
+			<input type="button" value="결제/배송내역 수정" class="btn btn-primary btn-sm" id="kakao_shipping">
+			<input type="button" value="신용카드 부분취소" class="btn btn-primary btn-sm" id="kakao_cancel">
+			<input type="button" value="목록" class="btn btn-secondary btn-sm">
 		</div>
 	</div>
 	
@@ -514,30 +627,29 @@ function leadingZeros(n, digits) {
 <!-- 주문자/배송지 정보 -->
 	<h5 class="admin_order_title tc">주문자/배송지 정보</h5>
 	<div class="admin_od_pay_info_div ">
-		<form action="admin_shipping" >
+	<!-- form-data 415 오류 오ㅐ나,,,? -->
+	<form method="post" action="/admin/shipping/post" id="form" enctype="application/x-www-form-urlencoded" accept-charset="utf-8" >
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 			<div class="admin_od_pay_info tl">
 				<b>주문하신 분</b>
 					<table class="info_form">
 						<tr>
 							<td>아이디</td>
-							<td><input type="text" value="${order.member.id}" id="orderer_id"></td>
+							<td><input type="text" value="${order.member.id}" id="orderer_id" readonly></td>
 						</tr>
 						<tr>
 							<td>이름</td>
-							<td><input type="text"></td>
-						</tr>
-						<tr>
-							<td>전화번호</td>
-							<td><input type="text"></td>
+							<td><input type="text" value="${order.member.name}"></td>
 						</tr>
 						<tr>
 							<td>핸드폰</td>
-							<td><input type="text"></td>
+							<td><input type="text" value="${order.member.phone}"></td>
 						</tr>
 						<tr>
 							<td>주소</td>
-							<td><input type="text"><input type="button" value="우편번호검색"><br>
-								<input type="text"><input type="text">
+							<td><input type="text" value="${order.member.zipcode}" id="orderer_zip"><input type="button" value="우편번호검색" onclick="execPostCode1()"><br>
+								<input type="text" value="${order.member.address1}" id="orderer_add">
+								<input type="text" value="${order.member.address2}">
 							</td>
 						</tr>
 						
@@ -550,34 +662,36 @@ function leadingZeros(n, digits) {
 					<table class="info_form">
 						<tr>
 							<td>이름</td>
-							<td><input type="text"></td>
+							<td><input type="text" value="${order.addName}" id="addName"></td>
 						</tr>
 						<tr>
 							<td>전화번호</td>
-							<td><input type="text"></td>
+							<td><input type="text" value="${order.addPhone1}" id="addPhone1"></td>
 						</tr>
 						<tr>
 							<td>핸드폰</td>
-							<td><input type="text"></td>
+							<td><input type="text" value="${order.addPhone2}" id="addPhone2"></td>
 						</tr>
 						<tr>
 							<td>주소</td>
-							<td><input type="text"><input type="button" value="우편번호검색"><br>
-								<input type="text"><input type="text">
+							<td><input type="text" value="${order.zipcode}" id="recipient_zip"><input type="button" value="우편번호검색" onclick="execPostCode2()"><br>
+								<input type="text" value="${order.address1}" id="recipient_add1">
+								<input type="text" value="${order.address2}" name="address2" id="address2">
 							</td>
 						</tr>
 						<tr>
 							<td>배송 메모</td>
-							<td><input type="text"> </td>
+							<td><input type="text" value="${order.addMemo}" name="addMemo" id="addMemo"> </td>
 						</tr>
 					</table>
 				</div>
-			</form>
+			
 		
 		<div class="admin_od_pay_info_btn tc">
-			<input type="button" value="주문자/배송지 정보 수정" onclick='location.href="/admin/order/list"' >
-			<input type="button" value="목록" onclick='location.href="/admin/order/list"' >
+			<input type="button" value="주문자/배송지 정보 수정" id="shipping_submit" class="btn btn-primary btn-sm">
+			<input type="button" value="목록" onclick='location.href="/admin/order/list"' class="btn btn-secondary btn-sm">
 		</div>
+	</form>
 		
 	</div>
 

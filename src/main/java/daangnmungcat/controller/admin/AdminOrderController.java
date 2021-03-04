@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import daangnmungcat.config.ContextSqlSession;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
@@ -39,6 +42,7 @@ import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.OrderService;
 
 @Controller
+@RestController
 public class AdminOrderController {
 	
 	@Autowired
@@ -104,8 +108,9 @@ public class AdminOrderController {
 		KakaoPayApprovalVO kakao = null;
 		Payment pay = null;
 		
-		if(order.getPayId() != null) {
+		if(order.getSettleCase().equals("카카오페이")) {
 			kakao = kakaoService.kakaoPayInfo(order.getPayId());
+			System.out.println("kakao: " + kakao);
 		}else {
 			pay = orderService.selectAccountPaymentByOrderId(order.getId());
 		}
@@ -140,8 +145,9 @@ public class AdminOrderController {
 	
 	@ResponseBody
 	@PostMapping("/admin/order/{status}")
-	public int updateOrderState(@RequestBody String[] od, @PathVariable String status){
+	public int updateOrderState(@RequestBody String[] od, @PathVariable String status, HttpServletRequest request){
 		
+		//od id list
 		Order order = null;
 		int res = 0;
 		
@@ -149,40 +155,119 @@ public class AdminOrderController {
 			
 			OrderDetail ord = orderService.getOrderDetailById(od[i]);
 			order = orderService.getOrderByNo(ord.getOrderId());
-			int price = order.getFinalPrice();
 			List<OrderDetail> odList = orderService.getOrderDetail(ord.getOrderId());
 			
-			System.out.println(order);
+			//품절상태에서 다른 상태로 되돌리면 복구
 			
-			if(status.equals("대기")) {
-				ord.setOrderState(OrderState.DEPOSIT_REQUEST);
-			}else if(status.equals("결제")) {
-				ord.setOrderState(OrderState.PAID);
-			}else if(status.equals("배송")) {
-				ord.setOrderState(OrderState.SHIPPING);
-			}else if(status.equals("완료")) {
-				ord.setOrderState(OrderState.DELIVERED);
-			}else if(status.equals("취소")) {
-				ord.setOrderState(OrderState.CANCEL);
-			}else if(status.equals("반품")) {
-				ord.setOrderState(OrderState.RETURN);
-			}else if(status.equals("품절")) {
-				ord.setOrderState(OrderState.SOLD_OUT);
-				//품절시 order 전체 금액에서 해당 상품 금액 빼기 -> 상태 수정시 되돌림
-				order.setFinalPrice(order.getFinalPrice() - ord.getTotalPrice());
-				order.setMisu(order.getFinalPrice() - ord.getTotalPrice());
+			if(!status.equals(OrderState.SOLD_OUT.getLabel()) && 
+					!status.equals(OrderState.CANCEL.getLabel()) &&
+					!status.equals(OrderState.RETURN.getLabel())) {
+				
+			//대기, 결제, 배송, 완료는 하나라도 변경 시 order도 변경
+			
+				if(status.equals("대기")) {
+					ord.setOrderState(OrderState.DEPOSIT_REQUEST);
+					order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
+
+				}else if(status.equals("결제")) {
+					ord.setOrderState(OrderState.PAID);
+					order.setState(OrderState.PAID.getLabel());
+	
+				}else if(status.equals("배송")) {
+					ord.setOrderState(OrderState.SHIPPING);
+					order.setState(OrderState.SHIPPING.getLabel());
+		
+				}else if(status.equals("완료")) {
+					ord.setOrderState(OrderState.DELIVERED);
+					order.setState(OrderState.DELIVERED.getLabel());
+				}
+			
+				orderService.updatePartOrderDetail(ord, ord.getId());
+				orderService.updateOrder(order, order.getId());
+				
+				
+			//취소, 반품, 품절일때 -> 상세 각자 상태변경
+			//대기 상태에서 변경 order 미수금에서 해당 상품 금액 빼기
+			//입금 상태에서 품절 시 전체금액 - 해당상품금액 -> 미수금 마이너스됨
+			//주문 총액은 변경 x 미수만 변경	
+				
+			} else { 
+				
+				if(!ord.getOrderState().getLabel().equals(status)) {
+					System.out.println("취소/반품/품절");
+					
+					if(status.equals("취소")) {
+						ord.setOrderState(OrderState.CANCEL);
+					}else if(status.equals("반품")) {
+						ord.setOrderState(OrderState.RETURN);	
+					}else if(status.equals("품절")) {
+						ord.setOrderState(OrderState.SOLD_OUT);
+					}
+					order.setMisu(order.getMisu() - ord.getTotalPrice());
+					
+					orderService.updatePartOrderDetail(ord, ord.getId());
+				}			
+			}
+			
+			// 최종 미수: 품절 아닌 odList의 가격 - 입금액
+			int deposit = 0;
+			int pdtPrice = 0;
+			
+			List<OrderDetail> notSoldOutList = orderService.selectNotSoldOutOrderDetailById(order.getId());
+			Payment pay = orderService.selectAccountPaymentByOrderId(order.getId());
+			
+			
+			if(pay == null) {
+				deposit = 0;
+				for(OrderDetail notSoldOutOd: notSoldOutList) {
+					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+				}
+				
+			}else {
+				deposit = pay.getPayPrice();
+				for(OrderDetail notSoldOutOd: notSoldOutList) {
+					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+				}
+			}
+			
+			int finalPrice = pdtPrice - deposit;
+			order.setMisu(finalPrice);
+			orderService.updateOrder(order, order.getId());
+				
+				
+			if(odList.size() == od.length) {
+				// 전체선택 ->  order의 상태도 같이 변경
+				// 하나라도 있으면 유지
+				// 하나 취소 -> 상태유지
+				System.out.println("모든 상품 선택");
+				order.setState(status);
 				orderService.updateOrder(order, order.getId());
 			}
 			
-			if(odList.size() == od.length) {
-				//모든상품
+	
+		} //end
+		
+		//모든 처리 후 현재 모든 status가 동일하면 order도 같이 변경
+		
+		List<OrderDetail> odList = null;
+		for(int i=0; i<od.length; i++) {
+			OrderDetail ord = orderService.getOrderDetailById(od[i]);
+			odList = orderService.getOrderDetail(ord.getOrderId());
+			order = orderService.getOrderByNo(ord.getOrderId());
+			
+			int j = 0;
+			for(i=0; i<odList.size(); i++) {
+				if(odList.get(i).getOrderState().getLabel().equals(status)) {
+					j++;
+				}
+			}
+			if(j == odList.size()) {
 				order.setState(status);
+				orderService.updateOrder(order, order.getId());
 			}
 			
-			res = orderService.updatePartOrderDetail(ord, ord.getId());
 		}
-		//System.out.println(list);
-		
+			
 		return res;
 	}
 	
@@ -192,6 +277,39 @@ public class AdminOrderController {
 		
 		try {
 			return ResponseEntity.ok(orderService.adminInsertPaymentAndOrderUpdate(map));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+	}
+	
+	
+	@PostMapping("/admin/shipping/post")
+	public ResponseEntity<Object> updatesOrderShipping(@RequestBody Map<String, String> map){
+		System.out.println("shipping update");
+		try {
+			
+			String id = map.get("id");
+			String name =  map.get("name");
+			String zipcode =  map.get("zipcode");
+			String add1 = map.get("add1");
+			String add2 =  map.get("add2");
+			String phone1 =  map.get("phone1");
+			String phone2 =  map.get("phone2");
+			String memo =  map.get("memo");
+			
+			Order o = orderService.getOrderByNo(id);
+			
+			o.setAddName(name);
+			o.setZipcode(Integer.parseInt(zipcode));
+			o.setAddress1(add1);
+			o.setAddress2(add2);
+			o.setAddPhone1(phone1);
+			o.setAddPhone2(phone2);
+			o.setAddMemo(memo);
+			
+			return ResponseEntity.ok(orderService.updateOrder(o, o.getId()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();

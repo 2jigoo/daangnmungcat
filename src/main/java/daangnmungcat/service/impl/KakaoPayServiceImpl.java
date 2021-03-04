@@ -59,7 +59,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 
     private KakaoPayReadyVO  kakaoPayReadyVO;
     private KakaoPayApprovalVO kakaoPayApprovalVo;
-    private KakaoPayCancel kakaoPayCancel;
     
     
     @Override
@@ -132,7 +131,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", nextOrderNo);
-        params.add("partner_user_id", request.getParameter("mem_id"));
+        params.add("partner_user_id", member.getId());
         
         String name;
         if(qtt <= 1) {

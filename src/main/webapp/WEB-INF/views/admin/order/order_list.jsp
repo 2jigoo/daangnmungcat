@@ -7,12 +7,22 @@
 
 $(document).ready(function(){
 	var length = $('#order_list tbody td').length;
+	console.log(length)
 	for(i=7; i<length; i+=18){
 		if($('#order_list').find("td:eq(" + i + ")").text() != '0' ){
 			for(j=(i-7); j<(i+11); j++){
-				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#ffe6e8')
+				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#fff0f5')
 			}
-			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#ffe6e8; color:red; font-weight:bold');
+			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#fff0f5; color:red;');
+		}
+	}
+	
+	for(i=6; i<length; i+=18){
+		if($('#order_list').find("td:eq(" + i + ")").text() != '0' ){
+			for(j=(i-6); j<(i+12); j++){
+				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#f0f8ff')
+			}
+			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#f0f8ff; color:red;');
 		}
 	}
 	
@@ -194,7 +204,7 @@ function getDateStr(myDate){
 	<div class="card-header py-2">
 		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
 			<div class="mt-2 float-left">주문 리스트</div>
-			<button id="addNew" class="btn btn-success btn-sm" onclick="location.href='/admin/mileage/write' " style="float: right;">주문 등록</button>
+			
 		</h6>
 	</div>
 	<!-- card-body -->
@@ -328,10 +338,17 @@ function getDateStr(myDate){
 					<td>${order.ordercnt}건</td>
 				</tr>
 				<tr>
-					<td>${order.trackingNumber}</td>
 					<td>
+						<c:if test="${order.trackingNumber != null}"> ${order.trackingNumber} </c:if>
+						<c:if test="${order.trackingNumber == null}"> - </c:if>	
+					</td>
+					<td>
+					<c:if test="${order.shippingDate != null}"> 
 						<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            		<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
+					</c:if>
+					<c:if test="${order.shippingDate == null}"> - </c:if>	
+						
 					</td>
 				</tr>
 					</c:forEach>
