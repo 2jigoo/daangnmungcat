@@ -1,9 +1,5 @@
 package daangnmungcat.controller;
 
-import javax.servlet.http.HttpSession;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +15,6 @@ import daangnmungcat.service.MemberService;
 
 @Controller
 public class MemberController {
-	private static final Log log = LogFactory.getLog(MemberController.class);
 	
 	@Autowired
 	private MemberService service;

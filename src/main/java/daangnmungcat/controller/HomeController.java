@@ -12,16 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import daangnmungcat.dto.Criteria;
-import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.service.JoongoSaleService;
-import daangnmungcat.service.MallCateService;
 import daangnmungcat.service.MallPdtService;
-import lombok.extern.log4j.Log4j2;
 
 @Controller
-@Log4j2
 public class HomeController {
 	
 	@Autowired

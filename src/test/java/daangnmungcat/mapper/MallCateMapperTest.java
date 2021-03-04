@@ -1,11 +1,7 @@
 package daangnmungcat.mapper;
 
-import static org.junit.Assert.fail;
-
 import java.util.List;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -22,7 +18,6 @@ import daangnmungcat.dto.MallCate;
 @ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MallCateMapperTest {
-	private static final Log log = LogFactory.getLog(MallCateMapperTest.class);
 	
 	@Autowired
 	private MallCateMapper mapper;

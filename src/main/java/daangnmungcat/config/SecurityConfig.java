@@ -1,6 +1,8 @@
 package daangnmungcat.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -9,17 +11,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import daangnmungcat.handler.LoginSuccessHandler;
 import daangnmungcat.security.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan(basePackages = {"daangnmungcat.handler"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
@@ -28,15 +30,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/").permitAll()
 			.antMatchers("/chat/**").hasRole("USER")
-			.antMatchers("/admin/**").hasRole("ADMIN");
-		//.antMatchers("/**").permitAll();
+			.antMatchers("/admin/**").hasRole("ADMIN")
+			.antMatchers("/login").anonymous()
+			.antMatchers("/logout").authenticated()
+			.anyRequest().permitAll();
 		
 		http.cors().configurationSource(corsConfigurationSource());
 		
 		http.formLogin()
 			.loginPage("/login")
 			.usernameParameter("id")
-			.loginProcessingUrl("/doLogin");
+			.loginProcessingUrl("/doLogin")
+			.successHandler(authenticationSuccessHandler)
+			.failureHandler(authenticationFailureHandler);
 		
 		http.logout()
 			.logoutUrl("/logout")
@@ -46,6 +52,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// 동일 도메인에서 iframe SockJS 지원하게끔
 		http.headers()
 	        .frameOptions().disable();
+		
+		// 403 접근 권한 없을 때 페이지
+		http.exceptionHandling()
+			.accessDeniedPage("/WEB-INF/views/error/403.jsp");
 		
 //		http.csrf().ignoringAntMatchers("/logout");
 		// csrf 활성화: LoginFilter에서 POST만 처리
@@ -58,13 +68,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new CustomUserDetailService();
 	}
 	
-	@Bean
-	public AuthenticationSuccessHandler loginSuccessHandler() {
-		return new LoginSuccessHandler();
-	}
+	@Autowired
+	private AuthenticationSuccessHandler authenticationSuccessHandler;
+	
+	@Autowired
+	private AuthenticationFailureHandler authenticationFailureHandler;
+	
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
+//		web.debug(true); // debug 할 때
 		web.ignoring().antMatchers("/resources/**");
 	}
 

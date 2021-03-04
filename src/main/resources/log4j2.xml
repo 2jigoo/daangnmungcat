@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
-   <Appenders>
-   
-      <Console name="Console" target="SYSTEM_OUT">
-         <PatternLayout pattern="%5p [%t] - %m%n" />
-      </Console>
-      
-      <!-- <RollingFile name="RollingFile_Daily">
-         <FileName>./logs/daangnmeongcat.log</FileName>
-         <FilePattern>./logs/time-based-logs/%d{yyyy-MM-dd}.log</FilePattern>
-         <PatternLayout pattern="[%-5level] [%d{yyyy-MM-dd HH:mm}] %m%n" />
-         <Policies>
-            <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-         </Policies>
-         <DefaultRolloverStrategy max="5" />
-      </RollingFile> -->
-      
-   </Appenders>
-   
-   <Loggers>
-      <Logger name="daangnmungcat" level="trace" additivity="false">
-         <AppenderRef ref="Console" />
-        <!--  <AppenderRef ref="RollingFile_Daily" /> -->
-      </Logger>
-   </Loggers>
-   
+<Configuration status="INFO">
+ <!--    해당 설정파일에서 사용하는 프로퍼티-->
+    <Properties>
+        <Property name="logNm">Spring Log4j2 Test</Property>
+        <Property name="layoutPattern">%d{HH:mm:ss} [%-5p]  [%C]  - %m %n</Property>
+    </Properties>
+  <!-- LogEvent를 전달해주는 Appender-->
+    <Appenders>
+        <Console name="Console_Appender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${layoutPattern}"/>
+        </Console>
+    </Appenders>
+  <!-- 실제 Logger-->
+    <Loggers>
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender"/>
+        </Root>
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+        </Logger>
+        <Logger name="daangnmungcat" level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+        </Logger>
+        <Logger name="daangnmungcat.mapper" level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+        </Logger>
+    </Loggers>
 </Configuration>

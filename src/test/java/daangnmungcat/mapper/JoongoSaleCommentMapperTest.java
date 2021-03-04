@@ -1,9 +1,5 @@
 package daangnmungcat.mapper;
 
-import static org.junit.Assert.*;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -17,12 +13,12 @@ import daangnmungcat.config.ContextRoot;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleComment;
+import lombok.extern.log4j.Log4j2;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JoongoSaleCommentMapperTest {
-	private static final Log log = LogFactory.getLog(JoongoListMapperTest.class); 
 	
 	@Autowired
 	private JoongoSaleCommentMapper mapper;

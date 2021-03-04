@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,7 +35,6 @@ import daangnmungcat.service.OrderService;
 @RestController
 @Controller
 public class MypageController {
-	private static final Log log = LogFactory.getLog(MypageController.class);
 	
 	//_대신 - 이고 최소화
 	//대문, 행위는 url에 포함 x

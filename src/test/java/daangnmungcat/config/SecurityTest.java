@@ -1,6 +1,5 @@
 package daangnmungcat.config;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import daangnmungcat.dto.Member;
 import daangnmungcat.service.MemberService;
-import oracle.net.aso.m;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ContextRoot.class} )

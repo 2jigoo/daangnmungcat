@@ -24,7 +24,7 @@ public class ContextRoot {
 		ms.setDefaultLocale(Locale.KOREA);
 		ms.setBasenames("classpath:messages/security-message", "classpath:org/springframework/security/messages");
 		ms.setDefaultEncoding("UTF-8");
-		ms.setCacheSeconds(5);
+		ms.setCacheSeconds(30);
 		return ms;
 	}
 	

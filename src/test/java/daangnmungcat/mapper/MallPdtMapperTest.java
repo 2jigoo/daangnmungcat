@@ -2,8 +2,6 @@ package daangnmungcat.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -15,14 +13,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import daangnmungcat.config.ContextRoot;
 import daangnmungcat.dto.Criteria;
-import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MallPdtMapperTest {
-	private static final Log log = LogFactory.getLog(MallPdtMapperTest.class);
 	
 	@Autowired
 	private MallPdtMapper mapper;

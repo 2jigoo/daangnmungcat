@@ -2,8 +2,6 @@ package daangnmungcat.mapper;
 
 import static org.junit.Assert.fail;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -22,7 +20,6 @@ import daangnmungcat.dto.Mileage;
 @ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class MileageMapperTest {
-	private static final Log log = LogFactory.getLog(MileageMapperTest.class); 
 	
 	@Autowired
 	private MileageMapper mapper;

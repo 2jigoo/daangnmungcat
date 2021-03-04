@@ -8,9 +8,8 @@
 </script>
 <form method="post" action="/doLogin">
 	<div class="login-wrapper">
-		<c:if test="${not empty SPRING_SECURITY_LAST_EXCEPTION }">
-			<p style="color:red; font-weight:bold;"> login Failed : ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message }</p>
-			<c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session" />
+		<c:if test="${loginFailMsg ne null }">
+			<p style="color:red; font-weight:bold;"> ${loginFailMsg }</p>
 		</c:if>
 		
 		<spring:message code="memmsg.a"/>
@@ -26,10 +25,7 @@
 		<div class="btn">
 			<input type="submit" value="로그인">
 		</div>
-		<c:if test="${msg != null}"><p>${msg}</p></c:if>
-		<!-- csrf 토큰 hidden -->
-		csrf 토큰<br>
-		<input type="text" name="${_csrf.parameterName}" value="${_csrf.token}" />
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	</div>
 </form>
 
