@@ -56,7 +56,12 @@ $(document).ready(function(){
 								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}
 								/ <span class="regdate" regdate="${chat.latestDate }"> ${chat.latestDate }</span>
 							</div>
-							<div class="dongnename">${chat.messages[0].content }</div>
+							<div class="dongnename">
+								<c:choose>
+									<c:when test="${chat.messages[0].image ne null}"><img src="${chat.messages[0].image }" width=60px></c:when>
+									<c:otherwise>${chat.messages[0].content }</c:otherwise>
+								</c:choose>
+							</div>
 						</div>		
 					</a>
 				</section>

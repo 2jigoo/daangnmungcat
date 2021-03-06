@@ -17,7 +17,7 @@ public interface CartMapper {
 	int updateCartItemFromBasektIdToMember(@Param("id")List<Integer> id, @Param("memberId")String memberId);
 	int updateQuantityFromBasektIdToMember(@Param("basketId")String basketId, @Param("memberId")String memberId);
 	int updateCartItem(Cart cart);
-	int deleteCartItem(Cart cart);
+	int deleteCartItem(@Param("cart") Cart... cart);
 	int deleteBasketId(@Param("basketId") String basketId);
 	int deleteCartItems(@Param("memberId") String memberId, @Param("pdtList") List<MallProduct> pdtList);
 	

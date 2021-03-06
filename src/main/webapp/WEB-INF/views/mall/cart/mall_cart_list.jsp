@@ -108,7 +108,18 @@ $(document).ready(function(){
 				}
 			}); 
 		}
-		
+    });
+    
+    
+    $("#delete_selected_items").click(function() {
+    	var checkedList = new Array();
+	    $(".ckbox:checked").each(function() {
+	    	checkedList.push({id: this.value});
+	    });
+	    
+	    if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
+		    deleteCartItems(checkedList);
+		}
     });
 });
 
@@ -121,32 +132,48 @@ function check(){
 }
 
 
-function deleteCartItem(cart_id) {
+function deleteItem(cart_id) {
+	var items = [{id: cart_id}];
+	
 	if(confirm("선택하신 상품을 삭제하시겠습니까?") == true) {
-		$.ajax({
-			url: "/mall/cart",
-			type: "DELETE",
-			contentType:"application/json; charset=utf-8",
-			dataType: "text",
-			cache : false,
-			data : JSON.stringify({id: cart_id}),
-			success: function(data) {
-				location.reload();
-			},
-			error: function(error){
-				alert("에러 발생");
-				console.log(error);
-			}
-		});
+		deleteCartItems(items);
 	}
 };
+
+function deleteCartItems(items) {
+	$.ajax({
+		url: "/mall/cart",
+		type: "DELETE",
+		contentType:"application/json; charset=utf-8",
+		dataType: "text",
+		cache : false,
+		data : JSON.stringify(items),
+		success: function(data) {
+			location.reload();
+		},
+		error: function(error){
+			alert("에러 발생");
+			console.log(error);
+		}
+	});
+}
 
 </script>
 
 <div id="subContent">
 	<div id="pageCont" class="s-inner">
+		<h2 id="subTitle">장바구니</h2>
 		<c:if test="${empty list}">
-			장바구니가 비었습니다.
+			<div class="empty_cart">
+				장바구니가 비어있습니다
+				<p>
+					<a class="cart_btn" href="/mall/product/list/dog">멍템 쇼핑</a>		
+					<a class="cart_btn" href="/mall/product/list/cat">냥템 쇼핑</a>
+					<c:if test="${loginUser eq null }">
+						<a class="cart_btn" href="/login" style="background-color: black;">로그인하기</a>
+					</c:if>
+				</p>
+			</div>
 		</c:if>
 		<c:if test="${not empty list}">
 
@@ -212,7 +239,7 @@ function deleteCartItem(cart_id) {
 									<!-- 백엔드에서 합계 구하는 로직 아직 X -->
 									<%-- ${cart.amount } --%>
 									<span class="amount" value="${cart.product.price * cart.quantity }">${cart.product.price * cart.quantity }</span>원
-									<i class="fas fa-times delete_btn" onclick="deleteCartItem(${cart.id})"></i>
+									<i class="fas fa-times delete_btn" onclick="deleteItem(${cart.id})"></i>
 									<%-- <div class="totalPrice">
 										<p><span id="od_price"><fmt:formatNumber value="${pdt.price}" /></span> 원</p>
 										<p><input type="hidden" value="${pdt.price}" id="price" onchange="comma(${pdt.price})"></p>
@@ -243,17 +270,55 @@ function deleteCartItem(cart_id) {
 					<tfoot>
 						<tr>
 							<td colspan="7">
-								<c:if test="${deliveryFee['total'] eq 0}">
-									총 결제 금액 : 무료배송
-								</c:if>
-								<c:if test="${deliveryFee['total'] ne 0 }">
-									총 결제 금액 : 배송비 ${deliveryFee['conditional']} 원 / ${deliveryFee['charged']} 원
-								</c:if>
+								<table class="cart_total_table">
+									<thead>
+										<tr>
+											<th>총 ${total['quantity']}개의 상품금액</th>
+											<th>배송비</th>
+											<th>합계</th>
+											<th>적립예정 마일리지</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><fmt:formatNumber value="${total['price']}" />원</td>
+											<td>
+												<c:choose>
+													<c:when test="${deliveryFee['total'] eq 0}">
+														무료배송
+													</c:when>
+													<c:when test="${deliveryFee['conditional'] ne 0}">
+														조건부 <fmt:formatNumber value="${deliveryFee['conditional']}" /> 원
+													</c:when>
+													<c:when test="${deliveryFee['conditional'] ne 0 && deliveryFee['charged'] ne 0 }">
+														+
+													</c:when>
+													<c:when test="${deliveryFee['charged'] ne 0}">
+														유료배송 상품 <fmt:formatNumber value="${deliveryFee['charged']}" /> 원
+													</c:when>
+												</c:choose>
+												<c:if test="${deliveryFee['total'] ne 0}">
+													<br><fmt:formatNumber value="${deliveryFee['total']}" />원
+												</c:if>
+											</td>
+											<td><fmt:formatNumber value="${total['cost'] }" />원</td>
+											<td><fmt:formatNumber value="${total['cost'] * 0.1}" />원</td>
+										</tr>
+									</tbody>
+								</table>
 							</td>
 						</tr>
 					</tfoot>
 				</table>
-				<input type="button" id="pre_order" value="주문하기">
+				<div class="">
+					<div style="float: left;">
+						<input class="cart_btn" type="button" id="delete_selected_items" value="선택상품 삭제">
+					</div>
+					<div style="float: right;">
+						<input class="cart_btn" type="submit" id="pre_order" value="선택상품 주문">
+						<input class="cart_btn" type="submit" id="pre_order" value="전체상품 주문">
+					</div>
+				</div>
 			</form>
 		</c:if>	
 	</div>

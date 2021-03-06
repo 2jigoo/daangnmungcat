@@ -127,8 +127,12 @@ public class CartServiceImpl implements CartService {
 	
 	
 	@Override
-	public int deleteCartItem(Cart cart) {
+	@Transactional
+	public int deleteCartItem(Cart... cart) {
 		int res = cartMapper.deleteCartItem(cart);
+		if(res != cart.length) {
+			throw new RuntimeException();
+		}
 		return res;
 	}
 

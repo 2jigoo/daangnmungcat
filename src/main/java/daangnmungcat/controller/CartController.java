@@ -63,7 +63,20 @@ public class CartController {
 		
 		if (list != null) {
 			 deliveryFee = calculateDeliveryFee(list);
+			 
+			 int price = list.stream().collect(Collectors.summingInt(Cart::getAmount));
+			 int quantity = list.stream().collect(Collectors.summingInt(Cart::getQuantity));
+			 
+			 Map<String, Integer> total = new HashMap<>();
+			 
+			 total.put("price", price);
+			 total.put("quantity", quantity);
+			 total.put("cost", price + deliveryFee.get("total"));
+			 
+			 model.addAttribute("total", total);
 		}
+		
+		
 		
 		model.addAttribute("list", list);
 		model.addAttribute("deliveryFee", deliveryFee);
@@ -245,7 +258,7 @@ public class CartController {
 	
 	@DeleteMapping("/mall/cart")
 	@ResponseBody
-	public ResponseEntity<Object> deleteCartItem(@RequestBody Cart cart, AuthInfo loginUser) {
+	public ResponseEntity<Object> deleteCartItem(AuthInfo loginUser, @RequestBody Cart... cart) {
 		int res = 0;
 		
 		try {

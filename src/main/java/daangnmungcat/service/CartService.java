@@ -15,7 +15,7 @@ public interface CartService {
 	int addCartItem(Cart cart);
 	int moveToMember(String basketId, String memberId);
 	int modifyQuantity(Cart cart);
-	int deleteCartItem(Cart cart);
+	int deleteCartItem(Cart... cart);
 	
 	int deleteAfterOrdered(String memberId, List<MallProduct> pdtList);
 }
