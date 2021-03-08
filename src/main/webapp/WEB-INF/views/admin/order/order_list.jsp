@@ -11,18 +11,18 @@ $(document).ready(function(){
 	for(i=7; i<length; i+=18){
 		if($('#order_list').find("td:eq(" + i + ")").text() != '0' ){
 			for(j=(i-7); j<(i+11); j++){
-				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#fff0f5')
+				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#f0f8ff')
 			}
-			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#fff0f5; color:red;');
+			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#f0f8ff; color:red;');
 		}
 	}
 	
 	for(i=6; i<length; i+=18){
 		if($('#order_list').find("td:eq(" + i + ")").text() != '0' ){
 			for(j=(i-6); j<(i+12); j++){
-				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#f0f8ff')
+				$(this).find("td:eq(" + j + ")").attr('style', 'background-color:#fff0f5')
 			}
-			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#f0f8ff; color:red;');
+			$(this).find("td:eq(" + i + ")").attr('style', 'background-color:#fff0f5; color:red;');
 		}
 	}
 	

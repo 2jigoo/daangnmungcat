@@ -146,9 +146,11 @@ CREATE TABLE MALL_ORDER (
 	pay_date DATE,
 	regdate DATE DEFAULT SYSDATE, 
 	return_price NUMBER(10), /* 반품/품절금액 */
+	cancel_price NUMBER(10), /*결제 취소/환불 금액*/
 	state VARCHAR2(20) NOT NULL, /* 주문상태 */
 	misu NUMBER(10)/* 미수금 */
 );
+
 
 ALTER TABLE mall_order ADD pay_date DATE;
 

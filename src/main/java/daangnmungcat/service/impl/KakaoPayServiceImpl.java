@@ -343,8 +343,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	
 	@Override
 	@Transactional
-	public String kakaoPayPartCancel(String memberId, Map<String, String> map) {
-		Member member = service.selectMemberById(memberId);
+	public String kakaoPayPartCancel(Map<String, String> map) {
+		
 		
 		//부분취소 -> 부가세(cancel_vat_amount)만 계산해서 던져주면 됨 -> 안해도되는듯
 		//전체 결제 금액오버시 exception 자동, 모두 부분취소 -> cancel_pay로 됨
@@ -356,10 +356,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		
 		String tid = map.get("tid");
 		String partner_order_id = map.get("partner_order_id");
-		//String cancel_amount = json.get("cancel_amount");
-		String first_pdt = map.get("first_pdt");
-		String qtt =  map.get("order_qtt");
-		String od_id = map.get("od_id");
+		String partner_user_id = map.get("partner_user_id");
+		String cancel_amount = map.get("cancel_amount");
 		
 		RestTemplate restTemplate = new RestTemplate();
         
@@ -375,96 +373,46 @@ public class KakaoPayServiceImpl implements KakaoPayService {
        
         List<OrderDetail> newOdList = orderService.selectOrderDetailUsingPartCancelByOrderId(partner_order_id); 
         
-        kakaoPayApprovalVo = kakaoPayInfo(tid);
-        kakaoPayApprovalVo.setItem_name(first_pdt);
-        
-        String cancel_amount = null;
-    	if(newOdList.size() == 1) {
-    		cancel_amount = String.valueOf(kakaoPayApprovalVo.getCancel_available_amount().getTotal());
-    		System.out.println("1개남았을때 남은금액:" + cancel_amount);
-    	} else {
-    		cancel_amount = map.get("cancel_amount");
-    	}
-    	System.out.println(cancel_amount);
-        
+    
         params.add("cid", "TC0ONETIME");
         params.add("tid", tid);
         params.add("cancel_amount", cancel_amount);
         params.add("cancel_tax_free_amount", "0");
         //params.add("cancel_vat_amount", cancel_vat_amount);
         params.add("partner_order_id", partner_order_id);
-        params.add("partner_user_id", member.getId());
-        //params.add("item_name", first_pdt);
+        params.add("partner_user_id", partner_user_id);
+
         
         
          HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
          System.out.println("body" + body);
          
-        try {
-        	
-        	// order detail 취소건만 상태 부분취소로 변경
-        	//payment 가격 변경, order 결제가격 변경 -> 상태 부분취소
-        	//사용한 마일리지 복구
-        	//부분취소시 배송비?? -> total만 수정하고 admin에서 알아서..
-        	System.out.println("취소할 상품 이름:" + first_pdt);
-        	
-        	params.add("item_name", first_pdt);
-        	 
-        	Order order = orderService.getOrderByNo(partner_order_id);
-         	List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
-         	order.setDetails(odList);
-         	
-         	OrderDetail od = orderService.getOrderDetailById(od_id);
-         	od.setOrderState(OrderState.CANCEL);
-         
-         	order.setState("부분취소");
-         	order.setReturnPrice(order.getReturnPrice() + Integer.parseInt(cancel_amount));
-        	
-         	int total;
-         	int finalPrice;
-         	int mileRes = 0; 
-         	
-         	//결제완료가 하나인데 그것도 취소할때 -> 걍 하나면 주문취소로 하기
-         	if(newOdList.size() == 1) {
-        		total = 0 ;
-        		finalPrice = 0;
-        		order.setState("환불완료");
-        		order.setTotalPrice(total);
-             	order.setFinalPrice(finalPrice);
-        		order.setDeliveryPrice(0);
-        		
-        		Mileage plus = new Mileage();
-        		plus.setMember(member);
-        		plus.setOrder(order);
-        		plus.setMileage(order.getUsedMileage());
-        		plus.setContent("상품 구매 적립");
-        		mileRes = mileService.insertMilegeInfo(plus);
-        		
-        	} else {
-        		total = order.getTotalPrice() - Integer.parseInt(cancel_amount);
-        		order.setTotalPrice(total);
-        		
-        		finalPrice = order.getTotalPrice() + order.getDeliveryPrice() - order.getUsedMileage();
-        		order.setFinalPrice(finalPrice);
-        	}
-        	
-        	Payment pay = orderService.getPaymentById(tid);
-        	pay.setPayState("부분취소");
-        	pay.setOrder(order);
-
-        	
-        	
-        	int res1= orderService.updatePartOrderDetail(od, od.getId());
-        	int res2 = orderService.updateOrder(order, order.getId());
-        	int res3 = orderService.updatePayment(pay, tid);
-        	
-        	System.out.println("orderstate:" + res1 + "/ od:" + res2 + "/ paystate:" + res3 + "/ mile:" + mileRes);
+        // order detail 취소건만 상태 부분취소로 변경
+     	//payment 가격 변경, order 결제가격 변경 -> 상태 부분취소
+     	//사용한 마일리지 복구 -> 수동처리
+     	//부분취소시 배송비?? -> total만 수정하고 admin에서 알아서..
+         try {
         	
         	//RestTemplate을 이용해 카카오페이에 데이터를 보내는 방법
        		kakaoPayReadyVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/cancel"), body, KakaoPayReadyVO.class);
        		log.info("" + kakaoPayReadyVO);
         	
-        	return "/kakaoPayPartCancelSuccess";
+
+        	Payment pay = orderService.getPaymentById(tid);
+        	pay.setPayState("부분취소");
+        	//카카오 취소가능금액
+        	pay.setPayPrice(kakaoPayInfo(tid).getCancel_available_amount().getTotal());
+        	System.out.println("취소 후 결제금액" +  kakaoPayApprovalVo.getCancel_available_amount().getTotal());
+        	
+        	Order order = orderService.getOrderByNo(partner_order_id);
+        	order.setReturnPrice(Integer.parseInt(cancel_amount));
+        	
+        	int res = orderService.updatePayment(pay, tid);
+        	int res2 = orderService.updateOrder(order, order.getId());
+        	System.out.println("부분취소,order 변경:" + res + res2);
+   
+       		
+        	return "redirect:/admin/order?id=" + partner_order_id;
 
         } catch (RestClientException e) {
             e.printStackTrace();

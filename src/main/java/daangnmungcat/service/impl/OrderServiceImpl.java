@@ -54,6 +54,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private OrderMapper mapper;
+	
+	@Autowired
+	private KakaoPayService kakaoService;
 
 	@Transactional
 	@Override
@@ -134,6 +137,7 @@ public class OrderServiceImpl implements OrderService{
 		order.setPayId(kakao.getTid());
 		order.setSettleCase("카카오페이");
 		order.setState(OrderState.PAID.getLabel());
+		order.setMisu(0);
 		log.info("insert order..........................................");
 		mapper.insertOrder(order);
 		
@@ -510,9 +514,9 @@ public class OrderServiceImpl implements OrderService{
 			payPrice = Integer.parseInt(price);
 		}
 		
-		String returnPrice = null; 
-		if(map.get("returnPrice") != null) {
-			returnPrice = map.get("returnPrice");
+		String cancelPrice = null; 
+		if(map.get("cancelPrice") != null) {
+			cancelPrice = map.get("cancelPrice");
 		}
 		
 		String order = map.get("order");
@@ -553,16 +557,30 @@ public class OrderServiceImpl implements OrderService{
 		String payId = today + numStr;
 		
 		//pay가 null이면 insert, 있으면 update
-		Payment pay = null;
-		Payment newPay = new Payment();
+	
 		
 		if(o.getSettleCase().equals("카카오페이")) {
-			pay = selectAccountPaymentByOrderId(o.getPayId());
+			System.out.println("카카오");
+			Payment pay = selectAccountPaymentByOrderId(o.getPayId());
 			
-		}else if(o.getSettleCase().equals("무통장")) {
-			pay = selectAccountPaymentByOrderId(o.getId());
+			//미수금 =  
+			//현재 주문취소금액 + 입력된 주문취소금액
+			o.setCancelPrice(Integer.parseInt(cancelPrice));
+			o.setDeliveryPrice(Integer.parseInt(deli));
+			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
+			res += updateOrder(o, o.getId());
+	
+			
+			
+		}else {
+			
+			int p = 0;
+			Payment pay = selectAccountPaymentByOrderId(o.getId());
 			
 			if(pay != null) {
+				
+				p = pay.getPayPrice();
+				
 				pay.setMember(member);
 				pay.setPayPrice(payPrice);
 				pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
@@ -571,8 +589,9 @@ public class OrderServiceImpl implements OrderService{
 				pay.setQuantity(Integer.parseInt(qtt));
 				log.info("update pay");
 				res += updatePayment(pay, pay.getId());
-				System.out.println(pay);
+				
 			}else {
+				Payment newPay = new Payment();
 				
 				System.out.println("새로운 payId: " + payId);
 				newPay.setId(payId);
@@ -585,28 +604,69 @@ public class OrderServiceImpl implements OrderService{
 				newPay.setQuantity(Integer.parseInt(qtt));
 				System.out.println(pay);
 				log.info("insert pay");
-				res += insertAccountPayment(newPay);
+				insertAccountPayment(newPay);
 				
-				//null이면 order의 새로운 payId로 설정
-				o.setPayId(newPay.getId());
-				
-				//미수금 = 전체 금액 - 입금액
-				o.setMisu(o.getFinalPrice() - payPrice);
-				o.setReturnPrice(Integer.parseInt(returnPrice));
-				o.setDeliveryPrice(Integer.parseInt(deli));
-				o.setAddDeliveryPrice(Integer.parseInt(addDeli));
-				res += updateOrder(o, o.getId());
-				System.out.println("입금처리 후 미수금:" + o.getMisu());
-				
-				//입금액 = misu - 입금액
-				newPay.setPayPrice(o.getMisu() - payPrice);
-				res += updatePayment(newPay, newPay.getId());
-				
+//				Payment newP = getPaymentById(payId);
+//				newP.setPayPrice(o.getMisu() - payPrice);
+//				res += updatePayment(newP, newP.getId());
+			
 			}
-		}
+			
 
+			o.setCancelPrice(Integer.parseInt(cancelPrice));
+			o.setDeliveryPrice(Integer.parseInt(deli));
+			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
+			
+			//misu = 결제액 - 입금액 
+			//최종 미수
+			if(payPrice == 0) {
+				System.out.println(o.getFinalPrice() + o.getCancelPrice());
+				o.setMisu(o.getFinalPrice() + o.getCancelPrice());
+			}else {
+				
+				//총결제액 = 입금액 이면  총금액에서 빼기
+				//
+				if(p != payPrice) {
+					System.out.println("p != price");
+					if(o.getFinalPrice() == payPrice) {
+						System.out.println("final = payprice");
+						o.setMisu(Integer.parseInt(cancelPrice));
+					}else {
+						System.out.println("not final = payprice");
+						o.setMisu(o.getFinalPrice() - payPrice + Integer.parseInt(cancelPrice));
+					}
+					
+				}else {
+					System.out.println("p == price");
+					if(o.getFinalPrice() == payPrice) {
+						System.out.println("final = payprice");
+						o.setMisu(Integer.parseInt(cancelPrice));
+					}else if(o.getFinalPrice() != payPrice) {
+						System.out.println("final != payprice");
+						int cp = Integer.parseInt(cancelPrice);
+						
+						if(cp != o.getCancelPrice()) {
+							System.out.println("cp != cancelprice");
+							o.setMisu(o.getMisu() + cp);
+						}else {
+						
+						}
+					}
+				}
+			}
+			
+			res += updateOrder(o, o.getId());
+			
+		
+		}
+		
 		return res;
 	}
+
+		
+			
+		
+	
 
 	@Override
 	public List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId) {

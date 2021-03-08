@@ -20,7 +20,7 @@ public interface KakaoPayService {
 
 	String kakaoPayCancel(String memberId, Map<String, String> map);
 
-	String kakaoPayPartCancel(String memberId, Map<String, String> map);
+	String kakaoPayPartCancel(Map<String, String> map);
 	
 	KakaoPayApprovalVO kakaoPayInfo(String tid);
 }

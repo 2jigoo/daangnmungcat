@@ -26,6 +26,7 @@
 		<result property="addDeliveryPrice" column="add_delivery_price"></result>
 		<result property="settleCase" column="settle_case"></result>
 		<result property="returnPrice" column="return_price"></result>
+		<result property="cancelPrice" column="cancel_price"></result>
 		<result property="payId" column="pay_id"></result>
 		<result property="payDate" column="pay_date"></result>
 		<result property="state" column="state"></result>
@@ -89,7 +90,7 @@
 			ZIPCODE, ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, 
 			TOTAL_PRICE, USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, 
 			SETTLE_CASE, TRACKING_NUMBER, SHIPPING_DATE, ADD_DELIVERY_PRICE, 
-			PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, STATE, MISU, 
+			PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, STATE, MISU, 
 	</sql>
 	<sql id="odSql">
 		SELECT ID, ORDER_ID, MEM_ID, PDT_ID, QUANTITY, PRICE, TOTAL_PRICE, ORDER_STATE,
@@ -224,6 +225,7 @@
 			<if test="payDate != null"> pay_date = #{payDate}, </if>
 			<if test="misu != null"> misu = #{misu}, </if>
 			<if test="returnPrice != null"> return_price = #{returnPrice}, </if>
+			<if test="cancelPrice != null"> cancel_price = #{cancelPrice}, </if>
 			<if test="state != null"> state = #{state}, </if>
 			<if test="finalPrice != null"> final_price = #{finalPrice}, </if>
 			<if test="totalPrice != null"> total_price = #{totalPrice} </if>
@@ -261,7 +263,7 @@
 			FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 				ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 				USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-				ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+				ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
 				STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER ORDER BY REGDATE desc )B)A
 			WHERE A.RNUM BETWEEN  #{rowStart} AND  #{rowEnd}
 				ORDER BY A.RNUM
@@ -273,7 +275,7 @@
 		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
 					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt FROM MALL_ORDER )B)A
 	</select>
 	
@@ -283,7 +285,7 @@
 				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
 					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 					FROM MALL_ORDER
 					<where>
@@ -309,7 +311,7 @@
 			FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
 				ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 				USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-				ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,
+				ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE,  CANCEL_PRICE, 
 				STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 			FROM MALL_ORDER 
 				<where>

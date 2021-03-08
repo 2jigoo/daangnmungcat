@@ -109,8 +109,9 @@ public class PayController {
 		return mv;
 	}
 	
+	/*
 	//부분 취소
-	@PostMapping("/kakao-part")
+	//@PostMapping("/kakao-part")
 	public String kakaoPartCancel(@RequestBody Map<String, String> map, AuthInfo loginUser, HttpSession session) {
 		log.info("kakao- part cancel - post");
 		session.setAttribute("map", map);
@@ -140,7 +141,7 @@ public class PayController {
 	
 		return mv;
 	}
-	
+	*/
 	//무통장
 	@PostMapping("/accountPay")
 	public String accountPay (AuthInfo loginUser, HttpServletRequest request, HttpSession session) {

@@ -84,7 +84,7 @@ $(document).ready(function(){
 				price: $('#order_price_txt').val(),
 				depositor: $('#orderer_id').val(),
 				payDate: $('#order_regdate_txt').val() ,
-				returnPrice: $('#order_return').val(),
+				cancelPrice: $('#order_cancel').val(),
 				trackingNum:  $('#order_shipping_num').val(),
 				shippingDate: $('#order_shipping_txt').val(),
 				qtt: ${order.details.size()},
@@ -177,7 +177,7 @@ $(document).ready(function(){
 	
 	$('#kakao_cancel').on('click', function(){
 		var tid = $('#tid').text();
-		window.open("/admin/order/part_cancel?oid="+${order.id}+"&tid=" + tid, "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open("/admin/order/part_cancel?oid="+${order.id}+"&tid=" + tid, "", "width=500, height=200, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 	
 	
@@ -344,7 +344,8 @@ function execPostCode2(){
 	
 	<h5 class="admin_order_title tc">주문결제 내역</h5>
 	<div class="admin_od_pay_info_div">
-		<span style="color:red; text-align:left">미수금 ${order.misu}원</span>
+		<span style="color:red; text-align:left">미수금 : ${order.misu}원</span><br>
+		
 		<table class="adm_table_style2">
 			<colgroup>
 				<col width="40%">
@@ -376,7 +377,7 @@ function execPostCode2(){
 					<td>${order.deliveryPrice }</td>
 					<td>${order.addDeliveryPrice }</td>
 					<td>${order.usedMileage }</td>
-					<td>${order.finalPrice}</td>
+					<td>${pay.payPrice}</td>
 					<td>${order.returnPrice }</td>
 				</tr>
 			</tbody>
@@ -419,7 +420,7 @@ function execPostCode2(){
 					<tr>
 						<td>취소/환불 금액</td>
 						<td>
-							<fmt:formatNumber value="${order.returnPrice}"/>
+							<fmt:formatNumber value="${order.cancelPrice}"/>
 						</td>
 					</tr>
 					
@@ -471,7 +472,7 @@ function execPostCode2(){
 					</tr>
 					<tr>
 						<td>취소/환불 금액</td>
-						<td><input type="text" id="order_return" value="${order.returnPrice }"></td>
+						<td><input type="text" id="order_cancel" value="${order.cancelPrice }"></td>
 					</tr>
 					
 					<tr>
@@ -576,7 +577,7 @@ function execPostCode2(){
 						<td>결제/취소 이력</td>
 						<td>
 							<c:forEach items="${kakao.payment_action_details}" var="d">
-								 ${d.approved_at} | 금액: ${d.amount} | 이력: ${d.payment_action_type} <br>
+								 ${d.approved_at} | 금액: ${d.amount} | 상태: ${d.payment_action_type} <br>
 							</c:forEach>
 						</td>
 					</tr>
@@ -589,7 +590,7 @@ function execPostCode2(){
 				<table class="info_form">
 					<tr>
 						<td>취소/환불 금액</td>
-						<td><input type="text" id="kakao_return" value="${order.returnPrice}"></td>
+						<td><input type="text" id="kakao_return" value="${order.cancelPrice}"></td>
 					</tr>
 					<tr>
 						<td>배송비</td>
@@ -616,7 +617,7 @@ function execPostCode2(){
 	
 		<div class="admin_od_pay_info_btn tc">
 			<input type="button" value="결제/배송내역 수정" class="btn btn-primary btn-sm" id="kakao_shipping">
-			<input type="button" value="신용카드 부분취소" class="btn btn-primary btn-sm" id="kakao_cancel">
+			<input type="button" value="부분취소" class="btn btn-primary btn-sm" id="kakao_cancel">
 			<input type="button" value="목록" class="btn btn-secondary btn-sm">
 		</div>
 	</div>

@@ -43,6 +43,7 @@ public class Order {
 	private LocalDateTime shippingDate;
 	private int addDeliveryPrice;
 	private int returnPrice;
+	private int cancelPrice;
 	private String payId;
 	private LocalDateTime payDate;
 	private String state;

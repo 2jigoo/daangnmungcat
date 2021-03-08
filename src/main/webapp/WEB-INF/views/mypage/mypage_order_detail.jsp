@@ -201,6 +201,10 @@ $(document).ready(function(){
 			<span class="tableTitle">결제 정보</span>
 			<table  class="order_detail_table">
 				<tr>
+					<td>결제 방식</td>
+					<td>${order.settleCase }</td>
+				</tr>
+				<tr>
 					<td>상품 합계 금액</td>
 					<td><fmt:formatNumber value="${order.totalPrice}"/></td>
 				</tr>

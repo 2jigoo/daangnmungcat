@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.config.ContextSqlSession;
+import daangnmungcat.controller.PayController;
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
@@ -39,10 +41,13 @@ import daangnmungcat.dto.Payment;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
+import daangnmungcat.service.MemberService;
 import daangnmungcat.service.OrderService;
+import lombok.extern.log4j.Log4j2;
 
 @Controller
 @RestController
+@Log4j2
 public class AdminOrderController {
 	
 	@Autowired
@@ -50,6 +55,9 @@ public class AdminOrderController {
 	
 	@Autowired
 	private KakaoPayService kakaoService;
+	
+	@Autowired
+	private MemberService memberService;
 	
 	@GetMapping("/admin/order/list")
 	public ModelAndView orderList(Criteria cri, @Nullable @RequestParam String content, @Nullable @RequestParam String query,
@@ -110,6 +118,7 @@ public class AdminOrderController {
 		
 		if(order.getSettleCase().equals("카카오페이")) {
 			kakao = kakaoService.kakaoPayInfo(order.getPayId());
+			pay = orderService.selectAccountPaymentByOrderId(order.getId());
 			System.out.println("kakao: " + kakao);
 		}else {
 			pay = orderService.selectAccountPaymentByOrderId(order.getId());
@@ -156,45 +165,86 @@ public class AdminOrderController {
 			OrderDetail ord = orderService.getOrderDetailById(od[i]);
 			order = orderService.getOrderByNo(ord.getOrderId());
 			List<OrderDetail> odList = orderService.getOrderDetail(ord.getOrderId());
+			Payment pay = orderService.selectAccountPaymentByOrderId(order.getId());
 			
 			//품절상태에서 다른 상태로 되돌리면 복구
 			
 			if(!status.equals(OrderState.SOLD_OUT.getLabel()) && 
 					!status.equals(OrderState.CANCEL.getLabel()) &&
 					!status.equals(OrderState.RETURN.getLabel())) {
-				
+					
 			//대기, 결제, 배송, 완료는 하나라도 변경 시 order도 변경
 			
-				if(status.equals("대기")) {
-					ord.setOrderState(OrderState.DEPOSIT_REQUEST);
-					order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
-
-				}else if(status.equals("결제")) {
-					ord.setOrderState(OrderState.PAID);
-					order.setState(OrderState.PAID.getLabel());
-	
-				}else if(status.equals("배송")) {
-					ord.setOrderState(OrderState.SHIPPING);
-					order.setState(OrderState.SHIPPING.getLabel());
+				if(!ord.getOrderState().getLabel().equals(OrderState.DEPOSIT_REQUEST.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.PAID.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.SHIPPING.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.DELIVERED.getLabel())){
+						
+						if(status.equals("대기")) {
+							ord.setOrderState(OrderState.DEPOSIT_REQUEST);
+							order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
 		
-				}else if(status.equals("완료")) {
-					ord.setOrderState(OrderState.DELIVERED);
-					order.setState(OrderState.DELIVERED.getLabel());
-				}
+						}else if(status.equals("결제")) {
+							ord.setOrderState(OrderState.PAID);
+							order.setState(OrderState.PAID.getLabel());
 			
-				orderService.updatePartOrderDetail(ord, ord.getId());
-				orderService.updateOrder(order, order.getId());
+						}else if(status.equals("배송")) {
+							ord.setOrderState(OrderState.SHIPPING);
+							order.setState(OrderState.SHIPPING.getLabel());
 				
+						}else if(status.equals("완료")) {
+							ord.setOrderState(OrderState.DELIVERED);
+							order.setState(OrderState.DELIVERED.getLabel());
+						}
+						
+						
+						order.setMisu(order.getMisu() + ord.getTotalPrice());
+						order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());
+						
+						orderService.updatePartOrderDetail(ord, ord.getId());
+						orderService.updateOrder(order, order.getId());
+						
+						
+				} else {
+						
+					if(status.equals("대기")) {
+						ord.setOrderState(OrderState.DEPOSIT_REQUEST);
+						order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
+	
+					}else if(status.equals("결제")) {
+						ord.setOrderState(OrderState.PAID);
+						order.setState(OrderState.PAID.getLabel());
+		
+					}else if(status.equals("배송")) {
+						ord.setOrderState(OrderState.SHIPPING);
+						order.setState(OrderState.SHIPPING.getLabel());
+			
+					}else if(status.equals("완료")) {
+						ord.setOrderState(OrderState.DELIVERED);
+						order.setState(OrderState.DELIVERED.getLabel());
+					}
+					
+					orderService.updatePartOrderDetail(ord, ord.getId());
+					orderService.updateOrder(order, order.getId());
+				}
 				
+					
+				
+					
+					
 			//취소, 반품, 품절일때 -> 상세 각자 상태변경
 			//대기 상태에서 변경 order 미수금에서 해당 상품 금액 빼기
-			//입금 상태에서 품절 시 전체금액 - 해당상품금액 -> 미수금 마이너스됨
+			//입금 상태에서 품절 시 전체금액 - 해당상품금액 -> 미수금 마이너스됨 -> 취소/환불금액에서 입력하면 처리
 			//주문 총액은 변경 x 미수만 변경	
+			//반품,품절금액 -> return_price에 반영 
+			//결제 취소 금액 -> cancel_price. 최종미수금에서 + 
 				
 			} else { 
 				
-				if(!ord.getOrderState().getLabel().equals(status)) {
-					System.out.println("취소/반품/품절");
+				//취소반품 품절일때 중복 변경 x
+				if(!ord.getOrderState().getLabel().equals(OrderState.CANCEL.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.RETURN.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.SOLD_OUT.getLabel())){
 					
 					if(status.equals("취소")) {
 						ord.setOrderState(OrderState.CANCEL);
@@ -203,43 +253,64 @@ public class AdminOrderController {
 					}else if(status.equals("품절")) {
 						ord.setOrderState(OrderState.SOLD_OUT);
 					}
+
+					//주문취소에 추가  => 현재 취소액 + 선택한 금액
+					order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
 					order.setMisu(order.getMisu() - ord.getTotalPrice());
 					
-					orderService.updatePartOrderDetail(ord, ord.getId());
-				}			
+				}else {
+					System.out.println("취반품");
+					System.out.println(status + " - " + ord.getOrderState().getLabel());
+					if(status.equals("취소")) {
+						ord.setOrderState(OrderState.CANCEL);
+					}else if(status.equals("반품")) {
+						ord.setOrderState(OrderState.RETURN);	
+					}else if(status.equals("품절")) {
+						ord.setOrderState(OrderState.SOLD_OUT);
+					}
+
+				}
+
+				orderService.updatePartOrderDetail(ord, ord.getId());
+				orderService.updateOrder(order, order.getId());
+				
 			}
 			
-			// 최종 미수: 품절 아닌 odList의 가격 - 입금액
-			int deposit = 0;
-			int pdtPrice = 0;
-			
-			List<OrderDetail> notSoldOutList = orderService.selectNotSoldOutOrderDetailById(order.getId());
-			Payment pay = orderService.selectAccountPaymentByOrderId(order.getId());
-			
-			
-			if(pay == null) {
-				deposit = 0;
-				for(OrderDetail notSoldOutOd: notSoldOutList) {
-					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
-				}
+//			
+//			// 최종 미수: 품절 아닌 odList의 가격 - 입금액
+//			int deposit = 0;
+//			int pdtPrice = 0;
+//			
+//			List<OrderDetail> notSoldOutList = orderService.selectNotSoldOutOrderDetailById(order.getId());
+//			
+//			
+//			
+//			if(pay == null) {
+//				deposit = 0;
+//				for(OrderDetail notSoldOutOd: notSoldOutList) {
+//					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+//				}
+//				
+//			}else {
+//				deposit = pay.getPayPrice();
+//				for(OrderDetail notSoldOutOd: notSoldOutList) {
+//					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+//				}
+//			}
+//			
+//			//최종 = 상품금액 - 입금액
+//			int finalPrice = pdtPrice - deposit;
+//			order.setMisu(finalPrice + order.getReturnPrice());
+//			
+//			orderService.updateOrder(order, order.getId());
+//				
 				
-			}else {
-				deposit = pay.getPayPrice();
-				for(OrderDetail notSoldOutOd: notSoldOutList) {
-					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
-				}
-			}
 			
-			int finalPrice = pdtPrice - deposit;
-			order.setMisu(finalPrice);
-			orderService.updateOrder(order, order.getId());
-				
-				
+			
 			if(odList.size() == od.length) {
 				// 전체선택 ->  order의 상태도 같이 변경
 				// 하나라도 있으면 유지
 				// 하나 취소 -> 상태유지
-				System.out.println("모든 상품 선택");
 				order.setState(status);
 				orderService.updateOrder(order, order.getId());
 			}
@@ -267,7 +338,8 @@ public class AdminOrderController {
 			}
 			
 		}
-			
+		
+		
 		return res;
 	}
 	
@@ -316,4 +388,29 @@ public class AdminOrderController {
 		}
 		
 	}
+	
+	@GetMapping("/admin/order/part_cancel")
+	public ModelAndView partCancel(HttpServletRequest request) {
+		ModelAndView mv = new ModelAndView();
+		String oid = request.getParameter("oid");
+		String tid = request.getParameter("tid");
+		
+		Order order = orderService.getOrderByNo(oid);
+		KakaoPayApprovalVO kakao = kakaoService.kakaoPayInfo(tid);
+		
+		mv.addObject("order", order);
+		mv.addObject("kakao", kakao);
+		mv.setViewName("/admin/order/part_cancel");
+		
+		return mv;
+		
+	}
+	
+	@PostMapping("/kakao-part")
+	public String kakaoPartCancel(@RequestBody Map<String, String> map) {
+		log.info("kakao- part cancel - post");
+		return "redirect:" + kakaoService.kakaoPayPartCancel(map);
+	}
+	
+	
 }

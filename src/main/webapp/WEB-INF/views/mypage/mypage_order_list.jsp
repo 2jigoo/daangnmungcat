@@ -108,7 +108,7 @@ $(document).ready(function(){
 		}
 		
 	});
-	
+	/*
 
 	$(document).on('click', '#order_cancel', function(){
 		
@@ -202,7 +202,7 @@ $(document).ready(function(){
 	});
 	
 	
-	
+	*/
 	
 });
 
@@ -264,8 +264,7 @@ ${vo.tid}
 	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id}<br>	
-            					</span>
-            					<input type="button" value="결제정보" id="order_info" tid="${order.payId}">
+            					<%-- </span><input type="button" value="결제정보" id="order_info" tid="${order.payId}"> --%>
             				</td>
             			</c:if>
             			<c:if test="${od.partcnt == 1}">
@@ -275,7 +274,7 @@ ${vo.tid}
 	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
 	            					<br> ${order.id} <br>
 	            				</span>
-	            				<input type="button" value="결제정보" id="order_info" tid="${order.payId}">
+	            				
             				</td>
             			</c:if>
 							
@@ -293,7 +292,7 @@ ${vo.tid}
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
 						<td>
 							${od.orderState.label}<br>
-							<c:if test="${od.orderState.label ne '부분취소' and od.orderState.label ne '환불완료' and od.partcnt != 1 }">
+							<%-- <c:if test="${od.orderState.label ne '부분취소' and od.orderState.label ne '환불완료' and od.partcnt != 1 }">
 								<input type="button" value="부분취소" id="part_cancel"
 										pay_id="${order.payId}" 
 										od_price="${od.pdt.price}" 
@@ -301,7 +300,7 @@ ${vo.tid}
 										order_qtt="${od.quantity}"  
 										order_id="${order.id}"
 										od_id = "${od.id}" >
-							</c:if>
+							</c:if> --%>
 						</td>
 							
 						<c:if test="${od.partcnt > 1}">
@@ -315,7 +314,7 @@ ${vo.tid}
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				${order.state}
 	            				<br>
-            					<c:if test="${order.state == '결제완료' || order.state == '부분취소'}">
+            					<%-- <c:if test="${order.state == '결제완료' || order.state == '부분취소'}">
             						<fmt:formatNumber value="${order.finalPrice}"/>
             						<br>
 									<input type="button" value="전체취소" id="order_cancel"
@@ -332,7 +331,7 @@ ${vo.tid}
 								</c:if>
 								<c:if test="${od.orderState.label == '배송완료'}">
 									<input type="button" value="구매확정" id="purchase_complited"><br>	
-								</c:if>
+								</c:if> --%>
             					</td>
 						</c:if>
 						<c:if test="${od.partcnt == 1}">
@@ -346,7 +345,7 @@ ${vo.tid}
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				${order.state}
             					<br>
-            					<c:if test="${order.state == '결제완료' || order.state == '부분취소'}">
+            					<%-- <c:if test="${order.state == '결제완료' || order.state == '부분취소'}">
             						<fmt:formatNumber value="${order.finalPrice}"/>
             						<br>
 									<input type="button" value="전체취소" id="order_cancel"
@@ -364,7 +363,7 @@ ${vo.tid}
 								<c:if test="${od.orderState.label == '배송완료'}">
 									<input type="button" value="구매확정" id="purchase_complited"> <br>
 								
-								</c:if>
+								</c:if> --%>
             				</td>
             			</c:if>
 						
