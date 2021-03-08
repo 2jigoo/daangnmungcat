@@ -1,33 +1,45 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
-<style>
-.login-wrapper {text-align:center; padding:50px;}
-</style>
 <script>
-
+	function validate() {
+	    if (document.loginForm.id.value == "" && document.loginForm.password.value == "") {
+	        alert("아이디와 비밀번호를 입력해주세요");
+	        document.loginForm.id.focus();
+	        return false;
+	    }
+	    if (document.loginForm.id.value == "") {
+	        alert("아이디를 입력해주세요");
+	        document.loginForm.id.focus();
+	        return false;
+	    }
+	    if (document.loginForm.password.value == "") {
+			alert("비밀번호를 입력해주세요");
+			document.loginForm.password.focus();
+	        return false;
+	    }
+	}
 </script>
-<form method="post" action="/doLogin">
-	<div class="login-wrapper">
-		<c:if test="${loginFailMsg ne null }">
-			<p style="color:red; font-weight:bold;"> ${loginFailMsg }</p>
-		</c:if>
-		
-		<spring:message code="memmsg.a"/>
-
-		<div class="id">
-			<label for="id">id</label>
-			<input type="text" name="id">
+<div id="subContent">
+	<div id="pageCont" class="s-inner">
+		<h2 id="subTitle">로그인</h2>
+		<div class="login-wrapper">
+			<form name="loginForm" method="post" action="/doLogin">
+				<input class="input_row" type="text" name="id" placeholder="아이디" required>
+				<input class="input_row" type="password" name="password" placeholder="비밀번호" required>
+				<c:if test="${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'] ne null}">
+					${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'] }
+					<p class="login_fail_msg">${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</p>
+					<c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session"/>
+				</c:if>
+				<input class="login_btn" type="submit" value="로그인" onclick="validate()">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+			</form>
+			<div class="link_row">
+				<a class="link_items" href="">아이디 찾기</a><span class="bar" aria-hidden="true"></span><a class="link_items" href="">비밀번호 찾기</a><span class="bar" aria-hidden="true"></span><a class="link_items" href="/sign/contract">회원가입</a>
+			</div>
 		</div>
-		<div class="pw">
-			<label for="password">pw</label>
-			<input type="password" name="password">
-		</div>
-		<div class="btn">
-			<input type="submit" value="로그인">
-		</div>
-		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 	</div>
-</form>
+</div>
 
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

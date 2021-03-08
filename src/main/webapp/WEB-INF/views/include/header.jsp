@@ -5,7 +5,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <sec:authorize access="isAuthenticated()">
-	<sec:authentication property="principal" var="loginAdmin"/>
+	<sec:authentication property="principal" var="loginUser"/>
 </sec:authorize>
 
 <!DOCTYPE html>

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
@@ -76,8 +77,8 @@ public class AdminMemberController {
 		return "/admin/member/member_list";
 	}
 	
-	@GetMapping("/admin/member/detail/{id}")
-	public String memberInfoViewPage() {
+	@GetMapping("/admin/member/detail")
+	public String memberInfoViewPage(String id) {
 		return "/admin/member/member_detail";
 	}
 

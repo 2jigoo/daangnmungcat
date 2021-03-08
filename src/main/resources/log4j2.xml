@@ -22,7 +22,7 @@
         <Logger name="daangnmungcat" level="INFO" additivity="false">
             <AppenderRef ref="Console_Appender" />
         </Logger>
-        <Logger name="daangnmungcat.mapper" level="INFO" additivity="false">
+        <Logger name="daangnmungcat.mapper" level="TRACE" additivity="false">
             <AppenderRef ref="Console_Appender" />
         </Logger>
     </Loggers>
