@@ -193,7 +193,7 @@
             </li>
             
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/admin/notice/list">
                     <i class="fas fa-fw fa-exclamation"></i>
                     <span>공지사항 관리</span></a>
             </li>

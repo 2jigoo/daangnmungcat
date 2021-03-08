@@ -27,6 +27,7 @@
 				<input class="input_row" type="text" name="id" placeholder="아이디" required>
 				<input class="input_row" type="password" name="password" placeholder="비밀번호" required>
 				<c:if test="${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'] ne null}">
+					${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'] }
 					<p class="login_fail_msg">${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</p>
 					<c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session"/>
 				</c:if>

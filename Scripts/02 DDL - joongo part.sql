@@ -197,7 +197,8 @@ CREATE TABLE notice(
 	contents VARCHAR2(2000), /* 내용 */
 	regdate DATE NOT NULL, /* 등록일*/
 	notice_yn char(1) DEFAULT 'n', /*공지여부*/
-	notice_file varchar2(1000)	/*첨부파일 경로*/
+	notice_file varchar2(1000),	/*첨부파일 경로*/
+	writer VARCHAR2(20) NOT NULL
 );
 
 ALTER TABLE notice
