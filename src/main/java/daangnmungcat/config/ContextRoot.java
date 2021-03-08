@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
@@ -22,10 +23,14 @@ public class ContextRoot {
 	public MessageSource messageSource() {
 		ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
 		ms.setDefaultLocale(Locale.KOREA);
-		ms.setBasenames("classpath:messages/security-message", "classpath:org/springframework/security/messages");
+		ms.setBasenames("classpath:messages/message");
 		ms.setDefaultEncoding("UTF-8");
 		ms.setCacheSeconds(30);
 		return ms;
 	}
 	
+	@Bean
+	public MessageSourceAccessor messageSourceAccessor() {
+		return new MessageSourceAccessor(messageSource());
+	}
 }

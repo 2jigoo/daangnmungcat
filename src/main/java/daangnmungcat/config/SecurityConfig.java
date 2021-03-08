@@ -29,10 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		System.out.println("security 작동");
 		http.authorizeRequests()
 			.antMatchers("/").permitAll()
-			.antMatchers("/chat/**").hasRole("USER")
-			.antMatchers("/admin/**").hasRole("ADMIN")
 			.antMatchers("/login").anonymous()
 			.antMatchers("/logout").authenticated()
+			.antMatchers("/admin/**").hasRole("ADMIN")
+			.antMatchers("/chat/**").authenticated()
 			.anyRequest().permitAll();
 		
 		http.cors().configurationSource(corsConfigurationSource());
@@ -41,8 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.loginPage("/login")
 			.usernameParameter("id")
 			.loginProcessingUrl("/doLogin")
-			.successHandler(authenticationSuccessHandler)
-			.failureHandler(authenticationFailureHandler);
+			.successHandler(authenticationSuccessHandler);
 		
 		http.logout()
 			.logoutUrl("/logout")
@@ -71,8 +70,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationSuccessHandler authenticationSuccessHandler;
 	
-	@Autowired
-	private AuthenticationFailureHandler authenticationFailureHandler;
+//	@Autowired
+//	private AuthenticationFailureHandler authenticationFailureHandler;
 	
 	
 	@Override

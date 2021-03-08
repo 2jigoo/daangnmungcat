@@ -260,6 +260,16 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 	.list_top > div select {width:140px; height:35px;}
 }
 
+/*login page*/
+.login-wrapper {width: 400px; margin: 20px auto 0px auto; text-align: center; padding: 40px; border: 1px solid #dddddd;}
+.login-wrapper form {margin: 0px; padding: 0px; margin-bottom: 20px;}
+.login-wrapper .login_fail_msg {color: crimson; margin: 10px 0px 20px 0px;}
+.login-wrapper .input_row {font-family: inherit; font-size: inherit; width: 100%; height: 48px; margin-bottom: 8px; padding: 7px 35px 10px 11px; border: solid 1px #dadada;}
+.login-wrapper .login_btn {font-family: inherit; font-size: inherit; width: 100%; height: 48px; padding: 7px 35px 10px 11px; border: solid 1px #dadada; color: white; background-color: #ff7e15; }
+.login-wrapper .link_row {font-size: 16px; line-height: 16px; padding-top: 18px; text-align: center; color: #666666;}
+.login-wrapper .link_row .link_items {font-size: 16px; line-height: 16px; display: inline-block; text-decoration: none; color: #666666; }
+.bar {display: inline-block;width: 1px; height: 16px; margin: 0px 10px; background: #e4e4e5; vertical-align: bottom;}
+
 
 .joongo_comment {margin-top:40px;}
 .joongo_comment > .tit {font-size:1.25em; color:#000; font-weight:500; margin-bottom:10px;}
