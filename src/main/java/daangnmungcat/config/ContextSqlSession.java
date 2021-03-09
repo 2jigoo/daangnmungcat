@@ -20,9 +20,10 @@ public class ContextSqlSession {
 	@Autowired
 	private ApplicationContext ApplicationContext;
 	
+	// RefreshableSqlSessionFactoryBean : Mapper.xml 수정 시 바로 반영
 	@Bean
-	public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws IOException {
-		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+	public RefreshableSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws IOException {
+		RefreshableSqlSessionFactoryBean factoryBean = new RefreshableSqlSessionFactoryBean();
 		
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setConfigLocation(ApplicationContext.getResource("classpath:/mybatis-config.xml"));

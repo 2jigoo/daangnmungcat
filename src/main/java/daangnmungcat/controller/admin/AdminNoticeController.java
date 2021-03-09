@@ -13,9 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Notice;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.SearchCriteria;
@@ -77,20 +79,22 @@ public class AdminNoticeController {
 	}
 	
 	@PostMapping("/admin/notice/write")
-	public String noticeWriting(Notice notice, @RequestParam("noticeFile") MultipartFile file, AuthInfo loginUser, HttpSession session) {
+	@ResponseBody
+	public String noticeWriting(Notice notice, @RequestParam(value = "noticeFile", required = false) MultipartFile file, AuthInfo loginUser, HttpSession session) {
 		
 		log.info(notice.toString());
-		log.info(file.getOriginalFilename());
 		
 		File realPath = null;
 		
 		if(file != null) {
+			log.info(file.getOriginalFilename());
 			realPath = getRealPath(session);
 		}
 		
-		int res = noticeService.registNotice(notice, file, realPath);
+		notice.setWriter(new Member(loginUser.getId()));
+		int id = noticeService.registNotice(notice, file, realPath);
 		
-		return "/admin/notice/notice_list";
+		return "id";
 	}
 	
 	private File getRealPath(HttpSession session) {

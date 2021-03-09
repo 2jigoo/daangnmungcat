@@ -71,8 +71,16 @@
 				e.preventDefault();
 			}
 		});
-		
 	})
+	
+	
+	$(function(){
+		$("#writeBtn").click(function(e){
+			e.preventDefault();
+			uploadNoticeForm();
+		});
+		
+	});
 	
 	function setFilteringPaging() {
 		
@@ -84,6 +92,32 @@
 		
 		var perPageNum = thisUrl.searchParams.get("perPageNum");
 	}
+	
+	function uploadNoticeForm() {
+		var form = $("#noticeForm")[0];
+		var formData = new FormData(form);
+		
+		$.ajax({
+			url: "/admin/notice/write",
+			type: "post",
+			data: formData,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(id) {
+				/* if(confirm("작성 완료. 확인하시겠습니까?") == true) {
+					location.href = "/notice/"
+				} */
+				console.log("성공! " + id);
+			},
+			error: function(e) {
+				console.log(e);
+			}
+		})
+	}
+	
+	
+	
 </script>
 <div class="card shadow mb-4" style="width: 800px;">
 	<div class="card-header py-2">
@@ -107,7 +141,7 @@
 	</div>
 	<!-- card-body -->
 	<div class="card-body p-5">
-		<form autocomplete="off" action="/admin/notice/write" method="post">
+		<form autocomplete="off" action="/admin/notice/write" method="post" name="noticeForm" enctype="multipart/form-data">
 			<input type="hidden" name="guestId" value="">
 			<input type="hidden" name="bookNo" value="">
 			<div class="form-group row">
@@ -137,7 +171,7 @@
 			<div class="form-group row">
 				<div class="col-sm" style="text-align: right;">
 					<button type="button" class="btn btn-secondary" name="clearBtn" onclick="setClear()">초기화</button>
-					<input type="submit" class="btn btn-primary" id="regBtn" value="등록">
+					<input type="submit" class="btn btn-primary" id="writeBtn" value="등록">
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 				</div>
 			</div>

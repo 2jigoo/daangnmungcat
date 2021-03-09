@@ -62,7 +62,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		String path = UPLOAD_PATH + File.separator + notice.getId();
 		
-		int res = noticeMapper.insertNotice(notice);
+		noticeMapper.insertNotice(notice);
 		
 		if(file != null) {
 			
