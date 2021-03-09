@@ -33,6 +33,7 @@ public interface JoongoListMapper {
 	int updateSold(Sale sale);
 	int deleteJoongoSale(int id);
 	
+	int selectHeartedJoongoCountsByMemberId(@Param("memberId") String memberId);
 	List<Sale> selectHeartedJoongoByMemberIdWithPaging(@Param("memberId") String memberId, @Param("criteria") Criteria criteria);
 //	int insertFileForm(FileForm FileForm);
 	int nextID();

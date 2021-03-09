@@ -74,24 +74,26 @@
 	<select id="selectNoticeBySearch" resultMap="noticeResult">
 		SELECT *
 		FROM (
-			SELECT
-				rownum AS rnum,
-				n.id,
-				title,
-				contents,
-				n.regdate,
-				notice_yn,
-				notice_file,
-				n.writer AS writer_id,
-				m.nickname AS writer_nickname
-			FROM
-				notice n
-					LEFT OUTER JOIN member m ON (n.writer = m.id)
-			<include refid="whereSearchSQL"/>
-			ORDER BY regdate DESC
-		) a
-		WHERE a.rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
-		ORDER BY a.rnum
+			SELECT rownum AS rnum, a.*
+			FROM (
+				SELECT
+					n.id,
+					title,
+					contents,
+					n.regdate,
+					notice_yn,
+					notice_file,
+					n.writer AS writer_id,
+					m.nickname AS writer_nickname
+				FROM
+					notice n
+						LEFT OUTER JOIN member m ON (n.writer = m.id)
+				<include refid="whereSearchSQL"/>
+				ORDER BY regdate DESC
+			) a
+		)
+		WHERE rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
+		ORDER BY rnum
 	</select>
 	
 	<select id="selectNoticeCountBySearch" resultType="int">

@@ -256,6 +256,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 	
 	@Override
+	public int getHeartedCounts(String memberId) {
+		int count = joongoListMapper.selectHeartedJoongoCountsByMemberId(memberId);
+		return count;
+	}
+	
+	@Override
 	public List<Sale> getHeartedList(String memberId, Criteria criteria) {
 		List<Sale> list = joongoListMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
 		setChatCount(list);

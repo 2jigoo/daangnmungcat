@@ -3,9 +3,15 @@
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <style>
-	.tumb-box {
-		border-radius: 10px;
-		overflow: hidden;
+	#uploadImage {
+		cursor: pointer;
+	    border-radius: 8px;
+	    overflow: hidden;
+	    border: 1px solid lightgray;
+	}
+
+	.thumb-box {
+		position: relative;
 	}
 	
 	.image-null {
@@ -13,13 +19,30 @@
 	}
 	
 	.image-uploaded {
-		display: inline-block;
 		width: 200px;
-		border-radius: 8px;
 	}
 	
-	.dellink {
+	.image-delete-btn {
 		display: none;
+		background: url(/resources/images/delete_image.svg);
+		background-size: contain;
+	    background-repeat: no-repeat;
+	    position: absolute;
+	    top: 0px;
+	    right: 0px;
+	    width: 32px;
+	    height: 32px;
+	}
+	
+	.image-delete-btn-span {
+		position: absolute;
+	    width: 1px;
+	    height: 1px;
+	    padding: 0;
+	    margin: -1px;
+	    overflow: hidden;
+	    clip: rect(0,0,0,0);
+	    border: 0;
 	}
 </style>
 <script>
@@ -41,7 +64,7 @@
 				preview.classList.remove("image-null");
 				preview.src = URL.createObjectURL(elem.files[0]); //파일 객체에서 이미지 데이터 가져옴.
 				preview.classList.add("image-uploaded");
-				document.querySelector('.dellink').style.display = 'block'; // 이미지 삭제 링크 표시
+				document.querySelector('.image-delete-btn').style.display = 'block'; // 이미지 삭제 링크 표시
 				preview.onload = function() {
 					URL.revokeObjectURL(preview.src); //URL 객체 해제
 				}
@@ -51,11 +74,11 @@
 		});
 		
 	  	// 파일 제거시 썸네일 해제
-		document.querySelector('.dellink').addEventListener('click', function(e){
-			let dellink = e.target;
-			let preview = dellink.previousElementSibling;
+		document.querySelector('.delbtn').addEventListener('click', function(e){
+			let delbtn = e.target;
+			let preview = delbtn.previousElementSibling;
 			preview.src = ''; // 썸네일 이미지 src 데이터 해제
-			document.querySelector('.dellink').style.display = 'none';
+			document.querySelector('.delbtn').style.display = 'none';
 		});
 		
 	});
@@ -248,12 +271,12 @@
 			<div class="form-group row">
 				<label for="inputEmail3" class="col-3 col-form-label font-weight-bold">첨부파일</label>
 				<div class="col-9">
-					<input type="file" class="form-control mb-3" id="uploadImage" name="uploadFile" accept="image/jpeg, image/jpg, image/png">
+					<input type="file" class="form-control mb-3" id="uploadImage" name="uploadImage" accept="image/jpeg, image/jpg, image/png">
 					 <div class="row col-auto">
 					 	<div class="thumb-box">
 							<img src="" class="thumb image-null"/>
+							<a href="javascript:" class="image-delete-btn"><span class="image-delete-btn-span">첨부 이미지 삭제</span></a>
 						</div>
-						<a href="javascript:void(0);" class="dellink">썸네일삭제</a>
 					</div>
 				</div>
 			</div>

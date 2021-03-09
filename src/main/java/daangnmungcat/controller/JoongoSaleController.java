@@ -55,7 +55,9 @@ public class JoongoSaleController {
 	
 	
 	@RequestMapping(value = "joongoSale/detailList", method = RequestMethod.GET)
-	public String listById(@RequestParam int id, Model model, AuthInfo loginUser, Criteria cri) {
+	public String listById(@RequestParam(value = "id") int id, Model model, AuthInfo loginUser, Criteria cri) {
+		log.info("detailList?id: " + id);
+		
 		Sale sale = service.getSaleById(id);
 		String memId = sale.getMember().getId();
 		
@@ -137,12 +139,21 @@ public class JoongoSaleController {
 	
 	@GetMapping("/joongo/heart/list")
 	public String heartedList(AuthInfo loginUser, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+		log.info("page: " + page);
+		
 		PageMaker pageMaker = new PageMaker();
 		Criteria criteria = new Criteria(page, 20);
+		
+		int totalCount = service.getHeartedCounts(loginUser.getId());
+		log.info("totalCount: " + totalCount);
+		
 		pageMaker.setCri(criteria);
+		pageMaker.setTotalCount(totalCount);
 		
 		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
 		list.forEach(sale -> log.debug(sale.toString()));
+		
+		log.info("pageMaker: " + pageMaker.toString());
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", pageMaker);

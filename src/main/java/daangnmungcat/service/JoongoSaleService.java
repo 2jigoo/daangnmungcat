@@ -35,6 +35,7 @@ public interface JoongoSaleService {
 	FileForm selectThumImgPath(int id);
 
 	// 해당 회원의 페이징된 찜 목록
+	int getHeartedCounts(String memberId);
 	List<Sale> getHeartedList(String memberId, Criteria criteria);
 	
 	

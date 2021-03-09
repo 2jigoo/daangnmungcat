@@ -302,29 +302,31 @@
 	<select id="selectMemberBySearch" resultMap="memberResult">
 		SELECT *
 		FROM (
-			SELECT
-				rownum AS rnum,
-				m.id, pwd, m.name, nickname, email, phone, grade,
-				DONGNE1 AS dongne1_id,
-				d1.name AS dongne1_name,
-				dongne2 AS dongne2_id,
-				d2.name AS dongne2_name,
-				profile_pic, profile_text, regdate, birthday,
-				zipcode, address1, address2, use_yn, 
-				NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
-			FROM MEMBER m
-				LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
-				LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
-			<include refid="whereSearchSql"/>
-			<choose>
-				<when test="scri.searchType != null and !scri.searchType.equals('') and scri.keyword != null and !scri.keyword.equals('')">
-					ORDER BY m.${scri.searchType} ASC, regdate DESC
-				</when>
-				<otherwise>ORDER BY regdate DESC</otherwise>
-			</choose>
-		) a
-		WHERE a.rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
-		ORDER BY a.rnum
+			SELECT rownum AS rnum, a.*
+			FROM (
+				SELECT
+					m.id, pwd, m.name, nickname, email, phone, grade,
+					DONGNE1 AS dongne1_id,
+					d1.name AS dongne1_name,
+					dongne2 AS dongne2_id,
+					d2.name AS dongne2_name,
+					profile_pic, profile_text, regdate, birthday,
+					zipcode, address1, address2, use_yn, 
+					NVL((SELECT sum(mileage) FROM mall_MILEAGE GROUP BY mem_id HAVING mem_id = m.id), 0) AS MILEAGE
+				FROM MEMBER m
+					LEFT OUTER JOIN dongne1 d1 ON (m.dongne1 = d1.id)
+					LEFT OUTER JOIN dongne2 d2 ON (m.dongne2 = d2.ID)
+				<include refid="whereSearchSql"/>
+				<choose>
+					<when test="scri.searchType != null and !scri.searchType.equals('') and scri.keyword != null and !scri.keyword.equals('')">
+						ORDER BY m.${scri.searchType} ASC, regdate DESC
+					</when>
+					<otherwise>ORDER BY regdate DESC</otherwise>
+				</choose>
+			) a
+		)
+		WHERE rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
+		ORDER BY rnum
 	</select>
 	
 	<select id="selectMemberCountBySearch" resultType="int">

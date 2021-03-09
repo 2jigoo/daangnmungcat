@@ -83,7 +83,7 @@ public class AdminNoticeController {
 	
 	@PostMapping("/admin/notice")
 	@ResponseBody
-	public ResponseEntity<Object> noticeWriting(Notice notice, @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile, AuthInfo loginUser, HttpSession session) {
+	public ResponseEntity<Object> noticeWriting(Notice notice, @RequestParam(value = "uploadImage", required = false) MultipartFile uploadFile, AuthInfo loginUser, HttpSession session) {
 		
 		log.info(notice.toString());
 		
