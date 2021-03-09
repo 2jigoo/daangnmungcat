@@ -175,7 +175,7 @@ CREATE TABLE MALL_ORDER_DETAIL (
 	quantity NUMBER(4) NOT NULL, /* 수량 */
 	price NUMBER(12) NOT NULL, /* 가격 */
 	total_price NUMBER(12) NOT NULL,/* 총가격 */
-	order_state VARCHAR2(30)
+	order_state VARCHAR2(30) DEFAULT '결제완료'
 );
 
 CREATE UNIQUE INDEX PK_MALL_ORDER_DETAIL

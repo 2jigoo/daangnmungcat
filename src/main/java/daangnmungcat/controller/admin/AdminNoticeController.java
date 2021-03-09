@@ -8,10 +8,13 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -78,24 +81,39 @@ public class AdminNoticeController {
 		return "/admin/notice/notice_write";
 	}
 	
-	@PostMapping("/admin/notice/write")
+	@PostMapping("/admin/notice")
 	@ResponseBody
-	public String noticeWriting(Notice notice, @RequestParam(value = "noticeFile", required = false) MultipartFile file, AuthInfo loginUser, HttpSession session) {
+	public ResponseEntity<Object> noticeWriting(Notice notice, @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile, AuthInfo loginUser, HttpSession session) {
 		
 		log.info(notice.toString());
 		
 		File realPath = null;
 		
-		if(file != null) {
-			log.info(file.getOriginalFilename());
+		if(uploadFile != null) {
+			log.info(uploadFile.getOriginalFilename());
 			realPath = getRealPath(session);
 		}
 		
+		int id = 0;
 		notice.setWriter(new Member(loginUser.getId()));
-		int id = noticeService.registNotice(notice, file, realPath);
 		
-		return "id";
+		try {
+			id = noticeService.registNotice(notice, uploadFile, realPath);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(id);
 	}
+	
+	@PutMapping("/admin/notice/${id}")
+	@ResponseBody
+	public ResponseEntity<Object> noticeModifying(Notice notice, @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile, AuthInfo loginUser, HttpSession session) {
+		
+		
+		return ResponseEntity.ok("");
+	}
+	
 	
 	private File getRealPath(HttpSession session) {
 		return new File(session.getServletContext().getRealPath("")); 

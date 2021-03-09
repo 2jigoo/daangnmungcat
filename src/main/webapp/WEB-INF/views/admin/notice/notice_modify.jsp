@@ -2,73 +2,26 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
-<style>
-	.tumb-box {
-		border-radius: 10px;
-		overflow: hidden;
-	}
-	
-	.image-null {
-		display: none;
-	}
-	
-	.image-uploaded {
-		display: inline-block;
-		width: 200px;
-		border-radius: 8px;
-	}
-	
-	.dellink {
-		display: none;
-	}
-</style>
 <script>
 	$(document).ready(function() {
-		document.title += ' - 공지사항 글쓰기';
+		document.title += ' - 공지사항 등록';
 		
 		$("#noticeForm").on("keyup", "textarea", function(e) {
 		    $(this).css("height", "auto");
 		    $(this).height(this.scrollHeight);
 		  });
-		
 	  	$("table").find("textarea").keyup();
-	  	
-	  	// 파일 등록시 썸네일 등록
-		document.getElementById('uploadImage').addEventListener('change', function(e) {
-			let elem = e.target;
-			if (validateType(elem.files[0])) {
-				let preview = document.querySelector('.thumb');
-				preview.classList.remove("image-null");
-				preview.src = URL.createObjectURL(elem.files[0]); //파일 객체에서 이미지 데이터 가져옴.
-				preview.classList.add("image-uploaded");
-				document.querySelector('.dellink').style.display = 'block'; // 이미지 삭제 링크 표시
-				preview.onload = function() {
-					URL.revokeObjectURL(preview.src); //URL 객체 해제
-				}
-			} else {
-				console.log('이미지 파일이 아닙니다.');
-			}
-		});
-		
-	  	// 파일 제거시 썸네일 해제
-		document.querySelector('.dellink').addEventListener('click', function(e){
-			let dellink = e.target;
-			let preview = dellink.previousElementSibling;
-			preview.src = ''; // 썸네일 이미지 src 데이터 해제
-			document.querySelector('.dellink').style.display = 'none';
-		});
-		
 	});
-
+	
 	$(function() {
 		/* 기간 설정 관련 */
 		$("#startDate").datepicker({
-			format : "yyyy-mm-dd",
-			endDate : '0d',
-			language : "ko",
-			todayBtn : "linked",
-			clearBtn : true,
-			autoClose : true,
+			format: "yyyy-mm-dd",
+			endDate: '0d',
+			language: "ko",
+			todayBtn: "linked",
+			clearBtn: true,
+			autoClose: true,
 		}).on("changeDate", function(selected) {
 			var startDate = new Date(selected.date.valueOf());
 			$("#endDate").datepicker("setStartDate", startDate);
@@ -77,136 +30,111 @@
 		});
 
 		$("#endDate").datepicker({
-			format : "yyyy-mm-dd",
-			endDate : '0d',
-			language : "ko",
-			todayBtn : "linked",
-			clearBtn : true,
-			autoClose : true
+			format: "yyyy-mm-dd",
+			endDate: '0d',
+			language: "ko",
+			todayBtn: "linked",
+			clearBtn: true,
+			autoClose: true
 		}).on("changeDate", function(selected) {
 			var endDate = new Date(selected.date.valueOf());
 			$("#startDate").datepicker("setEndDate", endDate);
 		}).on("clearDate", function(selected) {
 			$("#startDate").datepicker("setEndDate", null);
 		});
-
+		
 		$("#endDate").datepicker("update", dateToString(new Date()));
-
-		$("select[name=noticeYn]").change(function() {
+		
+		$("select[name=noticeYn]").change(function(){
 			document.searchForm.submit();
 		});
-
+		
 		$(".dateBtn").not("#aMonthBtn").click(function() {
 			setDateValue($(this).val() - 1);
 		});
-
+		
 		$("#allBtn").click(function() {
 			$("#startDate").datepicker('setDate', null);
 			$("#endDate").datepicker('setDate', null);
 		});
-
+		
 		$("#aMonthBtn").click(function() {
 			var today = new Date();
 			var wantDate = new Date();
 			wantDate.setMonth(wantDate.getMonth() - 1);
 			wantDate.setDate(wantDate.getDate() + 1);
-
+			
 			$("#endDate").datepicker("update", dateToString(today));
 			$("#startDate").datepicker("update", dateToString(wantDate));
 		});
-
-		$("select[name=perPageNum]").change(function() {
+		
+		$("select[name=perPageNum]").change(function(){
 			document.searchForm.submit();
 		});
-
-		$("#searchBtn").click(
-				function(e) {
-					if ($("select[name=searchType]").val() == undefined
-							|| $("input[name=keyword]").val() == "") {
-						e.preventDefault();
-					}
-				});
+		
+		$("#searchBtn").click(function(e) {
+			if($("select[name=searchType]").val() == undefined || $("input[name=keyword]").val() == "") {
+				e.preventDefault();
+			}
+		});
 	})
-
-	$(function() {
-		$("#writeBtn").click(function(e) {
+	
+	
+	$(function(){
+		$("#writeBtn").click(function(e){
 			e.preventDefault();
 			uploadNoticeForm();
 		});
-
+		
 	});
-
+	
 	function setFilteringPaging() {
-
+		
 		var thisUrlStr = window.location.href;
 		var thisUrl = new URL(thisUrlStr);
 
 		console.log("setFilteringPaging!");
 		console.log(thisUrlStr);
-
+		
 		var perPageNum = thisUrl.searchParams.get("perPageNum");
 	}
-
+	
 	function uploadNoticeForm() {
 		var form = $("#noticeForm")[0];
 		var formData = new FormData(form);
-
+		
 		console.log(form);
 		console.log(formData);
-
+		
 		$.ajax({
-			url : "/admin/notice",
-			type : "post",
-			enctype : "multipart/form-data",
-			data : formData,
-			contentType : false,
-			processData : false,
-			cache : false,
-			success : function(id) {
+			url: "/admin/notice/write",
+			type: "post",
+			enctype: "multipart/form-data",
+			data: formData,
+			contentType: false,
+			processData: false,
+			cache: false,
+			success: function(id) {
 				/* if(confirm("작성 완료. 확인하시겠습니까?") == true) {
 					location.href = "/notice/"
 				} */
 				console.log("성공! " + id);
 				location.href = "/admin/notice/list";
 			},
-			error : function(e) {
+			error: function(e) {
 				console.log(e);
 			}
 		})
 	}
-
-	//이미지 객체 타입으로 이미지 확장자 밸리데이션
-	var validateType = function(img){
-		return (['image/jpeg','image/jpg','image/png'].indexOf(img.type) > -1);
-	}
 	
-	var validateName = function(fname) {
-		let extensions = [ 'jpeg', 'jpg', 'png' ];
-		let fparts = fname.split('.');
-		let fext = '';
-
-		if (fparts.length > 1) {
-			fext = fparts[fparts.length - 1];
-		}
-
-		let validated = false;
-
-		if (fext != '') {
-			extensions.forEach(function(ext) {
-				if (ext == fext) {
-					validated = true;
-				}
-			});
-		}
-
-		return validated;
-	}
+	
+	
 </script>
-<div class="card shadow mb-4" style="width: 920px;">
+<div class="card shadow mb-4" style="width: 800px;">
 	<div class="card-header py-2">
 		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
 			<div class="mt-2 float-left">
-             	공지사항 글쓰기
+             	공지사항 등록
             </div>
 			<div class="float-right">
 				<button class="btn btn-sm btn-secondary" name="clearBtn" onclick="setClear()">초기화</button>
@@ -247,14 +175,8 @@
 			
 			<div class="form-group row">
 				<label for="inputEmail3" class="col-3 col-form-label font-weight-bold">첨부파일</label>
-				<div class="col-9">
-					<input type="file" class="form-control mb-3" id="uploadImage" name="uploadFile" accept="image/jpeg, image/jpg, image/png">
-					 <div class="row col-auto">
-					 	<div class="thumb-box">
-							<img src="" class="thumb image-null"/>
-						</div>
-						<a href="javascript:void(0);" class="dellink">썸네일삭제</a>
-					</div>
+				<div class="col-9 input-group mb-3">
+					<input type="file" class="form-control" id="inputFile" name="uploadFile">
 				</div>
 			</div>
 			

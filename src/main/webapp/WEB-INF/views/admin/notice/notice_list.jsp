@@ -262,12 +262,11 @@
 					<thead>
 						<tr>
 							<th width="50px"></th>
-							<th>글번호</th>
-							<th>공지</th>
+							<th width="120px">글번호</th>
+							<th width="80px">공지</th>
 							<th>제목</th>
-							<th>내용</th>
-							<th>작성자</th>
-							<th>작성일</th>
+							<th width="180px">작성자</th>
+							<th width="180px">작성일</th>
 							<th style="width: 104px; min-width:104px; max-width:104px;">상세보기</th>
 							<th style="width: 180px; min-width:180px; max-width:180px;"></th>
 						</tr>
@@ -286,10 +285,9 @@
 							</td>
 							<td>${notice.id }</td>
 							<td>${notice.noticeYn eq "y" ? "!" : "일반" }</td>
-							<td>${notice.title }</td>
-							<td>${notice.contents }</td>
-							<td>${notice.writer }</td>
-							<td><javatime:format value="${notice.regdate }" pattern="yyyy-MM-dd"/></td>
+							<td style="text-align: left;">${notice.title }</td>
+							<td>${notice.writer.nickname }(${notice.writer.id })</td>
+							<td><javatime:format value="${notice.regdate }" pattern="yyyy-MM-dd HH:mm"/></td>
 							<td>
 								<a href="#" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">보기</span></a>
 							</td>
