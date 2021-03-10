@@ -1,23 +1,16 @@
 package daangnmungcat.controller.admin;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,19 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import daangnmungcat.config.ContextSqlSession;
-import daangnmungcat.controller.PayController;
-import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Criteria;
-import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Payment;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
-import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.OrderService;
@@ -60,19 +48,45 @@ public class AdminOrderController {
 	private MemberService memberService;
 	
 	@GetMapping("/admin/order/list")
-	public ModelAndView orderList(Criteria cri, @Nullable @RequestParam String content, @Nullable @RequestParam String query,
-			@Nullable @RequestParam String state,
-			@Nullable @RequestParam String start, @Nullable @RequestParam String end) {
+	public ModelAndView orderList(Criteria cri, 
+			@Nullable @RequestParam String content, @Nullable @RequestParam String query,
+			@Nullable @RequestParam String start, @Nullable @RequestParam String end,
+			@Nullable @RequestParam String state,@Nullable @RequestParam String part_cancel,
+			@Nullable @RequestParam String settle_case,
+			@Nullable @RequestParam String misu, @Nullable @RequestParam String return_price) {
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		
+		cri.setPerPageNum(10);
 		List<Order> list = null;
+
 		
-		if(content != null  || query != null || state != null ||  start != null || end != null) {
-			list = orderService.selectOrderBySearch(content, query, state,  start, end, cri);
-			pageMaker.setTotalCount(orderService.searchListCount(content, query, state, start, end));
-			System.out.println(orderService.searchListCount(content, query, state, start, end));
+		if(content != null  || query != null) {
+
+			list = orderService.selectOrderBySearch(content, query, state,  start, end, settle_case, part_cancel, misu, return_price, cri);
+			pageMaker.setTotalCount(orderService.searchListCount(content, query, state, start, end, part_cancel, settle_case, misu, return_price));
+			System.out.println(orderService.searchListCount(content, query, state, start, end, settle_case, part_cancel, misu, return_price));
+			
+		}else if(state != null ||  start != null || end != null || settle_case != null || 
+				part_cancel != null || misu != null || return_price != null) {
+			
+			if(state.equals("전체")) {
+				state = "";
+			}
+			if(state.equals("전체취소")) {
+				state = "취소";
+			}
+			if(state.equals("부분취소")) {
+				state = null; 
+			}
+			
+			if(settle_case.equals("전체")) {
+				settle_case = null;
+			}
+			
+			list = orderService.selectOrderBySearch(content, query, state,  start, end, settle_case, part_cancel, misu, return_price, cri);
+			pageMaker.setTotalCount(orderService.searchListCount(content, query, state, start, end, part_cancel, settle_case, misu, return_price));
+			System.out.println("총갯수:" + orderService.searchListCount(content, query, state, start, end, part_cancel, settle_case, misu, return_price));
 		}else {
 			list = orderService.selectOrderAll(cri);
 			pageMaker.setTotalCount(orderService.listCount());
@@ -97,6 +111,10 @@ public class AdminOrderController {
 		mv.addObject("state", state);
 		mv.addObject("start", start);
 		mv.addObject("end", end);
+		mv.addObject("settleCase", settle_case);
+		mv.addObject("partCancel", part_cancel);
+		mv.addObject("misu", misu);
+		mv.addObject("returnPrice", return_price);
 	
 		mv.setViewName("/admin/order/order_list");
 		
@@ -159,13 +177,14 @@ public class AdminOrderController {
 		//od id list
 		Order order = null;
 		int res = 0;
+		Payment pay = null;
 		
 		for(int i=0; i<od.length; i++) {
 			
 			OrderDetail ord = orderService.getOrderDetailById(od[i]);
 			order = orderService.getOrderByNo(ord.getOrderId());
 			List<OrderDetail> odList = orderService.getOrderDetail(ord.getOrderId());
-			Payment pay = orderService.selectAccountPaymentByOrderId(order.getId());
+			pay = orderService.selectAccountPaymentByOrderId(order.getId());
 			
 			//품절상태에서 다른 상태로 되돌리면 복구
 			
@@ -275,37 +294,7 @@ public class AdminOrderController {
 				orderService.updateOrder(order, order.getId());
 				
 			}
-			
-//			
-//			// 최종 미수: 품절 아닌 odList의 가격 - 입금액
-//			int deposit = 0;
-//			int pdtPrice = 0;
-//			
-//			List<OrderDetail> notSoldOutList = orderService.selectNotSoldOutOrderDetailById(order.getId());
-//			
-//			
-//			
-//			if(pay == null) {
-//				deposit = 0;
-//				for(OrderDetail notSoldOutOd: notSoldOutList) {
-//					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
-//				}
-//				
-//			}else {
-//				deposit = pay.getPayPrice();
-//				for(OrderDetail notSoldOutOd: notSoldOutList) {
-//					pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
-//				}
-//			}
-//			
-//			//최종 = 상품금액 - 입금액
-//			int finalPrice = pdtPrice - deposit;
-//			order.setMisu(finalPrice + order.getReturnPrice());
-//			
-//			orderService.updateOrder(order, order.getId());
-//				
 				
-			
 			
 			if(odList.size() == od.length) {
 				// 전체선택 ->  order의 상태도 같이 변경
@@ -339,6 +328,38 @@ public class AdminOrderController {
 			
 		}
 		
+		//최종 미수: 품절 아닌 odList의 가격 - 입금액
+		int deposit = 0;
+		int pdtPrice = 0;
+		
+		List<OrderDetail> notSoldOutList = orderService.selectNotSoldOutOrderDetailById(order.getId());
+		
+		
+		
+		if(pay == null) {
+			deposit = 0;
+			for(OrderDetail notSoldOutOd: notSoldOutList) {
+				pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+			}
+			
+		}else {
+			deposit = pay.getPayPrice();
+			for(OrderDetail notSoldOutOd: notSoldOutList) {
+				pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+			}
+			System.out.println(pdtPrice);
+		}
+		
+		//최종 = 품절아닌 상품금액 - 입금액 + 취소/환불 금액
+		int finalPrice = pdtPrice - deposit;
+		System.out.println("품절아닌상품금액:" + finalPrice);
+		System.out.println("입금액:" + pay.getPayPrice());
+		System.out.println("환불금액:" + order.getCancelPrice());
+		System.out.println("주문취소:" + order.getReturnPrice());
+		System.out.println("return price + 품절아닌 odList의 가격 : " + (finalPrice + order.getReturnPrice()));
+		
+		//order.setMisu(finalPrice - order.getReturnPrice());
+		//orderService.updateOrder(order, order.getId());			
 		
 		return res;
 	}

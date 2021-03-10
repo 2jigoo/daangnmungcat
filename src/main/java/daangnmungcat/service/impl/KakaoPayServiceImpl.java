@@ -296,10 +296,9 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         	order.setDetails(odList);
         	System.out.println(order);
         	
-        	order.setReturnPrice(Integer.parseInt(cancel_amount));
-        	order.setState("환불완료");
+        	order.setState(OrderState.REFUNDED.getLabel());
         	
-        	//order의 final_price 어케 처리할지,,
+        	//order의 final_price -> 그대로 두고 misu랑 total만 다시 계산함
         	int finalPrice = order.getFinalPrice();
         	order.setFinalPrice(finalPrice - Integer.parseInt(cancel_amount));
         	int res1 = orderService.updateOrder(order, order.getId());
@@ -405,13 +404,16 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         	System.out.println("취소 후 결제금액" +  kakaoPayApprovalVo.getCancel_available_amount().getTotal());
         	
         	Order order = orderService.getOrderByNo(partner_order_id);
-        	order.setReturnPrice(Integer.parseInt(cancel_amount));
-        	
+     
+        	//부분취소시 미수 다시 반영
+        	KakaoPayApprovalVO kakao = kakaoPayInfo(pay.getId());
+        	int partCancel = kakao.getCanceled_amount().getTotal();
+        	order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - pay.getPayPrice() - partCancel);
+			
         	int res = orderService.updatePayment(pay, tid);
         	int res2 = orderService.updateOrder(order, order.getId());
-        	System.out.println("부분취소,order 변경:" + res + res2);
-   
-       		
+        	
+        	
         	return "redirect:/admin/order?id=" + partner_order_id;
 
         } catch (RestClientException e) {

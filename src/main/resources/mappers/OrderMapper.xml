@@ -299,6 +299,18 @@
 							and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
 								AND TO_date(#{end}, 'yyyy-MM-dd')+1 
 						</if>
+						<if test="settleCase != null and settleCase != '' ">
+							and SETTLE_CASE LIKE '%'|| #{settleCase} ||'%' 
+						</if>
+						<if test="partCancel != null and partCancel != '' ">
+							and CANCEL_PRICE != 0 AND STATE != '취소'
+						</if>
+						<if test="misu != null and misu != '' ">
+							and misu != 0
+						</if>
+						<if test="return != null and return != '' ">
+							and return_price != 0
+						</if>
 					</where> 
 					ORDER BY regdate DESC )B)A
 				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
@@ -315,7 +327,7 @@
 				STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
 			FROM MALL_ORDER 
 				<where>
-					<if test="content != '' and content != null and word != '' and word != null">
+					<if test="content != null and content != '' and word != null and word != ''">
 						${content} like '%'|| #{word} ||'%'
 					</if>
 					<if test="stateStr != null and stateStr != ''">
@@ -324,6 +336,18 @@
 					<if test="start != null and start != '' and end != null and end != '' ">
 						and regdate BETWEEN to_date( #{start}, 'yyyy-MM-dd') 
 							AND TO_date(#{end}, 'yyyy-MM-dd')+1 
+					</if>
+					<if test="settleCase != null and settleCase != '' ">
+						and SETTLE_CASE LIKE '%'|| #{settleCase} ||'%' 
+					</if>
+					<if test="partCancel != null and partCancel != '' ">
+						and CANCEL_PRICE != 0 AND STATE != '취소'
+					</if>
+					<if test="misu != null and misu != '' ">
+						and misu != 0
+					</if>
+					<if test="return != null and return != '' ">
+						and return_price != 0
 					</if>
 				</where> 
 			)B)A

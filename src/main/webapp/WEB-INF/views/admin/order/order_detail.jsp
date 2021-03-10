@@ -40,6 +40,14 @@ $(document).ready(function(){
         }
 	});
 	
+	$('#kakao_regdate_chk').on('click', function(){
+		if($('#kakao_regdate_chk').is(':checked')){
+			$('#kakao_regdate_txt').attr('value', getTimeStamp());
+		}else{
+			$('#kakao_regdate_txt').attr('value', '');
+        }
+	});
+	
 	$('#order_shipping_chk').on('click', function(){
 		if($('#order_shipping_chk').is(':checked')){
 			$('#order_shipping_txt').attr('value', getTimeStamp());
@@ -115,9 +123,11 @@ $(document).ready(function(){
 	
 	$('#kakao_shipping').on('click', function(){
 		var data = {
+				price: $('#kakao_price').val(),
+				payDate: $('#kakao_regdate_txt').val() ,
 				order: ${order.id},
 				qtt: ${order.details.size()},
-				returnPrice: $('#kakao_return').val(),
+				cancelPrice: $('#kakao_return').val(),
 				trackingNum: $('#kakao_shipping_num').val(),
 				shippingDate: $('#kakao_shipping_txt').val(),
 				deli: $('#kakao_delivery').val(),
@@ -414,7 +424,7 @@ function execPostCode2(){
 						<td>입금확인 일시</td>
 						<td>
 							<fmt:parseDate value="${pay.payDate }" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
-	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
+	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>
 						</td>
 					</tr>
 					<tr>
@@ -494,7 +504,7 @@ function execPostCode2(){
 	
 		<div class="admin_od_pay_info_btn tc">
 			<input type="button" value="결제/배송내역 수정" id="pay_shipping_update" class="btn btn-primary btn-sm">
-			<input type="button" value="목록" class="btn btn-secondary btn-sm">
+			<input type="button" value="목록" class="btn btn-secondary btn-sm" onclick="location.href='/admin/order/list'">
 		</div>
 	</div>
 	</c:if>
@@ -503,7 +513,7 @@ function execPostCode2(){
 
 	
 <!-- 카카오페이일때 -->
-	
+	${order.finalPrice }
 	
 	<c:if test="${order.settleCase == '카카오페이' }">
 	<div class="admin_od_pay_info_div">	
@@ -577,9 +587,23 @@ function execPostCode2(){
 						<td>결제/취소 이력</td>
 						<td>
 							<c:forEach items="${kakao.payment_action_details}" var="d">
-								 ${d.approved_at} | 금액: ${d.amount} | 상태: ${d.payment_action_type} <br>
+							<fmt:parseDate value=" ${d.approved_at}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
+	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>
+								 | 금액: ${d.amount} | 상태: ${d.payment_action_type} <br>
 							</c:forEach>
 						</td>
+					</tr>
+					<tr>
+						<td>취소/환불 금액</td>
+						<td>${order.cancelPrice}</td>
+					</tr>
+					<tr>
+						<td>배송비</td>
+						<td><input type="text" value="${order.deliveryPrice}" id="kakao_delivery"></td>
+					</tr>
+					<tr>
+						<td>추가배송비</td>
+						<td><input type="text" value="${order.addDeliveryPrice}" id="kakao_addDelivery"></td>
 					</tr>
 				</table>
 			</form>
@@ -589,16 +613,20 @@ function execPostCode2(){
 			<b>결제상세정보 수정</b>
 				<table class="info_form">
 					<tr>
+						<td>카카오페이 결제금액</td>
+						<td><input type="text" id="kakao_price" value="${pay.payPrice}"></td>
+					</tr>
+					<tr>
+						<td>카카오페이 결제시각</td>
+						<td>
+							<input type="checkbox" id="kakao_regdate_chk"> 현재 시간으로 설정 <br>
+							<fmt:parseDate value="${pay.payDate }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
+	            			<input type="text" id="kakao_regdate_txt" value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>">
+						</td>
+					</tr>
+					<tr>
 						<td>취소/환불 금액</td>
 						<td><input type="text" id="kakao_return" value="${order.cancelPrice}"></td>
-					</tr>
-					<tr>
-						<td>배송비</td>
-						<td><input type="text" value="${order.deliveryPrice}" id="kakao_delivery"></td>
-					</tr>
-					<tr>
-						<td>추가배송비</td>
-						<td><input type="text" value="${order.addDeliveryPrice}" id="kakao_addDelivery"></td>
 					</tr>
 					<tr>
 						<td>운송장번호</td>

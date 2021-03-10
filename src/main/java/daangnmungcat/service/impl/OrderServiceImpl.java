@@ -348,14 +348,14 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<Order> selectOrderBySearch(String content, String word, String state,String start, String end, Criteria cri) {
+	public List<Order> selectOrderBySearch(String content, String word, String state,String start, String end, String settleCase, String partCancel, String misu, String returnPrice,  Criteria cri) {
 		// TODO Auto-generated method stub
-		return mapper.selectOrderBySearch(cri, content, word, state, start, end);
+		return mapper.selectOrderBySearch(cri, content, word, state, start, end, settleCase, partCancel, misu, returnPrice);
 	}
 
 	@Override
-	public int searchListCount(String content, String word, String state, String start, String end) {
-		return mapper.searchListCount(content, word, state, start, end);
+	public int searchListCount(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice) {
+		return mapper.searchListCount(content, word, state, start, end, settleCase, partCancel, misu, returnPrice);
 	}
 	
 
@@ -506,15 +506,19 @@ public class OrderServiceImpl implements OrderService{
 		
 		String price = null;
 		String depositor = null;
+		String cancelPrice = null; 
 		int payPrice = 0;
 		
-		if(map.get("price") != null && map.get("depositor") != null ) {
+		if(map.get("price") != null) {
 			price = map.get("price");
-			depositor =  map.get("depositor");
 			payPrice = Integer.parseInt(price);
 		}
 		
-		String cancelPrice = null; 
+		if(map.get("depositor") != null) {
+			depositor =  map.get("depositor");
+		}
+		
+		
 		if(map.get("cancelPrice") != null) {
 			cancelPrice = map.get("cancelPrice");
 		}
@@ -561,19 +565,36 @@ public class OrderServiceImpl implements OrderService{
 		
 		if(o.getSettleCase().equals("카카오페이")) {
 			System.out.println("카카오");
-			Payment pay = selectAccountPaymentByOrderId(o.getPayId());
 			
-			//미수금 =  
-			//현재 주문취소금액 + 입력된 주문취소금액
+			Payment pay = selectAccountPaymentByOrderId(o.getId());
+			KakaoPayApprovalVO kakao = kakaoService.kakaoPayInfo(pay.getId());
+			int partCancel = kakao.getCanceled_amount().getTotal();
+			
 			o.setCancelPrice(Integer.parseInt(cancelPrice));
 			o.setDeliveryPrice(Integer.parseInt(deli));
 			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
+			
+			// payPrice = 카카오결제금액
+			pay.setPayPrice(payPrice);
+			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			
+			log.info("update pay");
+			res += updatePayment(pay, pay.getId());
+			
+			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice - partCancel);
+			
+			System.out.println("입금액:" + payPrice);
+			System.out.println("환불금액:" + cancelPrice);
+			System.out.println("주문취소" + o.getReturnPrice());
+			System.out.println("카카오 부분취소된금액:" + kakao.getCanceled_amount().getTotal());
+			
 			res += updateOrder(o, o.getId());
 	
 			
-			
 		}else {
 			
+			//무통장
 			int p = 0;
 			Payment pay = selectAccountPaymentByOrderId(o.getId());
 			
@@ -617,30 +638,36 @@ public class OrderServiceImpl implements OrderService{
 			o.setDeliveryPrice(Integer.parseInt(deli));
 			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
 			
-			//misu = 결제액 - 입금액 
-			//최종 미수
+			//최종금액 = 현재 total + 배송비 + 추가 배송비 
+			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			System.out.println("최종금액:" + o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			
+
 			if(payPrice == 0) {
-				System.out.println(o.getFinalPrice() + o.getCancelPrice());
-				o.setMisu(o.getFinalPrice() + o.getCancelPrice());
+				//미수 = 환불 + 취소 
+				System.out.println("payPrice = 0");
+				o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice));
 			}else {
 				
 				//총결제액 = 입금액 이면  총금액에서 빼기
-				//
+
 				if(p != payPrice) {
 					System.out.println("p != price");
 					if(o.getFinalPrice() == payPrice) {
 						System.out.println("final = payprice");
-						o.setMisu(Integer.parseInt(cancelPrice));
+						o.setMisu(Integer.parseInt(cancelPrice) + o.getReturnPrice());
 					}else {
-						System.out.println("not final = payprice");
-						o.setMisu(o.getFinalPrice() - payPrice + Integer.parseInt(cancelPrice));
+						System.out.println("final != payprice");
+						//o.setMisu(o.getFinalPrice() - payPrice + Integer.parseInt(cancelPrice) + o.getReturnPrice());
+						o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice);
+						// 43000-23000+0-20000 = 0
 					}
 					
 				}else {
 					System.out.println("p == price");
 					if(o.getFinalPrice() == payPrice) {
 						System.out.println("final = payprice");
-						o.setMisu(Integer.parseInt(cancelPrice));
+						o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice);
 					}else if(o.getFinalPrice() != payPrice) {
 						System.out.println("final != payprice");
 						int cp = Integer.parseInt(cancelPrice);
@@ -649,11 +676,14 @@ public class OrderServiceImpl implements OrderService{
 							System.out.println("cp != cancelprice");
 							o.setMisu(o.getMisu() + cp);
 						}else {
-						
+							o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice);
 						}
 					}
 				}
 			}
+			System.out.println("입금액:" + payPrice);
+			System.out.println("환불금액:" + cancelPrice);
+			System.out.println("주문취소" + o.getReturnPrice());
 			
 			res += updateOrder(o, o.getId());
 			

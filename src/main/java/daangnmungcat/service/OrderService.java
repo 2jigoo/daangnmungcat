@@ -24,8 +24,8 @@ public interface OrderService {
 	
 	List<Order> selectOrderAll(Criteria cri);
 	int listCount();
-	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, Criteria cri);
-	int searchListCount(String content, String query, String state, String start, String end);
+	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice, Criteria cri);
+	int searchListCount(String content, String query, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
 	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
 	
 	/////////////////////////////////////
