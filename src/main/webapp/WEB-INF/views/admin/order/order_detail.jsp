@@ -322,9 +322,9 @@ function execPostCode2(){
 						<td>${od.orderState.label}</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
-						<td>${od.pdt.deliveryPrice}</td>
+						<td><fmt:formatNumber value="${od.pdt.deliveryPrice}"/></td>
 						<td>${od.pdt.deliveryKind}</td>
-						<td>${od.totalPrice}</td>
+						<td><fmt:formatNumber value="${od.totalPrice}"/></td>
 						<td>${od.pdt.stock}</td>
 				</tr>
 				</c:forEach>	
@@ -348,10 +348,8 @@ function execPostCode2(){
 		<br>개별적인(이곳에서의) 상태 변경은 모든 작업을 수동으로 처리합니다. 예를 들어 입금대기에서 결제완료로 상태 변경시 입금액(결제금액)을 포함한 모든 정보는 수동 입력으로 처리하셔야 합니다.
 	</div>	
 	
-	<span>현재 배송비: ${total}</span>
-	
 <!-- 주문결제내역 -->	
-	
+	<div style="padding-top:100px;">
 	<h5 class="admin_order_title tc">주문결제 내역</h5>
 	<div class="admin_od_pay_info_div">
 		<span style="color:red; text-align:left">미수금 : ${order.misu}원</span><br>
@@ -383,19 +381,20 @@ function execPostCode2(){
 				<tr>
 					<td>${order.id }</td>
 					<td>${order.settleCase }</td>
-					<td>${order.totalPrice }</td>
-					<td>${order.deliveryPrice }</td>
-					<td>${order.addDeliveryPrice }</td>
-					<td>${order.usedMileage }</td>
-					<td>${pay.payPrice}</td>
-					<td>${order.returnPrice }</td>
+					<td><fmt:formatNumber value="${order.totalPrice }"/></td>
+					<td><fmt:formatNumber value="${order.deliveryPrice }"/></td>
+					<td><fmt:formatNumber value="${order.addDeliveryPrice }"/></td>
+					<td><fmt:formatNumber value="${order.usedMileage }"/></td>
+					<td><fmt:formatNumber value="${pay.payPrice}"/></td>
+					<td><fmt:formatNumber value="${order.returnPrice }"/></td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 	
+	</div>
 	
-	
+	<div style="padding-top:100px;">
 <!-- 결제 상세정보 -->	
 	<h5 class="admin_order_title tc">결제 상세 정보</h5>
 	
@@ -412,9 +411,7 @@ function execPostCode2(){
 					</tr>
 					<tr>
 						<td>무통장입금액</td>
-						<td>
-							${pay.payPrice}
-						</td>
+						<td><fmt:formatNumber value="${pay.payPrice}"/></td>
 					</tr>
 					<tr>
 						<td>입금자</td>
@@ -509,12 +506,12 @@ function execPostCode2(){
 	</div>
 	</c:if>
 	
-
+	</div>
 
 	
 <!-- 카카오페이일때 -->
-	${order.finalPrice }
-	
+
+<div style="padding-top:100px;">
 	<c:if test="${order.settleCase == '카카오페이' }">
 	<div class="admin_od_pay_info_div">	
 		<div class="admin_od_pay_info tl">
@@ -552,19 +549,19 @@ function execPostCode2(){
 					</tr>
 					<tr>
 						<td>결제 금액</td>
-						<td>${kakao.amount.total}</td>
+						<td><fmt:formatNumber value="${kakao.amount.total}"/></td>
 					</tr>
 					<tr>
 						<td>부가세</td>
-						<td>${kakao.amount.vat}</td>
+						<td><fmt:formatNumber value="${kakao.amount.vat}"/></td>
 					</tr>
 					<tr>
 						<td>취소된 금액</td>
-						<td>${kakao.canceled_amount.total} </td>
+						<td><fmt:formatNumber value="${kakao.canceled_amount.total}"/> </td>
 					</tr>
 					<tr>
 						<td>남은 취소 가능 금액</td>
-						<td> ${kakao.cancel_available_amount.total}</td>
+						<td><fmt:formatNumber value="${kakao.cancel_available_amount.total}"/></td>
 					</tr>
 					
 					<tr>
@@ -589,13 +586,13 @@ function execPostCode2(){
 							<c:forEach items="${kakao.payment_action_details}" var="d">
 							<fmt:parseDate value=" ${d.approved_at}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
 	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>
-								 | 금액: ${d.amount} | 상태: ${d.payment_action_type} <br>
+								 | 금액: <fmt:formatNumber value="${d.amount}"/> | 상태: ${d.payment_action_type} <br>
 							</c:forEach>
 						</td>
 					</tr>
 					<tr>
 						<td>취소/환불 금액</td>
-						<td>${order.cancelPrice}</td>
+						<td><fmt:formatNumber value="${order.cancelPrice}"/></td>
 					</tr>
 					<tr>
 						<td>배송비</td>
@@ -651,8 +648,8 @@ function execPostCode2(){
 	</div>
 	
 	</c:if>
-	
-	
+</div>
+
 <!-- 주문자/배송지 정보 -->
 	<h5 class="admin_order_title tc">주문자/배송지 정보</h5>
 	<div class="admin_od_pay_info_div ">

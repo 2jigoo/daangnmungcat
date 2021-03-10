@@ -295,7 +295,7 @@ function getDateStr(myDate){
 			</div>
 			<hr>
 		</div>
-		<table class="adm_table_style1" style="padding:20px;" id="order_list">
+		<table class="adm_table_style1" style="padding:20px; text-align:center" id="order_list">
 			<!-- <colgroup>
 				<col width="3%">
 				<col width="15%">
@@ -353,10 +353,10 @@ function getDateStr(myDate){
 					<td>${order.member.name}</td>
 					<td>${order.member.phone}</td>
 					<td>${order.addName}</td>
-					<td rowspan="3">${order.finalPrice }</td>
-					<td rowspan="3">${order.returnPrice}</td>
-					<td rowspan="3">${order.misu }</td>
-					<td rowspan="3">${order.usedMileage}</td>
+					<td rowspan="3"><fmt:formatNumber value="${order.finalPrice }"/></td>
+					<td rowspan="3"><fmt:formatNumber value="${order.returnPrice}"/></td>
+					<td rowspan="3"><fmt:formatNumber value="${order.misu}"/></td>
+					<td rowspan="3"><fmt:formatNumber value="${order.usedMileage}"/></td>
 					<td rowspan="3">
 						<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            		<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
