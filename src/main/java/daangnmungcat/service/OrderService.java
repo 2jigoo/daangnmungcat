@@ -17,31 +17,22 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.SearchCriteriaForMyPage;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 
 @Service
 public interface OrderService {
 	
-	List<Order> selectOrderAll(Criteria cri);
-	int listCount();
+	List<Order> selectOrderById(SearchCriteriaForMyPage cri, String id);
+	int selectOrderByIdCount(SearchCriteriaForMyPage cri, String id);
 	
-	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice, Criteria cri);
-	int searchListCount(String content, String query, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
+	List<Order> selectCancelOrderById(SearchCriteriaForMyPage cri, String id);
+	int selectCancelOrderByIdCount(SearchCriteriaForMyPage cri,String id);
 	
-	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
-	
-	/////////////////////////////////////
-	
-	List<Order> selectOrderById(Criteria cri, String id);
-	int selectOrderByIdCount(String id);
-	
-	List<Order> selectCancelOrderById(Criteria cri, String id);
-	int selectCancelOrderByIdCount(String id);
-	
-	List<Order> searchByDate(Criteria cri, String start, String end, String memId);
+	List<Order> searchByDate(SearchCriteriaForMyPage cri, String start, String end, String memId);
 	int searchByDateCount(String start, String end, String memId);
 	
-	List<Order> cancelSearchByDate(Criteria cri, String start, String end,String memId);
+	List<Order> cancelSearchByDate(SearchCriteriaForMyPage cri, String start, String end,String memId);
 	int cancelSearchByDateCount(String start, String end, String memId);
 	
 	Order getOrderByNo(String id);
@@ -71,6 +62,16 @@ public interface OrderService {
 	
 	List<OrderDetail> selectOrderDetailUsingPartCancelByOrderId(String orderId);
 	Map<String, Integer> calculateDeliveryFee(List<Cart> list);
+	
+	/////////////////////////////////////
+	List<Order> selectOrderAll(Criteria cri);
+	int listCount();
+	
+	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice, Criteria cri);
+	int searchListCount(String content, String query, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
+	
+	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
+	
 	
 	
 	

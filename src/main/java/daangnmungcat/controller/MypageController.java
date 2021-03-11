@@ -11,6 +11,7 @@ import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
@@ -30,6 +33,7 @@ import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.SearchCriteriaForMyPage;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
@@ -238,119 +242,111 @@ public class MypageController {
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView orderList(Criteria cri, AuthInfo loginUser) {
-		
+	public ModelAndView orderList(SearchCriteriaForMyPage cri, AuthInfo loginUser, 
+			@Nullable @RequestParam String id) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
-		pageMaker.setTotalCount(orderService.selectOrderByIdCount(member.getId()));
+		
+		ModelAndView mv = new ModelAndView();
+		
+		if(id != null) {
+			Order order = orderService.getOrderByNo(id);
+			List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
+			
+			order.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(order.getId());
+			}
+			
+			//무통장
+			Payment kakao = orderService.getPaymentById(order.getPayId());
+			Payment accountPay = orderService.selectAccountPaymentByOrderId(order.getId());
+			
+			mv.addObject("order", order);
+			mv.addObject("kakao", kakao);
+			mv.addObject("account", accountPay);
+			mv.setViewName("/mypage/mypage_order_detail");
+			
+		}else {	
+			
+			List<Order> list = orderService.selectOrderById(cri, member.getId());
+			pageMaker.setTotalCount(orderService.selectOrderByIdCount(cri, member.getId()));
+			
+			for(Order o: list) {
+				List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+				o.setDetails(odList);
+				for(OrderDetail od: odList) {
+					od.setOrderId(o.getId());
+				}
+			}
+			
+			mv.addObject("list", list);
+			mv.addObject("pageMaker", pageMaker);
+			mv.setViewName("/mypage/mypage_order_list");
+			}
+		
+		return mv;
+	}
+	
 
-		List<Order> list = orderService.selectOrderById(cri, member.getId());
-		
-		for(Order o: list) {
-			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			o.setDetails(odList);
-			for(OrderDetail od: odList) {
-				od.setOrderId(o.getId());
-			}
-		}
-		
-		
-		ModelAndView mv = new ModelAndView();
-		
-		mv.addObject("list", list);
-		mv.addObject("pageMaker", pageMaker);
-		System.out.println(pageMaker);
-		
-		mv.setViewName("/mypage/mypage_order_list");
-		return mv;
-	}
-	
-	@GetMapping("/mypage/mypage_order_list/start={start}/end={end}")
-	public ModelAndView searchOrder(Criteria cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
-		Member member = service.selectMemberById(loginUser.getId());
-		System.out.println(start +"/"+ end);
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		cri.setPerPageNum(10);
-		pageMaker.setTotalCount(orderService.searchByDateCount(start, end, member.getId()));
-		
-		
-		List<Order> list = orderService.searchByDate(cri, start, end, member.getId());
-		for(Order o: list) {
-			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			o.setDetails(odList);
-			for(OrderDetail od: odList) {
-				od.setOrderId(o.getId());
-			}
-		}
-		
-		ModelAndView mv = new ModelAndView();
-		
-		mv.addObject("list", list);
-		mv.addObject("pageMaker", pageMaker);
-		mv.setViewName("/mypage/mypage_order_list");
-		return mv;
-	}
-	
-	@GetMapping("/mypage/mypage_order_list/{id}")
-	public ModelAndView getOrderNo(@PathVariable String id, AuthInfo loginUser) {
-		
-		Member member = service.selectMemberById(loginUser.getId());
-		
-		Order order = orderService.getOrderByNo(id);
-		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
-		
-		order.setDetails(odList);
-		for(OrderDetail od: odList) {
-			od.setOrderId(order.getId());
-		}
-		
-		//무통장
-		Payment kakao = orderService.getPaymentById(order.getPayId());
-		Payment accountPay = orderService.selectAccountPaymentByOrderId(order.getId());
-		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("order", order);
-		mv.addObject("kakao", kakao);
-		mv.addObject("account", accountPay);
-		mv.setViewName("/mypage/mypage_order_detail");
-		return mv;
-	}
-	
 	
 	@GetMapping("/mypage/mypage_order_cancel_list")
-	public ModelAndView getCancelOrder(Criteria cri, AuthInfo loginUser) {
+	public ModelAndView getCancelOrder(SearchCriteriaForMyPage cri, AuthInfo loginUser,
+			@Nullable @RequestParam String id) {
 		Member member = service.selectMemberById(loginUser.getId());
-		
-		List<Order> list = orderService.selectCancelOrderById(cri, member.getId());
-		for(Order o: list) {
-			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			o.setDetails(odList);
-			for(OrderDetail od: odList) {
-				od.setOrderId(o.getId());
-			}
-		}
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
-		pageMaker.setTotalCount(orderService.selectCancelOrderByIdCount(member.getId()));
 		
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("list", list);
-		mv.addObject("pageMaker", pageMaker);
-		mv.setViewName("/mypage/mypage_order_cancel_list");
+		
+		if(id != null) {
+			Order order = orderService.getOrderByNo(id);
+			List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
+			
+			order.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(order.getId());
+			}
+			
+			//무통장
+			Payment kakao = orderService.getPaymentById(order.getPayId());
+			Payment accountPay = orderService.selectAccountPaymentByOrderId(order.getId());
+			
+			mv.addObject("order", order);
+			mv.addObject("kakao", kakao);
+			mv.addObject("account", accountPay);
+			mv.setViewName("/mypage/mypage_order_detail");
+			
+		}else {
+		
+			List<Order> list = orderService.selectCancelOrderById(cri, member.getId());
+			pageMaker.setTotalCount(orderService.selectCancelOrderByIdCount(cri, member.getId()));
+			
+			for(Order o: list) {
+				List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+				o.setDetails(odList);
+				for(OrderDetail od: odList) {
+					od.setOrderId(o.getId());
+				}
+			}
+			
+			mv.addObject("list", list);
+			mv.addObject("pageMaker", pageMaker);
+			mv.setViewName("/mypage/mypage_order_cancel_list");
+		}
+		
 		return mv;
 		
 	}
 
 	
 	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
-	public ModelAndView searchCancelOrder(Criteria cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
+	public ModelAndView searchCancelOrder(SearchCriteriaForMyPage cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		

@@ -165,13 +165,17 @@
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
 					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
-					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+					STATE, shipping_date, settle_case, misu
 			FROM mall_order
-				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-				and mem_id = #{id} ORDER BY regdate desc
-			)B)A
-				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
-				ORDER BY A.RNUM
+				where mem_id = #{id}
+				<if test="cri.start != null and cri.start != '' and cri.end != null and cri.end != ''">
+					and regdate BETWEEN to_date( #{cri.start}, 'yyyy-MM-dd') 
+										AND TO_date(#{cri.end}, 'yyyy-MM-dd')+1
+				</if>
+				 ORDER BY regdate desc
+				)B)A
+					WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+					ORDER BY A.RNUM
 	</select>
 	
 	<select id="selectOrderByIdCount" resultType="int">
@@ -181,11 +185,15 @@
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
 					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
-					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+					STATE, shipping_date, settle_case, misu
 			FROM MALL_ORDER 
-				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-				and mem_id = #{id} ORDER BY regdate desc
-			)B)A
+				where mem_id = #{id}
+				<if test="cri.start != null and cri.start != '' and cri.end != null and cri.end != ''">
+					and regdate BETWEEN to_date( #{cri.start}, 'yyyy-MM-dd') 
+									AND TO_date(#{cri.end}, 'yyyy-MM-dd')+1
+				</if>
+				ORDER BY regdate desc
+				)B)A
 	</select>
 	
 	<select id="selectCancelOrderById" resultMap="orderRes">
@@ -195,13 +203,17 @@
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
 					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
-					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+					STATE, shipping_date, settle_case, misu
 			FROM mall_order
-				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-				and mem_id = #{id} and state = '취소' ORDER BY regdate desc
-			)B)A
-				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
-				ORDER BY A.RNUM
+				where mem_id = #{id} and state = '취소' 
+				<if test="cri.start != null and cri.start != '' and cri.end != null and cri.end != ''">
+					and regdate BETWEEN to_date( #{cri.start}, 'yyyy-MM-dd') 
+									AND TO_date(#{cri.end}, 'yyyy-MM-dd')+1
+				</if>
+				ORDER BY regdate desc
+				)B)A
+					WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+					ORDER BY A.RNUM
 	</select>
 	
 	<select id="selectCancelOrderByIdCount" resultType="int">
@@ -211,11 +223,15 @@
 					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
 					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
 					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
-					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+					STATE, shipping_date, settle_case, misu
 			FROM MALL_ORDER
-				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-				and mem_id = #{id} and state = '취소' ORDER BY regdate desc
-			)B)A	
+				where mem_id = #{id} and state = '취소'
+				<if test="cri.start != null and cri.start != '' and cri.end != null and cri.end != ''">
+					and regdate BETWEEN to_date( #{cri.start}, 'yyyy-MM-dd') 
+									AND TO_date(#{cri.end}, 'yyyy-MM-dd')+1
+				</if>
+				ORDER BY regdate desc
+				)B)A
 	</select>
 	
 	<select id="getOrderByNo" resultMap="orderRes">

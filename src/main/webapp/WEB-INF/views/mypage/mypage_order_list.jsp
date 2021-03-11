@@ -66,6 +66,7 @@ $(document).ready(function(){
 		
 	});
 	
+	
 	$('#today').on('click', function(){
 		$("#start_date").datepicker("setDate", 'today');
 		$("#end_date").datepicker("setDate", 'today');
@@ -97,6 +98,7 @@ $(document).ready(function(){
 	});
 	
 	$('#search').on('click', function(){
+		event.preventDefault();
 		
 		var start_val = $("#start_date").datepicker({dateFormat:"yy-mm-dd"}).val();
 		var end_val = $("#end_date").datepicker({dateFormat:"yy-mm-dd"}).val(); 
@@ -104,7 +106,8 @@ $(document).ready(function(){
 		if(start_val == "" || end_val == ""){
 			alert('날짜를 선택하세요.')
 		}else{
-			location.href='/mypage/mypage_order_list/start='+start_val + '/end=' + end_val;
+			location.href='/mypage/mypage_order_list?page=${pageMaker.cri.page}&perPageNum=${pageMaker.cri.perPageNum}'
+					+ '&start=' + start_val + '&end=' + end_val;
 		}
 		
 	});
@@ -133,42 +136,27 @@ $(document).ready(function(){
 		
 	});
 	
-	
-	
 });
 
 
 
 </script>
-<div class="board_page">
-		<c:if test="${pageMaker.prev}">
-			   <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&content=${content}&query=${query}">이전</a></p>
-		</c:if> 
-		<ul>
-			<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-				<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&content=${content}&query=${query}">${idx}</a></li>
-			 </c:forEach>
-		</ul>
-		<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-				<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&content=${content}&query=${query}">다음</a></p>
-		</c:if>
-	</div>
-
 <div class="wrapper">
 
 	<h2 id="subTitle">주문 내역</h2>
 	<div class="order_list_search_div">
 		조회 기간 
+		<input type="button" value="전체" onclick="location.href='http://localhost:8080/mypage/mypage_order_list'">
 		<input type="button" value="오늘" id="today">
 		<input type="button" value="7일" id="7days_ago">
 		<input type="button" value="15일" id="15days_ago">
 		<input type="button" value="1개월" id="1month_ago">
 		<input type="button" value="6개월" id="6month_ago">
 		<input type="button" value="1년" id="1years_ago">
-		<input type="text" id="start_date"> ~ <input type="text" id="end_date"> 
+		<input type="text" id="start_date" value="${pageMaker.cri.start}"> ~ 
+		<input type="text" id="end_date" value="${pageMaker.cri.end}">
 		<input type="button" value="조회" id="search">
 	</div>
-
 <div>	
 	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
@@ -208,7 +196,7 @@ $(document).ready(function(){
            						<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
             					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
            						<input type="hidden" id="order_id" value="${order.id}"><br>
-           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
             						${order.id}
            						</span>
            						
@@ -222,7 +210,7 @@ $(document).ready(function(){
             					<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
             					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
            						<input type="hidden" id="order_id" value="${order.id}"><br>
-           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
             						${order.id}
            						</span>
            						<c:if test="${order.state == '대기'}">
@@ -309,7 +297,22 @@ $(document).ready(function(){
 		</tbody>
 	</table>
 </div>
+	<div class="board_page">
+			<c:if test="${pageMaker.prev}">
+				   <p><a href="<%=request.getContextPath()%>/mypage/mypage_order_list${pageMaker.makeSearchForMyPage(pageMaker.startPage - 1)}">이전</a></p>
+			</c:if> 
+			<ul>
+				<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+					<li><a href="<%=request.getContextPath()%>/mypage/mypage_order_list${pageMaker.makeSearchForMyPage(idx)}">${idx}</a></li>
+				 </c:forEach>
+			</ul>
+			<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+					<p><a href="<%=request.getContextPath()%>/mypage/mypage_order_list${pageMaker.makeSearchForMyPage(pageMaker.endPage + 1)}">다음</a></p>
+			</c:if>
+		</div>
+	
 </div>
+
 
 
 

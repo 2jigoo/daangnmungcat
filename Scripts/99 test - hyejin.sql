@@ -393,4 +393,21 @@ SELECT A.*
 			FROM MALL_ORDER 
 				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
 				and mem_id = 'test' ORDER BY regdate desc
-			)B)A
+			)B)A;
+			
+			
+SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt
+			FROM mall_order
+				where mem_id = 'test' AND state = '취소'
+					and regdate BETWEEN to_date('2021-02-25', 'yyyy-MM-dd') 
+										AND TO_date('2021-03-12', 'yyyy-MM-dd')+1
+				 ORDER BY regdate desc
+				)B)A
+					WHERE A.RNUM BETWEEN 1 AND 10
+					ORDER BY A.RNUM;

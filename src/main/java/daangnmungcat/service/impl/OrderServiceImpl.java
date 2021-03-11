@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Cart;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallProduct;
@@ -29,11 +28,11 @@ import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.SearchCriteriaForMyPage;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
 import daangnmungcat.service.KakaoPayService;
-import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
@@ -219,14 +218,14 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<Order> selectOrderById(Criteria cri, String id) {
+	public List<Order> selectOrderById(SearchCriteriaForMyPage cri, String id) {
 		return mapper.selectOrderById(cri, id);
 	}
 
 	@Override
-	public int selectOrderByIdCount(String id) {
+	public int selectOrderByIdCount(SearchCriteriaForMyPage cri, String id) {
 		// TODO Auto-generated method stub
-		return mapper.selectOrderByIdCount(id);
+		return mapper.selectOrderByIdCount(cri, id);
 	}
 	
 	@Override
@@ -236,7 +235,7 @@ public class OrderServiceImpl implements OrderService{
 
 
 	@Override
-	public List<Order> searchByDate(Criteria cri, String start, String end, String memId) {
+	public List<Order> searchByDate(SearchCriteriaForMyPage cri, String start, String end, String memId) {
 		// TODO Auto-generated method stub 
 		return mapper.searchByDate(cri, start, end, memId);
 	}
@@ -248,7 +247,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 	
 	@Override
-	public List<Order> cancelSearchByDate(Criteria cri, String start, String end, String memId) {
+	public List<Order> cancelSearchByDate(SearchCriteriaForMyPage cri, String start, String end, String memId) {
 		return mapper.cancelSearchByDate(cri, start, end, memId);
 	}
 	
@@ -287,14 +286,14 @@ public class OrderServiceImpl implements OrderService{
 
 	
 	@Override
-	public List<Order> selectCancelOrderById(Criteria cri, String id) {
+	public List<Order> selectCancelOrderById(SearchCriteriaForMyPage cri, String id) {
 		return mapper.selectCancelOrderById(cri, id);
 	}
 	
 	@Override
-	public int selectCancelOrderByIdCount(String id) {
+	public int selectCancelOrderByIdCount(SearchCriteriaForMyPage cri, String id) {
 		// TODO Auto-generated method stub
-		return mapper.selectCancelOrderByIdCount(id);
+		return mapper.selectCancelOrderByIdCount(cri, id);
 	}
 
 	

@@ -72,7 +72,7 @@ $(document).ready(function(){
             				<td class="gubun order_num">
             					<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
             					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/><br>
-           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
             						${order.id}
            						</span>
            						
@@ -87,7 +87,7 @@ $(document).ready(function(){
             				<td class="order_num">
             					<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
             					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/><br>
-           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
             						${order.id}
            						</span>
            						

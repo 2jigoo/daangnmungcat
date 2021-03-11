@@ -1,5 +1,8 @@
 package daangnmungcat.dto;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -92,5 +95,30 @@ public class PageMaker {
 		}
 
 		return builder.build().toString();
+	}
+	
+	public String makeSearchForMyPage(int page){
+		 SearchCriteriaForMyPage scri = (SearchCriteriaForMyPage) cri;
+		 
+		 UriComponents uriComponents = 
+            UriComponentsBuilder.newInstance()
+            .queryParam("page", page)
+            .queryParam("perPageNum", scri.getPerPageNum())
+            .queryParam("start", encoding(scri.getStart()))
+            .queryParam("end", encoding(scri.getEnd())).build();
+		 
+		return uriComponents.toUriString();
+	}
+	
+	private String encoding(String keyword) {
+		if(keyword == null || keyword.trim().length() == 0) { 
+			return "";
+		}
+		 
+		try {
+			return URLEncoder.encode(keyword, "UTF-8");
+		} catch(UnsupportedEncodingException e) { 
+			return ""; 
+		}
 	}
 }

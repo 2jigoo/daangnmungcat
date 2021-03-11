@@ -8,14 +8,15 @@ import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.SearchCriteriaForMyPage;
 
 public interface OrderMapper {
 	
-	List<Order> selectOrderById(@Param("cri")Criteria cri, @Param("id")String id);
-	int selectOrderByIdCount(String id);
+	List<Order> selectOrderById(@Param("cri")SearchCriteriaForMyPage cri, @Param("id")String id);
+	int selectOrderByIdCount(@Param("cri")SearchCriteriaForMyPage cri, @Param("id")String id);
 	
-	List<Order> selectCancelOrderById(@Param("cri")Criteria cri, @Param("id")String id);
-	int selectCancelOrderByIdCount(String id);
+	List<Order> selectCancelOrderById(@Param("cri")SearchCriteriaForMyPage cri, @Param("id")String id);
+	int selectCancelOrderByIdCount(@Param("cri")SearchCriteriaForMyPage cri, @Param("id")String id);
 	
 	Payment getPaymentById(String tid);
 	Payment selectAccountPaymentByOrderId(String orderId);
