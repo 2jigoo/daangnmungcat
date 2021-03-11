@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
@@ -87,12 +88,12 @@ public class PayController {
 	}
 	
 	@GetMapping("/kakaoPayCancelSuccess")
-	public ModelAndView payCancelSuccess(HttpServletRequest request, AuthInfo loginUser) {
+	public ModelAndView payCancelSuccess(Criteria cri, HttpServletRequest request, AuthInfo loginUser) {
 		log.info("kakaoPayCancel - success");
 	
 		Member member = memberService.selectMemberById(loginUser.getId());
 		
-		List<Order> list = orderService.selectOrderById(member.getId());
+		List<Order> list = orderService.selectOrderById(cri, member.getId());
 		
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());

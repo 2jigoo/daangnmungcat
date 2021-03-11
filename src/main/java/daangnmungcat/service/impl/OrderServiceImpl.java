@@ -135,6 +135,7 @@ public class OrderServiceImpl implements OrderService{
 		order.setPlusMileage(Integer.parseInt(plus_mile));
 		order.setDeliveryPrice(deli);
 		order.setPayId(kakao.getTid());
+		order.setPayDate(LocalDateTime.now());
 		order.setSettleCase("카카오페이");
 		order.setState(OrderState.PAID.getLabel());
 		order.setMisu(0);
@@ -151,10 +152,12 @@ public class OrderServiceImpl implements OrderService{
 		Payment pay = new Payment();
 		pay.setId(kakao.getTid());
 		pay.setKakao(kakao);
+		pay.setPayPrice(Integer.parseInt(finalPrice));
 		pay.setMember(loginUser);
 		pay.setOrder(order);
 		pay.setPayType(kakao.getPayment_method_type());
 		pay.setQuantity(kakao.getQuantity());
+		pay.setPayDate(LocalDateTime.now());
 		System.out.println("pay:" + pay);
 		mapper.insertPayment(pay);
 		log.info("insert payment..........................................");
@@ -216,10 +219,16 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<Order> selectOrderById(String id) {
-		return mapper.selectOrderById(id);
+	public List<Order> selectOrderById(Criteria cri, String id) {
+		return mapper.selectOrderById(cri, id);
 	}
 
+	@Override
+	public int selectOrderByIdCount(String id) {
+		// TODO Auto-generated method stub
+		return mapper.selectOrderByIdCount(id);
+	}
+	
 	@Override
 	public Order getOrderByNo(String id) {
 		return mapper.getOrderByNo(id);
@@ -227,14 +236,26 @@ public class OrderServiceImpl implements OrderService{
 
 
 	@Override
-	public List<Order> searchByDate(String start, String end, String memId) {
+	public List<Order> searchByDate(Criteria cri, String start, String end, String memId) {
 		// TODO Auto-generated method stub 
-		return mapper.searchByDate(start, end, memId);
+		return mapper.searchByDate(cri, start, end, memId);
 	}
 	
 	@Override
-	public List<Order> cancelSearchByDate(String start, String end, String memId) {
-		return mapper.cancelSearchByDate(start, end, memId);
+	public int searchByDateCount(String start, String end, String memId) {
+		// TODO Auto-generated method stub
+		return mapper.cancelSearchByDateCount(start, end, memId);
+	}
+	
+	@Override
+	public List<Order> cancelSearchByDate(Criteria cri, String start, String end, String memId) {
+		return mapper.cancelSearchByDate(cri, start, end, memId);
+	}
+	
+	@Override
+	public int cancelSearchByDateCount(String start, String end, String memId) {
+		// TODO Auto-generated method stub
+		return mapper.cancelSearchByDateCount(start, end, memId);
 	}
 
 
@@ -266,8 +287,14 @@ public class OrderServiceImpl implements OrderService{
 
 	
 	@Override
-	public List<Order> selectCancelOrderById(String id) {
-		return mapper.selectCancelOrderById(id);
+	public List<Order> selectCancelOrderById(Criteria cri, String id) {
+		return mapper.selectCancelOrderById(cri, id);
+	}
+	
+	@Override
+	public int selectCancelOrderByIdCount(String id) {
+		// TODO Auto-generated method stub
+		return mapper.selectCancelOrderByIdCount(id);
 	}
 
 	
@@ -333,7 +360,7 @@ public class OrderServiceImpl implements OrderService{
 		return deliveryFee;
 	}
 
-////////////////admin
+////////////////admin////////////////////////////
 	
 	@Override
 	public List<Order> selectOrderAll(Criteria cri) {
@@ -566,7 +593,7 @@ public class OrderServiceImpl implements OrderService{
 		if(o.getSettleCase().equals("카카오페이")) {
 			System.out.println("카카오");
 			
-			Payment pay = selectAccountPaymentByOrderId(o.getId());
+			Payment pay = getPaymentById(o.getPayId());
 			KakaoPayApprovalVO kakao = kakaoService.kakaoPayInfo(pay.getId());
 			int partCancel = kakao.getCanceled_amount().getTotal();
 			
@@ -693,17 +720,11 @@ public class OrderServiceImpl implements OrderService{
 		return res;
 	}
 
-		
-			
-		
-	
-
 	@Override
 	public List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId) {
 		// TODO Auto-generated method stub
 		return mapper.selectNotSoldOutOrderDetailById(orderId);
 	}
-
 
 
 }

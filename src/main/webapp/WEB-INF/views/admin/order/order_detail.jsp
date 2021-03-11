@@ -511,7 +511,6 @@ function execPostCode2(){
 	
 <!-- 카카오페이일때 -->
 
-<div style="padding-top:100px;">
 	<c:if test="${order.settleCase == '카카오페이' }">
 	<div class="admin_od_pay_info_div">	
 		<div class="admin_od_pay_info tl">
@@ -669,7 +668,7 @@ function execPostCode2(){
 						</tr>
 						<tr>
 							<td>핸드폰</td>
-							<td><input type="text" value="${order.member.phone}"></td>
+							<td><input type="text" value="${order.member.phone}" id="orderer_phone"></td>
 						</tr>
 						<tr>
 							<td>주소</td>

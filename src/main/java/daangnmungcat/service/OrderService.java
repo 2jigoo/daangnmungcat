@@ -24,14 +24,25 @@ public interface OrderService {
 	
 	List<Order> selectOrderAll(Criteria cri);
 	int listCount();
+	
 	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice, Criteria cri);
 	int searchListCount(String content, String query, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
+	
 	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
 	
 	/////////////////////////////////////
 	
-	List<Order> selectOrderById(String id);
-	List<Order> selectCancelOrderById(String id);
+	List<Order> selectOrderById(Criteria cri, String id);
+	int selectOrderByIdCount(String id);
+	
+	List<Order> selectCancelOrderById(Criteria cri, String id);
+	int selectCancelOrderByIdCount(String id);
+	
+	List<Order> searchByDate(Criteria cri, String start, String end, String memId);
+	int searchByDateCount(String start, String end, String memId);
+	
+	List<Order> cancelSearchByDate(Criteria cri, String start, String end,String memId);
+	int cancelSearchByDateCount(String start, String end, String memId);
 	
 	Order getOrderByNo(String id);
 	OrderDetail getOrderDetailById(String id);
@@ -49,9 +60,6 @@ public interface OrderService {
 	int adminInsertPaymentAndOrderUpdate(Map<String, String> map);
 
 	List<OrderDetail> sortingOrderDetail(String id);
-	
-	List<Order> searchByDate(String start, String end, String memId);
-	List<Order> cancelSearchByDate(String start, String end,String memId);
 	
 	void kakaoOrderTransaction(String memberId, String pg_token, KakaoPayApprovalVO kakao, HttpSession session);
 	String accountOrderTransaction(String memberId, HttpServletRequest request, HttpSession session);

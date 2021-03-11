@@ -23,9 +23,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
+import daangnmungcat.dto.OrderState;
+import daangnmungcat.dto.PageMaker;
+import daangnmungcat.dto.Payment;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
@@ -205,14 +209,45 @@ public class MypageController {
 		}
 	}
 	
+	@PostMapping("/order-cancel")
+	public ResponseEntity<Object> orderCancel(@RequestBody Map<String, String> map) {
+		try {
+			System.out.println(map.get("id").toString());
+			int res = 0;
+			String id = map.get("id").toString();
+			Order order = orderService.getOrderByNo(id);
+			List<OrderDetail> odList = orderService.getOrderDetail(id);
+			
+			for(OrderDetail od:odList) {
+				od.setOrderState(OrderState.CANCEL);
+				res += orderService.updateAllOrderDetail(od, order.getId());
+			}
+			
+			order.setState(OrderState.CANCEL.getLabel());
+			res += orderService.updateOrder(order, order.getId());
+			
+			return ResponseEntity.ok(res);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+	}
+	
 	
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView orderList(AuthInfo loginUser) {
+	public ModelAndView orderList(Criteria cri, AuthInfo loginUser) {
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
-		List<Order> list = orderService.selectOrderById(member.getId());
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		cri.setPerPageNum(10);
+		pageMaker.setTotalCount(orderService.selectOrderByIdCount(member.getId()));
+
+		List<Order> list = orderService.selectOrderById(cri, member.getId());
 		
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
@@ -222,19 +257,29 @@ public class MypageController {
 			}
 		}
 		
+		
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
+		mv.addObject("pageMaker", pageMaker);
+		System.out.println(pageMaker);
+		
 		mv.setViewName("/mypage/mypage_order_list");
 		return mv;
 	}
 	
 	@GetMapping("/mypage/mypage_order_list/start={start}/end={end}")
-	public ModelAndView searchOrder(@PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
+	public ModelAndView searchOrder(Criteria cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		
-		List<Order> list = orderService.searchByDate(start, end, member.getId());
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		cri.setPerPageNum(10);
+		pageMaker.setTotalCount(orderService.searchByDateCount(start, end, member.getId()));
+		
+		
+		List<Order> list = orderService.searchByDate(cri, start, end, member.getId());
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
@@ -246,33 +291,42 @@ public class MypageController {
 		ModelAndView mv = new ModelAndView();
 		
 		mv.addObject("list", list);
+		mv.addObject("pageMaker", pageMaker);
 		mv.setViewName("/mypage/mypage_order_list");
 		return mv;
 	}
 	
 	@GetMapping("/mypage/mypage_order_list/{id}")
 	public ModelAndView getOrderNo(@PathVariable String id, AuthInfo loginUser) {
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		Order order = orderService.getOrderByNo(id);
 		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
+		
 		order.setDetails(odList);
 		for(OrderDetail od: odList) {
 			od.setOrderId(order.getId());
 		}
+		
+		//무통장
+		Payment kakao = orderService.getPaymentById(order.getPayId());
+		Payment accountPay = orderService.selectAccountPaymentByOrderId(order.getId());
+		
 		ModelAndView mv = new ModelAndView();
-		mv.addObject("first_pdt", odList.get(0));
 		mv.addObject("order", order);
+		mv.addObject("kakao", kakao);
+		mv.addObject("account", accountPay);
 		mv.setViewName("/mypage/mypage_order_detail");
 		return mv;
 	}
 	
 	
 	@GetMapping("/mypage/mypage_order_cancel_list")
-	public ModelAndView getCancelOrder(AuthInfo loginUser) {
+	public ModelAndView getCancelOrder(Criteria cri, AuthInfo loginUser) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
-		List<Order> list = orderService.selectCancelOrderById(member.getId());
+		List<Order> list = orderService.selectCancelOrderById(cri, member.getId());
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
@@ -281,8 +335,14 @@ public class MypageController {
 			}
 		}
 		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		cri.setPerPageNum(10);
+		pageMaker.setTotalCount(orderService.selectCancelOrderByIdCount(member.getId()));
+		
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("list", list);
+		mv.addObject("pageMaker", pageMaker);
 		mv.setViewName("/mypage/mypage_order_cancel_list");
 		return mv;
 		
@@ -290,11 +350,11 @@ public class MypageController {
 
 	
 	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
-	public ModelAndView searchCancelOrder(@PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
+	public ModelAndView searchCancelOrder(Criteria cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		
-		List<Order> list = orderService.cancelSearchByDate(start, end, member.getId());
+		List<Order> list = orderService.cancelSearchByDate(cri, start, end, member.getId());
 		for(Order o: list) {
 			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
 			o.setDetails(odList);
@@ -303,8 +363,13 @@ public class MypageController {
 			}
 		}
 		
-		ModelAndView mv = new ModelAndView();
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		cri.setPerPageNum(10);
+		pageMaker.setTotalCount(orderService.cancelSearchByDateCount(start, end, member.getId()));
 		
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("pageMaker", pageMaker);
 		mv.addObject("list", list);
 		mv.setViewName("/mypage/mypage_order_cancel_list");
 		return mv;

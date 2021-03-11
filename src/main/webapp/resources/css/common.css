@@ -553,7 +553,7 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 #order_list_table tr td { border-bottom:1px solid black; vertical-align:middle;}
 #order_list_table th {padding:20px; border-bottom:1px solid black;}
 .order_list_img {width:25%; text-align:left; padding:5px; border-left:1px solid black; border-right:1px solid black;}
-.order_list_span {cursor:pointer;}
+.order_list_span {cursor:pointer; text-decoration:underline}
 .order_list_span:hover {text-decoration:underline}
 .order_list_search_div {width:70%; margin:0 auto; text-align:center; padding:50px;}
 .order_img_wrapper {display: inline-block; over-flow: hidden; vertical-align:middle }

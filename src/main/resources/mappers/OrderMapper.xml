@@ -158,16 +158,64 @@
 		values (#{id}, #{member.id}, #{order.id}, #{payPrice}, #{payType}, #{quantity}, #{payState}, #{payDate})
 	</insert>
 	
-	<select id="selectOrderById" resultMap="orderRes" parameterType="string">
-		SELECT * FROM mall_order 
-		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-		and mem_id = #{member.id} ORDER BY regdate desc
+	<select id="selectOrderById" resultMap="orderRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM mall_order
+				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+				and mem_id = #{id} ORDER BY regdate desc
+			)B)A
+				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+				ORDER BY A.RNUM
 	</select>
 	
-	<select id="selectCancelOrderById" resultMap="orderRes" parameterType="string">
-		SELECT * FROM mall_order 
-		where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
-		and mem_id = #{member.id} and state = '환불완료' ORDER BY regdate desc
+	<select id="selectOrderByIdCount" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM MALL_ORDER 
+				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+				and mem_id = #{id} ORDER BY regdate desc
+			)B)A
+	</select>
+	
+	<select id="selectCancelOrderById" resultMap="orderRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM mall_order
+				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+				and mem_id = #{id} and state = '취소' ORDER BY regdate desc
+			)B)A
+				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+				ORDER BY A.RNUM
+	</select>
+	
+	<select id="selectCancelOrderByIdCount" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM MALL_ORDER
+				where regdate BETWEEN TO_char(ADD_MONTHS(sysdate, -1),'yyyy-MM-dd') AND to_char(sysdate + 1, 'yyyy-MM-dd') 
+				and mem_id = #{id} and state = '취소' ORDER BY regdate desc
+			)B)A	
 	</select>
 	
 	<select id="getOrderByNo" resultMap="orderRes">
@@ -179,20 +227,69 @@
 		FROM mall_order_detail where order_id = #{orderId}
 	</select>
 	
-	<select id="searchByDate" parameterType="String" resultMap="orderRes">
-		<include refid="orderSql"></include>
-		FROM mall_order 
-		WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
-								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
-		and mem_id = #{mem_id} order by regdate desc
+	<select id="searchByDate" resultMap="orderRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM mall_order
+				WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
+										AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
+				and mem_id = #{mem_id} order by regdate desc
+			)B)A
+				WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+			ORDER BY A.RNUM
 	</select>
 	
-	<select id="cancelSearchByDate" parameterType="String" resultMap="orderRes">
-		<include refid="orderSql"></include>
-		FROM mall_order 
-		WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
-								AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
-		and mem_id = #{mem_id} and state = '환불완료' order by regdate desc
+	<select id="searchByDateCount" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM MALL_ORDER
+				WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
+										AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
+				and mem_id = #{mem_id} order by regdate desc
+			)B)A			 
+	</select>
+	
+	
+	<select id="cancelSearchByDate" resultMap="orderRes">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM mall_order
+				WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
+										AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
+				and mem_id = #{mem_id} and state = '취소' order by regdate desc
+			)B)A
+					WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd} 
+				ORDER BY A.RNUM
+	</select>
+	
+	<select id="cancelSearchByDateCount" resultType="int">
+		SELECT count(a.id)
+		FROM (SELECT ROWNUM AS RNUM, B.*
+		FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM MALL_ORDER
+				WHERE regdate BETWEEN to_date( #{dateFrom}, 'yyyy-MM-dd') 
+										AND TO_date(#{dateTo}, 'yyyy-MM-dd')+1 
+				and mem_id = #{mem_id} and state = '취소' order by regdate desc
+			)B)A
 	</select>
 	
 	<update id="updateAllOrderDetail">
