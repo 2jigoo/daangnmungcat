@@ -7,10 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class SearchCriteriaForMyPage extends Criteria {
+public class SearchCriteriaForOrder extends Criteria {
 
 	private String start;
 	private String end;
+	private String content;
+	private String query;
 	 
 	public String getStart() {
 		return start;

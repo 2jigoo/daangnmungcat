@@ -112,9 +112,33 @@ $(document).ready(function(){
 		
 	});
 	
-	$(document).on('click', '#cancel_multiple', '#cancel_single', function(){
+	$(document).on('click', '#cancel_single', function(){
 		var id = {id: $(this).attr('orderId')};
+		console.log(id)
+		if(confirm('주문을 취소하시겠습니까?') == true){
+			$.ajax({
+				url: '/order-cancel',
+				type: "post",
+				contentType: "application/json; charset=utf-8",
+				data : JSON.stringify(id),
+				dataType: "json",
+				cache : false,
+				success: function(res) {
+					alert('주문 취소 완료');
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
+			});
+		}else {
+			return;
+		}
 		
+	});
+	
+	$(document).on('click', '#cancel_multiple', function(){
+		var id = {id: $(this).attr('orderId')};
+		console.log(id)
 		if(confirm('주문을 취소하시겠습니까?') == true){
 			$.ajax({
 				url: '/order-cancel',
@@ -146,7 +170,7 @@ $(document).ready(function(){
 	<h2 id="subTitle">주문 내역</h2>
 	<div class="order_list_search_div">
 		조회 기간 
-		<input type="button" value="전체" onclick="location.href='http://localhost:8080/mypage/mypage_order_list'">
+		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_list'">
 		<input type="button" value="오늘" id="today">
 		<input type="button" value="7일" id="7days_ago">
 		<input type="button" value="15일" id="15days_ago">
@@ -176,7 +200,7 @@ $(document).ready(function(){
 				<th>수량</th>
 				<th>상품금액</th>
 				<th>주문상태</th>
-				<th>총 결제금액</th>
+				<th>상품 합계 금액</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -238,9 +262,9 @@ $(document).ready(function(){
 							<c:if test="${od.orderState.label == '배송'}">배송중</c:if>
 							<c:if test="${od.orderState.label == '완료'}">배송완료</c:if>
 							<c:if test="${od.orderState.label == '취소'}">결제취소</c:if>
-							<c:if test="${od.orderState.label == '반품'}">반품</c:if>
-							<c:if test="${od.orderState.label == '퓸절'}">품절</c:if>
-							<c:if test="${od.orderState.label == '환불'}">환불</c:if>
+							<c:if test="${od.orderState.label == '반품'}">반품취소</c:if>
+							<c:if test="${od.orderState.label == '품절'}">품절취소</c:if>
+							<c:if test="${od.orderState.label == '환불'}">환불완료</c:if>
 							<c:if test="${od.orderState.label == '구매확정'}">구매확정</c:if>
 							
 						</td>
@@ -257,9 +281,9 @@ $(document).ready(function(){
 								<c:if test="${order.state == '배송'}">배송중</c:if>
 								<c:if test="${order.state == '완료'}">배송완료</c:if>
 								<c:if test="${order.state == '취소'}">결제취소</c:if>
-								<c:if test="${order.state == '반품'}">반품</c:if>
-								<c:if test="${order.state == '퓸절'}">품절</c:if>
-								<c:if test="${order.state == '환불'}">환불</c:if>
+								<c:if test="${order.state == '반품'}">반품취소</c:if>
+								<c:if test="${order.state == '퓸절'}">품절취소</c:if>
+								<c:if test="${order.state == '환불'}">환불완료</c:if>
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
@@ -274,14 +298,14 @@ $(document).ready(function(){
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>
 	            				<br>
-	            				<c:if test="${order.state == '대기'}">입금대기</c:if>
+		            			<c:if test="${order.state == '대기'}">입금대기</c:if>
 								<c:if test="${order.state == '결제'}">결제완료</c:if>
 								<c:if test="${order.state == '배송'}">배송중</c:if>
 								<c:if test="${order.state == '완료'}">배송완료</c:if>
 								<c:if test="${order.state == '취소'}">결제취소</c:if>
-								<c:if test="${order.state == '반품'}">반품</c:if>
-								<c:if test="${order.state == '퓸절'}">품절</c:if>
-								<c:if test="${order.state == '환불'}">환불</c:if>
+								<c:if test="${order.state == '반품'}">반품취소</c:if>
+								<c:if test="${order.state == '퓸절'}">품절취소</c:if>
+								<c:if test="${order.state == '환불'}">환불완료</c:if>
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>

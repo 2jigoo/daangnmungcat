@@ -117,7 +117,7 @@ $(document).ready(function(){
 	<h2 id="subTitle">취소/환불 내역</h2>
 	<div class="order_list_search_div">
 		조회 기간 
-		<input type="button" value="전체" id="all">
+		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_cancel_list'">
 		<input type="button" value="오늘" id="today">
 		<input type="button" value="7일" id="7days_ago">
 		<input type="button" value="15일" id="15days_ago">

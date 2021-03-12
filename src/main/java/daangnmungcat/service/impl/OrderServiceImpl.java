@@ -28,7 +28,7 @@ import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.Payment;
-import daangnmungcat.dto.SearchCriteriaForMyPage;
+import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
@@ -218,12 +218,12 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<Order> selectOrderById(SearchCriteriaForMyPage cri, String id) {
+	public List<Order> selectOrderById(SearchCriteriaForOrder cri, String id) {
 		return mapper.selectOrderById(cri, id);
 	}
 
 	@Override
-	public int selectOrderByIdCount(SearchCriteriaForMyPage cri, String id) {
+	public int selectOrderByIdCount(SearchCriteriaForOrder cri, String id) {
 		// TODO Auto-generated method stub
 		return mapper.selectOrderByIdCount(cri, id);
 	}
@@ -235,7 +235,7 @@ public class OrderServiceImpl implements OrderService{
 
 
 	@Override
-	public List<Order> searchByDate(SearchCriteriaForMyPage cri, String start, String end, String memId) {
+	public List<Order> searchByDate(SearchCriteriaForOrder cri, String start, String end, String memId) {
 		// TODO Auto-generated method stub 
 		return mapper.searchByDate(cri, start, end, memId);
 	}
@@ -247,7 +247,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 	
 	@Override
-	public List<Order> cancelSearchByDate(SearchCriteriaForMyPage cri, String start, String end, String memId) {
+	public List<Order> cancelSearchByDate(SearchCriteriaForOrder cri, String start, String end, String memId) {
 		return mapper.cancelSearchByDate(cri, start, end, memId);
 	}
 	
@@ -286,12 +286,12 @@ public class OrderServiceImpl implements OrderService{
 
 	
 	@Override
-	public List<Order> selectCancelOrderById(SearchCriteriaForMyPage cri, String id) {
+	public List<Order> selectCancelOrderById(SearchCriteriaForOrder cri, String id) {
 		return mapper.selectCancelOrderById(cri, id);
 	}
 	
 	@Override
-	public int selectCancelOrderByIdCount(SearchCriteriaForMyPage cri, String id) {
+	public int selectCancelOrderByIdCount(SearchCriteriaForOrder cri, String id) {
 		// TODO Auto-generated method stub
 		return mapper.selectCancelOrderByIdCount(cri, id);
 	}
@@ -638,24 +638,27 @@ public class OrderServiceImpl implements OrderService{
 				res += updatePayment(pay, pay.getId());
 				
 			}else {
-				Payment newPay = new Payment();
+				if(payPrice != 0) {
 				
-				System.out.println("새로운 payId: " + payId);
-				newPay.setId(payId);
-				newPay.setMember(member);
-				newPay.setOrder(o);
-				newPay.setPayPrice(Integer.parseInt(price));
-				newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
-				newPay.setPayState(o.getState());
-				newPay.setPayType("무통장입금");
-				newPay.setQuantity(Integer.parseInt(qtt));
-				System.out.println(pay);
-				log.info("insert pay");
-				insertAccountPayment(newPay);
-				
-//				Payment newP = getPaymentById(payId);
-//				newP.setPayPrice(o.getMisu() - payPrice);
-//				res += updatePayment(newP, newP.getId());
+					Payment newPay = new Payment();
+					
+					System.out.println("새로운 payId: " + payId);
+					newPay.setId(payId);
+					newPay.setMember(member);
+					newPay.setOrder(o);
+					newPay.setPayPrice(Integer.parseInt(price));
+					newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+					newPay.setPayState(o.getState());
+					newPay.setPayType("무통장입금");
+					newPay.setQuantity(Integer.parseInt(qtt));
+					System.out.println(pay);
+					log.info("insert pay");
+					insertAccountPayment(newPay);
+					
+	//				Payment newP = getPaymentById(payId);
+	//				newP.setPayPrice(o.getMisu() - payPrice);
+	//				res += updatePayment(newP, newP.getId());
+				}
 			
 			}
 			

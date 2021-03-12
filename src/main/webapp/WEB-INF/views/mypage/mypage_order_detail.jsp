@@ -62,7 +62,7 @@ $(document).ready(function(){
 				<th>수량</th>
 				<th>상품금액</th>
 				<th>주문상태</th>
-				<th>총 결제금액</th>
+				<th>상품 합계 금액</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -106,14 +106,14 @@ $(document).ready(function(){
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
 						<td>
-							<c:if test="${od.orderState.code == '대기'}">입금대기</c:if>
+							<c:if test="${od.orderState.label == '대기'}">입금대기</c:if>
 							<c:if test="${od.orderState.label == '결제'}">결제완료</c:if>
 							<c:if test="${od.orderState.label == '배송'}">배송중</c:if>
 							<c:if test="${od.orderState.label == '완료'}">배송완료</c:if>
 							<c:if test="${od.orderState.label == '취소'}">결제취소</c:if>
-							<c:if test="${od.orderState.label == '반품'}">반품</c:if>
-							<c:if test="${od.orderState.label == '퓸절'}">품절</c:if>
-							<c:if test="${od.orderState.label == '환불'}">환불</c:if>
+							<c:if test="${od.orderState.label == '반품'}">반품취소</c:if>
+							<c:if test="${od.orderState.label == '퓸절'}">품절취소</c:if>
+							<c:if test="${od.orderState.label == '환불'}">환불완료</c:if>
 							<c:if test="${od.orderState.label == '구매확정'}">구매확정</c:if>
 						</td>
 						

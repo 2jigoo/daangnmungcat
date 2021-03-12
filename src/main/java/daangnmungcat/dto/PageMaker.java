@@ -98,7 +98,7 @@ public class PageMaker {
 	}
 	
 	public String makeSearchForMyPage(int page){
-		 SearchCriteriaForMyPage scri = (SearchCriteriaForMyPage) cri;
+		 SearchCriteriaForOrder scri = (SearchCriteriaForOrder) cri;
 		 
 		 UriComponents uriComponents = 
             UriComponentsBuilder.newInstance()

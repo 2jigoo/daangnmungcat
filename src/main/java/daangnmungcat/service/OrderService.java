@@ -17,22 +17,22 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
-import daangnmungcat.dto.SearchCriteriaForMyPage;
+import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 
 @Service
 public interface OrderService {
 	
-	List<Order> selectOrderById(SearchCriteriaForMyPage cri, String id);
-	int selectOrderByIdCount(SearchCriteriaForMyPage cri, String id);
+	List<Order> selectOrderById(SearchCriteriaForOrder cri, String id);
+	int selectOrderByIdCount(SearchCriteriaForOrder cri, String id);
 	
-	List<Order> selectCancelOrderById(SearchCriteriaForMyPage cri, String id);
-	int selectCancelOrderByIdCount(SearchCriteriaForMyPage cri,String id);
+	List<Order> selectCancelOrderById(SearchCriteriaForOrder cri, String id);
+	int selectCancelOrderByIdCount(SearchCriteriaForOrder cri,String id);
 	
-	List<Order> searchByDate(SearchCriteriaForMyPage cri, String start, String end, String memId);
+	List<Order> searchByDate(SearchCriteriaForOrder cri, String start, String end, String memId);
 	int searchByDateCount(String start, String end, String memId);
 	
-	List<Order> cancelSearchByDate(SearchCriteriaForMyPage cri, String start, String end,String memId);
+	List<Order> cancelSearchByDate(SearchCriteriaForOrder cri, String start, String end,String memId);
 	int cancelSearchByDateCount(String start, String end, String memId);
 	
 	Order getOrderByNo(String id);

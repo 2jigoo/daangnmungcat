@@ -20,7 +20,7 @@ import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
-import daangnmungcat.dto.SearchCriteriaForMyPage;
+import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
@@ -89,7 +89,7 @@ public class PayController {
 	}
 	
 	@GetMapping("/kakaoPayCancelSuccess")
-	public ModelAndView payCancelSuccess(SearchCriteriaForMyPage cri, HttpServletRequest request, AuthInfo loginUser) {
+	public ModelAndView payCancelSuccess(SearchCriteriaForOrder cri, HttpServletRequest request, AuthInfo loginUser) {
 		log.info("kakaoPayCancel - success");
 	
 		Member member = memberService.selectMemberById(loginUser.getId());

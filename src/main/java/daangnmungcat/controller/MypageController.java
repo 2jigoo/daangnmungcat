@@ -33,7 +33,7 @@ import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Payment;
-import daangnmungcat.dto.SearchCriteriaForMyPage;
+import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
@@ -242,7 +242,7 @@ public class MypageController {
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView orderList(SearchCriteriaForMyPage cri, AuthInfo loginUser, 
+	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, 
 			@Nullable @RequestParam String id) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
@@ -294,7 +294,7 @@ public class MypageController {
 
 	
 	@GetMapping("/mypage/mypage_order_cancel_list")
-	public ModelAndView getCancelOrder(SearchCriteriaForMyPage cri, AuthInfo loginUser,
+	public ModelAndView getCancelOrder(SearchCriteriaForOrder cri, AuthInfo loginUser,
 			@Nullable @RequestParam String id) {
 		Member member = service.selectMemberById(loginUser.getId());
 		
@@ -346,7 +346,7 @@ public class MypageController {
 
 	
 	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
-	public ModelAndView searchCancelOrder(SearchCriteriaForMyPage cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
+	public ModelAndView searchCancelOrder(SearchCriteriaForOrder cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
 		Member member = service.selectMemberById(loginUser.getId());
 		System.out.println(start +"/"+ end);
 		

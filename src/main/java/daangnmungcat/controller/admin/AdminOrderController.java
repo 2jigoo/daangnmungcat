@@ -49,7 +49,7 @@ public class AdminOrderController {
 	
 	@GetMapping("/admin/order/list")
 	public ModelAndView orderList(Criteria cri, 
-			@Nullable @RequestParam String content, @Nullable @RequestParam String query,
+			@Nullable @RequestParam String search, @Nullable @RequestParam String query,
 			@Nullable @RequestParam String start, @Nullable @RequestParam String end,
 			@Nullable @RequestParam String state,@Nullable @RequestParam String part_cancel,
 			@Nullable @RequestParam String settle_case,
@@ -61,11 +61,11 @@ public class AdminOrderController {
 		List<Order> list = null;
 
 		
-		if(content != null  || query != null) {
+		if(search != null  || query != null) {
 
-			list = orderService.selectOrderBySearch(content, query, state,  start, end, settle_case, part_cancel, misu, return_price, cri);
-			pageMaker.setTotalCount(orderService.searchListCount(content, query, state, start, end, part_cancel, settle_case, misu, return_price));
-			System.out.println(orderService.searchListCount(content, query, state, start, end, settle_case, part_cancel, misu, return_price));
+			list = orderService.selectOrderBySearch(search, query, state,  start, end, settle_case, part_cancel, misu, return_price, cri);
+			pageMaker.setTotalCount(orderService.searchListCount(search, query, state, start, end, part_cancel, settle_case, misu, return_price));
+			System.out.println(orderService.searchListCount(search, query, state, start, end, settle_case, part_cancel, misu, return_price));
 			
 		}else if(state != null ||  start != null || end != null || settle_case != null || 
 				part_cancel != null || misu != null || return_price != null) {
@@ -84,9 +84,9 @@ public class AdminOrderController {
 				settle_case = null;
 			}
 			
-			list = orderService.selectOrderBySearch(content, query, state,  start, end, settle_case, part_cancel, misu, return_price, cri);
-			pageMaker.setTotalCount(orderService.searchListCount(content, query, state, start, end, part_cancel, settle_case, misu, return_price));
-			System.out.println("총갯수:" + orderService.searchListCount(content, query, state, start, end, part_cancel, settle_case, misu, return_price));
+			list = orderService.selectOrderBySearch(search, query, state,  start, end, settle_case, part_cancel, misu, return_price, cri);
+			pageMaker.setTotalCount(orderService.searchListCount(search, query, state, start, end, part_cancel, settle_case, misu, return_price));
+			System.out.println("총갯수:" + orderService.searchListCount(search, query, state, start, end, part_cancel, settle_case, misu, return_price));
 		}else {
 			list = orderService.selectOrderAll(cri);
 			pageMaker.setTotalCount(orderService.listCount());
@@ -106,7 +106,7 @@ public class AdminOrderController {
 		mv.addObject("totalCnt", orderService.listCount());
 		mv.addObject("list", list);
 		mv.addObject("pageMaker", pageMaker);
-		mv.addObject("content", content);
+		mv.addObject("content", search);
 		mv.addObject("query", query);
 		mv.addObject("state", state);
 		mv.addObject("start", start);
@@ -178,7 +178,7 @@ public class AdminOrderController {
 		Order order = null;
 		int res = 0;
 		Payment pay = null;
-		
+		System.out.println("status:" + status);
 		for(int i=0; i<od.length; i++) {
 			
 			OrderDetail ord = orderService.getOrderDetailById(od[i]);
@@ -216,9 +216,25 @@ public class AdminOrderController {
 							order.setState(OrderState.DELIVERED.getLabel());
 						}
 						
+
+						if(order.getPayId() == null) {
+							System.out.println("pay 없음");
+							System.out.println(ord);
+							//현재 51000. return = 0 + 33000취소
+							//order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
+							//order.setMisu(order.getFinalPrice() - order.getReturnPrice());
+							//미수 = 51000 - 33000 + 0 = 18000
+							
+							//33000 - 33000 = 0
+							order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());
+							order.setMisu(order.getFinalPrice() - order.getReturnPrice()); 
+							
+							//54000 - 0
 						
-						order.setMisu(order.getMisu() + ord.getTotalPrice());
-						order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());
+						}else {
+							order.setReturnPrice(ord.getTotalPrice());
+							order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - pay.getPayPrice());
+						}
 						
 						orderService.updatePartOrderDetail(ord, ord.getId());
 						orderService.updateOrder(order, order.getId());
@@ -258,6 +274,8 @@ public class AdminOrderController {
 			//반품,품절금액 -> return_price에 반영 
 			//결제 취소 금액 -> cancel_price. 최종미수금에서 + 
 				
+			//무통장일때 pay가 존재하지 않으면 미수도 0
+				
 			} else { 
 				
 				//취소반품 품절일때 중복 변경 x
@@ -273,9 +291,19 @@ public class AdminOrderController {
 						ord.setOrderState(OrderState.SOLD_OUT);
 					}
 
-					//주문취소에 추가  => 현재 취소액 + 선택한 금액
-					order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
-					order.setMisu(order.getMisu() - ord.getTotalPrice());
+					if(order.getPayId() == null) {
+						System.out.println("pay 없음");
+						// 무통장시 미수금 있음 지금 미수에서 -> 취소시 해당 ord의 total 빼기
+						//현재 51000. return = 0 + 33000취소
+						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
+						order.setMisu(order.getFinalPrice() - order.getReturnPrice());
+						//미수 = 51000 - 33000 + 0 = 18000
+					
+					}else {
+						//주문취소에 추가  => 현재 취소액 + 선택한 금액
+						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
+						order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - pay.getPayPrice());
+					}
 					
 				}else {
 					System.out.println("취반품");
@@ -334,8 +362,6 @@ public class AdminOrderController {
 		
 		List<OrderDetail> notSoldOutList = orderService.selectNotSoldOutOrderDetailById(order.getId());
 		
-		
-		
 		if(pay == null) {
 			deposit = 0;
 			for(OrderDetail notSoldOutOd: notSoldOutList) {
@@ -352,14 +378,14 @@ public class AdminOrderController {
 		
 		//최종 = 품절아닌 상품금액 - 입금액 + 취소/환불 금액
 		int finalPrice = pdtPrice - deposit;
-		System.out.println("품절아닌상품금액:" + finalPrice);
-		System.out.println("입금액:" + pay.getPayPrice());
-		System.out.println("환불금액:" + order.getCancelPrice());
-		System.out.println("주문취소:" + order.getReturnPrice());
-		System.out.println("return price + 품절아닌 odList의 가격 : " + (finalPrice + order.getReturnPrice()));
+//		System.out.println("품절아닌상품금액:" + finalPrice);
+//		System.out.println("입금액:" + pay.getPayPrice());
+//		System.out.println("환불금액:" + order.getCancelPrice());
+//		System.out.println("주문취소:" + order.getReturnPrice());
+//		System.out.println("return price + 품절아닌 odList의 가격 : " + (finalPrice - order.getReturnPrice()));
 		
-		//order.setMisu(finalPrice - order.getReturnPrice());
-		//orderService.updateOrder(order, order.getId());			
+//		order.setMisu(finalPrice - order.getReturnPrice());
+//		orderService.updateOrder(order, order.getId());			
 		
 		return res;
 	}
