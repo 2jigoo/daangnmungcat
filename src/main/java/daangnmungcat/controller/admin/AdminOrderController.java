@@ -293,16 +293,21 @@ public class AdminOrderController {
 
 					if(order.getPayId() == null) {
 						System.out.println("pay 없음");
+						
 						// 무통장시 미수금 있음 지금 미수에서 -> 취소시 해당 ord의 total 빼기
 						//현재 51000. return = 0 + 33000취소
 						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
 						order.setMisu(order.getFinalPrice() - order.getReturnPrice());
 						//미수 = 51000 - 33000 + 0 = 18000
+						
+						//대기,결제
+						//order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());
+						//order.setMisu(order.getFinalPrice() - order.getReturnPrice()); 
 					
 					}else {
 						//주문취소에 추가  => 현재 취소액 + 선택한 금액
 						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
-						order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - pay.getPayPrice());
+						order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() + pay.getPayPrice());
 					}
 					
 				}else {

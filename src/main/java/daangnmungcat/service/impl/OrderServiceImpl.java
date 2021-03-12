@@ -655,9 +655,8 @@ public class OrderServiceImpl implements OrderService{
 					log.info("insert pay");
 					insertAccountPayment(newPay);
 					
-	//				Payment newP = getPaymentById(payId);
-	//				newP.setPayPrice(o.getMisu() - payPrice);
-	//				res += updatePayment(newP, newP.getId());
+					o.setPayId(newPay.getId());					
+					
 				}
 			
 			}
