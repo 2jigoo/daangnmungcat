@@ -13,14 +13,14 @@ import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 
 public interface KakaoPayService {
 	
-	String kakaoPayReady(HttpServletRequest request, HttpSession session);
+	String kakaoPayReady(String memberId, HttpServletRequest request, HttpSession session);
 	
 	//지우기
-	KakaoPayApprovalVO kakaoPayApprovalInfo(String pg_token, HttpServletRequest request, HttpSession session);
+	KakaoPayApprovalVO kakaoPayApprovalInfo(String memberId, String pg_token, HttpServletRequest request, HttpSession session);
 
-	String kakaoPayCancel(Map<String, String> map, HttpServletRequest request, HttpSession session);
+	String kakaoPayCancel(String memberId, Map<String, String> map);
 
-	String kakaoPayPartCancel(Map<String, String> map, HttpServletRequest request, HttpSession session);
+	String kakaoPayPartCancel(Map<String, String> map);
 	
-	KakaoPayApprovalVO kakaoPayInfo(String tid, HttpServletRequest request, HttpSession session);
+	KakaoPayApprovalVO kakaoPayInfo(String tid);
 }

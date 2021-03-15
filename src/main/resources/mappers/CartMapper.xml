@@ -89,7 +89,10 @@
 	<delete id="deleteCartItem" parameterType="Cart">
 		DELETE
 		FROM mall_cart
-		where id = #{id}
+		where id IN
+			<foreach item="c" index="index" collection="cart" open="(" separator="," close=")">
+				#{c.id}
+			</foreach>
 	</delete>
 	
 	<delete id="deleteCartItems">

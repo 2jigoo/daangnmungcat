@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-<%@ include file="/resources/include/header.jsp" %>
-
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 
    #section_img {
@@ -200,6 +198,14 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+	
+	$("#delBtn").click(function(){
+		if (confirm("정말 삭제하시겠습니까??") == true){
+		} else{
+		    return false;
+		}
+	})
+	
 	   
 	   /* 글쓴 시간 가져오기
 	   var inDate = document.getElementById('regdate').innerHTML;
@@ -489,6 +495,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		               </div>
 		            </div>
 		         </a>
+		         <a href="/joongo/review/list?memId=${sale.member.id}">거래후기 보기</a>
 		      </section>
 		      
 		      <section id="section_description">
@@ -562,7 +569,13 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 			               <c:forEach items="${mlist }" var="mlist">
 			                  <li>
 			                     <a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
-			                        <div class="section_img"><img src="<%=request.getContextPath()%>/resources/${mlist.thumImg}"></div>
+			                        <div class="section_img">
+			                        	<c:if test="${empty mlist.thumImg}">
+											<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg"></div>
+										</c:if>
+										<c:if test="${not empty mlist.thumImg}">
+											<img src="<%=request.getContextPath() %>/resources/${mlist.thumImg}"></div>
+										</c:if>
 			                        <div class="section_txt">
 			                           <p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
 			                           <p class="section_subject">${mlist.title}</p>
@@ -657,4 +670,4 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		   
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

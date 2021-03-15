@@ -10,7 +10,6 @@ DROP TABLE MALL_MILEAGE CASCADE CONSTRAINTS;/* 쇼핑몰_마일리지 */
 DROP TABLE MALL_PAYMENT CASCADE CONSTRAINTS;/* 쇼핑몰_결제수단 */
 
 
-
 /* 쇼핑몰_멍_카테고리 */
 CREATE TABLE MALL_DOG_CATE (
 	id NUMBER(12) NOT NULL, /* 멍카테고리아이디 */
@@ -139,14 +138,21 @@ CREATE TABLE MALL_ORDER (
 	final_price NUMBER(10) NOT NULL, /* 최종가격 */
 	plus_mileage NUMBER(10) NOT NULL, /* 마일리지적립금액 */
 	delivery_price NUMBER(10) NOT NULL, /* 배송비 */
-	tracking_number varchar2(20),
+	settle_case varchar2(20) NOT NULL, /* 지불 수단 */
+	tracking_number varchar2(20), /*운송장 번호*/
+	shipping_date DATE, /*배송날짜*/
 	add_delivery_price NUMBER(10), /* 추가배송비 */
-	pay_id varchar2(30) NOT NULL, /* 결제번호 */
+	pay_id varchar2(30), /* 결제번호 */
+	pay_date DATE,
 	regdate DATE DEFAULT SYSDATE, 
 	return_price NUMBER(10), /* 반품/품절금액 */
-	state VARCHAR2(20) DEFAULT '결제완료' /* 주문상태 */
+	cancel_price NUMBER(10), /*결제 취소/환불 금액*/
+	state VARCHAR2(20) NOT NULL, /* 주문상태 */
+	misu NUMBER(10)/* 미수금 */
 );
 
+
+ALTER TABLE mall_order ADD pay_date DATE;
 
 CREATE UNIQUE INDEX PK_MALL_ORDER
 	ON MALL_ORDER (
@@ -214,9 +220,9 @@ CREATE TABLE MALL_PAYMENT (
 	order_id varchar2(20) NOT NULL, /* 주문서아이디 */
 	pay_price NUMBER(10) NOT NULL, /* 결제금액 */
 	pay_date DATE DEFAULT SYSDATE, /* 결제일시 */
-	pay_type VARCHAR2(1500) NOT NULL, /* 결제방법 */
-	pay_quantity NUMBER(12) NOT NULL, /* 수량 */
-	pay_state VARCHAR2(30) DEFAULT '결제완료'
+	pay_type VARCHAR2(1500) , /* 결제방법 */
+	pay_quantity NUMBER(12), /* 수량 */
+	pay_state VARCHAR2(30)
 );
 
 

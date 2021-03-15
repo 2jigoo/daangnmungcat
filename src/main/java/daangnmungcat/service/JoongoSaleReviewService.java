@@ -9,6 +9,8 @@ public interface JoongoSaleReviewService {
 	
 	List<SaleReview> selectJoongoReviewBySaleMemId(String memId);
 	
+	List<SaleReview> selectMypageJoongoReviewBySaleMemId(String memId);
+	
 	SaleReview selectJoongoReviewBySaleId(int saleId);
 	
 	SaleReview selectJoongoReviewById(int id);
@@ -19,5 +21,7 @@ public interface JoongoSaleReviewService {
 	
 	int deleteJoongoSaleReview(int id);
 	
-	int countMemId(String memId);
+	int countMemId(String memId);;
+	
+	int countBuyMemId(String memId);
 }

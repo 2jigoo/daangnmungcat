@@ -98,7 +98,7 @@
 		  FROM (SELECT rownum AS rnum, b.*
 		  		FROM (<include refid="selectSql" /> 
 		  		<where>
-		  			<if test="product.name != null">and mdc.name like '%'||#{product.name}||'%' </if>
+		  			<if test="product.name != null">and mdc.name like '%'||#{product.name}||'%' or mcc.name like '%'||#{product.name}||'%' </if>
 		  			<if test="product.dogCate != null">and mdc.NAME like '%'||#{product.dogCate.name}||'%' </if>
 		  			<if test="product.catCate != null">or mcc.NAME like '%'||#{product.catCate.name}||'%' </if>
 		  			<if test="product.saleYn != null">and sale_yn = #{product.saleYn} </if>

@@ -31,6 +31,8 @@ INSERT INTO MEMBER(id, pwd, name, nickname, email, phone, grade, dongne1, dongne
 VALUES('chattest1', '1234', '채팅요정', '유정', 'chat01@test.co.kr', '010-1234-4321', 'W', 3,  44, NULL, NULL, sysdate, TO_DATE('1994-01-12', 'yyyy-mm-dd'));
 INSERT INTO MEMBER(id, pwd, name, nickname, email, phone, grade, dongne1, dongne2, PROFILE_PIC, PROFILE_TEXT, regdate, BIRTHDAY)
 VALUES('chattest2', '1234', '채팅유저', '채유전', 'chat02@test.co.kr', '010-1234-4999', 'W', 3,  44, NULL, NULL, sysdate, TO_DATE('1994-08-12', 'yyyy-mm-dd'));
+INSERT INTO MEMBER(id, pwd, name, nickname, email, phone, grade, dongne1, dongne2, PROFILE_PIC, PROFILE_TEXT, regdate, BIRTHDAY)
+VALUES('chattest10', '1238', '채팅요정', '유정', 'chat10@test.co.kr', '010-1234-4320', 'W', 3,  44, NULL, NULL, sysdate, TO_DATE('1994-01-12', 'yyyy-mm-dd'));
 
 INSERT INTO JOONGO_SALE(id, mem_id, dog_cate, cat_cate, title, content, price, DONGNE1_ID, DONGNE2_ID, BUY_MEM_id, SALE_STATE, regdate, redate, hits)
 VALUES(1/*sale_seq.nextval*/, 'chattest1', 'n', 'y', '고양이 그려드립니다ㅋ', '허접한 그림입니다', 100, 3, 44, NULL, 1, sysdate, sysdate, 0);
@@ -278,3 +280,52 @@ FROM (
 ) a
 WHERE a.rnum BETWEEN 1 AND 3
 ORDER BY a.rnum
+
+SELECT * FROM NOTICE n ;
+
+
+SELECT * FROM SALE_VIEW sv ;
+
+
+SELECT *
+	FROM (
+		SELECT rownum AS rnum, a.*
+		FROM (
+			SELECT
+				js.ID,
+				js.MEM_ID,
+				nickname	as mem_nickname,
+				grade		as mem_grade,
+				profile_pic AS mem_profile_pic,
+				DOG_CATE,
+				CAT_CATE,
+				TITLE,
+				CONTENT,
+				PRICE,
+				d1.ID		AS dongne1_id,
+				d1.NAME		AS dongne1_name,
+				d2.ID		AS dongne2_id,
+				BUY_MEM_ID,
+				SALE_STATE,
+				js.REGDATE,
+				REDATE,
+				HITS,
+				CHAT_COUNT,
+				HEART_COUNT,
+				thum_name,
+				h.mem_id		as heart_mem_id,
+				h.regdate		as heart_regdate
+	  		FROM JOONGO_SALE js
+	  			LEFT OUTER JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+	  			LEFT OUTER JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	  			LEFT OUTER JOIN MEMBER m On js.mem_id = m.id
+	  			LEFT OUTER JOIN joongo_heart h ON js.id = h.sale_id
+	  			LEFT OUTER JOIN (SELECT sale_id, thum_name FROM JOONGO_IMAGE WHERE THUM_NAME IS NOT null) ji ON js.id = ji.SALE_ID 
+	  		WHERE h.mem_id = 'chattest1'
+	  		ORDER BY h.regdate desc
+	  	) a
+	)
+	WHERE rnum BETWEEN 1 AND 10
+	ORDER BY rnum
+	
+	SELECT sale_id, thum_name FROM joongo_image WHERE thum_name IS not null;

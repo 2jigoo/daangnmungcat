@@ -55,8 +55,8 @@ public class JoongoSaleController {
 	
 	
 	@RequestMapping(value = "joongoSale/detailList", method = RequestMethod.GET)
-	public String listById(@RequestParam int id, Model model, HttpSession session, Criteria cri) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String listById(@RequestParam(value = "id") int id, Model model, AuthInfo loginUser, Criteria cri) {
+		log.info("detailList?id: " + id);
 		
 		Sale sale = service.getSaleById(id);
 		String memId = sale.getMember().getId();
@@ -98,8 +98,7 @@ public class JoongoSaleController {
 	}
 
 	@GetMapping("/heart")
-	public String heart(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String heart(AuthInfo loginUser, Model model, @RequestParam int id) {
 		if (loginUser == null) {
 			String textUrl = "detailList?id=" + id;
 			model.addAttribute("msg", "로그인을 하셔야 합니다.");
@@ -125,8 +124,7 @@ public class JoongoSaleController {
 	}
 
 	@GetMapping("/heartNo")
-	public String heartNo(HttpSession session, HttpServletRequest req, Model model, @RequestParam int id) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String heartNo(AuthInfo loginUser, Model model, @RequestParam int id) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("id", id);
 		map.put("memId", loginUser.getId());
@@ -140,15 +138,22 @@ public class JoongoSaleController {
 	
 	
 	@GetMapping("/joongo/heart/list")
-	public String heartedList(HttpSession session, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
+	public String heartedList(AuthInfo loginUser, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
+		log.info("page: " + page);
 		
 		PageMaker pageMaker = new PageMaker();
 		Criteria criteria = new Criteria(page, 20);
+		
+		int totalCount = service.getHeartedCounts(loginUser.getId());
+		log.info("totalCount: " + totalCount);
+		
 		pageMaker.setCri(criteria);
+		pageMaker.setTotalCount(totalCount);
 		
 		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
 		list.forEach(sale -> log.debug(sale.toString()));
+		
+		log.info("pageMaker: " + pageMaker.toString());
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", pageMaker);

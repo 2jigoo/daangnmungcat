@@ -1,6 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 </style>
@@ -9,15 +8,22 @@ $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
 	
 	$('#pwd_confirm').on("click", function(){
-		$.get(contextPath +"/member/info", function(member){
-			console.log(member)
-			var pwd = $('#pwd').val();
-			if(pwd == member.member.pwd){
-				window.location.href= contextPath+'/mypage/mypage_info';
-			}else {
-				alert('비밀번호가 맞지 않습니다.');	
-			}
-		});
+		var pwd = JSON.stringify({pwd: $('#pwd').val()});
+		
+			$.ajax({
+				url: contextPath + "/member/checkPwd",
+				type: "POST",
+				data: pwd,
+				contentType: "application/json",
+				success: function(res) {
+					if(res == true) {
+						location.href = "/mypage/mypage_info";
+					}
+				},
+				error: function(e) {
+					alert("비밀번호가 일치하지 않습니다.");
+				}
+			});
 	});
 });
 </script>
@@ -32,4 +38,4 @@ $(function(){
 	<input type="button" id="pwd_confirm" value="인증하기">
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

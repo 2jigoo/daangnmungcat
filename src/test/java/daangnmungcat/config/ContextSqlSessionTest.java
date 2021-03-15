@@ -1,9 +1,7 @@
 package daangnmungcat.config;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.After;
@@ -14,12 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import lombok.extern.log4j.Log4j2;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { ContextRoot.class })
+@Log4j2
 public class ContextSqlSessionTest {
-	protected static final Log log = LogFactory.getLog(ContextSqlSessionTest.class);
-
-	
 	@After
 	public void tearDown() throws Exception {
 		System.out.println();

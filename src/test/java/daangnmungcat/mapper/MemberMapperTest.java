@@ -1,9 +1,5 @@
 package daangnmungcat.mapper;
 
-import java.util.List;
-
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -14,15 +10,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import daangnmungcat.config.ContextRoot;
-import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
+import lombok.extern.log4j.Log4j2;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Log4j2
 public class MemberMapperTest {
-	private static final Log log = LogFactory.getLog(MemberMapperTest.class); 
 	
 	@Autowired
 	private MemberMapper mapper;

@@ -1,6 +1,8 @@
 package daangnmungcat.service;
 
+import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -33,8 +35,8 @@ public interface MemberService {
 	int phoneCheck(String phone);
 	
 
-	int deleteProfilePic(HttpServletRequest request, HttpSession session);
-	int updateProfilePic(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request);
+	int deleteProfilePic(String id, File realPath);
+	int updateProfilePic(String id, MultipartFile[] uploadFile, File realPath);
 	int updateProfileText(Member member);
 	int updatePhone(Member member);
 	int updatePwd(Member member);
@@ -50,12 +52,12 @@ public interface MemberService {
 	List<Address> myAddress(String id);
 	int insertAddress(Address address);
 	int updateMyAddress(Member member);
-	Address getAddress(String id);
+	Address getAddress(String id);	
 	int updateShippingAddress(Address address);
 	int deleteShippingAddress(String id);
 	
 
 	// admin
-	List<Member> search(SearchCriteria scri);
-	int getTotalBySearch(SearchCriteria scri);
+	List<Member> search(SearchCriteria scri, Member member);
+	int getTotalBySearch(SearchCriteria scri, Member member);
 }

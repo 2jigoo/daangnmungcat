@@ -1,6 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="loginUser"/>
+</sec:authorize>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,9 +15,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-
+	<meta name="_csrf" content="${_csrf.token}">
     <title>당근멍캣 - Admin</title>
 
+	<!-- jQuery & DatePicker -->
+    <!-- <script src="/resources/vendor/jquery/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    
+   	<script src="/resources/vendor/datepicker/bootstrap-datepicker.js"></script>
+	<script src="/resources/vendor/datepicker/bootstrap-datepicker.ko.min.js"></script>
+    
+    <script>
+	    $.ajaxSetup({
+		    error: function(jqXHR, exception) {
+		        if (jqXHR.status === 0) {
+		            alert('Not connect.\n Verify Network.');
+		        } 
+		        else if (jqXHR.status == 400) {
+		            alert('Server understood the request, but request content was invalid. [400]');
+		        } 
+		        else if (jqXHR.status == 401) {
+		            alert("로그인 후 이용해주세요. [401]");
+		        } 
+		        else if (jqXHR.status == 403) {
+		            alert('Forbidden resource can not be accessed. [403]');
+		        } 
+		        else if (jqXHR.status == 404) {
+		            alert('Requested page not found. [404]');
+		        } 
+		        else if (jqXHR.status == 500) {
+		            alert('Internal server error. [500]');
+		        } 
+		        else if (jqXHR.status == 503) {
+		            alert('Service unavailable. [503]');
+		        } 
+		        else if (exception === 'parsererror') {
+		            alert('Requested JSON parse failed. [Failed]');
+		        } 
+		        else if (exception === 'timeout') {
+		            alert('Time out error. [Timeout]');
+		        } 
+		        else if (exception === 'abort') {
+		            alert('Ajax request aborted. [Aborted]');
+		        } 
+		        else {
+		            alert('Uncaught Error.n' + jqXHR.responseText);
+		        }
+		        console.log(exception);
+		    }
+		});
+		
+		var csrfToken = $("meta[name='_csrf']").attr("content");
+		console.log(csrfToken);
+		$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+		    if (options['type'].toLowerCase() === "post" || "put" || "delete") {
+		        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+		    }
+		});
+    </script>
+    
     <!-- Custom fonts for this template-->
     <link href="/resources/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -19,13 +82,13 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
     <link href="/resources/css/sb-admin-2.min.css" rel="stylesheet">
-    
+    <link href="/resources/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.css" rel="stylesheet">
+ 	<link href="/resources/vendor/datepicker/bootstrap-datepicker3.standalone.css" rel="stylesheet">
     <link href="/resources/css/admin_common.css" rel="stylesheet">
     
-    
-	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
-	<script src="<c:url value="/resources/js/admin_common.js" />" type="text/javascript" ></script>
 </head>
 <body id="page-top">
 
@@ -36,7 +99,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/main">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -48,7 +111,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/admin/main">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>대시보드</span></a>
             </li>
@@ -130,7 +193,7 @@
             </li>
             
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="/admin/notice/list">
                     <i class="fas fa-fw fa-exclamation"></i>
                     <span>공지사항 관리</span></a>
             </li>
@@ -214,7 +277,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${loginUser.nickname }</span>
                                 <img class="img-profile rounded-circle"
                                     src="/resources/img/undraw_profile.svg">
                             </a>

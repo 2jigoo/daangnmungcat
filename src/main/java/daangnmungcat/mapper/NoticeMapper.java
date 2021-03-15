@@ -6,18 +6,21 @@ import org.apache.ibatis.annotations.Param;
 
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Notice;
+import daangnmungcat.dto.SearchCriteria;
 
 public interface NoticeMapper {
 
+	List<Notice> selectNoticeBySearch(@Param("scri") SearchCriteria scri, @Param("notice") Notice notice);
+	int selectNoticeCountBySearch(@Param("scri") SearchCriteria scri, @Param("notice") Notice notice);
+	
 	List<Notice> selectNoticeByAll();
-
 	Notice selectNoticeByNo(int id);
-
-	int listCount();
-
+	
 	List<Notice> selectNoticeByAllPage(Criteria cri);
-
-	List<Notice> selectNoticeBySearch(@Param("notice") Notice notice, @Param("cri") Criteria cri);
-
+	int listCount();
+	
 	int insertNotice(Notice notice);
+	int updateNotice(Notice notice);
+	int deleteNotice(Notice notice);
+	
 }

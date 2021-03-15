@@ -1,56 +1,85 @@
 package daangnmungcat.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import daangnmungcat.handler.LoginSuccessHandler;
+import daangnmungcat.security.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
+@ComponentScan(basePackages = {"daangnmungcat.handler"})
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		System.out.println("security 작동");
 		http.authorizeRequests()
-			.antMatchers("/#").permitAll()
-			.antMatchers("/admin").access("hasRole('ROLE_ADMIN')")
-			.antMatchers("/member").access("hasRole('ROLE_MEMBER')");
+			.antMatchers("/").permitAll()
+			.antMatchers("/login").anonymous()
+			.antMatchers("/logout").authenticated()
+			.antMatchers("/admin/**").hasRole("ADMIN")
+			.antMatchers("/chat/**").authenticated()
+			.anyRequest().permitAll();
 		
 		http.cors().configurationSource(corsConfigurationSource());
 		
-		//admin access denined -> login page로 이동하여 로그인
-		//loginPage("뷰이름").loginProcessingUrl("경로");
-		http.formLogin().loginPage("/login").loginProcessingUrl("/sample/login");
+		http.formLogin()
+			.loginPage("/login")
+			.usernameParameter("id")
+			.loginProcessingUrl("/doLogin")
+			.successHandler(authenticationSuccessHandler);
+		
+		http.logout()
+			.logoutUrl("/logout")
+			.logoutSuccessUrl("/")
+			.invalidateHttpSession(true);
 		
 		// 동일 도메인에서 iframe SockJS 지원하게끔
 		http.headers()
 	        .frameOptions().disable();
 		
-//		http.csrf().disable();
+		// 403 접근 권한 없을 때 페이지
+		http.exceptionHandling()
+			.accessDeniedPage("/WEB-INF/views/error/403.jsp");
+		
+//		http.csrf().ignoringAntMatchers("/logout");
+		// csrf 활성화: LoginFilter에서 POST만 처리
+		// csrf 비활성화: LoginFilter에서 다 처리
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//{noop} -> 패스워드 인코딩처리 없이 사용
-		auth.inMemoryAuthentication().withUser("admin").password("{noop}1234").roles("ADMIN");
-		auth.inMemoryAuthentication().withUser("member").password("{noop}member").roles("member");
-	}
 	
 	@Bean
-	public AuthenticationSuccessHandler loginSuccessHandler() {
-		return new LoginSuccessHandler();
+	protected UserDetailsService userDetailsService() {
+		return new CustomUserDetailService();
 	}
 	
+	@Autowired
+	private AuthenticationSuccessHandler authenticationSuccessHandler;
 	
+//	@Autowired
+//	private AuthenticationFailureHandler authenticationFailureHandler;
+	
+	
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		// web.debug(true); // debug 할 때
+		web.ignoring().antMatchers("/resources/**");
+	}
+
 	// CORS 허용 적용
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -66,5 +95,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 	
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+    	return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 	
 }

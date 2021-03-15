@@ -42,14 +42,13 @@
                 <div class="modal-body">로그아웃 하시겠습니까?</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
-                    <a class="btn btn-primary" href="#">로그아웃</a>
+                   	<a class="btn btn-primary" href="/logout">로그아웃</a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="/resources/vendor/jquery/jquery.min.js"></script>
     <script src="/resources/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
@@ -57,6 +56,7 @@
 
     <!-- Custom scripts for all pages-->
     <script src="/resources/js/sb-admin-2.min.js"></script>
+    <script src="/resources/js/admin_common.js"></script>
 
     <!-- Page level plugins -->
     <script src="/resources/vendor/chart.js/Chart.min.js"></script>

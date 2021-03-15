@@ -2,10 +2,7 @@ package daangnmungcat.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,14 +17,12 @@ import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
-import daangnmungcat.dto.SaleState;
 import daangnmungcat.service.JoongoSaleService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ContextRoot.class} )
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class JoongoListMapperTest {
-	private static final Log log = LogFactory.getLog(JoongoListMapperTest.class); 
 	
 	@Autowired
 	private JoongoListMapper mapper;

@@ -24,13 +24,16 @@ public interface JoongoListMapper {
 	List<Sale> selectDongne2ByAll(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	
 	int listCount();
+	int listSearchCount(Sale sale);
 	int listCount1(@Param("dongne1") String dongne1);
 	int listCount2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	
 	int insertJoongoSale(Sale sale);
 	int updateJoongoSale(Sale sale);
 	int updateSold(Sale sale);
+	int deleteJoongoSale(int id);
 	
+	int selectHeartedJoongoCountsByMemberId(@Param("memberId") String memberId);
 	List<Sale> selectHeartedJoongoByMemberIdWithPaging(@Param("memberId") String memberId, @Param("criteria") Criteria criteria);
 //	int insertFileForm(FileForm FileForm);
 	int nextID();

@@ -2,8 +2,7 @@
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
-<jsp:include page="/resources/include/header.jsp"/>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <script>
 $(document).ready(function(){
 	
@@ -57,7 +56,12 @@ $(document).ready(function(){
 								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}
 								/ <span class="regdate" regdate="${chat.latestDate }"> ${chat.latestDate }</span>
 							</div>
-							<div class="dongnename">${chat.messages[0].content }</div>
+							<div class="dongnename">
+								<c:choose>
+									<c:when test="${chat.messages[0].image ne null}"><img src="${chat.messages[0].image }" width=60px></c:when>
+									<c:otherwise>${chat.messages[0].content }</c:otherwise>
+								</c:choose>
+							</div>
 						</div>		
 					</a>
 				</section>
@@ -65,4 +69,4 @@ $(document).ready(function(){
 		</article>
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

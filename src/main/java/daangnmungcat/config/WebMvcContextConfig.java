@@ -12,6 +12,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -40,22 +41,12 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/").setCachePeriod(31556926);
 	}
 
-	
 	// 매핑 정보가 없는 url 요청은 default servlet handler를 사용하게 함
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
 	}
 
-	/*@Bean
-	public InternalResourceViewResolver getInternalResourceViewResolver() {
-		InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-		resolver.setPrefix("/WEB-INF/views/");
-		resolver.setSuffix(".jsp");
-		return resolver;
-	}*/
-	
-	
 	@Override
 	public void configureViewResolvers(ViewResolverRegistry registry) {
 		registry.jsp("/WEB-INF/views/", ".jsp");
@@ -85,6 +76,7 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("mypage/mypage_order_detail").setViewName("mypage/mypage_order_detail");
 		registry.addViewController("mypage/mypage_order_cancel_list").setViewName("mypage/mypage_order_cancel_list");
 		
+		registry.addViewController("admin").setViewName("admin/index");
 		registry.addViewController("admin/main").setViewName("admin/main");
 		
 		registry.addViewController("mall/order/mall_pre_order").setViewName("mall/order/mall_pre_order");
@@ -94,17 +86,8 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		
 		registry.addViewController("mall/order/pay_success").setViewName("mall/order/pay_success");
 		registry.addViewController("mypage/pay_info").setViewName("mypage/pay_info");
+		registry.addViewController("admin/order/part_cancel").setViewName("admin/order/part_cancel");
 	}
-	
-	/*
-	@Bean
-	public MessageSource messageSource() {
-		ResourceBundleMessageSource ms = new ResourceBundleMessageSource();
-		ms.setBasename("message.label");
-		ms.setDefaultEncoding("UTF-8");
-		return ms;
-	}
-	*/
 	
 	//파일업로드
 	@Bean
@@ -138,6 +121,31 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 				    	HttpMethod.DELETE.name());
 	}
 	
+	@Override
+	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+		resolvers.add(new AuthInfoMethodArgumentResolver());
+		WebMvcConfigurer.super.addArgumentResolvers(resolvers);
+	}
 	
 	
+	/*@Bean
+	public LocaleChangeInterceptor localeChangeInterceptor(){
+		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+		localeChangeInterceptor.setParamName("lang");
+		return localeChangeInterceptor;
+	}
+	
+	@Bean
+	public LocaleResolver localeResolver(){
+		SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+		localeResolver.setDefaultLocale(Locale.KOREAN);
+		return localeResolver;
+	}
+	
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		// TODO Auto-generated method stub
+		registry.addInterceptor(localeChangeInterceptor());
+	}*/
+
 }

@@ -17,36 +17,43 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 
 @Service
 public interface OrderService {
-	List<Order> selectOrderAll(Criteria cri);
-	int listCount();
 	
-	/////////////////////////////////////
-	List<Order> selectOrderById(String id);
-	List<Order> selectCancelOrderById(String id);
+	List<Order> selectOrderById(SearchCriteriaForOrder cri, String id);
+	int selectOrderByIdCount(SearchCriteriaForOrder cri, String id);
+	
+	List<Order> selectCancelOrderById(SearchCriteriaForOrder cri, String id);
+	int selectCancelOrderByIdCount(SearchCriteriaForOrder cri,String id);
+	
+	List<Order> searchByDate(SearchCriteriaForOrder cri, String start, String end, String memId);
+	int searchByDateCount(String start, String end, String memId);
+	
+	List<Order> cancelSearchByDate(SearchCriteriaForOrder cri, String start, String end,String memId);
+	int cancelSearchByDateCount(String start, String end, String memId);
 	
 	Order getOrderByNo(String id);
 	OrderDetail getOrderDetailById(String id);
 	Payment getPaymentById(String tid);
+	Payment selectAccountPaymentByOrderId(String orderId);
 	
 	int insertOrder(Order order);
 	
 	List<OrderDetail> getOrderDetail(String orderNo);
 
 	int insertPayment(Payment pay);
+	int insertAccountPayment(Payment pay);
 
 	int insertOrderDetail(OrderDetail orderDetail);
-
+	int adminInsertPaymentAndOrderUpdate(Map<String, String> map);
 
 	List<OrderDetail> sortingOrderDetail(String id);
 	
-	List<Order> searchByDate(String start, String end, String memId);
-	List<Order> cancelSearchByDate(String start, String end,String memId);
-	
-	void orderTransaction(KakaoPayApprovalVO kakao, HttpServletRequest request, HttpSession session);
+	void kakaoOrderTransaction(String memberId, String pg_token, KakaoPayApprovalVO kakao, HttpSession session);
+	String accountOrderTransaction(String memberId, HttpServletRequest request, HttpSession session);
 	
 	int updateAllOrderDetail(OrderDetail od, String orderId);
 	int updatePartOrderDetail(OrderDetail od, int id);
@@ -55,6 +62,18 @@ public interface OrderService {
 	
 	List<OrderDetail> selectOrderDetailUsingPartCancelByOrderId(String orderId);
 	Map<String, Integer> calculateDeliveryFee(List<Cart> list);
+	
+	/////////////////////////////////////
+	List<Order> selectOrderAll(Criteria cri);
+	int listCount();
+	
+	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice, Criteria cri);
+	int searchListCount(String content, String query, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
+	
+	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
+	
+	
+	
 	
 	
 }

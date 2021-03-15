@@ -3,7 +3,7 @@
 <mapper namespace="daangnmungcat.mapper.JoongoListMapper">
 
 	<sql id="selectSQL">
-		SELECT rownum, js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+		SELECT rownum, js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, , thum_name FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
 	</sql>
 	
 	
@@ -54,6 +54,7 @@
 		<result column="hits" property="hits"/>
 		<result column="chat_count" property="chatCount"/>
 		<result column="heart_count" property="heartCount"/>
+		<result column="thum_name" property="thumImg"/>
 		<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
 		<association property="dongne2" column="dongne2_id" select="daangnmungcat.mapper.MemberMapper.selectDongneByDongne2" />
 		<association property="member" columnPrefix="mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
@@ -100,8 +101,8 @@
 	<select id="selectJoongoByDongne1" parameterType="map" resultMap="saleResult">
 	SELECT a.*
 	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
-	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} ORDER BY js.id desc) b) a
+	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+	  FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1}  ORDER BY js.id desc) b) a
 	 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 	 ORDER BY a.rnum
 		<!-- <include refid="selectSQL"/>
@@ -112,8 +113,8 @@
 	<select id="selectJoongoByDongne2" parameterType="map" resultMap="saleResult">
 	SELECT a.*
 	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
-	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2} ORDER BY js.id desc) b) a
+	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+	  FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} AND d2.NAME = #{dongne2} ORDER BY js.id desc) b) a
 	 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 	 ORDER BY a.rnum
 		<!-- <include refid="selectSQL"/>
@@ -123,8 +124,8 @@
 	<select id="selectJoongoBySearch" parameterType="map" resultMap="saleResult">
 		SELECT a.*
 		  FROM (SELECT rownum AS rnum, b.*
-		  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
-		  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID 
+		  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+		  FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID   
 		  <where>
 		  	<if test="sale.title != null">and title LIKE '%'||#{sale.title}||'%' </if>
 		  	<if test="sale.dogCate != null">and dog_cate = #{sale.dogCate} </if>
@@ -143,6 +144,17 @@
 	  FROM (SELECT rownum AS rnum, b.*
 	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
 	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID 
+	  ORDER BY js.id desc) b) a
+	</select>
+	
+	<select id="listSearchCount" parameterType="Sale" resultType="int">
+	SELECT count(a.id)
+	  FROM (SELECT rownum AS rnum, b.*
+	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	  <where>
+	  	<if test="member != null">and MEM_ID LIKE '%'||#{member.id}||'%' </if>
+	  </where>
 	  ORDER BY js.id desc) b) a
 	</select>
 	
@@ -183,41 +195,58 @@
 		WHERE id = #{id}
 	</update>
 	
+	<delete id="deleteJoongoSale">
+		delete from joongo_sale where id = #{id}
+	</delete>
+	
+	<select id="selectHeartedJoongoCountsByMemberId" parameterType="String" resultType="int">
+		SELECT COUNT(*)
+		FROM JOONGO_SALE js
+  			LEFT OUTER JOIN joongo_heart h ON js.id = h.sale_id
+  		WHERE h.mem_id = #{memberId}
+	</select>
+	
 	<select id="selectHeartedJoongoByMemberIdWithPaging" resultMap="saleResultForJoin">
-		SELECT rownum AS rnum, a.*
+		SELECT *
 		FROM (
-			SELECT
-				js.ID,
-				js.MEM_ID,
-				nickname	as mem_nickname,
-				grade		as mem_grade,
-				DOG_CATE,
-				CAT_CATE,
-				TITLE,
-				CONTENT,
-				PRICE,
-				d1.ID		AS dongne1_id,
-				d1.NAME		AS dongne1_name,
-				d2.ID		AS dongne2_id,
-				BUY_MEM_ID,
-				SALE_STATE,
-				js.REGDATE,
-				REDATE,
-				HITS,
-				CHAT_COUNT,
-				HEART_COUNT,
-				h.mem_id		as heart_mem_id,
-				h.regdate		as heart_regdate
-	  		FROM JOONGO_SALE js
-	  			LEFT OUTER JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
-	  			LEFT OUTER JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
-	  			LEFT OUTER JOIN MEMBER m On js.mem_id = m.id
-	  			LEFT OUTER JOIN joongo_heart h ON js.id = h.sale_id
-	  		WHERE h.mem_id = #{memberId}
-	  		ORDER BY h.regdate desc
-	  	) a
-		WHERE a.rnum BETWEEN #{criteria.rowStart} AND #{criteria.rowEnd}
-		ORDER BY a.rnum
+			SELECT rownum AS rnum, a.*
+			FROM (
+				SELECT
+					js.ID,
+					js.MEM_ID,
+					nickname	as mem_nickname,
+					grade		as mem_grade,
+					profile_pic AS mem_profile_pic,
+					DOG_CATE,
+					CAT_CATE,
+					TITLE,
+					CONTENT,
+					PRICE,
+					d1.ID		AS dongne1_id,
+					d1.NAME		AS dongne1_name,
+					d2.ID		AS dongne2_id,
+					BUY_MEM_ID,
+					SALE_STATE,
+					js.REGDATE,
+					REDATE,
+					HITS,
+					CHAT_COUNT,
+					HEART_COUNT,
+					thum_name,
+					h.mem_id		as heart_mem_id,
+					h.regdate		as heart_regdate
+		  		FROM JOONGO_SALE js
+		  			LEFT OUTER JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+		  			LEFT OUTER JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+		  			LEFT OUTER JOIN MEMBER m On js.mem_id = m.id
+		  			LEFT OUTER JOIN joongo_heart h ON js.id = h.sale_id
+		  			LEFT OUTER JOIN (SELECT sale_id, thum_name FROM JOONGO_IMAGE WHERE THUM_NAME IS NOT null) ji ON js.id = ji.SALE_ID 
+		  		WHERE h.mem_id = #{memberId}
+		  		ORDER BY h.regdate desc
+		  	) a
+		)
+		WHERE rnum BETWEEN #{criteria.rowStart} AND #{criteria.rowEnd}
+		ORDER BY rnum
 	</select>
 		
 		

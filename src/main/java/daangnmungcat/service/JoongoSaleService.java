@@ -29,11 +29,13 @@ public interface JoongoSaleService {
 
 	int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, HttpServletRequest request) throws Exception;
 	int updateJoongoSale(Sale sale, MultipartFile[] fileList,   MultipartFile file, HttpServletRequest request) throws Exception;
-
+	int deleteJoongoSale(int id);
+	
 	List<FileForm> selectImgPath(int id);
 	FileForm selectThumImgPath(int id);
 
 	// 해당 회원의 페이징된 찜 목록
+	int getHeartedCounts(String memberId);
 	List<Sale> getHeartedList(String memberId, Criteria criteria);
 	
 	
@@ -50,6 +52,7 @@ public interface JoongoSaleService {
 	
 	
 	int listCount();
+	int listSearchCount(Sale sale);
 	int listCountByDongne1(String dongne1);
 	int listCountByDongne2(String dongne1, String dongne2);
 }

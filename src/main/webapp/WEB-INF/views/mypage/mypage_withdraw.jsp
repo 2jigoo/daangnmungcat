@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 .wrapper {margin:0 auto; padding:50px; text-align:center}
 .box {text-align:left; padding:100px;}
@@ -16,36 +16,29 @@ $(document).ready(function(){
 	});
 	
 	$('#del').on("click", function(){
-		var pwd = $('#w_pwd').val();
+		var pwd = {pwd: $('#w_pwd').val()};
 		if(pwd == ""){
 			alert('비밀번호를 입력하세요.')
 		}else {
 			if(confirm('탈퇴하시겠습니까?') == true){
-					$.get(contextPath +"/member/info", function(member){
-						
-						if(pwd == member.member.pwd){
-							$.ajax({
-								url: contextPath + "/withdrawal",
-								type: "POST",
-								contentType:"application/json; charset=utf-8",
-								dataType: "json",
-								cache : false,
-								data : JSON.stringify(id),
-								success: function(res) {
-										if(res == 1){
-											alert('이용해주셔서 감사합니다.');
-											location.href = contextPath + '/logout'
-										}
-								},
-								error: function(request,status,error){
-									alert('에러' + request.status+request.responseText+error);
-								}
-							});
-						}else {
-							alert('비밀번호가 맞지 않습니다.');	
+				$.ajax({
+					url: contextPath + "/withdrawal",
+					type: "POST",
+					contentType:"application/json; charset=utf-8",
+					data : JSON.stringify(pwd),
+					dataType: "json",
+					cache : false,
+					success: function(res) {
+						if(res == 1){
+							alert('이용해주셔서 감사합니다.');
+							location.href = "/";
 						}
-					});
-			}else {
+					},
+					error: function(request,status,error){
+						alert("비밀번호가 일치하지 않습니다.");
+					}
+				});
+			} else {
 				return ;
 			}
 		}
@@ -82,4 +75,4 @@ $(document).ready(function(){
 	
 </div>
 
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

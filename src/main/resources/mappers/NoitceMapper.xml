@@ -3,7 +3,9 @@
 <mapper namespace="daangnmungcat.mapper.NoticeMapper">
 
 	<sql id="selectNoticeSQL">
-		SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice 
+		SELECT
+			id, title, contents, regdate, notice_YN, notice_file, writer as writer_id
+		FROM notice 
 	</sql>
 	
 	<resultMap type="Notice" id="noticeResult">
@@ -13,6 +15,7 @@
 		<result column="regdate" property="regdate"/>
 		<result column="notice_YN" property="noticeYn"/>
 		<result column="notice_file" property="noticeFile"/>
+		<association column="writer" property="writer" columnPrefix="writer_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult"/>
 	</resultMap>
 	
 	
@@ -24,34 +27,104 @@
 		ORDER BY a.rnum
 	</select>
 	
-	<select id="selectNoticeBySearch" parameterType="map" resultMap="noticeResult">
+	<!-- <select id="selectNoticeBySearch" parameterType="map" resultMap="noticeResult">
 		SELECT a.*
 		  FROM (SELECT rownum AS rnum, b.*
 		  		FROM (SELECT id, title, contents, regdate, notice_YN, notice_file FROM notice ORDER BY notice_yn desc
 		  <where>
-		  	<if test="notce.title != null">and title LIKE '%'||#{notice.title}||'%' </if>
-		  	<if test="notce.contents != null">and title LIKE '%'||#{notice.contents}||'%' </if>
+		  	<if test="notice.title != null">and title LIKE '%'||#{notice.title}||'%' </if>
+		  	<if test="notice.contents != null">and title LIKE '%'||#{notice.contents}||'%' </if>
 			<if test="notice.noticeYn != null">and cat_cate = #{notice.noticeYn} </if>
 		  </where>) b) a
 		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 		ORDER BY a.rnum
-	</select>
+	</select> -->
 	
 	
 	<select id="listCount" parameterType="map" resultType="int">
-	  SELECT count(a.id)
-	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice
-	  ORDER BY id desc) b) a
+		SELECT count(a.id)
+		FROM (SELECT rownum AS rnum, b.*
+			FROM (SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice
+		ORDER BY id desc) b) a
+	</select>
+	
+	
+	<sql id="whereSearchSQL">
+		<where>
+			<if test="scri.searchType != null" > 
+				<if test="scri.searchType eq 'title'">
+					and title like '%' || #{scri.keyword} || '%'
+				</if>
+				<if test="scri.searchType eq 'contents'">
+					and contents like '%' || #{scri.keyword} || '%'
+				</if>
+				<if test="scri.searchType eq 'writer'">
+					and m.id like '%' || #{scri.keyword} || '%'
+				</if>
+				<if test="notice.noticeYn != null and (notice.noticeYn.equalsIgnoreCase('y') || notice.noticeYn.equlasIgnoreCase('n'))">
+					and notice_yn = #{notice.noticeYn}
+				</if>
+			   	<if test="scri.startDate != null and scri.startDate != '' and scri.endDate != null and scri.endDate != ''">
+				 	and n.regdate between #{scri.startDate} and #{scri.endDate}
+				</if> 
+			 </if>
+		</where>
+	</sql>
+	
+	<select id="selectNoticeBySearch" resultMap="noticeResult">
+		SELECT *
+		FROM (
+			SELECT rownum AS rnum, a.*
+			FROM (
+				SELECT
+					n.id,
+					title,
+					contents,
+					n.regdate,
+					notice_yn,
+					notice_file,
+					n.writer AS writer_id,
+					m.nickname AS writer_nickname
+				FROM
+					notice n
+						LEFT OUTER JOIN member m ON (n.writer = m.id)
+				<include refid="whereSearchSQL"/>
+				ORDER BY regdate DESC
+			) a
+		)
+		WHERE rnum BETWEEN #{scri.rowStart} AND #{scri.rowEnd}
+		ORDER BY rnum
+	</select>
+	
+	<select id="selectNoticeCountBySearch" resultType="int">
+		SELECT COUNT(*)
+		FROM notice n
+			LEFT OUTER JOIN member m ON (n.writer = m.id)
+		<include refid="whereSearchSQL"/>
 	</select>
 	
 	<select id="selectNoticeByNo" resultMap="noticeResult" parameterType="int">
-		<include refid="selectNoticeSQL"></include>
+		<include refid="selectNoticeSQL"/>
 		where id = #{id}
 	</select>
 	
 	<insert id="insertNotice" parameterType="Notice">
-		insert into notice values(notice_seq.nextval, #{title}, #{contents}, sysdate, #{noticeYn}, #{noticeFile})
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			SELECT notice_seq.nextval FROM DUAL
+		</selectKey>
+		insert into notice(id, title, contents, regdate, notice_YN, notice_file, writer)
+		values(#{id}, #{title}, #{contents}, sysdate, #{noticeYn}, #{noticeFile}, #{writer.id})
 	</insert>
+	
+	<update id="updateNotice" parameterType="int">
+		UPDATE notice
+		SET title = #{title}, contents = #{contents}, notice_YN = #{noticeyYn}, notice_file = #{noticeFile}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteNotice" parameterType="Notice">
+		DELTE FROM notice
+		WHERE id = #{id}
+	</delete>
 
 </mapper>

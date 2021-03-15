@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <script type="text/javascript">
 var dongne1Id;
@@ -20,7 +20,7 @@ $(function(){
 		<div>
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="sale">
-				<li><a href="<%=request.getContextPath()%>/detailList?id=${sale.id}">
+				<li><a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${sale.id}">
 					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
 					<div class="txt">
 						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
@@ -60,4 +60,4 @@ $(function(){
 </div>
 
 
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

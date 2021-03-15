@@ -36,13 +36,19 @@ public class Order {
 	private int usedMileage;
 	private int finalPrice;
 	private int plusMileage;
+	private String settleCase;
+	private LocalDateTime regDate;
 	private int deliveryPrice;
 	private String trackingNumber;
+	private LocalDateTime shippingDate;
 	private int addDeliveryPrice;
 	private int returnPrice;
+	private int cancelPrice;
 	private String payId;
 	private LocalDateTime payDate;
 	private String state;
+	private int misu;
+	private int ordercnt;
 
 	
 	public Order(String id) {

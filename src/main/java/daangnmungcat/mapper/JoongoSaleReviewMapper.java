@@ -8,6 +8,8 @@ public interface JoongoSaleReviewMapper {
 	List<SaleReview> selectJoongoReviewByAll();
 	
 	List<SaleReview> selectJoongoReviewBySaleMemId(String memId);
+
+	List<SaleReview> selectMypageJoongoReviewBySaleMemId(String memId);
 	
 	SaleReview selectJoongoReviewBySaleId(int saleId);
 	
@@ -20,4 +22,6 @@ public interface JoongoSaleReviewMapper {
 	int deleteJoongoSaleReview(int id);
 	
 	int countMemId(String memId);
+	
+	int countBuyMemId(String memId);
 }

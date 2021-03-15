@@ -41,9 +41,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	private JoongoListMapper joongoListMapper;
 	
 	@Autowired
-	private JoongoListMapper listMapper;
-	
-	@Autowired
 	private FileFormMapper fileMapper;
 	
 	@Autowired
@@ -110,7 +107,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		
-		int res = listMapper.insertJoongoSale(sale);
+		int res = joongoListMapper.insertJoongoSale(sale);
 
 		String uploadFolder = getFolder(request);
 		System.out.println("uploadPath:" + uploadFolder);
@@ -128,7 +125,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		*/
 		int cnt = 2;
 		
-		
 		//썸네일 이미지 추가
 			try {
 				String thumFileName = "1_" + file.getOriginalFilename().trim();
@@ -144,33 +140,32 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				e.printStackTrace();
 			}
 			
+			
 		// 상세 이미지 추가
 		for (MultipartFile multipartFile : fileList) {
-			String uploadFileName = multipartFile.getOriginalFilename();
-			uploadFileName = cnt + "_" + uploadFileName.trim();
 			
-			File saveFile = new File(uploadFolder, uploadFileName);
-			
-			//db저장
-			FileForm fileForm = new FileForm();
-			fileForm.setSale(sale);
-			fileForm.setFileName("upload/joongosale/"+uploadFileName);
-			res += fileMapper.insertSaleFile(fileForm);
-			
-			try {
-				multipartFile.transferTo(saveFile);
-				cnt++;
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(multipartFile.isEmpty() == false) {
+				String uploadFileName = multipartFile.getOriginalFilename();
+				uploadFileName = cnt + "_" + uploadFileName.trim();
+				
+				File saveFile = new File(uploadFolder, uploadFileName);
+				
+				//db저장
+				FileForm fileForm = new FileForm();
+				fileForm.setSale(sale);
+				fileForm.setFileName("upload/joongosale/"+uploadFileName);
+				res += fileMapper.insertSaleFile(fileForm);
+				
+				try {
+					multipartFile.transferTo(saveFile);
+					cnt++;
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		
-		if(res != (fileList.length + 1)) {
-			throw new RuntimeException(); // 업로드 갯수 불일치
-		}
-		
 		return res;
 	}
 
@@ -193,7 +188,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 
 	@Override
 	public int updateJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile  file, HttpServletRequest request) throws Exception {
-		int res = listMapper.updateJoongoSale(sale);
+		int res = joongoListMapper.updateJoongoSale(sale);
 
 		String uploadFolder = getFolder(request);
 		
@@ -222,7 +217,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		
 		// 상세 이미지 추가
 		for (MultipartFile multipartFile : fileList) {
-			if(multipartFile.getOriginalFilename() != null) {
+			if(multipartFile.isEmpty() == false) {
 				String uploadFileName = multipartFile.getOriginalFilename().trim();
 				int num = list.size() + 1;
 				uploadFileName = num + "_" + uploadFileName;
@@ -246,9 +241,6 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				}
 			}
 		}
-		if(res != (fileList.length + 1)) {
-			throw new RuntimeException(); // 업로드 갯수 불일치
-		}
 		
 		return res;
 	}
@@ -264,8 +256,14 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 	
 	@Override
+	public int getHeartedCounts(String memberId) {
+		int count = joongoListMapper.selectHeartedJoongoCountsByMemberId(memberId);
+		return count;
+	}
+	
+	@Override
 	public List<Sale> getHeartedList(String memberId, Criteria criteria) {
-		List<Sale> list = listMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
+		List<Sale> list = joongoListMapper.selectHeartedJoongoByMemberIdWithPaging(memberId, criteria);
 		setChatCount(list);
 		return list;
 	}
@@ -338,6 +336,17 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		System.out.println(list);
 		list.forEach(sale -> sale.setChatCount(chatService.getChatCounts(sale.getId())));
 		list.forEach(sale -> log.debug(sale.getId() + ": " + sale.getChatCount()));
+	}
+
+	@Override
+	public int deleteJoongoSale(int id) {
+		fileMapper.deleteSaleFileBySaleId(id);
+		return joongoListMapper.deleteJoongoSale(id);
+	}
+
+	@Override
+	public int listSearchCount(Sale sale) {
+		return joongoListMapper.listSearchCount(sale);
 	}
 
 	

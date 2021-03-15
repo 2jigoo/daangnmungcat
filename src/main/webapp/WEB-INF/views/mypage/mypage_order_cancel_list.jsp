@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
 .wrapper {margin:0 auto; padding:50px;}
 </style>
@@ -101,7 +101,8 @@ $(document).ready(function(){
 		if(start_val == "" || end_val == ""){
 			alert('날짜를 선택하세요.')
 		}else{
-			location.href='/mypage/mypage_order_cancel_list/start='+start_val + '/end=' + end_val;
+			location.href='/mypage/mypage_order_cancel_list?page=${pageMaker.cri.page}&perPageNum=${pageMaker.cri.perPageNum}'
+				+ '&start=' + start_val + '&end=' + end_val;
 		}
 		
 	});
@@ -116,16 +117,17 @@ $(document).ready(function(){
 	<h2 id="subTitle">취소/환불 내역</h2>
 	<div class="order_list_search_div">
 		조회 기간 
+		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_cancel_list'">
 		<input type="button" value="오늘" id="today">
 		<input type="button" value="7일" id="7days_ago">
 		<input type="button" value="15일" id="15days_ago">
 		<input type="button" value="1개월" id="1month_ago">
 		<input type="button" value="6개월" id="6month_ago">
 		<input type="button" value="1년" id="1years_ago">
-		<input type="text" id="start_date"> ~ <input type="text" id="end_date"> 
+		<input type="text" id="start_date" value="${pageMaker.cri.start}"> ~ 
+		<input type="text" id="end_date" value="${pageMaker.cri.end}">
 		<input type="button" value="조회" id="search">
 	</div>
-
 <div>	
 	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
@@ -162,24 +164,30 @@ $(document).ready(function(){
             		<tr>
             			<c:if test="${od.partcnt > 1}">
             				<td class="gubun order_num">
-            						<input type="hidden" id="order_id" value="${order.id}">
-            					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
-	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
-	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
-	            					<br> ${order.id}<br>
-	            					<input type="hidden" id="first_pdt" value="${od.pdt.name}">
-            					</span>
+           						<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
+           						<input type="hidden" id="order_id" value="${order.id}"><br>
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
+            						${order.id}
+           						</span>
+           						
+           						<c:if test="${order.state == '대기'}">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple">
+           						</c:if>
             				</td>
             			</c:if>
             			<c:if test="${od.partcnt == 1}">
             				<td class="order_num">
-            						<input type="hidden" id="order_id" value="${order.id}">
-            					<span class="order_list_span"  onclick="location.href='/mypage/mypage_order_list/${order.id}'">	
-	            					<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
-	            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
-	            					<br> ${order.id} <br>
-	            					<input type="hidden" id="first_pdt" value="${od.pdt.name}">
-	            				</span>
+            					<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
+           						<input type="hidden" id="order_id" value="${order.id}"><br>
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
+            						${order.id}
+           						</span>
+           						<c:if test="${order.state == '대기'}">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_single">
+           						</c:if>
+	            				
             				</td>
             			</c:if>
 							
@@ -187,45 +195,68 @@ $(document).ready(function(){
 							<div class="order_img_wrapper">
 									<c:if test="${od.pdt.image1 eq null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
 									<c:if test="${od.pdt.image1 ne null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources${od.pdt.image1}" class="order_list_img"></a></c:if>
-								<span style="margin-left:30px; line-height:100px"><a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a></span></div>
+								<span style="margin-left:30px; line-height:100px; overflow:hidden" id="part_pdt" pdt="${od.pdt.name}">
+									<a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a>
+								</span>
+							</div>
 							
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
-						<td>${od.orderState.label}</td>
-						
+						<td>
+							<c:if test="${od.orderState.label == '대기'}">입금대기</c:if>
+							<c:if test="${od.orderState.label == '결제'}">결제완료</c:if>
+							<c:if test="${od.orderState.label == '배송'}">배송중</c:if>
+							<c:if test="${od.orderState.label == '완료'}">배송완료</c:if>
+							<c:if test="${od.orderState.label == '취소'}">결제취소</c:if>
+							<c:if test="${od.orderState.label == '반품'}">반품</c:if>
+							<c:if test="${od.orderState.label == '퓸절'}">품절</c:if>
+							<c:if test="${od.orderState.label == '환불'}">환불</c:if>
+							<c:if test="${od.orderState.label == '구매확정'}">구매확정</c:if>
+							
+						</td>
+							
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
+            				<input type="hidden" id="order_id" value="${order.id}"><br>
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-            					<fmt:formatNumber value="${order.finalPrice}"/>
-            					<input type="hidden" value="${order.finalPrice}" name="pay_price" id="pay_price">
-            					<input type="hidden" id="order_qtt" value="${od.partcnt}">
-            					<br>
-            					<c:if test="${od.orderState.label == '결제완료'}">
-									<input type="button" value="주문취소" id="order_cancel">
-									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
-								</c:if>
-								<c:if test="${od.orderState.label == '배송완료'}">
-									<input type="button" value="구매확정" id="purchase_complited">
-								</c:if>
-            					</td>
+	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<br>
+	            				<c:if test="${order.state == '대기'}">입금대기</c:if>
+								<c:if test="${order.state == '결제'}">결제완료</c:if>
+								<c:if test="${order.state == '배송'}">배송중</c:if>
+								<c:if test="${order.state == '완료'}">배송완료</c:if>
+								<c:if test="${order.state == '취소'}">결제취소</c:if>
+								<c:if test="${order.state == '반품'}">반품</c:if>
+								<c:if test="${order.state == '퓸절'}">품절</c:if>
+								<c:if test="${order.state == '환불'}">환불</c:if>
+								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
+	            				<br>
+	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
+	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+            				</td>
 						</c:if>
+						
 						<c:if test="${od.partcnt == 1}">
             				<td class="final_price">
-	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+            				<input type="hidden" id="order_id" value="${order.id}"><br>
+	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />	
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>
-	            				<input type="hidden" value="${order.finalPrice }" name="pay_price" id="pay_price">
-	            				<input type="hidden" id="order_qtt" value="${od.partcnt}">
 	            				<br>
-            					<c:if test="${od.orderState.label == '결제완료'}">
-									<input type="button" value="주문취소" id="order_cancel">
-									<input type="hidden" value="${order.payId}" name="pay_id" id="pay_id">
-								</c:if>
-								<c:if test="${od.orderState.label == '배송완료'}">
-									<input type="button" value="구매확정" id="purchase_complited">
-								</c:if>
+	            				<c:if test="${order.state == '대기'}">입금대기</c:if>
+								<c:if test="${order.state == '결제'}">결제완료</c:if>
+								<c:if test="${order.state == '배송'}">배송중</c:if>
+								<c:if test="${order.state == '완료'}">배송완료</c:if>
+								<c:if test="${order.state == '취소'}">결제취소</c:if>
+								<c:if test="${order.state == '반품'}">반품</c:if>
+								<c:if test="${order.state == '퓸절'}">품절</c:if>
+								<c:if test="${order.state == '환불'}">환불</c:if>
+								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
+	            				<br>
+	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
+	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
             				</td>
             			</c:if>
 						
@@ -237,7 +268,21 @@ $(document).ready(function(){
 		</tbody>
 	</table>
 </div>
+
+		<div class="board_page">
+			<c:if test="${pageMaker.prev}">
+				   <p><a href="<%=request.getContextPath()%>/mypage/mypage_order_cancel_list${pageMaker.makeSearchForMyPage(pageMaker.startPage - 1)}">이전</a></p>
+			</c:if> 
+			<ul>
+				<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+					<li><a href="<%=request.getContextPath()%>/mypage/mypage_order_cancel_list${pageMaker.makeSearchForMyPage(idx)}">${idx}</a></li>
+				 </c:forEach>
+			</ul>
+			<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+					<p><a href="<%=request.getContextPath()%>/mypage/mypage_order_cancel_list${pageMaker.makeSearchForMyPage(pageMaker.endPage + 1)}">다음</a></p>
+			</c:if>
+		</div>
+	
 </div>
 
-<jsp:include page="/resources/include/footer.jsp"/>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

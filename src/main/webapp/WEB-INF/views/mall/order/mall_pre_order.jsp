@@ -2,7 +2,7 @@
 <%@page import="daangnmungcat.service.MileageService"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -14,6 +14,12 @@ $(document).ready(function(){
 	$('input[name=final]').prop('value', price);
 	
 	$('#order_btn').on('click', function(){
+		$('#form').submit();
+	});
+	
+	$('#account_order_btn').on('click', function(){
+		console.log('무통장')
+		$("#form").attr("action", "/accountPay");
 		$('#form').submit();
 	})
 	
@@ -100,12 +106,14 @@ function execPostCode(){
 <form method="post" id="form" action="/kakao-pay" enctype="multipart/form-data" accept-charset="utf-8">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<!-- 넘어가는 data -->
-	<input type="text" name="first_pdt" value="${cart.get(0).product.name}"> <!-- 첫번째 -->
-	<input type="text" name="pdt_qtt" value="${size}"> <!-- 주문개수 -->
-	<input type="text" name="final"> <!-- 최종가격  -->
-	<input type="text" name="mem_id" value="${member.id}"> 
-	<input type="text" name="total_qtt" value="${total_qtt}"> <!-- 총 수량 -->
-	<input type="text" name="plus_mile" value="${mileage}"> <!-- 적립예정 -->
+	<input type="hidden" name="first_pdt" value="${cart.get(0).product.name}"> <!-- 첫번째 -->
+	<input type="hidden" name="pdt_qtt" value="${size}"> <!-- 주문개수 -->
+	<input type="hidden" name="final"> <!-- 최종가격  -->
+	<input type="hidden" name="mem_id" value="${member.id}"> 
+	<input type="hidden" name="total_qtt" value="${total_qtt}"> <!-- 총 수량 -->
+	<input type="hidden" name="plus_mile" value="${mileage}"> <!-- 적립예정 -->
+	<input type="hidden" name="total" value="${total}"> <!-- 적립예정 -->
+	<input type="hidden" name="deli" value="${totalDeliveryFee}"> <!-- 적립예정 -->
 	
 	<div class="pre_order_cart_div">
 		<table class="pre_order_table">
@@ -284,10 +292,10 @@ function execPostCode(){
 </div>	
 	
 	<div class="pre_order_btn">
-		<input type="button" value="결제" id="order_btn">
+		<input type="button" value="무통장입금" id="account_order_btn">
+		<input type="button" value="카카오페이" id="order_btn">
 	</div>
 	</form>
 
 
-<jsp:include page="/resources/include/footer.jsp"/>
-	
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

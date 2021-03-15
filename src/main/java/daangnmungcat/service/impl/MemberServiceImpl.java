@@ -10,10 +10,12 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Address;
 import daangnmungcat.dto.AuthInfo;
+import daangnmungcat.dto.Authority;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Dongne1;
 import daangnmungcat.dto.Dongne2;
@@ -21,6 +23,7 @@ import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.SearchCriteria;
 import daangnmungcat.mapper.MemberMapper;
+import daangnmungcat.service.AuthoritiesService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import net.nurigo.java_sdk.api.Message;
@@ -29,9 +32,13 @@ import net.nurigo.java_sdk.exceptions.CoolsmsException;
 @Service
 public class MemberServiceImpl implements MemberService {
 
+	private static final String UPLOAD_PATH = "resources" + File.separator + "upload" + File.separator + "profile";
+	
 	@Autowired
 	private MemberMapper mapper;
 	
+	@Autowired
+	private AuthoritiesService authoritesService;
 	
 	@Autowired
 	private MileageService mService;
@@ -58,14 +65,25 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	@Transactional
 	public int registerMember(Member member) {
 		Mileage mile = new Mileage();
 		mile.setMileage(1000);
 		mile.setOrder(null);
 		mile.setContent("회원가입");
 		mile.setMember(member);
-		mService.insertMilegeInfo(mile);
-		return mapper.insertMember(member);
+		
+		Authority authority = new Authority(member.getId(), "USER");
+		
+		int res = mService.insertMilegeInfo(mile);
+		res += mapper.insertMember(member);
+		res += authoritesService.registerAuthorityIntoMember(authority);
+		
+		if(res != 3) {
+			throw new RuntimeException();
+		}
+		
+		return res;
 	}
 
 	@Override
@@ -127,11 +145,16 @@ public class MemberServiceImpl implements MemberService {
 
 	
 	@Override
-	public int deleteProfilePic( HttpServletRequest request, HttpSession session) {		
-		AuthInfo loginUser = (AuthInfo) session.getAttribute("loginUser");
-		Member member = selectMemberById(loginUser.getId());
+	public int deleteProfilePic(String id, File realPath) {		
+		Member member = selectMemberById(id);
 		
-		File dir = new File(session.getServletContext().getRealPath("resources\\upload\\profile"));
+		/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
+		File dir = new File(realPath, UPLOAD_PATH);
+		
+		if(!dir.exists()) {
+			dir.mkdirs();
+		}
+		
 		System.out.println("delete할 Path:" + dir);
 		
 		File files[] = dir.listFiles();
@@ -156,18 +179,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public int updateProfilePic(MultipartFile[] uploadFile, HttpSession session, HttpServletRequest request) {
-		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
-		Member member = selectMemberById(info.getId());
+	public int updateProfilePic(String id, MultipartFile[] uploadFile, File realPath) {
+		Member member = selectMemberById(id);
 		
-		String uploadFolder = getFolder(request);
-		System.out.println("uploadPath:" + uploadFolder);
+		/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
+		File dir = new File(realPath, UPLOAD_PATH);
 		
-		File uploadPath = new File(uploadFolder, getFolder(request));
-		
-		if(!uploadPath.exists()) {
-			uploadPath.mkdirs();
+		if(!dir.exists()) {
+			dir.mkdirs();
 		}
 		
 		for(MultipartFile multipartFile : uploadFile) {
@@ -188,7 +207,7 @@ public class MemberServiceImpl implements MemberService {
 			//UUID uuid = UUID.randomUUID();
 			//uploadFileName = uuid.toString() + "_" + uploadFileName;
 			
-			File saveFile = new File(uploadFolder, uploadFileName);
+			File saveFile = new File(dir, uploadFileName);
 			
 			try {
 				multipartFile.transferTo(saveFile);
@@ -203,11 +222,11 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.updateProfilePic(member);
 	}
 	
-	
+	/*
 	private String getFolder(HttpServletRequest request) {
 		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\profile");
 		return path;
-	}
+	}*/
 
 	@Override
 	public int updateProfileText(Member member) {
@@ -267,14 +286,14 @@ public class MemberServiceImpl implements MemberService {
 
 	// admin
 	@Override
-	public List<Member> search(SearchCriteria scri) {
-		List<Member> list = mapper.selectMemberBySearch(scri);
+	public List<Member> search(SearchCriteria scri, Member member) {
+		List<Member> list = mapper.selectMemberBySearch(scri, member);
 		return list;
 	}
 	
 	@Override
-	public int getTotalBySearch(SearchCriteria scri) {
-		int count = mapper.selectMemberCountBySearch(scri);
+	public int getTotalBySearch(SearchCriteria scri, Member member) {
+		int count = mapper.selectMemberCountBySearch(scri, member);
 		return count;
 	}
 

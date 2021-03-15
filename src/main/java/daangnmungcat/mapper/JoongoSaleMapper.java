@@ -27,7 +27,6 @@ public interface JoongoSaleMapper {
 	
 	//게시글 관리
 	int updateJoongoSale(Sale sale);
-	int deleteJoongoSale(int id);
 	
 	
 	

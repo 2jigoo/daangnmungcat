@@ -2,8 +2,6 @@ package daangnmungcat.controller;
 
 import java.util.Random;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,8 +11,6 @@ import daangnmungcat.service.MemberService;
 
 @RestController
 public class SmsController {
-
-	private static final Log log = LogFactory.getLog(SmsController.class);
 
 	@Autowired
 	private MemberService service;

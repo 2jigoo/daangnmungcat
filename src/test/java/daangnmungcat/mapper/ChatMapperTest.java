@@ -2,8 +2,6 @@ package daangnmungcat.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -11,25 +9,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.config.ContextRoot;
 import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import lombok.extern.log4j.Log4j2;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @ContextConfiguration(classes = {ContextRoot.class} )
+@Log4j2
 //@Transactional
 public class ChatMapperTest {
 
-	private static final Log log = LogFactory.getLog(ChatMapperTest.class);
-	
 	@Autowired
 	private ChatMapper cMapper;
 	

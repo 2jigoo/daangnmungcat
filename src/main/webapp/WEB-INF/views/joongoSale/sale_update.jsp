@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
     <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%@ include file="/resources/include/header.jsp" %>
+<%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
 td, th {
@@ -30,6 +30,7 @@ textarea {
 	height: 160px;
 	float: left;
 }
+
 
 #hidden{
 	color:#ff7e15;
@@ -447,4 +448,4 @@ function handleThumImgs(){
 	
 	</div>
 </div>
-<jsp:include page="/resources/include/footer.jsp"/>
+<%@ include file="/WEB-INF/views/include/footer.jsp" %>

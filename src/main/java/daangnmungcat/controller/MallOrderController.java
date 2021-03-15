@@ -55,9 +55,8 @@ public class MallOrderController {
 
 
 	@PostMapping("/mall/pre-order/single")
-	public ModelAndView singleOrder(HttpSession session, HttpServletRequest request) {
+	public ModelAndView singleOrder(AuthInfo info, HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
 		Member loginUser = service.selectMemberById(info.getId());
 		
 		String id = request.getParameter("id");
@@ -109,7 +108,6 @@ public class MallOrderController {
 			}
 			
 			totalDeliveryFee += chargedDeliveryFee;
-			System.out.println("합치면:" + totalDeliveryFee);
 		}
 		
 		// 총 배송비
@@ -155,9 +153,8 @@ public class MallOrderController {
 	
 	//카트에서 선택된 카트리스트
 	@PostMapping("/mall/pre-order/list")
-	public ModelAndView preOrderList(HttpSession session, HttpServletRequest request) {
+	public ModelAndView preOrderList(HttpSession session, HttpServletRequest request, AuthInfo info) {
 		session = request.getSession();
-		AuthInfo info = (AuthInfo) session.getAttribute("loginUser");
 		Member loginUser = service.selectMemberById(info.getId());	
 		
 		String[] id = request.getParameterValues("id");
@@ -205,7 +202,6 @@ public class MallOrderController {
 		}
 				
 		totalDeliveryFee += chargedDeliveryFee;
-			System.out.println("합치면:" + totalDeliveryFee);
 		}
 
 
