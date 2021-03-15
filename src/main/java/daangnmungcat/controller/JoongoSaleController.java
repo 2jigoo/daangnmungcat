@@ -100,7 +100,7 @@ public class JoongoSaleController {
 	@GetMapping("/heart")
 	public String heart(AuthInfo loginUser, Model model, @RequestParam int id) {
 		if (loginUser == null) {
-			String textUrl = "detailList?id=" + id;
+			String textUrl = "joongoSale/detailList?id=" + id;
 			model.addAttribute("msg", "로그인을 하셔야 합니다.");
 			model.addAttribute("url", textUrl);
 		} else {
