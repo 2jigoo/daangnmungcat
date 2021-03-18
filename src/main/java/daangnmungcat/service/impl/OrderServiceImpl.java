@@ -503,9 +503,8 @@ public class OrderServiceImpl implements OrderService{
 		cartService.deleteAfterOrdered(loginUser.getId(), pdtList);
 		
 		log.info("..........end..........");
-		session.setAttribute("orderNo", nextNo);
-		
-		return "/accountPaySuccess";
+	
+		return "/accountPaySuccess?id=" + nextNo;
 		
 	}
 
@@ -568,7 +567,7 @@ public class OrderServiceImpl implements OrderService{
 		
 		if(map.get("shippingDate") != null && map.get("shippingDate") != "") {
 			shippingDate = map.get("shippingDate");
-			o.setShippingDate(LocalDateTime.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			o.setShippingDate(LocalDateTime.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 		}
 		
 		Member member = null;
@@ -576,7 +575,7 @@ public class OrderServiceImpl implements OrderService{
 			member = memberService.selectMemberById(depositor);
 		}
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 		String today = sdf.format(new Date());
 		Random rand = new Random();
 		String numStr = "";
@@ -602,12 +601,12 @@ public class OrderServiceImpl implements OrderService{
 			
 			// payPrice = 카카오결제금액
 			pay.setPayPrice(payPrice);
-			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 			
 			log.info("update pay");
 			res += updatePayment(pay, pay.getId());
 			
-			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice() - o.getUsedMileage());
 			o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice - partCancel);
 			
 			System.out.println("입금액:" + payPrice);
@@ -630,7 +629,7 @@ public class OrderServiceImpl implements OrderService{
 				
 				pay.setMember(member);
 				pay.setPayPrice(payPrice);
-				pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+				pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 				pay.setPayState(o.getState());
 				pay.setPayType("무통장");
 				pay.setQuantity(Integer.parseInt(qtt));
@@ -647,7 +646,7 @@ public class OrderServiceImpl implements OrderService{
 					newPay.setMember(member);
 					newPay.setOrder(o);
 					newPay.setPayPrice(Integer.parseInt(price));
-					newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+					newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 					newPay.setPayState(o.getState());
 					newPay.setPayType("무통장입금");
 					newPay.setQuantity(Integer.parseInt(qtt));
@@ -667,7 +666,7 @@ public class OrderServiceImpl implements OrderService{
 			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
 			
 			//최종금액 = 현재 total + 배송비 + 추가 배송비 
-			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice() - o.getUsedMileage());
 			System.out.println("최종금액:" + o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
 			
 

@@ -7,6 +7,11 @@
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
+<style>
+.wrapper {margin:0 auto; padding:80px; margin-bottom:50px;}
+.wrapper input{font-family:'S-CoreDream'; margin:2px 2px;}
+.wrapper select{font-family:'S-CoreDream'}
+</style>
 <script>
 $(document).ready(function(){
 	
@@ -70,6 +75,39 @@ $(document).ready(function(){
 		}
 	})
 	
+	
+	$('#account_tr').hide();
+	var type;
+	$("input[name=pay_type]:radio").change(function () {
+		 type = this.value;
+		if(type == '무통장'){
+			$('#account_tr').show();
+		}else {
+			$('#account_tr').hide();
+		}
+	});
+	
+	$('#pay').on('click', function(){
+		
+		if(type == '카카오페이'){
+			$('#form').submit();
+		}else {
+			$("#form").attr("action", "/accountPay");
+			$('#form').submit();
+		}
+		
+	});
+
+	
+	
+	$('#phone1').keyup(function(){
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	});
+	
+	$('#phone2').keyup(function(){
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	});
+	
 });
 
 function check(a){
@@ -100,9 +138,9 @@ function execPostCode(){
 
 
 </script>
+<div class="wrapper">
 
-
-<h3 style="text-align:center; padding:50px">주문서 작성 / 결제 </h3>
+<h2 style="text-align:center; margin-bottom:80px;">주문서 작성 / 결제 </h2>
 <form method="post" id="form" action="/kakao-pay" enctype="multipart/form-data" accept-charset="utf-8">
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<!-- 넘어가는 data -->
@@ -116,9 +154,8 @@ function execPostCode(){
 	<input type="hidden" name="deli" value="${totalDeliveryFee}"> <!-- 적립예정 -->
 	
 	<div class="pre_order_cart_div">
-		<table class="pre_order_table">
+		<table id="order_list_table">
 			<colgroup>
-				<col width="50px">
 				<col width="200px">
 				<col width="50px">
 				<col width="50px">
@@ -128,7 +165,6 @@ function execPostCode(){
 			</colgroup>
 			<thead>
 				<tr>
-					<th></th>	
 					<th>상품/옵션 정보</th>
 					<th>수량</th>
 					<th>상품금액</th>
@@ -140,11 +176,17 @@ function execPostCode(){
 			<tbody>
 			<c:forEach var="cart" items="${cart}" varStatus="status">
 				<tr>
-					<td><img id="pdt_img" src="/resources/images/no_image.jpg" width="100%"></td>
-					<td>
-						<input type="hidden" id="pdt_id" name="pdt_id" value="${cart.product.id}">
-						${cart.product.name}
+					<td class="tl">
+						<div class="order_img_wrapper">
+							<c:if test="${cart.product.image1 eq null}"><a href="/mall/product/${cart.product.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
+							<c:if test="${cart.product.image1 ne null}"><a href="/mall/product/${cart.product.id}"><img src="/resources${cart.product.image1}" class="order_list_img"></a></c:if>
+							<span style="margin-left:30px; line-height:100px; overflow:hidden">
+								<input type="hidden" id="pdt_id" name="pdt_id" value="${cart.product.id}">
+								<a href="/mall/product/${cart.product.id}">${cart.product.name}</a>
+							</span>
+						</div>
 					</td>
+
 					<td>${cart.quantity }</td>
 					<td><span class="price" value="${cart.product.price }">${cart.product.price}</span></td>
 					<td><fmt:formatNumber value="${cart.product.price * 0.01}" /></td>
@@ -175,29 +217,32 @@ function execPostCode(){
 	
 		
 		<div class="pre_order_go_cart_btn">
-			<input type="button" value="장바구니로 가기" onclick="location.href='/mall/cart/list'">
+			<input type="button" value="장바구니로 가기" onclick="location.href='/mall/cart/list'" class="go_list" style="font-size:13px">
 		</div>
 	</div>	
 	
 	<div class="pre_order_box">
 		<div class="box1">
-			총 ${size}개의 상품금액 <br>
-			<span class=""><fmt:formatNumber value="${total}" />원</span> 
+			총 <span style="font-weight:bold">${size}</span>개의 상품금액 <br>
+			<span style="font-weight:bold"><fmt:formatNumber value="${total}" /></span>원
 		</div>
+		<div class="box_img"><img src="/resources/images/order_plus.png"></div>
 		<div class="box2">
 			배송비<br> 
-			<fmt:formatNumber value="${totalDeliveryFee}" />
+			<span style="font-weight:bold"><fmt:formatNumber value="${totalDeliveryFee}" /></span>
 		</div>
+		<div class="box_img"><img src="/resources/images/order_total.png"></div>
 		<div class="box3">
 			합계 <br>
-			<fmt:formatNumber value="${total + totalDeliveryFee }" />원<br>
-			적립예정 마일리지: <fmt:formatNumber value="${mileage}" />원
+			<span style="font-weight:bold"><fmt:formatNumber value="${total + totalDeliveryFee }" /></span>원<br>
+			<span style="font-size:12px">적립예정 마일리지 : <fmt:formatNumber value="${mileage}" />원</span>
 		</div>
+		
 	</div>
 	
 <div class="order_detail_info_div">
-		<h4>주문자 정보</h4>
-		<table id="pre_order_info_table">
+		<span class="tableTitle">주문자 정보</span>
+		<table class="order_detail_table">
 			<tr>
 				<td>주문하시는 분</td> 
 				<td><input type="text" value="${member.name}" name=""></td> 
@@ -221,27 +266,27 @@ function execPostCode(){
 			</tr>
 		</table>
 	
-		<h4>배송정보</h4>
-			<table id="pre_order_info_table">
+		<span class="tableTitle">배송 정보</span>
+			<table class="order_detail_table">
 				<tr>
 					<td>배송지 확인</td> 
 					<td>
 						<input type="checkbox" name="chk" onclick="check(this)" value="mem" checked> 주문자 정보와 동일
-						<input type="checkbox" name="chk" onclick="check(this)" value="write"> 직접 입력
-						<input type="button" value="배송지관리" id="myAddress">
+						<input type="checkbox" name="chk" onclick="check(this)" value="write"> 직접 입력   
+						<input type="button" value="배송지관리" id="myAddress" class="pre_order_btn2">
 					</td> 
 				</tr>
 				<tr>
-					<td>받으실 분</td> 
+					<td> <span class="asterisk">* </span> 받으실 분</td> 
 					<td><input type="text" value="${member.name}" id="order_name" name="add_name"></td> 
 				</tr>
 				<tr>
-					<td>받으실 곳</td> 
+					<td><span class="asterisk">* </span>받으실 곳</td> 
 					<td>
 						<input type="text" value="${member.zipcode}" id="zipcode" name="zipcode">
-						<input type="button" value="우편번호 검색" onclick="execPostCode()">
+						<input type="button" value="우편번호 검색" onclick="execPostCode()" class="pre_order_btn3">
 						<br>
-						<input type="text" value="${member.address1}" id="address1" name="address1">
+						<input type="text" value="${member.address1}" id="address1" name="address1" style="width:280px">
 						<input type="text" value="${member.address2}" id="address2" name="address2">
 					</td> 
 				</tr>
@@ -250,7 +295,7 @@ function execPostCode(){
 					<td><input type="text" id="phone1" name="phone1"></td> 
 				</tr>
 				<tr>
-					<td>받는 분 휴대폰</td> 
+					<td><span class="asterisk">* </span>받는 분 휴대폰</td> 
 					<td><input type="text" value="${member.phone}" id="phone2" name="phone2"></td> 
 				</tr>
 				<tr>
@@ -261,8 +306,8 @@ function execPostCode(){
 
 	
 	
-		<h4>결제정보</h4>
-		<table id="pre_order_info_table">
+		<span class="tableTitle">결제 정보</span>
+		<table class="order_detail_table">
 			<tr>
 				<td>합계금액</td>
 				<td><span id="total_price"><fmt:formatNumber value="${total}" /></span></td>
@@ -284,18 +329,33 @@ function execPostCode(){
 			</tr>
 			<tr>
 				<td>최종 결제 금액</td>
-				<td><span id="final_price">${final_price}</span>
+				<td><span id="final_price" style="font-weight:bold">${final_price}</span>
 					
 				</td>
 			</tr>
+			<tr>
+				<td>결제 수단 선택</td>
+				<td>
+					<input type="radio" name="pay_type" value="무통장"> 무통장입금
+					<input type="radio" name="pay_type" value="카카오페이"> 카카오페이 <br>
+					<div id="account_tr" style="padding:10px">
+						입금자명  <input type="text" value="${member.name }" readonly><br>
+						입금은행  
+						<select>
+							<option>국민 123-123121-1234 (주)당근멍캣</option>
+						</select>
+					</div>
+				</td>
+				
+			</tr>
 		</table>
 </div>	
-	
-	<div class="pre_order_btn">
-		<input type="button" value="무통장입금" id="account_order_btn">
-		<input type="button" value="카카오페이" id="order_btn">
+
+	<div class="pre_order_btns">
+		<input type="button" value="결제하기" id="pay" class="go_list" style="width:150px; height:50px">
 	</div>
 	</form>
 
+</div>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

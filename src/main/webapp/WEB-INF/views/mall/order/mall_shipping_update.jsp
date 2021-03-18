@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}">
 <title>배송지 수정</title>
+<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
@@ -158,11 +159,16 @@ function execPostCode(){
 
 </script>
 </head>
+<style>
+.wrapper {margin:0 auto; padding:30px; margin-bottom:50px;}
+.wrapper input{font-family:'S-CoreDream'; margin:2px 2px;}
+</style>
 
 <body>
-
 <div class="wrapper">
-<table>
+
+<h3 class="tc">배송지 수정</h3>
+<table class="addr_add_table">
 	<tr>
 		<td>배송지 이름</td>
 		<td><input type="text" id="addr_subject"></td>
@@ -174,16 +180,10 @@ function execPostCode(){
 	<tr>
 		<td>받으실 곳</td>
 		<td><input type="text" id="zipcode">
-			<input type="button" value="우편번호검색" onclick="execPostCode()">
+			<input type="button" value="우편번호검색" onclick="execPostCode()" class="pre_order_btn3">
+			<input type="text" id="address1" style="width:250px;"><br>
+			<input type="text" id="address2">
 		</td>
-	</tr>
-	<tr>
-		<td></td>
-		<td><input type="text" id="address1"></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td><input type="text" id="address2"></td>
 	</tr>
 	<tr>
 		<td>전화번호</td>
@@ -198,8 +198,14 @@ function execPostCode(){
 		<td><input type="checkbox" id="default_addr">기본 배송지로 설정합니다.</td>
 	</tr>
 </table>
-<input type="button" value="취소" id="cancel" onclick="location.href='/mall/order/mall_my_address'">
-<input type="button" value="수정" id="addr_update">
+
+	<div class="addr_btns">
+		<input type="button" value="취소" id="cancel" onclick="location.href='/mall/order/mall_my_address'" class="go_list" style="padding:8px; background-color:#676767; font-size:15px">
+		<input type="button" value="수정" id="addr_update" class="go_list" style="padding:8px; font-size:15px">
+	</div>
+
 </div>
+
+
 </body>
 </html>

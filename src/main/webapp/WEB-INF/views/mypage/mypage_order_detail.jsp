@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {margin:0 auto; padding:50px;}
+.wrapper {margin:0 auto; padding:70px; margin-bottom:50px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -46,7 +46,7 @@ $(document).ready(function(){
 <br>
 <div class="wrapper">
 <h2 id="subTitle">주문 상세</h2>
-	<table id="order_list_table">
+	<table id="order_list_table" style="margin-top:80px;">
 		<colgroup>
 			<col width="200px">
 			<col width="400px">
@@ -77,7 +77,7 @@ $(document).ready(function(){
            						</span>
            						
            						<c:if test="${order.state == '대기'}">
-           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple" class="order_list_cancel" style="margin:10px;">
            						</c:if>
            						
            					</td>
@@ -92,7 +92,7 @@ $(document).ready(function(){
            						</span>
            						
            						<c:if test="${order.state == '대기'}">
-           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple" class="order_list_cancel" style="margin:10px;">
            						</c:if>
             				</td>
             			</c:if>
@@ -101,7 +101,11 @@ $(document).ready(function(){
 							<div class="order_img_wrapper">
 									<c:if test="${od.pdt.image1 eq null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
 									<c:if test="${od.pdt.image1 ne null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources${od.pdt.image1}" class="order_list_img"></a></c:if>
-								<span style="margin-left:30px; line-height:120px"><a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a></span></div>
+								<span style="margin-left:30px; line-height:100px; overflow:hidden" id="part_pdt" pdt="${od.pdt.name}">
+									<a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a>
+								</span>
+							</div>
+							
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
@@ -169,7 +173,7 @@ $(document).ready(function(){
 					배송비  <fmt:formatNumber value="${order.deliveryPrice}"/> + 
 					추가배송비 <fmt:formatNumber value="${order.addDeliveryPrice}"/> = 
 					합계 : <span style="font-weight:bold">
-							<fmt:formatNumber value="${order.totalPrice - order.cancelPrice + order.deliveryPrice + order.addDeliveryPrice}"/> won
+							<fmt:formatNumber value="${order.totalPrice - order.cancelPrice + order.deliveryPrice + order.addDeliveryPrice}"/> 원
 						</span>
 				</td>
 			</tr>
@@ -232,51 +236,51 @@ $(document).ready(function(){
 				</tr>
 				<tr>
 					<td>상품 합계 금액</td>
-					<td><fmt:formatNumber value="${order.totalPrice - order.cancelPrice}"/></td>
+					<td><fmt:formatNumber value="${order.totalPrice - order.cancelPrice}"/>원</td>
 				</tr>
 				<tr>
 					<td>배송비</td>
-					<td><fmt:formatNumber value="${order.deliveryPrice}"/></td>
+					<td><fmt:formatNumber value="${order.deliveryPrice}"/>원</td>
 				</tr>
 				<c:if test="${order.addDeliveryPrice != null && order.addDeliveryPrice != 0}">
 				<tr>
 					<td>추가 배송비 </td>
-					<td><fmt:formatNumber value="${order.addDeliveryPrice}"/></td>
+					<td><fmt:formatNumber value="${order.addDeliveryPrice}"/>원</td>
 				</tr>
 				</c:if>
 				<tr>
 					<td>총 결제 금액</td>
-					<td>
+					<td style="font-weight:bold">
 						<c:if test="${order.settleCase == '카카오페이'}">
-							<fmt:formatNumber value="${kakao.kakao.amount.total}"/>
+							<fmt:formatNumber value="${kakao.kakao.amount.total}"/>원
 						</c:if>
 						<c:if test="${order.settleCase == '무통장'}">
-							<fmt:formatNumber value="${account.payPrice}"/>
+							<fmt:formatNumber value="${account.payPrice}"/>원
 						</c:if>
 					</td>
 				</tr>
 				<c:if test="${order.returnPrice != null && order.returnPrice != 0}">
 					<tr>
 						<td>주문취소 금액</td>
-						<td><fmt:formatNumber value="${order.returnPrice}"/></td>
+						<td><fmt:formatNumber value="${order.returnPrice}"/>원</td>
 					</tr>
 				</c:if>
 				<c:if test="${order.cancelPrice != 0}">
 					<tr>
 						<td>환불 금액</td>
-						<td><fmt:formatNumber value="${order.cancelPrice}"/></td>
+						<td><fmt:formatNumber value="${order.cancelPrice}"/> 원</td>
 					</tr>
 				</c:if>
 				<tr>
 					<td>마일리지</td>
 					<td>
-						적립 예정 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
-						사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
+						적립 예정 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/>원<br> 
+						사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>원
 					</td>
 				</tr>
 		</table>
 	
-	<input type="button" value="목록으로" onclick='location.href="/mypage/mypage_order_list"' >
+	<input type="button" value="목록으로" onclick='location.href="/mypage/mypage_order_list"' class="go_list">
 	</div>
 </div>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

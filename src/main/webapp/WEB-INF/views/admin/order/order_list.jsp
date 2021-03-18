@@ -67,7 +67,6 @@ $(document).ready(function(){
 		$('#query').prop('value', query);  
 	}
 	
-	
 	$('#searchBtn').on('click', function(){
 		var keyword = $("select[name=search]").val();
 		var query = $('#query').val();
