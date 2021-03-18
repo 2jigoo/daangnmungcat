@@ -30,6 +30,7 @@ $(document).ready(function(){
 				cache : false,
 				success: function(res) {
 					alert('주문 취소 완료');
+					location.reload();
 				},
 				error: function(request,status,error){
 					alert('에러' + request.status+request.responseText+error);
@@ -236,46 +237,46 @@ $(document).ready(function(){
 				</tr>
 				<tr>
 					<td>상품 합계 금액</td>
-					<td><fmt:formatNumber value="${order.totalPrice - order.cancelPrice}"/>원</td>
+					<td><fmt:formatNumber value="${order.totalPrice - order.cancelPrice}"/></td>
 				</tr>
 				<tr>
 					<td>배송비</td>
-					<td><fmt:formatNumber value="${order.deliveryPrice}"/>원</td>
+					<td><fmt:formatNumber value="${order.deliveryPrice}"/></td>
 				</tr>
 				<c:if test="${order.addDeliveryPrice != null && order.addDeliveryPrice != 0}">
 				<tr>
 					<td>추가 배송비 </td>
-					<td><fmt:formatNumber value="${order.addDeliveryPrice}"/>원</td>
+					<td><fmt:formatNumber value="${order.addDeliveryPrice}"/></td>
 				</tr>
 				</c:if>
 				<tr>
 					<td>총 결제 금액</td>
 					<td style="font-weight:bold">
 						<c:if test="${order.settleCase == '카카오페이'}">
-							<fmt:formatNumber value="${kakao.kakao.amount.total}"/>원
+							<fmt:formatNumber value="${kakao.kakao.amount.total}"/>
 						</c:if>
 						<c:if test="${order.settleCase == '무통장'}">
-							<fmt:formatNumber value="${account.payPrice}"/>원
+							<fmt:formatNumber value="${account.payPrice}"/>
 						</c:if>
 					</td>
 				</tr>
 				<c:if test="${order.returnPrice != null && order.returnPrice != 0}">
 					<tr>
 						<td>주문취소 금액</td>
-						<td><fmt:formatNumber value="${order.returnPrice}"/>원</td>
+						<td><fmt:formatNumber value="${order.returnPrice}"/></td>
 					</tr>
 				</c:if>
 				<c:if test="${order.cancelPrice != 0}">
 					<tr>
 						<td>환불 금액</td>
-						<td><fmt:formatNumber value="${order.cancelPrice}"/> 원</td>
+						<td><fmt:formatNumber value="${order.cancelPrice}"/></td>
 					</tr>
 				</c:if>
 				<tr>
 					<td>마일리지</td>
 					<td>
-						적립 예정 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/>원<br> 
-						사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>원
+						적립 예정 마일리지 : <fmt:formatNumber value="${order.plusMileage}"/><br> 
+						사용한 마일리지 : <fmt:formatNumber value="${order.usedMileage}"/>
 					</td>
 				</tr>
 		</table>

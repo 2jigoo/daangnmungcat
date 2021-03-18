@@ -102,7 +102,7 @@ $(function(){
 							data : JSON.stringify(member),
 							success: function(res) {
 									if(res == 1){
-										alert('기본 주소로 변경완료')
+										console.log('기본변경o')
 									}
 							},
 							error: function(request,status,error){
@@ -194,8 +194,7 @@ function execPostCode(){
 		<td><input type="text" id="addr_memo"></td>
 	</tr>
 	<tr>
-		<td></td>
-		<td><input type="checkbox" id="default_addr">기본 배송지로 설정합니다.</td>
+		<td colspan="2" class="tc"><input type="checkbox" id="default_addr">기본 배송지로 설정합니다.</td>
 	</tr>
 </table>
 

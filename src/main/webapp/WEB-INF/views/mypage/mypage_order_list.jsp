@@ -125,6 +125,7 @@ $(document).ready(function(){
 				cache : false,
 				success: function(res) {
 					alert('주문 취소 완료');
+					location.reload();
 				},
 				error: function(request,status,error){
 					alert('에러' + request.status+request.responseText+error);

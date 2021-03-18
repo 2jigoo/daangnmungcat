@@ -19,7 +19,6 @@ $(document).ready(function(){
 		<p>감사합니다. </p>
 	</div>
 
-	
 	<table class="order_comple_table">
 		<colgroup>
 			<col style="width:200px;">

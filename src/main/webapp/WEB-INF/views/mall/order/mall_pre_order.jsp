@@ -108,6 +108,8 @@ $(document).ready(function(){
 		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
 	});
 	
+	
+	
 });
 
 function check(a){
@@ -244,7 +246,7 @@ function execPostCode(){
 		<span class="tableTitle">주문자 정보</span>
 		<table class="order_detail_table">
 			<tr>
-				<td>주문하시는 분</td> 
+				<td><span class="asterisk">* </span>주문하시는 분</td> 
 				<td><input type="text" value="${member.name}" name=""></td> 
 			</tr>
 			<tr>
@@ -257,11 +259,11 @@ function execPostCode(){
 				</td> 
 			</tr>
 			<tr>
-				<td>연락처</td> 
+				<td><span class="asterisk">* </span>연락처</td> 
 				<td><input type="text" value="${member.phone}" name=""></td> 
 			</tr>
 			<tr>
-				<td>이메일</td> 
+				<td><span class="asterisk">* </span>이메일</td> 
 				<td><input type="text" value="${member.email}" name=""></td> 
 			</tr>
 		</table>

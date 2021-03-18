@@ -96,7 +96,7 @@ $(document).ready(function(){
 							data : JSON.stringify(member),
 							success: function(res) {
 									if(res == 1){
-										alert('기본 주소로 변경완료');
+										console.log('기본변경o')
 									}
 							},
 							error: function(request,status,error){
