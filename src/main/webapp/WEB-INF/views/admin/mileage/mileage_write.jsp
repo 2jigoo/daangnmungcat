@@ -64,7 +64,7 @@ $(function(){
 		
 		
 		console.log(mileageWrite);
-		alert(JSON.stringify(mileageWrite));
+		//alert(JSON.stringify(mileageWrite));
 		console.log(JSON.stringify(mileageWrite));
 		
 		$.ajax({
