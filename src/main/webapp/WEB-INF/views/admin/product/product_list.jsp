@@ -101,9 +101,9 @@ $(function(){
 					</td>
 					<td rowspan="2"  class="tc">${list.saleYn}</td>
 					<td rowspan="2">
-						<a href="<%=request.getContextPath() %>/admin/product/update?id=${list.id}">수정</a>
-						<a href="<%=request.getContextPath() %>/admin/product/delete?id=${list.id}" class="delete_btn">삭제</a>
-						<a href="<%=request.getContextPath() %>/mall/product/${list.id}">보기</a>
+						<a class="a_btn" href="<%=request.getContextPath() %>/admin/product/update?id=${list.id}">수정</a>
+						<a class="a_btn" href="<%=request.getContextPath() %>/admin/product/delete?id=${list.id}" class="delete_btn">삭제</a>
+						<a class="a_btn" href="<%=request.getContextPath() %>/mall/product/${list.id}">보기</a>
 					</td>
 				</tr>
 				<tr>

@@ -15,7 +15,7 @@
 .adm_table_style1 {width:100%; border-collapse:collapse; font-family:'S-CoreDream'; color:#353535;}
 .adm_table_style1 thead th {background:#404d69; color:#fff; text-align:center; border:1px solid rgba(255,255,255,0.1); padding:10px;}
 .adm_table_style1 tbody td {border:1px solid #ddd; padding:10px;}
-.adm_table_style1 tbody td a {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
+.adm_table_style1 .a_btn {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
 .adm_table_style1 img {width:100%;}
 
 .board_page {text-align:center; margin-top:50px;}

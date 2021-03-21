@@ -74,82 +74,15 @@
 		});
 		
 	  	// 파일 제거시 썸네일 해제
-		document.querySelector('.delbtn').addEventListener('click', function(e){
+		document.querySelector('.image-delete-btn').addEventListener('click', function(e){
 			let delbtn = e.target;
 			let preview = delbtn.previousElementSibling;
 			preview.src = ''; // 썸네일 이미지 src 데이터 해제
-			document.querySelector('.delbtn').style.display = 'none';
+			document.querySelector('.image-delete-btn').style.display = 'none';
+			// input file 값 제거
 		});
 		
 	});
-
-	$(function() {
-		/* 기간 설정 관련 */
-		$("#startDate").datepicker({
-			format : "yyyy-mm-dd",
-			endDate : '0d',
-			language : "ko",
-			todayBtn : "linked",
-			clearBtn : true,
-			autoClose : true,
-		}).on("changeDate", function(selected) {
-			var startDate = new Date(selected.date.valueOf());
-			$("#endDate").datepicker("setStartDate", startDate);
-		}).on("clearDate", function(selected) {
-			$("#endDate").datepicker("setStartDate", null);
-		});
-
-		$("#endDate").datepicker({
-			format : "yyyy-mm-dd",
-			endDate : '0d',
-			language : "ko",
-			todayBtn : "linked",
-			clearBtn : true,
-			autoClose : true
-		}).on("changeDate", function(selected) {
-			var endDate = new Date(selected.date.valueOf());
-			$("#startDate").datepicker("setEndDate", endDate);
-		}).on("clearDate", function(selected) {
-			$("#startDate").datepicker("setEndDate", null);
-		});
-
-		$("#endDate").datepicker("update", dateToString(new Date()));
-
-		$("select[name=noticeYn]").change(function() {
-			document.searchForm.submit();
-		});
-
-		$(".dateBtn").not("#aMonthBtn").click(function() {
-			setDateValue($(this).val() - 1);
-		});
-
-		$("#allBtn").click(function() {
-			$("#startDate").datepicker('setDate', null);
-			$("#endDate").datepicker('setDate', null);
-		});
-
-		$("#aMonthBtn").click(function() {
-			var today = new Date();
-			var wantDate = new Date();
-			wantDate.setMonth(wantDate.getMonth() - 1);
-			wantDate.setDate(wantDate.getDate() + 1);
-
-			$("#endDate").datepicker("update", dateToString(today));
-			$("#startDate").datepicker("update", dateToString(wantDate));
-		});
-
-		$("select[name=perPageNum]").change(function() {
-			document.searchForm.submit();
-		});
-
-		$("#searchBtn").click(
-				function(e) {
-					if ($("select[name=searchType]").val() == undefined
-							|| $("input[name=keyword]").val() == "") {
-						e.preventDefault();
-					}
-				});
-	})
 
 	$(function() {
 		$("#writeBtn").click(function(e) {
@@ -159,16 +92,6 @@
 
 	});
 
-	function setFilteringPaging() {
-
-		var thisUrlStr = window.location.href;
-		var thisUrl = new URL(thisUrlStr);
-
-		console.log("setFilteringPaging!");
-		console.log(thisUrlStr);
-
-		var perPageNum = thisUrl.searchParams.get("perPageNum");
-	}
 
 	function uploadNoticeForm() {
 		var form = $("#noticeForm")[0];

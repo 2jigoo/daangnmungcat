@@ -96,14 +96,14 @@ $(function(){
 				<c:forEach items="${list}" var="list">
 				<tr>
 					<td>${list.id }</td>
-					<td>${list.order.id}</td>
+					<td><a href="/admin/order?id=${list.order.id}">${list.order.id}</a></td>
 					<td>${list.member.id}</td>
 					<td>${list.mileage}</td>
 					<td>${list.content}</td>
 					<td>${list.regDate}</td>
 					<td>
-						<a href="<%=request.getContextPath() %>/admin/mileage/update?id=${list.id}">수정</a>
-						<a href="<%=request.getContextPath() %>/admin/mileage/delete?id=${list.id}" id="mileDelBtn">삭제</a>
+						<a class="a_btn" href="<%=request.getContextPath() %>/admin/mileage/update?id=${list.id}">수정</a>
+						<a class="a_btn" href="<%=request.getContextPath() %>/admin/mileage/delete?id=${list.id}" id="mileDelBtn">삭제</a>
 					</td>
 				</tr>
 				</c:forEach>

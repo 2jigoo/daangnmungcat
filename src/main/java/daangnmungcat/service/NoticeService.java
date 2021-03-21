@@ -23,6 +23,7 @@ public interface NoticeService {
 	
 	int registNotice(Notice notice, MultipartFile file, File realPath);
 	int modifyNotice(Notice notice);
+	int modifyNoticeFileName(Notice notice);
 	int deleteNotice(Notice notice);
 	
 }

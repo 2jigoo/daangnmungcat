@@ -1,21 +1,22 @@
 package daangnmungcat.handler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.authentication.AccountExpiredException;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -23,9 +24,13 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class LoginFailureHandler implements AuthenticationFailureHandler {
 
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
+		
 		/*
 		if (exception instanceof AuthenticationServiceException) {
 			request.setAttribute("loginFailMsg", "로그인 에러");
@@ -49,10 +54,19 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 			request.setAttribute("loginFailMsg", "비밀번호가 만료되었습니다.");
 		}
 		*/
-		log.info("exception: " + exception.toString());
+		
+		log.info("exception: " + exception.toString() + ", " + exception.getMessage());
+		
+		response.setStatus(HttpStatus.UNAUTHORIZED.value());
+		response.setCharacterEncoding("UTF-8");
+		
+        Map<String, Object> data = new HashMap<>();
+        data.put("exception", exception.getMessage());
+        
+        response.getWriter().println(objectMapper.writeValueAsString(data));
 		
 		// 로그인 페이지로 다시 포워딩
-		response.sendRedirect("/login?error");
+//		response.sendRedirect("/login?error");
 //		request.getRequestDispatcher("/login?error").forward(request, response);
 		
 	}
