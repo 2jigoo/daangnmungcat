@@ -364,3 +364,9 @@ UPDATE MEMBER SET pwd ='{noop}1234' WHERE id = 'chattest1';
 
 SELECT * from user_constraints 
 WHERE table_name = 'MALL_MILEAGE';
+
+
+SELECT * FROM notice;
+
+INSERT INTO NOTICE VALUES (notice_seq.nextval, '공지사항 테스트입니다.', '공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트', sysdate, 'n', NULL, 'NULL', 0);
+INSERT INTO NOTICE VALUES (notice_seq.nextval, '공지사항 공지글 테스트입니다.', '공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트공지사항 테스트', sysdate, 'y', NULL, 'NULL', 0);
