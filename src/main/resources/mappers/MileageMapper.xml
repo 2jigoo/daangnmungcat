@@ -70,6 +70,7 @@
 		<where>
 			<if test="mileage.content !=null">and content like '%'||#{mileage.content}||'%'</if>
 			<if test="mileage.member !=null">and mem_id like '%'||#{mileage.member.id}||'%'</if>
+			<if test="mileage.order !=null">and od_id like '%'||#{mileage.order.id}||'%'</if>
 		</where>)b)a
 		WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 		order by a.rnum		
