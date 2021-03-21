@@ -4,7 +4,7 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {margin:0 auto; padding:50px; text-align:center}
+.wrapper {margin:0 auto; padding:70px; text-align:center}
 #mypage_table { width:800px; margin:0 auto; padding:20px}
 #mypage_table tr:first-child th {font-weight:bold; height:50px;}
 </style>

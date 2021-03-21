@@ -44,7 +44,11 @@ $(document).ready(function(){
 		id = member.member.id;
 	});
 	
-	$('#addr_phone').keyup(function(){
+	$('#addr_phone1').keyup(function(){
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	});
+	
+	$('#addr_phone2').keyup(function(){
 		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
 	});
 
@@ -61,8 +65,8 @@ $(document).ready(function(){
 		}else if($('#address1').val() == ""){
 			alert('주소를 입력하세요');
 			return;
-		}else if($('#addr_phone').val() == ""){
-			alert('전화번호를 입력하세요');
+		}else if($('#addr_phone2').val() == ""){
+			alert('폰번호를 입력하세요');
 			return;
 		}else if($('#address2').val() == ""){
 			alert('상세주소를 입력하세요');
@@ -72,7 +76,8 @@ $(document).ready(function(){
 					memId: id,
 					subject: $('#addr_subject').val(),
 					name: $('#addr_name').val(),
-					phone: $('#addr_phone').val(),
+					phone1: $('#addr_phone1').val(),
+					phone2: $('#addr_phone2').val(),
 					zipcode: $('#zipcode').val(),
 					address1: $('#address1').val(),
 					address2: $('#address2').val(),
@@ -142,15 +147,15 @@ $(document).ready(function(){
 
 <table class="addr_add_table">
 	<tr>
-		<td>배송지명</td>
+		<td><span class="asterisk">* </span>배송지명</td>
 		<td><input type="text" id="addr_subject"></td>
 	</tr>
 	<tr>
-		<td>받으실 분</td>
+		<td><span class="asterisk">* </span>받으실 분</td>
 		<td><input type="text" id="addr_name"></td>
 	</tr>
 	<tr>
-		<td>받으실 곳</td>
+		<td><span class="asterisk">* </span>받으실 곳</td>
 		<td><input type="text" id="zipcode">
 			<input type="button" value="우편번호검색" onclick="execPostCode()" class="pre_order_btn3"><br>
 			<input type="text" id="address1" style="width:250px;"><br>
@@ -159,7 +164,11 @@ $(document).ready(function(){
 	</tr>
 	<tr>
 		<td>전화번호</td>
-		<td><input type="text" id="addr_phone"></td>
+		<td><input type="text" id="addr_phone1"></td>
+	</tr>
+	<tr>
+		<td><span class="asterisk">* </span>폰번호</td>
+		<td><input type="text" id="addr_phone2"></td>
 	</tr>
 	<tr>
 		<td>배송 메모</td>
