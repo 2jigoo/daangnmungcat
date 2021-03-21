@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {margin:0 auto; padding:50px;}
+.wrapper {margin:0 auto; padding:70px; margin-bottom:50px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -30,6 +30,7 @@ $(document).ready(function(){
 				cache : false,
 				success: function(res) {
 					alert('주문 취소 완료');
+					location.reload();
 				},
 				error: function(request,status,error){
 					alert('에러' + request.status+request.responseText+error);
@@ -46,7 +47,7 @@ $(document).ready(function(){
 <br>
 <div class="wrapper">
 <h2 id="subTitle">주문 상세</h2>
-	<table id="order_list_table">
+	<table id="order_list_table" style="margin-top:80px;">
 		<colgroup>
 			<col width="200px">
 			<col width="400px">
@@ -77,7 +78,7 @@ $(document).ready(function(){
            						</span>
            						
            						<c:if test="${order.state == '대기'}">
-           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple" class="order_list_cancel" style="margin:10px;">
            						</c:if>
            						
            					</td>
@@ -92,7 +93,7 @@ $(document).ready(function(){
            						</span>
            						
            						<c:if test="${order.state == '대기'}">
-           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple" class="order_list_cancel" style="margin:10px;">
            						</c:if>
             				</td>
             			</c:if>
@@ -101,7 +102,11 @@ $(document).ready(function(){
 							<div class="order_img_wrapper">
 									<c:if test="${od.pdt.image1 eq null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
 									<c:if test="${od.pdt.image1 ne null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources${od.pdt.image1}" class="order_list_img"></a></c:if>
-								<span style="margin-left:30px; line-height:120px"><a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a></span></div>
+								<span style="margin-left:30px; line-height:100px; overflow:hidden" id="part_pdt" pdt="${od.pdt.name}">
+									<a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a>
+								</span>
+							</div>
+							
 						</td>
 						<td>${od.quantity}</td>
 						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
@@ -169,7 +174,7 @@ $(document).ready(function(){
 					배송비  <fmt:formatNumber value="${order.deliveryPrice}"/> + 
 					추가배송비 <fmt:formatNumber value="${order.addDeliveryPrice}"/> = 
 					합계 : <span style="font-weight:bold">
-							<fmt:formatNumber value="${order.totalPrice - order.cancelPrice + order.deliveryPrice + order.addDeliveryPrice}"/> won
+							<fmt:formatNumber value="${order.totalPrice - order.cancelPrice + order.deliveryPrice + order.addDeliveryPrice}"/> 원
 						</span>
 				</td>
 			</tr>
@@ -246,7 +251,7 @@ $(document).ready(function(){
 				</c:if>
 				<tr>
 					<td>총 결제 금액</td>
-					<td>
+					<td style="font-weight:bold">
 						<c:if test="${order.settleCase == '카카오페이'}">
 							<fmt:formatNumber value="${kakao.kakao.amount.total}"/>
 						</c:if>
@@ -276,7 +281,7 @@ $(document).ready(function(){
 				</tr>
 		</table>
 	
-	<input type="button" value="목록으로" onclick='location.href="/mypage/mypage_order_list"' >
+	<input type="button" value="목록으로" onclick='location.href="/mypage/mypage_order_list"' class="go_list">
 	</div>
 </div>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

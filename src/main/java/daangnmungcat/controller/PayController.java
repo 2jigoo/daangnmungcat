@@ -20,6 +20,7 @@ import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
+import daangnmungcat.dto.Payment;
 import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.service.KakaoPayService;
@@ -55,7 +56,7 @@ public class PayController {
 	
 	
 	@GetMapping("/kakaoPaySuccess")
-	public ModelAndView kakaoPaySuccess(@RequestParam("pg_token") String pg_token, AuthInfo loginUser, HttpServletRequest request, HttpSession session) {
+	public String kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model,  AuthInfo loginUser, HttpServletRequest request, HttpSession session) {
 		log.info("kakaoPaySuccess - get");
 		
 		ModelAndView mv = new ModelAndView();
@@ -63,10 +64,13 @@ public class PayController {
 		KakaoPayApprovalVO kakao = kakaoService.kakaoPayApprovalInfo(memberId, pg_token, request, session);
 		log.info("kakaoPaySuccess - 결제정보 :" + kakao);
 		
-		mv.setViewName("/mall/order/pay_success");
-		mv.addObject("info", kakao);
-
-		return mv;
+		Payment pay = orderService.getPaymentById(kakao.getTid());
+		Order order = orderService.getOrderByNo(pay.getOrder().getId());
+		
+		model.addAttribute("order", order);
+		model.addAttribute("info", kakao);
+		
+		return "redirect:/mall/order/order_end?orderNo=" + order.getId();
 	}
 	
 	@GetMapping("/kakaoPayCancel")
@@ -111,39 +115,7 @@ public class PayController {
 		return mv;
 	}
 	
-	/*
-	//부분 취소
-	//@PostMapping("/kakao-part")
-	public String kakaoPartCancel(@RequestBody Map<String, String> map, AuthInfo loginUser, HttpSession session) {
-		log.info("kakao- part cancel - post");
-		session.setAttribute("map", map);
-		String memberId = loginUser.getId();
-		return "redirect:" + kakaoService.kakaoPayPartCancel(memberId, map);
-	}
-	
-	@GetMapping("/kakaoPayPartCancelSuccess")
-	public ModelAndView payPartCancelSuccess(AuthInfo loginUser) {
-		log.info("kakaoPayPartCancel - success");
-	
-		Member member = memberService.selectMemberById(loginUser.getId());
-		
-		List<Order> list = orderService.selectOrderById(member.getId());
-		
-		for(Order o: list) {
-			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			o.setDetails(odList);
-			for(OrderDetail od: odList) {
-				od.setOrderId(o.getId());
-			}
-		}
 
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("list", list);
-		mv.setViewName("/mypage/mypage_order_list");
-	
-		return mv;
-	}
-	*/
 	//무통장
 	@PostMapping("/accountPay")
 	public String accountPay (AuthInfo loginUser, HttpServletRequest request, HttpSession session) {
@@ -152,17 +124,41 @@ public class PayController {
 	}
 	
 	@GetMapping("/accountPaySuccess")
-	public ModelAndView accountPaySuccess (HttpServletRequest request, HttpSession session) {
+	public String accountPaySuccess (@RequestParam String id, Model model, HttpServletRequest request, HttpSession session) {
 		log.info("무통장입금 - success");
-		String nextNo = (String) session.getAttribute("orderNo");
 		
-		Order order = orderService.getOrderByNo(nextNo);
+		System.out.println("param:" + id);
+		Order order = orderService.getOrderByNo(id);
 		List<OrderDetail> odList = orderService.sortingOrderDetail(order.getId());
 		order.setDetails(odList);
 		
+		model.addAttribute("order", order);
+		return "redirect:/mall/order/order_end?orderNo=" + order.getId();
+		
+	}
+	
+	@GetMapping("/mall/order/order_end")
+	public ModelAndView orderEnd(@RequestParam String orderNo, Model model, HttpServletRequest request, HttpSession session) {
+		System.out.println("param:" + orderNo);
 		ModelAndView mv = new ModelAndView();
+		
+		Order order = orderService.getOrderByNo(orderNo);
+		List<OrderDetail> odList = orderService.sortingOrderDetail(orderNo);
+		order.setDetails(odList);
+		
+		KakaoPayApprovalVO kakao = null;
+		Payment pay = null; 
+		
+		if(order.getPayId() != null ) {
+			kakao = kakaoService.kakaoPayInfo(order.getPayId());
+			pay = orderService.getPaymentById(kakao.getTid());
+		}
+		
+		
 		mv.addObject("order", order);
-		mv.setViewName("/mall/order/pay_account");
+		mv.addObject("kakao", kakao);
+		mv.addObject("pay", pay);
+		
 		return mv;
 	}
 	

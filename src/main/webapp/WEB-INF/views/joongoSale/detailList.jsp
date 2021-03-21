@@ -490,7 +490,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		                        <img alt="프로필" src="<%=request.getContextPath() %>/resources/${sale.member.profilePic}">
 		               </div>
 		               <div id="section_profile_left">
-		                  <div id="nickname" >${sale.member.nickname} ${sale.member.grade }</div>
+		                  <div id="nickname" >${sale.member.nickname} ${sale.member.grade.name }</div>
 		                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>	
 		               </div>
 		            </div>

@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="_csrf" content="${_csrf.token}">
 <title>배송지 추가</title>
-
+<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script src="<c:url value="/resources/js/common.js" />" type="text/javascript" ></script>
@@ -96,7 +96,7 @@ $(document).ready(function(){
 							data : JSON.stringify(member),
 							success: function(res) {
 									if(res == 1){
-										alert('기본 주소로 변경완료');
+										console.log('기본변경o')
 									}
 							},
 							error: function(request,status,error){
@@ -131,13 +131,18 @@ $(document).ready(function(){
 
 
 </script>
+<style>
+.wrapper {margin:0 auto; padding:30px; margin-bottom:50px;}
+.wrapper input{font-family:'S-CoreDream'; margin:2px 2px;}
+</style>
 </head>
-
 <body>
 <div class="wrapper">
-<table>
+<h3 class="tc">배송지 추가</h3>
+
+<table class="addr_add_table">
 	<tr>
-		<td>배송지 이름</td>
+		<td>배송지명</td>
 		<td><input type="text" id="addr_subject"></td>
 	</tr>
 	<tr>
@@ -147,16 +152,10 @@ $(document).ready(function(){
 	<tr>
 		<td>받으실 곳</td>
 		<td><input type="text" id="zipcode">
-			<input type="button" value="우편번호검색" onclick="execPostCode()">
+			<input type="button" value="우편번호검색" onclick="execPostCode()" class="pre_order_btn3"><br>
+			<input type="text" id="address1" style="width:250px;"><br>
+			<input type="text" id="address2">
 		</td>
-	</tr>
-	<tr>
-		<td></td>
-		<td><input type="text" id="address1"></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td><input type="text" id="address2"></td>
 	</tr>
 	<tr>
 		<td>전화번호</td>
@@ -167,12 +166,16 @@ $(document).ready(function(){
 		<td><input type="text" id="addr_memo"></td>
 	</tr>
 	<tr>
-		<td></td>
-		<td><input type="checkbox" id="default_addr">기본 배송지로 설정합니다.</td>
+		<td colspan="2" class="tc"><input type="checkbox" id="default_addr">기본 배송지로 설정합니다.</td>
 	</tr>
 </table>
-<input type="button" value="취소" id="cancel" onclick="location.href='/mall/order/mall_my_address'">
-<input type="button" value="저장" id="addr_save">
+
+
+<div class="addr_btns">
+	<input type="button" value="취소" id="cancel" onclick="location.href='/mall/order/mall_my_address'" class="go_list" style="padding:8px; background-color:#676767; font-size:15px">
+	<input type="button" value="저장" id="addr_save" class="go_list" style="padding:8px; font-size:15px">
+</div>
+
 </div>
 </body>
 </html>

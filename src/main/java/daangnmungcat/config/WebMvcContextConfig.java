@@ -75,6 +75,7 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("mypage/mypage_order_list").setViewName("mypage/mypage_order_list");
 		registry.addViewController("mypage/mypage_order_detail").setViewName("mypage/mypage_order_detail");
 		registry.addViewController("mypage/mypage_order_cancel_list").setViewName("mypage/mypage_order_cancel_list");
+		registry.addViewController("/mall/order/order_end").setViewName("/mall/order/order_end");
 		
 		registry.addViewController("admin").setViewName("admin/index");
 		registry.addViewController("admin/main").setViewName("admin/main");
@@ -84,8 +85,6 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("mall/order/mall_shipping_add").setViewName("mall/order/mall_shipping_add");
 		registry.addViewController("mall/order/mall_shipping_update").setViewName("mall/order/mall_shipping_update");
 		
-		registry.addViewController("mall/order/pay_success").setViewName("mall/order/pay_success");
-		registry.addViewController("mypage/pay_info").setViewName("mypage/pay_info");
 		registry.addViewController("admin/order/part_cancel").setViewName("admin/order/part_cancel");
 	}
 	

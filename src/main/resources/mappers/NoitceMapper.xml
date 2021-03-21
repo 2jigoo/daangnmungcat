@@ -122,6 +122,12 @@
 		WHERE id = #{id}
 	</update>
 	
+	<update id="updateNoticeFileName" parameterType="Notice">
+		UPDATE notice
+		SET notice_file = #{noticeFile}
+		WHERE id = #{id}
+	</update>
+	
 	<delete id="deleteNotice" parameterType="Notice">
 		DELTE FROM notice
 		WHERE id = #{id}

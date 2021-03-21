@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication auth) throws IOException, ServletException {
 		
+		String url = "/";
+		
 		List<String> roleNames = new ArrayList<>();
 		auth.getAuthorities().forEach(authority -> {
 			roleNames.add(authority.getAuthority());
@@ -40,8 +43,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 		
 		//사용자가 admin권한이면 바로 admin 페이지로
 		if(roleNames.contains("ROLE_ADMIN")) {
-			response.sendRedirect("/admin/main");
-			return;
+			url = "/admin/main";
 		}
 		
 		if(roleNames.contains("ROLE_USER")) {
@@ -52,11 +54,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 				cartService.moveToMember(c.getValue(), auth.getName());
 				response.addCookie(c);
 			});
-			response.sendRedirect("/");
-			return;
 		}
 		
-		response.sendRedirect("/");
+		response.setStatus(HttpStatus.OK.value());
+		response.getWriter().println(url);
 	}
 
 }

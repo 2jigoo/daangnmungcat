@@ -60,9 +60,9 @@ public class NoticeServiceImpl implements NoticeService {
 	@Transactional
 	public int registNotice(Notice notice, MultipartFile file, File realPath) {
 		
-		String path = UPLOAD_PATH + File.separator + notice.getId();
-		
 		noticeMapper.insertNotice(notice);
+		
+		String path = UPLOAD_PATH + File.separator + notice.getId();
 		
 		if(file != null) {
 			
@@ -83,10 +83,13 @@ public class NoticeServiceImpl implements NoticeService {
 			
 			try {
 				file.transferTo(saveFile);
+				notice.setNoticeFile(fileName);
+				noticeMapper.updateNoticeFileName(notice);
 			} catch(Exception e) {
 				log.error(e.getMessage());
 			}
 		}
+		
 		
 		return notice.getId();
 	}
@@ -102,4 +105,9 @@ public class NoticeServiceImpl implements NoticeService {
 		return noticeMapper.deleteNotice(notice);
 	}
 
+	
+	@Override
+	public int modifyNoticeFileName(Notice notice) {
+		return noticeMapper.updateNoticeFileName(notice);
+	}
 }

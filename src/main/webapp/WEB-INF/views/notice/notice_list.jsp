@@ -24,12 +24,14 @@ $(function(){
 			</tr>
 			<c:forEach var="notice" items="${notice }">
 				<tr class="board">
-					<td><c:choose>
+					<td>
+						<c:choose>
 							<c:when test="${notice.noticeYn == 'y' }">
 								<span class="notice_board">공지(${notice.id})</span>
 							</c:when>
-							<c:when test="${notice.noticeYn == 'n'}"> ${notice.id }</c:when>
+							<c:otherwise>${notice.id }</c:otherwise>
 						</c:choose>
+					</td>
 					<td><a href="<%=request.getContextPath()%>/notice/view?id=${notice.id}">${notice.title }</a></td>
 					<td>${notice.regdate}</td>
 				</tr>

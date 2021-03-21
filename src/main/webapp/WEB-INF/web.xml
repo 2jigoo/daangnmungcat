@@ -10,9 +10,7 @@
 	</context-param>
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
-		<param-value>
-		daangnmungcat.config.ContextRoot
-		</param-value>
+		<param-value>daangnmungcat.config.ContextRoot</param-value>
 	</context-param>
 	
 	
@@ -94,8 +92,10 @@
     </filter>
  
     <filter-mapping>
-          <filter-name>springSecurityFilterChain</filter-name>
+        <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>ERROR</dispatcher>
     </filter-mapping>
 
 	

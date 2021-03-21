@@ -163,8 +163,8 @@ $(function(){
 					<td class="tc"><fmt:formatNumber value="${list.price}"/> 원</td>
 					<td rowspan="2"  class="tc">${list.member.id}</td>
 					<td rowspan="2">
-						<a href="/joongoSale/detailList?id=${list.id}">보기</a>
-						<a href="/joongoSale/admin/delete?id=${list.id}" class="delete_btn">삭제</a>
+						<a class="a_btn" href="/joongoSale/detailList?id=${list.id}">보기</a>
+						<a class="a_btn" href="/joongoSale/admin/delete?id=${list.id}" class="delete_btn">삭제</a>
 					</td>
 				</tr>
 				<tr>

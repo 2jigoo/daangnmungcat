@@ -329,3 +329,5 @@ SELECT *
 	ORDER BY rnum
 	
 	SELECT sale_id, thum_name FROM joongo_image WHERE thum_name IS not null;
+	
+SELECT * FROM MALL_PDT_VIEW mpv  ;

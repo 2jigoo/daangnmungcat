@@ -26,7 +26,7 @@ $(document).ready(function(){
 	
 	$('#order_price_chk').on('click', function(){
 		if($('#order_price_chk').is(':checked')){
-			$('#order_price_txt').attr('value', ${order.finalPrice});
+			$('#order_price_txt').attr('value', ${order.misu});
 		}else{
 			$('#order_price_txt').attr('value', '0');
         }
@@ -221,8 +221,7 @@ function getTimeStamp() {
 		  
 		  leadingZeros(d.getDate(), 2) + ' ' + 
 		  leadingZeros(d.getHours(), 2) + ':' + 
-		  leadingZeros(d.getMinutes(), 2) + ':' + 
-		  leadingZeros(d.getSeconds(), 2);
+		  leadingZeros(d.getMinutes(), 2)
 
 	  return s;
 	}
@@ -413,15 +412,15 @@ function execPostCode2(){
 						<td>무통장입금액</td>
 						<td><fmt:formatNumber value="${pay.payPrice}"/></td>
 					</tr>
-					<tr>
+					<%-- <tr>
 						<td>입금자</td>
 						<td>${pay.member.name}</td>
-					</tr>
+					</tr> --%>
 					<tr>
 						<td>입금확인 일시</td>
 						<td>
 							<fmt:parseDate value="${pay.payDate }" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
-	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>
+	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
 						</td>
 					</tr>
 					<tr>
@@ -437,8 +436,8 @@ function execPostCode2(){
 					</tr>
 					<tr>
 						<td>배송일시</td>
-						<td><fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
-							<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/></td>
+						<td><fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+							<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/></td>
 					</tr>
 					<tr>
 						<td>배송비</td>
@@ -465,16 +464,16 @@ function execPostCode2(){
 							<c:if test="${pay != null}"><input type="text" id="order_price_txt" name="deposit_price" value="${pay.payPrice}">원 </c:if>
 						</td>
 					</tr>
-					<tr>
+					<%-- <tr>
 						<td>입금자</td>
 						<td><input type="text" id="order_depositor" value="${pay.member.name}"></td>
-					</tr>
+					</tr> --%>
 					<tr>
 						<td>입금확인 일시</td>
 						<td>
 							<input type="checkbox" id="order_regdate_chk"> 현재 시간으로 설정 <br>
-							<fmt:parseDate value="${pay.payDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
-							<input type="text" id="order_regdate_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>">
+							<fmt:parseDate value="${pay.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+							<input type="text" id="order_regdate_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>">
 						</td>
 					</tr>
 					<tr>
@@ -490,8 +489,8 @@ function execPostCode2(){
 						<td>배송일시</td>
 						<td>
 							<input type="checkbox" id="order_shipping_chk"> 현재 시간으로 설정 <br>
-							<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
-							<input type="text" id="order_shipping_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>">
+							<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+							<input type="text" id="order_shipping_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>">
 						</td>
 					</tr>
 					
@@ -583,8 +582,8 @@ function execPostCode2(){
 						<td>결제/취소 이력</td>
 						<td>
 							<c:forEach items="${kakao.payment_action_details}" var="d">
-							<fmt:parseDate value=" ${d.approved_at}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
-	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>
+							<fmt:parseDate value=" ${d.approved_at}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            			<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
 								 | 금액: <fmt:formatNumber value="${d.amount}"/> | 상태: ${d.payment_action_type} <br>
 							</c:forEach>
 						</td>
@@ -616,8 +615,10 @@ function execPostCode2(){
 						<td>카카오페이 결제시각</td>
 						<td>
 							<input type="checkbox" id="kakao_regdate_chk"> 현재 시간으로 설정 <br>
-							<fmt:parseDate value="${pay.payDate }" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
-	            			<input type="text" id="kakao_regdate_txt" value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>">
+							<fmt:setLocale value="en_US" scope="session"/>
+							<fmt:parseDate value="${pay.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            			<input type="text" id="kakao_regdate_txt" value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>">
+	            			
 						</td>
 					</tr>
 					<tr>
@@ -632,8 +633,8 @@ function execPostCode2(){
 						<td>배송일시</td>
 						<td>
 							<input type="checkbox" id="kakao_shipping_chk"> 현재 시간으로 설정 <br>
-							<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="parseDate" type="both" />
-							<input type="text" id="kakao_shipping_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${parseDate}"/>">
+							<fmt:parseDate value="${order.shippingDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+							<input type="text" id="kakao_shipping_txt" readonly value="<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>">
 						</td>
 					</tr>
 				</table>

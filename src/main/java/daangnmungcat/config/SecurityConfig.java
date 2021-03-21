@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -41,7 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.loginPage("/login")
 			.usernameParameter("id")
 			.loginProcessingUrl("/doLogin")
-			.successHandler(authenticationSuccessHandler);
+			.successHandler(authenticationSuccessHandler)
+			.failureHandler(authenticationFailureHandler);
 		
 		http.logout()
 			.logoutUrl("/logout")
@@ -70,15 +72,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private AuthenticationSuccessHandler authenticationSuccessHandler;
 	
-//	@Autowired
-//	private AuthenticationFailureHandler authenticationFailureHandler;
-	
+	@Autowired
+	private AuthenticationFailureHandler authenticationFailureHandler;
 	
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// web.debug(true); // debug 할 때
 		web.ignoring().antMatchers("/resources/**");
 	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+	}
+
 
 	// CORS 허용 적용
     @Bean

@@ -345,44 +345,6 @@ public class MypageController {
 	}
 
 	
-	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
-	public ModelAndView searchCancelOrder(SearchCriteriaForOrder cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
-		Member member = service.selectMemberById(loginUser.getId());
-		System.out.println(start +"/"+ end);
-		
-		List<Order> list = orderService.cancelSearchByDate(cri, start, end, member.getId());
-		for(Order o: list) {
-			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			o.setDetails(odList);
-			for(OrderDetail od: odList) {
-				od.setOrderId(o.getId());
-			}
-		}
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		cri.setPerPageNum(10);
-		pageMaker.setTotalCount(orderService.cancelSearchByDateCount(start, end, member.getId()));
-		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("pageMaker", pageMaker);
-		mv.addObject("list", list);
-		mv.setViewName("/mypage/mypage_order_cancel_list");
-		return mv;
-	}
-	
-	//결제정보 조회
-	@GetMapping("/kakao-info/{tid}/")
-	public ModelAndView kakaoPayinfo(@PathVariable String tid) {
-		KakaoPayApprovalVO vo = kakaoService.kakaoPayInfo(tid);
-		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("info", vo);
-		mv.setViewName("/mypage/pay_info");
-		
-		return mv;
-	}
-	
 	private File getRealPath(HttpSession session) {
 		return new File(session.getServletContext().getRealPath("")); 
 	}

@@ -10,13 +10,14 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Configuration
 @Import({ContextDataSource.class, ContextSqlSession.class, SecurityConfig.class, WebSocketMessageBrokerConfig.class})
 @ComponentScan(basePackages = {
 		"daangnmungcat.mapper",
 		"daangnmungcat.service",
-		"daangnmungcat.websocket",
-		"daangnmungcat.handler"})
+		"daangnmungcat.websocket"})
 public class ContextRoot {
 	
 	@Bean
@@ -30,7 +31,8 @@ public class ContextRoot {
 	}
 	
 	@Bean
-	public MessageSourceAccessor messageSourceAccessor() {
-		return new MessageSourceAccessor(messageSource());
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
 	}
+	
 }

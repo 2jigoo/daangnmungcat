@@ -43,8 +43,8 @@ $(function(){
 					<tr>
 						<td>${list.name}</td>
 						<td>
-							<a href="<%=request.getContextPath()%>/admin/category/update?cateName=멍&id=${list.id}">수정</a>
-						<a href="<%=request.getContextPath()%>/admin/category/delete?cateName=멍&id=${list.id}" class="delete_btn">삭제</a>
+							<a class="a_btn" href="<%=request.getContextPath()%>/admin/category/update?cateName=멍&id=${list.id}">수정</a>
+						<a class="a_btn" href="<%=request.getContextPath()%>/admin/category/delete?cateName=멍&id=${list.id}" class="delete_btn">삭제</a>
 						</td>
 					</tr>
 					</c:forEach>
