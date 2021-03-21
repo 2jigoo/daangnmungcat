@@ -358,3 +358,9 @@ SELECT * FROM JOONGO_SALE js ;
 	 WHERE a.rnum BETWEEN 1 AND 10
 	 ORDER BY a.rnum;
 		 
+	
+SELECT * FROM MEMBER;
+UPDATE MEMBER SET pwd ='{noop}1234' WHERE id = 'chattest1';
+
+SELECT * from user_constraints 
+WHERE table_name = 'MALL_MILEAGE';

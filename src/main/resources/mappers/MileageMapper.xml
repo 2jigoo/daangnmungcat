@@ -25,8 +25,13 @@
 		</selectKey>
 			INSERT INTO MALL_MILEAGE(ID, OD_ID, MEM_ID, MILEAGE, CONTENT)
 			VALUES(#{id},
-			<if test="order.id != null and !order.id.equals('')">#{order.id},</if>
-			<if test="order.id.equals('')">NULL,</if>
+			<choose>
+				<when test="order == null">NULL</when>
+				<when test="order.id != null and order.id.equals('')">#{order.id}</when>
+				<otherwise>NULL</otherwise>
+			</choose>,
+			<!-- <if test="order.id != null and !order.id.equals('')">#{order.id},</if>
+			<if test="order.id == null or order.id.length() == 0">NULL,</if> -->
 			#{member.id}, #{mileage}, #{content})
 	</insert>
 	

@@ -99,12 +99,13 @@ $(document).ready(function(){
 			dataType: "json",
 			cache : false,
 			data : JSON.stringify(newMember),
-			success: function() {
+			success: function(data) {
 				alert('회원가입이 완료되었습니다.');
-				/* window.location.href= contextPath+'/welcome'; */
+				window.location.href= contextPath+'/';
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
+				console.log(error);
 			}
 		});
 	});
