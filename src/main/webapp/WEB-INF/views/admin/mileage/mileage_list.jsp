@@ -14,6 +14,8 @@ $(function(){
 			window.location = "/admin/mileage/list?"+$("select[name='search']").val()+"="+$("input[name='query']").val()+"";
 		}else if($("select[name='search']").val() == "member"){
 			window.location = "/admin/mileage/list?"+$("select[name='search']").val()+"="+$("input[name='query']").val()+"";		
+		}else if($("select[name='search']").val() == "order"){
+			window.location = "/admin/mileage/list?"+$("select[name='search']").val()+"="+$("input[name='query']").val()+"";		
 		}else {
 			window.location = "/admin/mileage/list?"+$("select[name=search]").val()+"="+$("input[name='query']").val()+"";
 		}
@@ -26,6 +28,10 @@ $(function(){
 			$(".sch_select").show()
 			$(".sch_select2").hide()
 		} else if($(this).val() == "content"){
+			$(".sch_txt").hide()
+			$(".sch_select").hide()
+			$(".sch_select2").show()
+		} else if($(this).val() == "order"){
 			$(".sch_txt").hide()
 			$(".sch_select").hide()
 			$(".sch_select2").show()
@@ -63,6 +69,7 @@ $(function(){
 					<option value="">기준</option>
 					<option value="content">적립 내용</option>
 					<option value="member">회원 아이디</option>
+					<option value="order">주문 번호</option>
 					</select>
 				<label>
 					<input type="search" class="form-control form-control-sm" name="query">
@@ -75,11 +82,11 @@ $(function(){
 			<colgroup>
 				<col width="5%">
 				<col width="7%">
-				<col width="20%">
+				<col width="25%">
 				<col width="15%">
-				<col width="30%">
-				<col width="12%">
+				<col width="27%">
 				<col width="10%">
+				<col width="12%">
 			</colgroup>
 			<thead>
 				<tr>
@@ -96,14 +103,14 @@ $(function(){
 				<c:forEach items="${list}" var="list">
 				<tr>
 					<td>${list.id }</td>
-					<td>${list.order.id}</td>
+					<td><a href="/admin/order?id=${list.order.id}">${list.order.id}</a></td>
 					<td>${list.member.id}</td>
 					<td>${list.mileage}</td>
 					<td>${list.content}</td>
-					<td>${list.regDate}</td>
+					<td><javatime:format value="${list.regDate }" pattern="yyyy-MM-dd HH:mm"/></td>
 					<td>
-						<a href="<%=request.getContextPath() %>/admin/mileage/update?id=${list.id}">수정</a>
-						<a href="<%=request.getContextPath() %>/admin/mileage/delete?id=${list.id}" id="mileDelBtn">삭제</a>
+						<a class="a_btn2" href="<%=request.getContextPath() %>/admin/mileage/update?id=${list.id}">수정</a>
+						<a class="a_btn2" href="<%=request.getContextPath() %>/admin/mileage/delete?id=${list.id}" id="mileDelBtn">삭제</a>
 					</td>
 				</tr>
 				</c:forEach>

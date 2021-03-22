@@ -16,13 +16,13 @@
         <Root level="INFO" additivity="false">
             <AppenderRef ref="Console_Appender"/>
         </Root>
-        <Logger name="org.springframework" level="INFO" additivity="false">
+        <Logger name="org.springframework" level="DEBUG" additivity="false">
             <AppenderRef ref="Console_Appender" />
         </Logger>
-        <Logger name="daangnmungcat" level="INFO" additivity="false">
+        <Logger name="daangnmungcat" level="DEBUG" additivity="false">
             <AppenderRef ref="Console_Appender" />
         </Logger>
-        <Logger name="daangnmungcat.mapper" level="TRACE" additivity="false">
+        <Logger name="daangnmungcat.mapper" level="DEBUG" additivity="false">
             <AppenderRef ref="Console_Appender" />
         </Logger>
     </Loggers>

@@ -40,7 +40,7 @@ $(function(){
 					<td>${list.content}</td>
 					<td class="tc">${list.member.id}</td>
 					<td>
-						<a href="/joongoSale/detailList?id=${list.sale.id}">보기</a>
+						<a class="a_btn" href="/joongoSale/detailList?id=${list.sale.id}">보기</a>
 					</td>
 				</tr>
 				</c:forEach>

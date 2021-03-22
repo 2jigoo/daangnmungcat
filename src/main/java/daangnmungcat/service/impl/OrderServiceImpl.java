@@ -33,6 +33,7 @@ import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
 import daangnmungcat.service.KakaoPayService;
+import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
@@ -44,6 +45,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private MallPdtService pdtService;
 	
 	@Autowired
 	private MemberService memberService;
@@ -114,7 +118,9 @@ public class OrderServiceImpl implements OrderService{
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
 			od.setOrderState(OrderState.PAID);
 			detailList.add(od);
+			pdtService.calculateStock(od.getPdt(), od.getQuantity()); // 주문 수량만큼 재고 차감
 			mapper.insertOrderDetail(od);
+			
 		}
 		System.out.println(detailList);
 		log.info("insert od..........................................");
@@ -330,8 +336,8 @@ public class OrderServiceImpl implements OrderService{
 											.filter(cart -> cart.getProduct().getDeliveryKind().equals("조건부 무료배송"))
 											.collect(Collectors.summingInt(Cart::getAmount));
 		
-		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
-		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+		// 조건부 무료배송 상품 총 금액이 3만원 미만이고 무료배송 상품도 없다면 조건부 유료배송
+		if(totalPriceOfCondiFeePdt > 0 && totalPriceOfCondiFeePdt <= 30000 && hasFreeDelivery == false) {
 			totalDeliveryFee = 3000;
 		}
 		
@@ -447,6 +453,7 @@ public class OrderServiceImpl implements OrderService{
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
 			od.setOrderState(OrderState.DEPOSIT_REQUEST);
 			detailList.add(od);
+			pdtService.calculateStock(od.getPdt(), od.getQuantity());
 			mapper.insertOrderDetail(od);
 		}
 		System.out.println(detailList);
@@ -503,9 +510,8 @@ public class OrderServiceImpl implements OrderService{
 		cartService.deleteAfterOrdered(loginUser.getId(), pdtList);
 		
 		log.info("..........end..........");
-		session.setAttribute("orderNo", nextNo);
-		
-		return "/accountPaySuccess";
+	
+		return "/accountPaySuccess?id=" + nextNo;
 		
 	}
 
@@ -568,7 +574,7 @@ public class OrderServiceImpl implements OrderService{
 		
 		if(map.get("shippingDate") != null && map.get("shippingDate") != "") {
 			shippingDate = map.get("shippingDate");
-			o.setShippingDate(LocalDateTime.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			o.setShippingDate(LocalDateTime.parse(shippingDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 		}
 		
 		Member member = null;
@@ -576,7 +582,7 @@ public class OrderServiceImpl implements OrderService{
 			member = memberService.selectMemberById(depositor);
 		}
 		
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
 		String today = sdf.format(new Date());
 		Random rand = new Random();
 		String numStr = "";
@@ -602,12 +608,12 @@ public class OrderServiceImpl implements OrderService{
 			
 			// payPrice = 카카오결제금액
 			pay.setPayPrice(payPrice);
-			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+			pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 			
 			log.info("update pay");
 			res += updatePayment(pay, pay.getId());
 			
-			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice() - o.getUsedMileage());
 			o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice - partCancel);
 			
 			System.out.println("입금액:" + payPrice);
@@ -630,7 +636,7 @@ public class OrderServiceImpl implements OrderService{
 				
 				pay.setMember(member);
 				pay.setPayPrice(payPrice);
-				pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+				pay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 				pay.setPayState(o.getState());
 				pay.setPayType("무통장");
 				pay.setQuantity(Integer.parseInt(qtt));
@@ -647,7 +653,7 @@ public class OrderServiceImpl implements OrderService{
 					newPay.setMember(member);
 					newPay.setOrder(o);
 					newPay.setPayPrice(Integer.parseInt(price));
-					newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withLocale(Locale.KOREA)));
+					newPay.setPayDate(LocalDateTime.parse(payDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withLocale(Locale.KOREA)));
 					newPay.setPayState(o.getState());
 					newPay.setPayType("무통장입금");
 					newPay.setQuantity(Integer.parseInt(qtt));
@@ -667,7 +673,7 @@ public class OrderServiceImpl implements OrderService{
 			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
 			
 			//최종금액 = 현재 total + 배송비 + 추가 배송비 
-			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice() - o.getUsedMileage());
 			System.out.println("최종금액:" + o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
 			
 

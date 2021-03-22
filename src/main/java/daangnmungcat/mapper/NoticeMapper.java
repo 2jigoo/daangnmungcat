@@ -15,12 +15,15 @@ public interface NoticeMapper {
 	
 	List<Notice> selectNoticeByAll();
 	Notice selectNoticeByNo(int id);
+	Notice selectSimpleNoticeByNo(int id);
 	
 	List<Notice> selectNoticeByAllPage(Criteria cri);
 	int listCount();
 	
 	int insertNotice(Notice notice);
 	int updateNotice(Notice notice);
+	int updateNoticeFileName(Notice notice);
 	int deleteNotice(Notice notice);
 	
+	int addHits(int id);
 }

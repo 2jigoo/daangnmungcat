@@ -15,8 +15,9 @@
 .adm_table_style1 {width:100%; border-collapse:collapse; font-family:'S-CoreDream'; color:#353535;}
 .adm_table_style1 thead th {background:#404d69; color:#fff; text-align:center; border:1px solid rgba(255,255,255,0.1); padding:10px;}
 .adm_table_style1 tbody td {border:1px solid #ddd; padding:10px;}
-.adm_table_style1 tbody td a {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
+.adm_table_style1 .a_btn {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
 .adm_table_style1 img {width:100%;}
+.adm_table_style1 .a_btn2 {width:70px; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
 
 .board_page {text-align:center; margin-top:50px;}
 .board_page ul {display:inline-block;}
@@ -93,4 +94,58 @@
 
 .table.padding-sm tbody td {padding: .325rem;}
 .table.middle td {vertical-align: middle;}
+
+
+/* 공지사항 */
+#uploadImage {
+	cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid lightgray;
+}
+
+.input-file-btn {
+	height: auto;
+	padding: 6px;
+	background-color:mediumturquoise;
+	border-radius: 4px;
+	color: white;
+	cursor: pointer;
+	text-align: center;
+}
+
+.thumb-box {
+	position: relative;
+}
+
+.image-null {
+	display: none;
+}
+
+.image-uploaded {
+	width: 200px;
+}
+
+.image-delete-btn {
+	display: none;
+	background: url(/resources/images/delete_image.svg);
+	background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 32px;
+    height: 32px;
+}
+
+.image-delete-btn-span {
+	position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
+import daangnmungcat.dto.Order;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.MemberService;
@@ -35,16 +36,19 @@ public class AdminMileageController {
 	private MemberService memService;
 	
 	@GetMapping("/admin/mileage/list")
-	public String list(Model model, Criteria cri, @RequestParam @Nullable String content, @RequestParam @Nullable String member) {
+	public String list(Model model, Criteria cri, @RequestParam @Nullable String content, @RequestParam @Nullable String member, @RequestParam @Nullable String order) {
 		List<Mileage> list = new ArrayList<Mileage>();
 		
-		if(content != null  || member != null ) {
+		if(content != null  || member != null || order !=null ) {
 			Mileage mileage = new Mileage();
 			if(content != null) {
 				mileage.setContent(content);
 			}
 			if(member != null) {
 				mileage.setMember(new Member(member));
+			}
+			if(order != null) {
+				mileage.setOrder(new Order(order));
 			}
 			list = service.selectMileageBySearch(mileage, cri);
 		}else {

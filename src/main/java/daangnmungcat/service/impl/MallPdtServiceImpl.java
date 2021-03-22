@@ -15,10 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.MallCate;
 import daangnmungcat.dto.MallProduct;
+import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.mapper.MallPdtMapper;
 import daangnmungcat.service.MallPdtService;
+import lombok.extern.log4j.Log4j2;
 
 @Service
+@Log4j2
 public class MallPdtServiceImpl implements MallPdtService {
 	
 	@Autowired
@@ -218,6 +221,16 @@ public class MallPdtServiceImpl implements MallPdtService {
 	@Override
 	public List<MallProduct> selectProductBySearch(MallProduct product, Criteria cri) {
 		return mapper.selectProductBySearch(product, cri);
+	}
+	
+	@Override
+	public int calculateStock(MallProduct product, int orderQuantity) {
+		MallProduct pdtInfo = mapper.getProductById(product.getId());
+		log.info(product.getId() + "번 상품 재고: " + pdtInfo.getStock() + ", 주문량: " + orderQuantity);
+		if (orderQuantity > pdtInfo.getStock()) {
+			throw new AlreadySoldOut(String.format("해당 상품이 품절되었습니다. (%s(%d))", pdtInfo.getName(), pdtInfo.getId()));
+		}
+		return mapper.updateMallProductStock(product, orderQuantity);
 	}
 
 }

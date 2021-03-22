@@ -18,7 +18,8 @@ public class Address {
 	private String memId;
 	private String subject; 
 	private String name; 
-	private String phone; 
+	private String phone1; 
+	private String phone2; 
 	private int zipcode; 
 	private String address1; 
 	private String address2; 

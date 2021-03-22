@@ -70,14 +70,28 @@ public class AddressController {
 	@PostMapping("/address/post/{id}")
 	public ResponseEntity<Object> updateShipping(@PathVariable String id, @RequestBody Map<String, Object> map) {
 		try {
+			
 			Address add = service.getAddress(id);
 			add.setSubject(map.get("subject").toString());
 			add.setName(map.get("name").toString());
 			add.setZipcode(Integer.parseInt(map.get("zipcode").toString()));
 			add.setAddress1(map.get("address1").toString());
 			add.setAddress2(map.get("address2").toString());
-			add.setPhone(map.get("phone").toString());
-			add.setMemo(map.get("memo").toString());
+			
+			if(map.get("phone1").equals("")) {
+				add.setPhone1(null);
+			}else {
+				add.setPhone1(map.get("phone1").toString());
+			}
+			
+			add.setPhone2(map.get("phone2").toString());
+			
+			if(map.get("memo").equals("")) {
+				add.setMemo(null);
+			}else {
+				add.setMemo(map.get("memo").toString());
+			}
+			
 			
 			return ResponseEntity.ok(service.updateShippingAddress(add));
 		} catch (Exception e) {

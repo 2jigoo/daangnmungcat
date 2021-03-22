@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
@@ -38,6 +39,7 @@ import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
 
 @RestController
@@ -59,6 +61,9 @@ public class MypageController {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private MileageService mileService;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -194,6 +199,7 @@ public class MypageController {
 	@PostMapping("/withdrawal")
 	public ResponseEntity<Object> withdraw(AuthInfo loginUser, @RequestBody Map<String, String> data, HttpSession session) {
 		try {
+			
 			String pwd = (String) data.get("pwd");
 			System.out.println("pwd: " + pwd);
 			
@@ -238,19 +244,49 @@ public class MypageController {
 		
 	}
 	
+	//구매확정 -> 마일리지 인서트
+	@PostMapping("/order-confirm")
+	public ResponseEntity<Object> orderConfirm(@RequestBody Map<String, String> map, AuthInfo loginUser){
+		try {
+			Member member = service.selectMemberById(loginUser.getId());
+			
+			String odId = map.get("id").toString();
+			OrderDetail od = orderService.getOrderDetailById(odId);
+			int mileage = (int) Math.floor(od.getTotalPrice() * 0.01);
+			
+			Mileage mile = new Mileage();
+			mile.setMileage(mileage);
+			mile.setOrder(orderService.getOrderByNo(String.valueOf(od.getId())));
+			//order -> od도 상태 다를 수 있으니까 od로 바꿔서 개별 적립하는게 맞는듯
+			// 배송도 od로 바꾸는게 맞음
+			mile.setContent("상품 구매 적립");
+			mile.setMember(member);
+			mileService.insertMilegeInfo(mile);
+			
+			od.setOrderState(OrderState.PURCHASE_COMPLETED);
+			orderService.updatePartOrderDetail(od, od.getId());
+			
+			return ResponseEntity.ok(mileage);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
 	
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
 	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, 
 			@Nullable @RequestParam String id) {
+		ModelAndView mv = new ModelAndView();
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
 		
-		ModelAndView mv = new ModelAndView();
 		
 		if(id != null) {
 			Order order = orderService.getOrderByNo(id);
@@ -286,7 +322,8 @@ public class MypageController {
 			mv.addObject("list", list);
 			mv.addObject("pageMaker", pageMaker);
 			mv.setViewName("/mypage/mypage_order_list");
-			}
+		}
+		
 		
 		return mv;
 	}
@@ -296,13 +333,15 @@ public class MypageController {
 	@GetMapping("/mypage/mypage_order_cancel_list")
 	public ModelAndView getCancelOrder(SearchCriteriaForOrder cri, AuthInfo loginUser,
 			@Nullable @RequestParam String id) {
+		ModelAndView mv = new ModelAndView();
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
 		
-		ModelAndView mv = new ModelAndView();
+		
 		
 		if(id != null) {
 			Order order = orderService.getOrderByNo(id);
@@ -344,44 +383,6 @@ public class MypageController {
 		
 	}
 
-	
-	@GetMapping("/mypage/mypage_order_cancel_list/start={start}/end={end}")
-	public ModelAndView searchCancelOrder(SearchCriteriaForOrder cri, @PathVariable String start, @PathVariable String end, AuthInfo loginUser) throws java.text.ParseException {
-		Member member = service.selectMemberById(loginUser.getId());
-		System.out.println(start +"/"+ end);
-		
-		List<Order> list = orderService.cancelSearchByDate(cri, start, end, member.getId());
-		for(Order o: list) {
-			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
-			o.setDetails(odList);
-			for(OrderDetail od: odList) {
-				od.setOrderId(o.getId());
-			}
-		}
-		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		cri.setPerPageNum(10);
-		pageMaker.setTotalCount(orderService.cancelSearchByDateCount(start, end, member.getId()));
-		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("pageMaker", pageMaker);
-		mv.addObject("list", list);
-		mv.setViewName("/mypage/mypage_order_cancel_list");
-		return mv;
-	}
-	
-	//결제정보 조회
-	@GetMapping("/kakao-info/{tid}/")
-	public ModelAndView kakaoPayinfo(@PathVariable String tid) {
-		KakaoPayApprovalVO vo = kakaoService.kakaoPayInfo(tid);
-		
-		ModelAndView mv = new ModelAndView();
-		mv.addObject("info", vo);
-		mv.setViewName("/mypage/pay_info");
-		
-		return mv;
-	}
 	
 	private File getRealPath(HttpSession session) {
 		return new File(session.getServletContext().getRealPath("")); 

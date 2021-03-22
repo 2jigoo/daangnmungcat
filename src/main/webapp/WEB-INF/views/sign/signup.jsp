@@ -3,9 +3,8 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {padding:50px; width:80%; margin:0 auto;}
-.signup {width:700px; margin:0 auto;}
-.btns {width:700px; margin:0 auto; padding:30px; text-align:center; }
+.wrapper {margin:0 auto; padding:70px; margin-bottom:250px; }
+.wrapper input{font-family:'S-CoreDream'; margin:2px 2px; width:220px;}
 
 </style>
 <script>
@@ -99,12 +98,13 @@ $(document).ready(function(){
 			dataType: "json",
 			cache : false,
 			data : JSON.stringify(newMember),
-			success: function() {
+			success: function(data) {
 				alert('회원가입이 완료되었습니다.');
-				/* window.location.href= contextPath+'/welcome'; */
+				window.location.href= contextPath+'/';
 			},
 			error: function(request,status,error){
 				alert('에러' + request.status+request.responseText+error);
+				console.log(error);
 			}
 		});
 	});
@@ -264,73 +264,72 @@ function id_check() {
 </script>
 
 <div class="wrapper">
-	<table class="signup">
-	<tr>
-		<td>아이디</td>
-		<td>
-			<input type="text" name="id" id="id" placeholder="입력후 중복확인">
-			<input type="button" value="중복확인" onclick="id_check()">
-	</tr>
-	<tr>
-		<td><input type="hidden" name="id_confirm" id="id_confirm"></td>
-	</tr>
-	<tr>
-		<td>비밀번호</td>
-		<td><input type="password" name="pwd" id="pwd"></td>
-	</tr>
-	<tr>
-		<td>비밀번호 확인</td>
-		<td><input type="password" name="pwdCheck"  id="pwdCheck"></td>
-	</tr>
-	<tr height="30px">
-		<td></td>
-		<td><font size="2" color="black" name="check">(임시)한글과 숫자를 포함한 6~20자리 이내만 가능합니다.</font></td>
-	</tr>
-	<tr>
-		<td>이름</td>
-		<td><input type="text" name="name" id="name"></td>
-	</tr>
-	<tr>
-		<td>닉네임</td>
-		<td><input type="text" name="nickname" id="nickname"></td>
-	</tr>
-	<tr>
-		<td>이메일</td>
-		<td><input type="text" name="email" id="email"></td>
-	</tr>
-	<tr height="30px">
-		<td></td>
-		<td><font size="2" color="black" name="email_check" id="email_check"></font></td>
-	</tr>
-	<tr class="phone">
-		<td>연락처</td>
-		<td class="replace"><input type="text" name="phone" id="phone">
-		<input type="button" name="send" id="send" value="인증번호발송">
-		<input type="hidden" id="certi" name="certi" value="1"></td> <!-- 0으로 변경해야됨 -->
-	</tr>
-	<tr><td>인증번호 해제해놨으니까 걍 번호입력만 하세유</td></tr>
-	<tr class="certi_tr">
-		<td></td>
-		<td><input type="text" name="certiNum" id="certiNum" disabled>
-		<input type="button" id="certiSubmit" value="확인" disabled>
-		</td>
-	</tr>
-	<tr>
-		<td>위치 설정</td>
-		<td>
-		<select name="dongne1" id="dongne1">
-			<option value="0">지역을 선택하세요</option>
-		</select> 
-		<select name="dongne2" id="dongne2">
-			<option value="0">동네를 선택하세요</option>
-		</select>
-		</td>
-	</tr>
+<h2 id="subTitle">회원가입</h2>
+
+<div class="step_div">
+	<div class="step1">01.약관동의</div>
+	<div class="step2 step_now">02.정보입력</div>
+	<div class="step3">03.가입완료</div>
+</div>
+<div class="signup_table_div">
+	<table class="signup_table">
+		<tr>
+			<td>
+				<input type="text" name="id" id="id" placeholder="* 아이디 입력후 중복확인" autocomplete="false">
+				<input type="button" value="중복확인" onclick="id_check()">
+			</td>
+		</tr>
+		<tr>
+			<td><input type="hidden" name="id_confirm" id="id_confirm"></td>
+		</tr>
+		<tr>
+			<td><input type="password" name="pwd" id="pwd" placeholder="* 비밀번호 (한글, 숫자 포함  20자 이내)"></td>
+		</tr>
+		<tr>
+			<td><input type="password" name="pwdCheck" id="pwdCheck" placeholder="* 비밀번호 확인"></td>
+		</tr>
+		<tr height="30px">
+			<td><font size="2" color="black" name="check">(임시)한글과 숫자를 포함한 6~20자리 이내만 가능합니다.</font></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="name" id="name" placeholder="* 이름"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="nickname" id="nickname" placeholder="* 닉네임"></td>
+		</tr>
+		<tr>
+			<td><input type="text" name="email" id="email" placeholder="* 이메일주소"></td>
+		</tr>
+		<tr height="30px">
+			<td><font size="2" color="black" name="email_check" id="email_check"></font></td>
+		</tr>
+		<tr class="phone">
+			<td class="replace"><input type="text" name="phone" id="phone" placeholder="* 연락처">
+			<input type="button" name="send" id="send" value="인증번호발송">
+			<input type="hidden" id="certi" name="certi" value="1"></td> <!-- 0으로 변경해야됨 -->
+		</tr>
+		<tr><td>인증번호 해제해놨으니까 걍 번호입력만 하세유</td></tr>
+		<tr class="certi_tr">
+			<td><input type="text" name="certiNum" id="certiNum" disabled>
+			<input type="button" id="certiSubmit" value="확인" disabled>
+			</td>
+		</tr>
+		<tr>
+			<td>
+			위치 설정 <br>
+			<select name="dongne1" id="dongne1">
+				<option value="0">지역을 선택하세요</option>
+			</select> 
+			<select name="dongne2" id="dongne2">
+				<option value="0">동네를 선택하세요</option>
+			</select>
+			</td>
+		</tr>
 
 	</table>
-
-<div class="btns">
-	<input type="button" value="가입완료" id="signup">
+</div>
+<div class="confirm_btns">
+	<input type="button" value="회원가입" id="signup" class="go_list" style="width:500px; border-radius:20px; padding:10px;">
 </div>
 
 </div>

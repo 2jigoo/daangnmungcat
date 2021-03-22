@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginUser"/>
@@ -23,6 +24,7 @@
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/chat_room.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+	
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/jquery.form.min.js" />" type="text/javascript" ></script>
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>

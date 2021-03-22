@@ -20,9 +20,13 @@ public interface NoticeService {
 	int getTotalBySearch(SearchCriteria scri, Notice notice);
 	
 	Notice get(int id);
+	Notice getSimpleInfo(int id);
 	
 	int registNotice(Notice notice, MultipartFile file, File realPath);
-	int modifyNotice(Notice notice);
-	int deleteNotice(Notice notice);
+	int modifyNotice(Notice notice, MultipartFile file, File realPath, boolean isChanged);
+	int modifyNoticeFileName(Notice notice);
+	int deleteNotice(Notice notice, File realPath);
+	
+	int addHits(int id);
 	
 }

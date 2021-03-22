@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {margin:0 auto; padding:50px;}
+.wrapper {margin:0 auto; padding-top:70px; margin-bottom:70px;}
 </style>
 
 <script>
@@ -125,6 +125,7 @@ $(document).ready(function(){
 				cache : false,
 				success: function(res) {
 					alert('주문 취소 완료');
+					location.reload();
 				},
 				error: function(request,status,error){
 					alert('에러' + request.status+request.responseText+error);
@@ -160,6 +161,30 @@ $(document).ready(function(){
 		
 	});
 	
+	$(document).on('click', '#order_confirm', function(){
+		var id = {id: $(this).attr('odId')};
+		console.log(id)
+		if(confirm('구매확정 하시겠습니까? ') == true){
+			$.ajax({
+				url: '/order-confirm',
+				type: "post",
+				contentType: "application/json; charset=utf-8",
+				data : JSON.stringify(id),
+				dataType: "json",
+				cache : false,
+				success: function(mileage) {
+					alert(mileage + '원이 적립되었습니다.')
+					location.reload();
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+				}
+			});
+		}else {
+			return;
+		}
+	});
+	
 });
 
 
@@ -169,19 +194,18 @@ $(document).ready(function(){
 
 	<h2 id="subTitle">주문 내역</h2>
 	<div class="order_list_search_div">
-		조회 기간 
-		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_list'">
-		<input type="button" value="오늘" id="today">
-		<input type="button" value="7일" id="7days_ago">
-		<input type="button" value="15일" id="15days_ago">
-		<input type="button" value="1개월" id="1month_ago">
-		<input type="button" value="6개월" id="6month_ago">
-		<input type="button" value="1년" id="1years_ago">
-		<input type="text" id="start_date" value="${pageMaker.cri.start}"> ~ 
-		<input type="text" id="end_date" value="${pageMaker.cri.end}">
-		<input type="button" value="조회" id="search">
+		<span style="margin-right:5px;">조회 기간</span>    
+		<input type="button" value="전체" class="order_list_btn" onclick="location.href='/mypage/mypage_order_list'" class="btn">
+		<input type="button" value="오늘" class="order_list_btn" id="today">
+		<input type="button" value="7일" class="order_list_btn" id="7days_ago">
+		<input type="button" value="15일" class="order_list_btn" id="15days_ago">
+		<input type="button" value="1개월" class="order_list_btn"  id="1month_ago">
+		<input type="button" value="6개월" class="order_list_btn" id="6month_ago">
+		<input type="button" value="1년" class="order_list_btn" id="1years_ago">
+		<input type="text" id="start_date" value="${pageMaker.cri.start}" class="order_list_period"> ~ 
+		<input type="text" id="end_date" value="${pageMaker.cri.end}" class="order_list_period">
+		<input type="button" value="조회" id="search" class="order_list_search">
 	</div>
-<div>	
 	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<table id="order_list_table">
@@ -213,7 +237,6 @@ $(document).ready(function(){
 		
 			<c:forEach var="order" items="${list}" varStatus="status">
 				<c:forEach var="od" items="${order.details}" varStatus="odstatus">
-				
             		<tr>
             			<c:if test="${od.partcnt > 1}">
             				<td class="gubun order_num">
@@ -225,7 +248,7 @@ $(document).ready(function(){
            						</span>
            						
            						<c:if test="${order.state == '대기'}">
-           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple" class="order_list_cancel" style="margin:10px;">
            						</c:if>
             				</td>
             			</c:if>
@@ -238,7 +261,7 @@ $(document).ready(function(){
             						${order.id}
            						</span>
            						<c:if test="${order.state == '대기'}">
-           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_single">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_single" class="order_list_cancel" style="margin:10px;">
            						</c:if>
 	            				
             				</td>
@@ -254,8 +277,8 @@ $(document).ready(function(){
 							</div>
 							
 						</td>
-						<td>${od.quantity}</td>
-						<td><fmt:formatNumber value="${od.pdt.price}"/></td>
+						<td>${od.quantity}개</td>
+						<td><fmt:formatNumber value="${od.pdt.price}"/> 원</td>
 						<td>
 							<c:if test="${od.orderState.label == '대기'}">입금대기</c:if>
 							<c:if test="${od.orderState.label == '결제'}">결제완료</c:if>
@@ -266,15 +289,18 @@ $(document).ready(function(){
 							<c:if test="${od.orderState.label == '품절'}">품절취소</c:if>
 							<c:if test="${od.orderState.label == '환불'}">환불완료</c:if>
 							<c:if test="${od.orderState.label == '구매확정'}">구매확정</c:if>
-							
+							<br>
+							<c:if test="${od.orderState.label == '완료' || od.orderState.label == '배송'}">
+								<input type="button" value="구매확정" id="order_confirm"  odId="${od.id}" class="pre_order_btn3" style="margin-top:5px;">
+							</c:if>
 						</td>
 							
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
-            				<input type="hidden" id="order_id" value="${order.id}"><br>
+            				<span style="display:none;">${order.id }</span>
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<fmt:formatNumber value="${order.finalPrice}"/> 원
 	            				<br>
 	            				<c:if test="${order.state == '대기'}">입금대기</c:if>
 								<c:if test="${order.state == '결제'}">결제완료</c:if>
@@ -287,16 +313,16 @@ $(document).ready(function(){
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
-	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+	            				
             				</td>
 						</c:if>
 						
 						<c:if test="${od.partcnt == 1}">
-            				<td class="final_price">
-            				<input type="hidden" id="order_id" value="${order.id}"><br>
+            				<td class="final_price">	
+	            			<span style="display:none;">${order.id }</span>	
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />	
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
-	            				<fmt:formatNumber value="${order.finalPrice}"/>
+	            				<fmt:formatNumber value="${order.finalPrice}"/> 원
 	            				<br>
 		            			<c:if test="${order.state == '대기'}">입금대기</c:if>
 								<c:if test="${order.state == '결제'}">결제완료</c:if>
@@ -309,7 +335,7 @@ $(document).ready(function(){
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
-	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+
             				</td>
             			</c:if>
 						
@@ -320,7 +346,7 @@ $(document).ready(function(){
 			</c:forEach>
 		</tbody>
 	</table>
-</div>
+
 	<div class="board_page">
 			<c:if test="${pageMaker.prev}">
 				   <p><a href="<%=request.getContextPath()%>/mypage/mypage_order_list${pageMaker.makeSearchForMyPage(pageMaker.startPage - 1)}">이전</a></p>
@@ -336,8 +362,6 @@ $(document).ready(function(){
 		</div>
 	
 </div>
-
-
 
 
 

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:50px;}
+.wrapper {margin:0 auto; padding:70px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -116,17 +116,17 @@ $(document).ready(function(){
 <div class="wrapper">
 	<h2 id="subTitle">취소/환불 내역</h2>
 	<div class="order_list_search_div">
-		조회 기간 
-		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_cancel_list'">
-		<input type="button" value="오늘" id="today">
-		<input type="button" value="7일" id="7days_ago">
-		<input type="button" value="15일" id="15days_ago">
-		<input type="button" value="1개월" id="1month_ago">
-		<input type="button" value="6개월" id="6month_ago">
-		<input type="button" value="1년" id="1years_ago">
-		<input type="text" id="start_date" value="${pageMaker.cri.start}"> ~ 
-		<input type="text" id="end_date" value="${pageMaker.cri.end}">
-		<input type="button" value="조회" id="search">
+		조회 기간  
+		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_cancel_list'" class="order_list_btn">
+		<input type="button" value="오늘" id="today" class="order_list_btn">
+		<input type="button" value="7일" id="7days_ago" class="order_list_btn">
+		<input type="button" value="15일" id="15days_ago" class="order_list_btn">
+		<input type="button" value="1개월" id="1month_ago" class="order_list_btn">
+		<input type="button" value="6개월" id="6month_ago" class="order_list_btn">
+		<input type="button" value="1년" id="1years_ago" class="order_list_btn">
+		<input type="text" id="start_date" value="${pageMaker.cri.start}" class="order_list_period"> ~ 
+		<input type="text" id="end_date" value="${pageMaker.cri.end}" class="order_list_period">
+		<input type="button" value="조회" id="search" class="order_list_search">
 	</div>
 <div>	
 	

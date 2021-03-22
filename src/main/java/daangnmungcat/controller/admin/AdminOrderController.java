@@ -232,8 +232,11 @@ public class AdminOrderController {
 							//54000 - 0
 						
 						}else {
-							order.setReturnPrice(ord.getTotalPrice());
-							order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - pay.getPayPrice());
+							System.out.println("pay있음");
+							order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());	
+							order.setMisu(order.getMisu() + ord.getTotalPrice());
+	
+							//order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - ord.getTotalPrice() - pay.getPayPrice());
 						}
 						
 						orderService.updatePartOrderDetail(ord, ord.getId());
@@ -306,8 +309,10 @@ public class AdminOrderController {
 					
 					}else {
 						//주문취소에 추가  => 현재 취소액 + 선택한 금액
+						System.out.println("pay있음");
 						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
-						order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() + pay.getPayPrice());
+						order.setMisu(order.getMisu() - ord.getTotalPrice());
+	
 					}
 					
 				}else {

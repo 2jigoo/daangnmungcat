@@ -41,4 +41,6 @@ public interface MallPdtService {
 	int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request);
 
 	List<MallProduct> selectProductBySearch(@Param("product") MallProduct product, @Param("cri") Criteria cri);
+
+	int calculateStock(MallProduct product, int orderQuantity);
 }

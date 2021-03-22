@@ -484,18 +484,17 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		      </section>
 	      
 		      <section id="section_profile">
-		         <a id="section_profile_link" href="#">
+		         <a id="section_profile_link" href="/joongo/review/list?memId=${sale.member.id}">
 		            <div>
 		               <div id="section_profile_img">
 		                        <img alt="프로필" src="<%=request.getContextPath() %>/resources/${sale.member.profilePic}">
 		               </div>
 		               <div id="section_profile_left">
-		                  <div id="nickname" >${sale.member.nickname} ${sale.member.grade }</div>
+		                  <div id="nickname" >${sale.member.nickname} ${sale.member.grade.name }</div>
 		                  <div id="dongnename">${sale.dongne1.name} ${sale.dongne2.name}</div>	
 		               </div>
 		            </div>
 		         </a>
-		         <a href="/joongo/review/list?memId=${sale.member.id}">거래후기 보기</a>
 		      </section>
 		      
 		      <section id="section_description">

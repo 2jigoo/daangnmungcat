@@ -12,9 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -106,12 +107,43 @@ public class AdminNoticeController {
 		return ResponseEntity.ok(id);
 	}
 	
-	@PutMapping("/admin/notice/${id}")
+	@GetMapping("/admin/notice/modify")
+	public String noticeModifyFormPage(int id, Model model) {
+		Notice notice = noticeService.get(id);
+		model.addAttribute("notice", notice);
+		
+		return "/admin/notice/notice_modify";
+	}
+
+	
+	@PostMapping("/admin/notice/{noticeId}")
 	@ResponseBody
-	public ResponseEntity<Object> noticeModifying(Notice notice, @RequestParam(value = "uploadFile", required = false) MultipartFile uploadFile, AuthInfo loginUser, HttpSession session) {
+	public ResponseEntity<Object> noticeModifying(@PathVariable int noticeId, Notice notice, @RequestParam(value = "uploadImage") MultipartFile uploadFile, @RequestParam boolean isChanged, AuthInfo loginUser, HttpSession session) {
 		
-		
-		return ResponseEntity.ok("");
+		try {
+			notice.setId(noticeId);
+			log.info("notice.getNoticeFile(): " + notice.getNoticeFile());
+			log.info("파일 변경? " + isChanged);
+			log.info("uploadFile: " + (uploadFile.isEmpty() ? "null" : uploadFile.getOriginalFilename()));
+			
+			int res = noticeService.modifyNotice(notice, uploadFile, getRealPath(session), isChanged);
+			return ResponseEntity.ok(res);
+			
+		} catch(RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
+	
+	@DeleteMapping("/admin/notice/{noticeId}")
+	@ResponseBody
+	public ResponseEntity<Object> noticeDeleting(@PathVariable int noticeId, HttpSession session) {
+		try {
+			noticeService.deleteNotice(new Notice(noticeId), getRealPath(session));
+		} catch(RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		return ResponseEntity.ok("success");
 	}
 	
 	
