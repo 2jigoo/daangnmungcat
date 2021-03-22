@@ -3,12 +3,12 @@
 <%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 <script>
-	$(document).ready(function() {
-		document.title += ' - 공지사항 목록';
-		setFilteringPaging();
-	});
-	
 	$(function() {
+		$(document).ready(function() {
+			document.title += ' - 공지사항 목록';
+			setFilteringPaging();
+		});
+		
 		/* 기간 설정 관련 */
 		$("#startDate").datepicker({
 			format: "yyyy-mm-dd",
@@ -90,26 +90,20 @@
 		var endDate = thisUrl.searchParams.get("endDate");
 		var noticeYn = thisUrl.searchParams.get("noticeYn");
 		
+		console.log(startDate);
+		console.log(endDate);
+		
 		if(perPageNum != null) {
 			$("select[name=perPageNum]").val(perPageNum);
-		}
-		if(!state) {
-		} else if(state.length != 0) {
-			$("select[name=state]").val(state);
 		}
 		if(!searchType) {
 		} else if(searchType.length != 0) {
 			$("select[name=searchType]").val(searchType);
 			$("input[name=keyword]").val(keyword);
 		}
-		if(!grade) {
-		} else if(grade.length != 0) {
-			$("select[name=grade]").val(grade);
-		}
-		if(!dongne1) {
-		} else if(dongne1.length != 0) {
-			$("select[name=dongne1]").val(dongne1);
-			loadDongne2List(dongne1);
+		if(!noticeYn) {
+		} else if(noticeYn.length != 0) {
+			$("select[name=noticeYn]").val(noticeYn);
 		}
 		if(!startDate) {
 		} else if(startDate.length != 0) {
@@ -281,7 +275,7 @@
 							<td>${notice.writer.nickname }(${notice.writer.id })</td>
 							<td><javatime:format value="${notice.regdate }" pattern="yyyy-MM-dd HH:mm"/></td>
 							<td>
-								<a href="/admin/notice/detail>id=${notice.id}" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">보기</span></a>
+								<a href="/notice/view?id=${notice.id}" target="_blank" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">보기</span></a>
 							</td>
 							<td>
 								<a href="/admin/notice/modify?id=${notice.id}" class="btn bg-warning btn-sm"><span class="text-gray-800">수정</span></a>
