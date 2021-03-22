@@ -16,6 +16,6 @@
 	
 	<insert id="insertAuthorityIntoUserName" parameterType="Authority">
 		INSERT INTO authorities(username, authority)
-		values(#{username}, #{authority});
+		values(#{username}, #{authority})
 	</insert>
 </mapper>

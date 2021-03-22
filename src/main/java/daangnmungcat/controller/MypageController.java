@@ -194,6 +194,7 @@ public class MypageController {
 	@PostMapping("/withdrawal")
 	public ResponseEntity<Object> withdraw(AuthInfo loginUser, @RequestBody Map<String, String> data, HttpSession session) {
 		try {
+			
 			String pwd = (String) data.get("pwd");
 			System.out.println("pwd: " + pwd);
 			
@@ -244,13 +245,14 @@ public class MypageController {
 	@GetMapping("/mypage/mypage_order_list")
 	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, 
 			@Nullable @RequestParam String id) {
+		ModelAndView mv = new ModelAndView();
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
 		
-		ModelAndView mv = new ModelAndView();
 		
 		if(id != null) {
 			Order order = orderService.getOrderByNo(id);
@@ -286,7 +288,8 @@ public class MypageController {
 			mv.addObject("list", list);
 			mv.addObject("pageMaker", pageMaker);
 			mv.setViewName("/mypage/mypage_order_list");
-			}
+		}
+		
 		
 		return mv;
 	}
@@ -296,13 +299,15 @@ public class MypageController {
 	@GetMapping("/mypage/mypage_order_cancel_list")
 	public ModelAndView getCancelOrder(SearchCriteriaForOrder cri, AuthInfo loginUser,
 			@Nullable @RequestParam String id) {
+		ModelAndView mv = new ModelAndView();
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
 		
-		ModelAndView mv = new ModelAndView();
+		
 		
 		if(id != null) {
 			Order order = orderService.getOrderByNo(id);

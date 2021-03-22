@@ -17,6 +17,7 @@
 .adm_table_style1 tbody td {border:1px solid #ddd; padding:10px;}
 .adm_table_style1 .a_btn {width:70px; display:block; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
 .adm_table_style1 img {width:100%;}
+.adm_table_style1 .a_btn2 {width:70px; padding:5px 10px; background:#738dc5; border-radius:3px; color:#fff; text-align:center; margin:2px auto; text-decoration:none !important;}
 
 .board_page {text-align:center; margin-top:50px;}
 .board_page ul {display:inline-block;}

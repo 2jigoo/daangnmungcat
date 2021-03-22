@@ -100,7 +100,7 @@ public class JoongoSaleController {
 	@GetMapping("/heart")
 	public String heart(AuthInfo loginUser, Model model, @RequestParam int id) {
 		if (loginUser == null) {
-			String textUrl = "detailList?id=" + id;
+			String textUrl = "joongoSale/detailList?id=" + id;
 			model.addAttribute("msg", "로그인을 하셔야 합니다.");
 			model.addAttribute("url", textUrl);
 		} else {
@@ -137,28 +137,31 @@ public class JoongoSaleController {
 	}
 	
 	
-	@GetMapping("/joongo/heart/list")
+	@GetMapping("/mypage/joongo/heart/list")
 	public String heartedList(AuthInfo loginUser, Model model, @RequestParam(value = "page", defaultValue = "1") int page) {
-		log.info("page: " + page);
-		
-		PageMaker pageMaker = new PageMaker();
-		Criteria criteria = new Criteria(page, 20);
-		
-		int totalCount = service.getHeartedCounts(loginUser.getId());
-		log.info("totalCount: " + totalCount);
-		
-		pageMaker.setCri(criteria);
-		pageMaker.setTotalCount(totalCount);
-		
-		List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
-		list.forEach(sale -> log.debug(sale.toString()));
-		
-		log.info("pageMaker: " + pageMaker.toString());
-		
-		model.addAttribute("list", list);
-		model.addAttribute("pageMaker", pageMaker);
-		
-		return "/joongoSale/sale_hearted_list";
+		if (loginUser == null) {
+			return "/joongoSale/sale_hearted_list";
+		}else {
+			log.info("page: " + page);
+			
+			PageMaker pageMaker = new PageMaker();
+			Criteria criteria = new Criteria(page, 20);
+			
+			int totalCount = service.getHeartedCounts(loginUser.getId());
+			log.info("totalCount: " + totalCount);
+			
+			pageMaker.setCri(criteria);
+			pageMaker.setTotalCount(totalCount);
+			
+			List<Sale> list = service.getHeartedList(loginUser.getId(), criteria);
+			list.forEach(sale -> log.debug(sale.toString()));
+			
+			log.info("pageMaker: " + pageMaker.toString());
+			
+			model.addAttribute("list", list);
+			model.addAttribute("pageMaker", pageMaker);
+			
+			return "/joongoSale/sale_hearted_list";
+		}
 	}
-	
 }

@@ -31,10 +31,10 @@ public class SecurityTest {
 	
 	private PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	
-//	@Test
+	@Test
 	public void testNewBcryptEncode() {
 		
-		String password = "1111";
+		String password = "1234";
 		String enPw = passwordEncoder.encode(password);
 		
 		System.out.println("enPw: " + enPw);
@@ -60,7 +60,7 @@ public class SecurityTest {
 		System.out.println(passwordEncoder.matches("password", "{bcrypt}$2a$10$7ELeUG5rUnOD.6GAY4Ivlud0MyFhFW.HsaCgcL5uW3xQERlMhUtqe"));
 	}
 	
-	@Test
+//	@Test
 	public void updatePasswordEncoded() {
 		Map encoders = new HashMap<>();
 		

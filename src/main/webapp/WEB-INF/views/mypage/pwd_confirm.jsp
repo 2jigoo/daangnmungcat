@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:80px; text-align:center}
+.wrapper {margin:0 auto; padding:80px; text-align:center; margin-bottom:250px;}
 .wrapper input{font-family:'S-CoreDream'; margin:2px 2px;}
 </style>
 <script>
@@ -31,6 +31,7 @@ $(function(){
 
 <div class="wrapper">
 	<h2 id="subTitle">회원정보 변경</h2>
+	
 	<div class="confirm_noti">
 		회원님의 정보를 안전하게 보호하기 위해 비밀번호를 다시 한번 확인해 주세요.
 	</div>

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:80px;}
+.wrapper {margin:0 auto; padding:70px;}
 </style>
 <script>
 $(document).ready(function(){

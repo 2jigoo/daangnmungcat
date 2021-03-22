@@ -4,7 +4,7 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {margin:0 auto; padding:50px; text-align:center}
+.wrapper {margin:0 auto; padding:70px; text-align:center}
 #mypage_table { width:800px; margin:0 auto; padding:20px}
 #mypage_table tr:first-child th {font-weight:bold; height:50px;}
 </style>
@@ -28,7 +28,7 @@ $(document).ready(function(){
 		<td><a href="<c:url value="/mypage/shipping_main" />">배송지 관리</a></td> <td><a href="/mypage/joongo/comment?memId=${loginUser.id}">내 댓글</a></td> <td><a href="<c:url value="/mypage/mypage_order_cancel_list" />">취소/환불내역</a></td> <td>마일리지</td>
 	</tr>
 	<tr>
-		<td><a href="<c:url value="/mypage/mypage_withdraw" />">회원 탈퇴</a></td> <td><a href="<c:url value="/joongo/heart/list"/>">찜 목록</a></td> <td>상품 후기</td> <td></td>
+		<td><a href="<c:url value="/mypage/mypage_withdraw" />">회원 탈퇴</a></td> <td><a href="<c:url value="/mypage/joongo/heart/list"/>">찜 목록</a></td> <td>상품 후기</td> <td></td>
 	</tr>
 	<tr>
 		<td></td> <td><a href="/mypage/joongo/review/list?memId=${loginUser.id}">거래후기</a></td> <td>찜리스트</td> <td></td>

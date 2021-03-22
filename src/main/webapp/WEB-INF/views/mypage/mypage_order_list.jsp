@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <style>
-.wrapper {margin:0 auto; padding:80px; margin-bottom:50px;}
+.wrapper {margin:0 auto; padding-top:70px; margin-bottom:70px;}
 </style>
 
 <script>
@@ -182,7 +182,6 @@ $(document).ready(function(){
 		<input type="text" id="end_date" value="${pageMaker.cri.end}" class="order_list_period">
 		<input type="button" value="조회" id="search" class="order_list_search">
 	</div>
-<div>	
 	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<table id="order_list_table">
@@ -287,7 +286,7 @@ $(document).ready(function(){
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
-	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정" class="pre_order_btn3" style="margin-top:5px;"></c:if>
             				</td>
 						</c:if>
 						
@@ -309,7 +308,7 @@ $(document).ready(function(){
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
-	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정" class="pre_order_btn3" style="margin-top:5px;"></c:if>
             				</td>
             			</c:if>
 						
@@ -320,7 +319,7 @@ $(document).ready(function(){
 			</c:forEach>
 		</tbody>
 	</table>
-</div>
+
 	<div class="board_page">
 			<c:if test="${pageMaker.prev}">
 				   <p><a href="<%=request.getContextPath()%>/mypage/mypage_order_list${pageMaker.makeSearchForMyPage(pageMaker.startPage - 1)}">이전</a></p>
@@ -336,8 +335,6 @@ $(document).ready(function(){
 		</div>
 	
 </div>
-
-
 
 
 
