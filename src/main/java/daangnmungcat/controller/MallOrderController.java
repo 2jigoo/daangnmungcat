@@ -89,9 +89,9 @@ public class MallOrderController {
 		for(Cart cart : listOfConditionalFee) {
 			totalPriceOfCondiFeePdt += cart.getProduct().getPrice() * cart.getQuantity();
 		}
-		
-		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
-		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+
+		// 조건부 무료배송 상품 총 금액이 3만원 미만이고 무료배송 상품도 없다면 조건부 유료배송
+		if(totalPriceOfCondiFeePdt > 0 && totalPriceOfCondiFeePdt <= 30000 && hasFreeDelivery == false) {
 			totalDeliveryFee = 3000;
 		}
 		
@@ -184,8 +184,8 @@ public class MallOrderController {
 			totalPriceOfCondiFeePdt += cart.getProduct().getPrice() * cart.getQuantity();
 		}
 			
-		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
-		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+		// 조건부 무료배송 상품 총 금액이 3만원 미만이고 무료배송 상품도 없다면 조건부 유료배송
+		if(totalPriceOfCondiFeePdt > 0 && totalPriceOfCondiFeePdt <= 30000 && hasFreeDelivery == false) {
 			totalDeliveryFee = 3000;
 		}
 			
