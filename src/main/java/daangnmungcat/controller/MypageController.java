@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
@@ -38,6 +39,7 @@ import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
 
 @RestController
@@ -59,6 +61,9 @@ public class MypageController {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private MileageService mileService;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -237,6 +242,35 @@ public class MypageController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
+	}
+	
+	//구매확정 -> 마일리지 인서트
+	@PostMapping("/order-confirm")
+	public ResponseEntity<Object> orderConfirm(@RequestBody Map<String, String> map, AuthInfo loginUser){
+		try {
+			Member member = service.selectMemberById(loginUser.getId());
+			
+			String odId = map.get("id").toString();
+			OrderDetail od = orderService.getOrderDetailById(odId);
+			int mileage = (int) Math.floor(od.getTotalPrice() * 0.01);
+			
+			Mileage mile = new Mileage();
+			mile.setMileage(mileage);
+			mile.setOrder(orderService.getOrderByNo(String.valueOf(od.getId())));
+			//order -> od도 상태 다를 수 있으니까 od로 바꿔서 개별 적립하는게 맞는듯
+			// 배송도 od로 바꾸는게 맞음
+			mile.setContent("상품 구매 적립");
+			mile.setMember(member);
+			mileService.insertMilegeInfo(mile);
+			
+			od.setOrderState(OrderState.PURCHASE_COMPLETED);
+			orderService.updatePartOrderDetail(od, od.getId());
+			
+			return ResponseEntity.ok(mileage);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 	
 	

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <style>
-.wrapper {margin:0 auto; padding:50px;}
+.wrapper {margin:0 auto; padding:70px; magin-bottom:70px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -30,17 +30,17 @@ function go_next() {
 <h2 id="subTitle">회원 가입</h2>
 
 <div class="step_div">
-	<div class="step step_now">01.약관동의</div>
-	<div class="step">02.정보입력</div>
-	<div class="step">03.가입완료</div>
+	<div class="step1 step_now">01.약관동의</div>
+	<div class="step2">02.정보입력</div>
+	<div class="step3">03.가입완료</div>
 </div>
 
-<div class="contract_div">
+<div class="contract_div" style="margin-top:20px;">
 	
-	<div style="width:70%; text-align:left; margin-bottom:10px;">
+	<div style="width:70%; text-align:left; margin-bottom:15px;">
 		<input type="checkbox" name="all"> 당근멍캣의 모든 약관을 확인하고 전체 동의합니다.
 		<br>
-		<input type="checkbox" name="ok" class="tl">
+		<input type="checkbox" name="ok">
 		<span style="color:#ff7e15; font-weight:500">(필수)</span> 회원가입 약관
 	</div>
 <textarea rows="15" cols="10" class="contract_textarea">
@@ -297,7 +297,8 @@ function go_next() {
 	</div>
 	
 <textarea rows="15" cols="10" class="contract_textarea">
-당근멍캣('/daangnmungcat'이하 '당근멍캣')은(는) 「개인정보 보호법」 제30조에 따라 정부주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+
+	당근멍캣('/daangnmungcat'이하 '당근멍캣')은(는) 「개인정보 보호법」 제30조에 따라 정부주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리방침을 수립·공개합니다.
 
 ○ 이 개인정보처리방침은 2021년 1월 1부터 적용됩니다.
 
@@ -518,9 +519,10 @@ function go_next() {
 </div>
  	
 	<div class="confirm_btns">
-		<input type="button" value="취소" class="go_list" style="padding:8px; background-color:#676767; font-size:15px; width:100px;"> 
- 	 	<input type="button" value="다음 단계" onclick="go_next()" class="go_list" style="padding:8px; font-size:15px; width:100px;"> 
+		<input type="button" value="취소" onclick="location.href='/'" class="go_list" style="padding:10px; background-color:#676767; font-size:15px; width:100px; border-radius:20px;"> 
+ 	 	<input type="button" value="다음 단계" onclick="go_next()" class="go_list" style="padding:10px; font-size:15px; width:100px; border-radius:20px;"> 
 	</div>
+
 
 </div>
 <%@ include file="/WEB-INF/views/include/footer.jsp"%>
