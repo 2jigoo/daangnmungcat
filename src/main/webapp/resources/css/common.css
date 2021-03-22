@@ -614,7 +614,14 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 
 /*회원가입약관*/
 .contract_div {width:70%; margin:0 auto; text-align:center; padding:20px;}
-.contract_textarea {width:100%; font-family:'S-CoreDream'; font-size:13px; font-weight:200; margin-top:10px;}
-.step {width:30%; padding:15px; display:inline-block; text-align:center; border-radius:25px; background-color:#f8f8f8; margin-left:-3px;}
-.step_now {background-color:#ff7e15; color:#fff; font-weight:500; } 
-.step_div {width:70%; margin:0 auto; text-align:center; padding:30px;}
+.contract_textarea {width:100%; padding:10px; font-family:'S-CoreDream'; font-size:13px; font-weight:200; margin-top:10px; border:1px solid #ccc}
+.step1 {width:30%; padding:15px; display:inline-block; text-align:center; background-color:#f8f8f8; margin-left:-20px; position: relative; z-index:5; border-radius:20px; }
+.step2 {width:30%; padding:15px; display:inline-block; text-align:center; background-color:#f8f8f8; margin-left:-20px; position: relative; z-index:4}
+.step3 {width:30%; padding:15px; display:inline-block; text-align:center; background-color:#f8f8f8; margin-left:-20px; position: relative; z-index:3; border-radius:20px;}
+.step_now {background-color:#ff7e15; color:#fff; font-weight:500; border-radius:20px; z-index:6;}  
+.step_div {width:70%; margin:0 auto; text-align:center; padding:40px;}
+
+/* 회원가입 */
+.signup_table {width:50%; margin:0 auto;}
+.signup_table_div {width:70%; margin:0 auto;}
+.signup_table_div input {margin:5px;}

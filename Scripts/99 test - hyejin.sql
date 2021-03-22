@@ -428,3 +428,5 @@ DELETE FROM ORDER_ADDRESS;
 UPDATE ORDER_ADDRESS SET phone1 = null WHERE id = 27;
 
 INSERT INTO ORDER_ADDRESS VALUES (ORDER_ADDRESS_seq.nextval, 'test','제목', '이름', 44512, 'askdjhasd#{address1}', 'asdjklas#{address2}', '메모', '010-6651-4452', '010-5512-5115');
+
+SELECT * FROM MALL_MILEAGE ORDER BY REGDATE desc;
