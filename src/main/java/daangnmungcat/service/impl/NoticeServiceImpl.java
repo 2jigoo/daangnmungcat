@@ -1,6 +1,7 @@
 package daangnmungcat.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,7 +65,7 @@ public class NoticeServiceImpl implements NoticeService {
 		
 		String path = UPLOAD_PATH + File.separator + notice.getId();
 		
-		if(file != null) {
+		if(!file.isEmpty()) {
 			
 			/* 업로드할 폴더 지정. 폴더가 없는 경우 생성 */
 			File dir = new File(realPath, path);
@@ -95,14 +96,79 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public int modifyNotice(Notice notice) {
-		noticeMapper.updateNotice(notice);
+	@Transactional
+	public int modifyNotice(Notice notice, MultipartFile file, File realPath, boolean isChanged) {
+		
+		// notice.noticeFile = null임
+		String path = UPLOAD_PATH + File.separator + notice.getId();
+		
+		
+		// 이미지가 변경된 경우와 삭제된 경우  (둘 다 기존 파일 삭제해야함)
+		// 없었는데 추가된 경우
+		if(isChanged == true) {
+			try {
+				Notice originNotice = get(notice.getId());
+				
+				File dir = new File(realPath, path);
+				
+				if(!dir.exists()) {
+					dir.mkdirs();
+				}
+				
+				// 이미지가 변경되거나 추가된 경우 파일 저장
+				if(!file.isEmpty()) {
+					String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+					File saveFile = new File(dir, fileName); // 위에서 지정한 폴더에 fileName 이름으로 저장
+					file.transferTo(saveFile);
+					notice.setNoticeFile(fileName);
+				} 
+				
+				log.info("notice: " + notice.toString());
+				
+				noticeMapper.updateNoticeFileName(notice); // DB에 파일명 변경
+				noticeMapper.updateNotice(notice);
+				
+				// 이미지가 삭제된 경우 디렉토리 삭제
+				if(file.isEmpty()) {
+					dir.delete();
+				}
+				
+				// 기존파일 삭제
+				if(originNotice.getNoticeFile() != null) {
+					File deleteFile = new File(dir, originNotice.getNoticeFile());
+					deleteFile.delete();
+				}
+				
+			} catch(IllegalStateException | IOException e) {
+				log.error(e.getMessage());
+			}
+		} else {
+			log.info("notice: " + notice.toString());
+			noticeMapper.updateNotice(notice);
+		}
+		
 		return notice.getId();
 	}
 
 	@Override
-	public int deleteNotice(Notice notice) {
-		return noticeMapper.deleteNotice(notice);
+	@Transactional
+	public int deleteNotice(Notice notice, File realPath) {
+		notice = get(notice.getId());
+		String imageFile = notice.getNoticeFile();
+		
+		int res = noticeMapper.deleteNotice(notice);
+		
+		if(imageFile != null) {
+			String path = UPLOAD_PATH + File.separator + notice.getId();
+			
+			File dir = new File(realPath, path);
+			File deleteFile = new File(dir, imageFile);
+			
+			deleteFile.delete();
+			dir.delete();
+		}
+		
+		return res;
 	}
 
 	

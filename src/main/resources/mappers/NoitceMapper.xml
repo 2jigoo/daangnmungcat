@@ -61,7 +61,7 @@
 				<if test="scri.searchType eq 'writer'">
 					and m.id like '%' || #{scri.keyword} || '%'
 				</if>
-				<if test="notice.noticeYn != null and (notice.noticeYn.equalsIgnoreCase('y') || notice.noticeYn.equlasIgnoreCase('n'))">
+				<if test="notice.noticeYn != null and (notice.noticeYn.equalsIgnoreCase('y') || notice.noticeYn.equalsIgnoreCase('n'))">
 					and notice_yn = #{notice.noticeYn}
 				</if>
 			   	<if test="scri.startDate != null and scri.startDate != '' and scri.endDate != null and scri.endDate != ''">
@@ -113,12 +113,23 @@
 			SELECT notice_seq.nextval FROM DUAL
 		</selectKey>
 		insert into notice(id, title, contents, regdate, notice_YN, notice_file, writer)
-		values(#{id}, #{title}, #{contents}, sysdate, #{noticeYn}, #{noticeFile}, #{writer.id})
+		values(#{id}, #{title}, #{contents}, sysdate,
+			notice_yn = 
+				<choose>
+					<when test="noticeYn != null and noticeYn.equalsIgnoreCase('y')">'y'</when>
+					<otherwise>'n'</otherwise>
+				</choose>
+			, #{noticeFile}, #{writer.id})
 	</insert>
 	
-	<update id="updateNotice" parameterType="int">
+	<update id="updateNotice" parameterType="Notice">
 		UPDATE notice
-		SET title = #{title}, contents = #{contents}, notice_YN = #{noticeyYn}, notice_file = #{noticeFile}
+		SET title = #{title}, contents = #{contents},
+			notice_yn = 
+				<choose>
+					<when test="noticeYn != null and noticeYn.equalsIgnoreCase('y')">'y'</when>
+					<otherwise>'n'</otherwise>
+				</choose>
 		WHERE id = #{id}
 	</update>
 	

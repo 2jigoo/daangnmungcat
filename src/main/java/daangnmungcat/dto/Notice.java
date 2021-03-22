@@ -36,4 +36,8 @@ public class Notice {
 	
 	private Member writer;
 	
+	public Notice(int noticeId) {
+		this.id = noticeId;
+	}
+	
 }

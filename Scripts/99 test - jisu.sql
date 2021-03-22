@@ -331,3 +331,7 @@ SELECT *
 	SELECT sale_id, thum_name FROM joongo_image WHERE thum_name IS not null;
 	
 SELECT * FROM MALL_PDT_VIEW mpv  ;
+
+SELECT * FROM notice;
+DELETE FROM notice;
+

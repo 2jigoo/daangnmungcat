@@ -22,8 +22,8 @@ public interface NoticeService {
 	Notice get(int id);
 	
 	int registNotice(Notice notice, MultipartFile file, File realPath);
-	int modifyNotice(Notice notice);
+	int modifyNotice(Notice notice, MultipartFile file, File realPath, boolean isChanged);
 	int modifyNoticeFileName(Notice notice);
-	int deleteNotice(Notice notice);
+	int deleteNotice(Notice notice, File realPath);
 	
 }

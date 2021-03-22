@@ -94,3 +94,57 @@
 .table.padding-sm tbody td {padding: .325rem;}
 .table.middle td {vertical-align: middle;}
 
+
+/* 공지사항 */
+#uploadImage {
+	cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid lightgray;
+}
+
+.input-file-btn {
+	height: auto;
+	padding: 6px;
+	background-color:mediumturquoise;
+	border-radius: 4px;
+	color: white;
+	cursor: pointer;
+	text-align: center;
+}
+
+.thumb-box {
+	position: relative;
+}
+
+.image-null {
+	display: none;
+}
+
+.image-uploaded {
+	width: 200px;
+}
+
+.image-delete-btn {
+	display: none;
+	background: url(/resources/images/delete_image.svg);
+	background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 32px;
+    height: 32px;
+}
+
+.image-delete-btn-span {
+	position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
