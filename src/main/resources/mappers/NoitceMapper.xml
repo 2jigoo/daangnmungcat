@@ -3,9 +3,23 @@
 <mapper namespace="daangnmungcat.mapper.NoticeMapper">
 
 	<sql id="selectNoticeSQL">
-		SELECT
-			id, title, contents, regdate, notice_YN, notice_file, writer as writer_id
-		FROM notice 
+		SELECT *
+		FROM (
+			SELECT
+				n.id,
+				title,
+				contents,
+				n.regdate,
+				notice_YN,
+				notice_file,
+				writer AS writer_id,
+				m.nickname AS writer_nickname,
+				hits,
+				lag(n.id, 1) over(order by n.id) prev,
+				lead(n.id, 1) over(order by n.id) next
+			FROM notice n
+				LEFT OUTER JOIN member m ON (n.writer = m.id)
+		)
 	</sql>
 	
 	<resultMap type="Notice" id="noticeResult">
@@ -15,6 +29,9 @@
 		<result column="regdate" property="regdate"/>
 		<result column="notice_YN" property="noticeYn"/>
 		<result column="notice_file" property="noticeFile"/>
+		<result column="hits" property="hits"/>
+		<result column="prev" property="prev"/>
+		<result column="next" property="next"/>
 		<association column="writer" property="writer" columnPrefix="writer_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult"/>
 	</resultMap>
 	
@@ -22,7 +39,20 @@
 	<select id="selectNoticeByAllPage" resultMap="noticeResult">
 		SELECT a.*
 		FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT id, title, contents, regdate, notice_YN, notice_file FROM notice ORDER BY notice_yn desc) b) a
+	  		FROM (
+	  			SELECT
+	  				n.id,
+	  				title,
+	  				contents,
+	  				n.regdate,
+	  				notice_YN,
+	  				notice_file,
+	  				writer AS writer_id,
+	  				m.nickname AS writer_nickname,
+	  				hits
+  				FROM notice n
+  					LEFT OUTER JOIN member m ON (n.writer = m.id)
+  				ORDER BY notice_yn desc) b) a
 		WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
 		ORDER BY a.rnum
 	</select>
@@ -42,10 +72,8 @@
 	
 	
 	<select id="listCount" parameterType="map" resultType="int">
-		SELECT count(a.id)
-		FROM (SELECT rownum AS rnum, b.*
-			FROM (SELECT rownum, id, title, contents, regdate, notice_YN, notice_file FROM notice
-		ORDER BY id desc) b) a
+		SELECT count(*)
+		FROM notice
 	</select>
 	
 	
@@ -114,11 +142,10 @@
 		</selectKey>
 		insert into notice(id, title, contents, regdate, notice_YN, notice_file, writer)
 		values(#{id}, #{title}, #{contents}, sysdate,
-			notice_yn = 
-				<choose>
-					<when test="noticeYn != null and noticeYn.equalsIgnoreCase('y')">'y'</when>
-					<otherwise>'n'</otherwise>
-				</choose>
+			<choose>
+				<when test="noticeYn != null and noticeYn.equalsIgnoreCase('y')">'y'</when>
+				<otherwise>'n'</otherwise>
+			</choose>
 			, #{noticeFile}, #{writer.id})
 	</insert>
 	
@@ -144,4 +171,19 @@
 		WHERE id = #{id}
 	</delete>
 
+
+	<select id="selectSimpleNoticeByNo" parameterType="int" resultMap="noticeResult">
+		SELECT
+			n.id, title, notice_yn, writer as writer_id, m.nickname as writer_nickname, n.regdate, hits
+		FROM notice n
+			LEFT OUTER JOIN member m  ON (n.writer = m.id)
+		WHERE n.id = #{id}
+	</select>
+	
+	<update id="addHits" parameterType="int">
+		UPDATE
+			notice
+		SET hits = hits + 1
+		WHERE id = #{id}
+	</update>
 </mapper>

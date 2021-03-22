@@ -35,6 +35,10 @@ public class Notice {
 	private LocalDateTime regdate;
 	
 	private Member writer;
+	private int hits;
+	
+	private int prev;
+	private int next;
 	
 	public Notice(int noticeId) {
 		this.id = noticeId;

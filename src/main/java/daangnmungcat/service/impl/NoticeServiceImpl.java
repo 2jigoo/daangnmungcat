@@ -58,6 +58,11 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
+	public Notice getSimpleInfo(int id) {
+		return noticeMapper.selectSimpleNoticeByNo(id);
+	}
+	
+	@Override
 	@Transactional
 	public int registNotice(Notice notice, MultipartFile file, File realPath) {
 		
@@ -175,5 +180,10 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public int modifyNoticeFileName(Notice notice) {
 		return noticeMapper.updateNoticeFileName(notice);
+	}
+	
+	@Override
+	public int addHits(int id) {
+		return noticeMapper.addHits(id);
 	}
 }

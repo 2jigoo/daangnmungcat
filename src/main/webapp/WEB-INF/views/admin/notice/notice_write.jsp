@@ -33,10 +33,10 @@
 			processData : false,
 			cache : false,
 			success : function(id) {
-				/* if(confirm("작성 완료. 확인하시겠습니까?") == true) {
-					location.href = "/notice/"
-				} */
-				console.log("성공! " + id);
+				if(confirm("작성 완료. 확인하시겠습니까?") == true) {
+			        var win = window.open("/notice/view?id="+id, '_blank');
+			        win.focus();
+				}
 				location.href = "/admin/notice/list";
 			},
 			error : function(e) {
@@ -67,7 +67,7 @@
 	</div>
 	<!-- card-body -->
 	<div class="card-body p-5">
-		<form autocomplete="off" action="/admin/notice/write" method="post" name="noticeForm" id="noticeForm" enctype="multipart/form-data">
+		<form autocomplete="off" action="/admin/notice" method="post" name="noticeForm" id="noticeForm" enctype="multipart/form-data">
 			<input type="hidden" name="guestId" value="">
 			<input type="hidden" name="bookNo" value="">
 			<div class="form-group row">

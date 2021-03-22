@@ -333,5 +333,37 @@ SELECT *
 SELECT * FROM MALL_PDT_VIEW mpv  ;
 
 SELECT * FROM notice;
-DELETE FROM notice;
 
+SELECT
+	id,
+	lag(id, 1) over(order by id) prev,
+	lead(id, 1) over(order by id) NEXT
+from notice;
+
+
+
+SELECT *
+FROM (
+	SELECT
+		n.id,
+		title,
+		contents,
+		n.regdate,
+		notice_YN,
+		notice_file,
+		writer AS writer_id,
+		m.nickname AS writer_nickname,
+		hits,
+		lag(n.id, 1) over(order by n.id) prev,
+		lead(n.id, 1) over(order by n.id) next
+	FROM notice n
+		LEFT OUTER JOIN member m ON (n.writer = m.id)
+)
+WHERE id = 64;
+
+
+SELECT
+			n.id, title, notice_yn, writer as writer_id, m.id as writer_nickname, n.regdate, hits
+		FROM notice n
+			LEFT OUTER JOIN member m ON (writer = m.id)
+		WHERE n.id = 63;
