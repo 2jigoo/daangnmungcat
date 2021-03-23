@@ -277,8 +277,7 @@ public class MypageController {
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, 
-			@Nullable @RequestParam String id) {
+	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, @Nullable @RequestParam(name = "id") String id) {
 		ModelAndView mv = new ModelAndView();
 		
 		Member member = service.selectMemberById(loginUser.getId());

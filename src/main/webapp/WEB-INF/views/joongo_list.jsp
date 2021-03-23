@@ -218,11 +218,12 @@ $(function(){
 				<li><a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${list.id}">
 					<div class="img">
 						<c:if test="${empty list.thumImg}">
-							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg"></div>
+							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
 						</c:if>
 						<c:if test="${not empty list.thumImg}">
-							<img src="<%=request.getContextPath() %>/resources/${list.thumImg}"></div>
+							<img src="<%=request.getContextPath() %>/resources/${list.thumImg}">
 						</c:if>
+					</div>
 					<div class="txt">
 						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>

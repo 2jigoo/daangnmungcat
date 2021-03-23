@@ -21,7 +21,15 @@ $(function(){
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="sale">
 				<li><a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${sale.id}">
-					<div class="img"><img src="<c:url value="/resources/images/mProduct_img1.png" />"></div>
+					<div class="img">
+						<c:if test="${empty sale.thumImg}">
+							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
+						</c:if>
+						<c:if test="${not empty sale.thumImg}">
+							<img src="<%=request.getContextPath() %>/resources/${list.thumImg}">
+						</c:if>
+						<%-- <img src="<c:url value="/resources/images/mProduct_img1.png" />"> --%>
+					</div>
 					<div class="txt">
 						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
 						<p class="subject">${sale.title}</p>

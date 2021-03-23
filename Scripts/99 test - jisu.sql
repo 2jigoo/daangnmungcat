@@ -362,8 +362,35 @@ FROM (
 WHERE id = 64;
 
 
+SELECT * FROM JOONGO_REVIEW jr ;
+SELECT * FROM SALE_REVIEW_VIEW srv ;
+
+SELECT DISTINCT s.id AS id, m.id AS MEM_ID, m.nickname AS MEM_NICKNAME, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT , THUM_NAME 
+	FROM JOONGO_SALE s 
+	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
+	LEFT JOIN (
+		SELECT *
+		FROM JOONGO_IMAGE
+		WHERE THUM_NAME IS NOT null
+	) ji ON s.ID = ji.SALE_ID
+	JOIN MEMBER m ON s.MEM_ID = m.id;
+	
+
 SELECT
-			n.id, title, notice_yn, writer as writer_id, m.id as writer_nickname, n.regdate, hits
-		FROM notice n
-			LEFT OUTER JOIN member m ON (writer = m.id)
-		WHERE n.id = 63;
+	jr.ID,
+	jr.SALE_ID,
+	js.MEM_ID AS SALE_MEM_ID,
+	jr.BUY_MEM_ID,
+	mv.NICKNAME AS BUY_MEM_NICKNAME,
+	mv.PROFILE_PIC AS BUY_MEM_PROFILE_PIC,
+	mv.DONGNE1 AS BUY_MEM_DONGNE1_NAME,
+	mv.DONGNE2 AS BUY_MEM_DONGNE2_NAME,
+	jr.RATING,
+	jr.CONTENT,
+	jr.REGDATE
+ FROM JOONGO_REVIEW jr
+  	LEFT OUTER JOIN JOONGO_SALE js ON jr.SALE_ID = js.ID
+ 	LEFT OUTER JOIN MEMBER_VIEW mv ON jr.BUY_MEM_ID = mv.ID;
+

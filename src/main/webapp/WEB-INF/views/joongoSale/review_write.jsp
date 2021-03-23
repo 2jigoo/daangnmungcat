@@ -63,7 +63,7 @@ $(function(){
          beforeSend : function(xhr){
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
          },
-         success:function(){
+         success:function(data){
             alert("리뷰가 등록됐습니다")
             window.location = "/";
          },
