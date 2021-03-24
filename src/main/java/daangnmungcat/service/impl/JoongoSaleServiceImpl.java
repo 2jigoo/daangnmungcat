@@ -307,6 +307,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 			throw new AlreadySoldOut("이미 거래가 완료된 중고판매글입니다.");
 		}
 		sale.setBuyMember(buyMember);
+		sale.setSaleState(SaleState.SOLD_OUT);
 		int res = joongoListMapper.updateSold(sale);
 		return res == 1 ? sale.getId() : 0;
 	}

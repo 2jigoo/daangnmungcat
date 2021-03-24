@@ -5,23 +5,27 @@ import java.util.List;
 import daangnmungcat.dto.SaleReview;
 
 public interface JoongoSaleReviewService {
-	List<SaleReview> selectJoongoReviewByAll();
+	List<SaleReview> getAllList();
 	
-	List<SaleReview> selectJoongoReviewBySaleMemId(String memId);
+	List<SaleReview> getReviewListWrittenBy(String memId);
 	
-	List<SaleReview> selectMypageJoongoReviewBySaleMemId(String memId);
+	List<SaleReview> getReviewListOnMe(String memId);
 	
-	SaleReview selectJoongoReviewBySaleId(int saleId);
+	List<SaleReview> getBuyersReviewOnMe(String memId);
 	
-	SaleReview selectJoongoReviewById(int id);
+	List<SaleReview> getSellersReviewOnMe(String memId);
 	
-	int insertJoongoSaleReview(SaleReview review);
+	SaleReview getReviewBySaleId(int saleId, String memId);
 	
-	int updateJoongoSaleReview(SaleReview review);
+	SaleReview getReviewByReviewId(int id);
 	
-	int deleteJoongoSaleReview(int id);
+	int writeReview(SaleReview review);
 	
-	int countMemId(String memId);;
+	int modifyReview(SaleReview review);
 	
-	int countBuyMemId(String memId);
+	int deleteReview(int id);
+	
+	int countReviewListOfMySales(String memId);;
+	
+	int countReviewListOfMyPurchase(String memId);
 }
