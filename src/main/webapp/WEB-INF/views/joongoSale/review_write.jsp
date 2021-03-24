@@ -45,7 +45,7 @@ $(function(){
 				id : $("input[name='sale']").val(),
 			},
 			buyMember : {
-				id : $("input[name='buyMember']").val(),
+				id : $("input[name='writer.id']").val(),
 			},
 			rating : star_num,
 			content : $("textarea[name='content']").val(),
@@ -63,7 +63,7 @@ $(function(){
          beforeSend : function(xhr){
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
          },
-         success:function(){
+         success:function(data){
             alert("리뷰가 등록됐습니다")
             window.location = "/";
          },
@@ -84,7 +84,7 @@ $(function(){
 	<div id="pageCont" class="s-inner">
 		<div class="joongo_review">
 			<input type="hidden" name="sale" value="${sale.id}">
-			<input type="hidden" name="buyMember" value="${sale.buyMember.id}">
+			<input type="hidden" name="writer.id" value="${sale.writer.id}">
 			<ul>
 				<li>
 					<p>구매상품</p>

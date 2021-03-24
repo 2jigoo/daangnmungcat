@@ -362,8 +362,43 @@ FROM (
 WHERE id = 64;
 
 
+SELECT * FROM JOONGO_REVIEW jr ;
+SELECT * FROM SALE_REVIEW_VIEW srv ;
+
+SELECT DISTINCT s.id AS id, m.id AS MEM_ID, m.nickname AS MEM_NICKNAME, dv.D1NAME as dongne1_name, dv.D2NAME as dongne2_name, grade, profile_pic, 
+	DOG_CATE, CAT_CATE, TITLE, CONTENT,PRICE, s.REGDATE AS regdate, 
+	REDATE, SALE_STATE, BUY_MEM_ID, HITS , CHAT_COUNT, HEART_COUNT , THUM_NAME 
+	FROM JOONGO_SALE s 
+	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
+	LEFT JOIN (
+		SELECT *
+		FROM JOONGO_IMAGE
+		WHERE THUM_NAME IS NOT null
+	) ji ON s.ID = ji.SALE_ID
+	JOIN MEMBER m ON s.MEM_ID = m.id;
+	
+
+CREATE OR REPLACE VIEW sale_review_view AS
 SELECT
-			n.id, title, notice_yn, writer as writer_id, m.id as writer_nickname, n.regdate, hits
-		FROM notice n
-			LEFT OUTER JOIN member m ON (writer = m.id)
-		WHERE n.id = 63;
+	r.ID,
+	r.SALE_ID,
+	s.MEM_ID AS SALE_MEM_ID,
+	s.BUY_MEM_ID AS BUY_MEM_ID,
+	r.WRITER AS WRITER_ID,
+	mv.NICKNAME AS WRITER_NICKNAME,
+	mv.PROFILE_PIC AS WRITER_PROFILE_PIC,
+	mv.DONGNE1 AS WRITER_DONGNE1_NAME,
+	mv.DONGNE2 AS WRITER_DONGNE2_NAME,
+	r.RATING,
+	r.CONTENT,
+	r.REGDATE
+ FROM JOONGO_REVIEW r
+  	LEFT OUTER JOIN JOONGO_SALE s ON r.SALE_ID = s.ID
+ 	LEFT OUTER JOIN MEMBER_VIEW mv ON r.WRITER = mv.ID;
+
+SELECT * FROM SALE_REVIEW_VIEW srv
+WHERE (SALE_MEM_ID = 'chattest1' OR BUY_MEM_ID = 'chattest1')
+	and writer_id != 'chattest1'; 
+
+ SELECT * FROM sale_review_view WHERE sale_id = 42;
+SELECT * FROM JOONGO_SALE WHERE id = 42;

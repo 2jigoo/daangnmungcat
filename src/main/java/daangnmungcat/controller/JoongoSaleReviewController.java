@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleReview;
@@ -35,9 +36,9 @@ public class JoongoSaleReviewController {
 	@GetMapping("/joongo/review/list")
 	public String listReive(Model model, @RequestParam @Nullable String memId) {
 		if (memId != null) {
-			List<SaleReview> list = service.selectJoongoReviewBySaleMemId(memId);
+			List<SaleReview> list = service.getBuyersReviewOnMe(memId);
 			Member saleMember = memberService.selectMemberById(memId);
-			int countMemId = service.countMemId(memId);
+			int countMemId = service.countReviewListOfMySales(memId);
 			
 			model.addAttribute("list", list);
 			model.addAttribute("saleMember", saleMember);
@@ -49,21 +50,21 @@ public class JoongoSaleReviewController {
 	@GetMapping("/mypage/joongo/review/list")
 	public String mypageListReive(Model model, @RequestParam @Nullable String memId) {
 		if (!memId.equals("")) {
-			List<SaleReview> list = service.selectMypageJoongoReviewBySaleMemId(memId);
-			Member saleMember = memberService.selectMemberById(memId);
-			int countMemId = service.countBuyMemId(memId);
+			Member member = memberService.selectMemberById(memId);
+			List<SaleReview> reviewList = service.getReviewListOnMe(memId);
+			int countReviewList = reviewList.size();
 			
-			model.addAttribute("list", list);
-			model.addAttribute("saleMember", saleMember);
-			model.addAttribute("countMemId", countMemId);
+			model.addAttribute("member", member);
+			model.addAttribute("reviewList", reviewList);
+			model.addAttribute("countReviewList", countReviewList);
 		}
 		return "joongoSale/review_list";
 	}
 	
 	@GetMapping("/joongo/review/write")
-	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId) {
+	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId, AuthInfo loginUser) {
 		if (saleId != null) {
-			SaleReview review = service.selectJoongoReviewBySaleId(Integer.parseInt(saleId));
+			SaleReview review = service.getReviewBySaleId(Integer.parseInt(saleId), loginUser.getId());
 			model.addAttribute("review", review);
 			
 			Sale sale = saleService.getSaleById(Integer.parseInt(saleId));
@@ -78,7 +79,7 @@ public class JoongoSaleReviewController {
 		try {
 			System.out.println("리뷰 쓰기");
 			System.out.println(review);
-			return ResponseEntity.ok(service.insertJoongoSaleReview(review));
+			return ResponseEntity.ok(service.writeReview(review));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -88,7 +89,7 @@ public class JoongoSaleReviewController {
 	@GetMapping("/joongo/review/update")
 	public String updateViewJoongoReview(Model model, @RequestParam @Nullable String id) {
 		if (id != null) {
-			SaleReview review = service.selectJoongoReviewById(Integer.parseInt(id));
+			SaleReview review = service.getReviewByReviewId(Integer.parseInt(id));
 			model.addAttribute("review", review);
 			
 			Sale sale = saleService.getSaleById(review.getSale().getId());
@@ -101,7 +102,7 @@ public class JoongoSaleReviewController {
 	@PostMapping("/joongo/review/update")
 	public ResponseEntity<Object> updateJoongoReview(@RequestBody SaleReview review) {
 		try {
-			return ResponseEntity.ok(service.updateJoongoSaleReview(review));
+			return ResponseEntity.ok(service.modifyReview(review));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
@@ -110,7 +111,7 @@ public class JoongoSaleReviewController {
 	@PostMapping("/joongo/review/delete")
 	public ResponseEntity<Object> deleteJoongoReview(@RequestBody SaleReview review) {
 		try {
-			return ResponseEntity.ok(service.deleteJoongoSaleReview(review.getId()));
+			return ResponseEntity.ok(service.deleteReview(review.getId()));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}

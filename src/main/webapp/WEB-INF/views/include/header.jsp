@@ -143,7 +143,7 @@
 			
 			<sec:authorize access="isAuthenticated()">
 				<ul class="h_util">
-				<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
+				<li><a href="/profile/${loginUser.id }">${loginUser.nickname}님 안녕하세요.</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 				</ul>
@@ -174,7 +174,7 @@
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
 			<ul>
-				<li><a href="#">${loginUser.getId()}님</a></li>
+				<li><a href="#">${loginUser.id}님</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 			</ul>

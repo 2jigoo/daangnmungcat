@@ -94,8 +94,10 @@
 					dataType: "json",
 					success: function(data) {
 						if(memberId == "${chat.buyer.id}") {
-							if(confirm("지금 바로 거래 후기를 남기시겠습니까?") == true) {
+							if(confirm("거래가 완료되었습니다! 지금 바로 거래 후기를 남기시겠습니까?") == true) {
 								location.href = "/joongo/review/write?saleId=" + data;
+							} else {
+								location.reload();
 							}
 						} else {
 							alert("거래가 완료되었습니다!");
@@ -167,6 +169,7 @@
 								<button type="button" id="sold-out-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">거래완료</button>
 							</c:when>
 							<c:otherwise>
+							reviewed ${reviewed }
 								<c:if test="${reviewed ne true }">
 									<button type="button" id="write-review-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">
 										거래 후기
