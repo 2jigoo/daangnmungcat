@@ -2,34 +2,54 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <script>
-$(function(){
-	$(".review_delete").click(function(){
-		if (confirm("정말 삭제하시겠습니까?") == true){
-			var deleteReview = {
-		    	id : $(this).data("id"),
-		    }
+	var pathname;
+	
+	$(function(){
+		$(document).ready(function(){
+			setFilteringPaging();
+		});
+		
+		$(".review_delete").click(function(){
+			if (confirm("정말 삭제하시겠습니까?") == false) return;
+			
+			var deleteReview = {id : $(this).data("id")};
 			
 			$.ajax({
-	         type: "post",
-	         url : "/joongo/review/delete",
-	         contentType : "application/json; charset=utf-8",
-	         cache : false,
-	         dataType : "json",
-	         data : JSON.stringify(deleteReview),
-	         beforeSend : function(xhr){
-	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-	         },
-	         success:function(){
-	            alert("리뷰가 삭제됐습니다.");
-	            location.reload();
-	         },
-	         error: function(request,status,error){
-	            alert('에러' + request.status+request.responseText+error);
-	         }
-	      })
-		}
+		         type: "post",
+		         url : "/joongo/review/delete",
+		         contentType : "application/json; charset=utf-8",
+		         cache : false,
+		         dataType : "json",
+		         data : JSON.stringify(deleteReview),
+		         beforeSend : function(xhr){
+		            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		         },
+		         success:function(){
+		            alert("리뷰가 삭제됐습니다.");
+		            location.reload();
+		         },
+		         error: function(request,status,error){
+		            alert('에러' + request.status+request.responseText+error);
+				}
+			})
+		});
+		
+		$("select[name=writer]").change(function() {
+			var reviewForm = document.reviewForm;
+			reviewForm.target = pathname;
+			reviewForm.submit();
+		});
+		
 	})
-})
+	
+	function setFilteringPaging() {
+		var thisUrl = new URL(window.location.href);
+		pathname = thisUrl.pathname;
+		
+		var writer = thisUrl.searchParams.get("writer");
+		$("select[name=writer]").val(writer);
+	}
+	
 </script>
 
 <div id="subContent">
@@ -57,51 +77,20 @@ $(function(){
 				</p>
 			</div>
 		</div>
-		<div class="profile_section">
-			<div class="title">판매상품<span class="more_btn">더 보기</span></div>
-			<ul class="product_list">
-				<c:forEach items="${saleList}" var="sale">
-				<c:choose>
-					<c:when test="${sale.saleState.code eq 'SOLD_OUT'}">
-						<li class="SOLD_OUT">
-					</c:when>
-					<c:otherwise>
-						<li>
-					</c:otherwise>
-				</c:choose>
-				<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${sale.id}">
-					<div class="img">
-						<c:if test="${empty sale.thumImg}">
-							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
-						</c:if>
-						<c:if test="${not empty sale.thumImg}">
-							<img src="<%=request.getContextPath() %>/resources/${sale.thumImg}">
-						</c:if>
-					</div>
-					<div class="txt">
-						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
-						<p class="subject">${sale.title}</p>
-						<p class="price">
-							<span class="${sale.saleState.code }">${sale.saleState.label}</span>
-							<span>
-								<c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
-								<c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
-							</span>
-						</p>
-						<ul>
-							<li class="heart">${sale.heartCount}</li>
-							<li class="chat">${sale.chatCount}</li>
-						</ul>
-					</div>
-				</a></li>
-				</c:forEach>
-				<c:if test="${empty saleList}">
-					<li class="no_date">등록된 글이 없습니다.</li>
-				</c:if>
-			</ul>
+		<div class="profile_menu">
+			<a href="/profile/${member.id }/sale"><div class="menu">판매상품</div></a><a href="/profile/${member.id }/review"><div class="menu selected">받은 거래후기</div></a>
 		</div>
 		<div class="profile_section">
-			<div class="title">받은 거래 후기<span class="more_btn">더 보기</span></div>
+			<form name="reviewForm" method="get">
+				<select name="writer">
+					<option value="all" selected>전체</option>
+					<option value="seller">판매자 후기</option>
+					<option value="buyer">구매자 후기</option>
+				</select>
+			</form>
+			<div class="title">
+				후기 ${reviewList.size() }
+			</div>
 			<ul class="joongo_review_list">
 				<c:choose>
 					<c:when test="${empty reviewList}">

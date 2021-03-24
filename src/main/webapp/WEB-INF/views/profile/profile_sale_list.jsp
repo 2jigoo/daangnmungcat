@@ -3,13 +3,16 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <script>
 $(function(){
+	$(document).ready(function(){
+		setFilteringPaging();
+	});
+	
 	$(".review_delete").click(function(){
-		if (confirm("정말 삭제하시겠습니까?") == true){
-			var deleteReview = {
-		    	id : $(this).data("id"),
-		    }
-			
-			$.ajax({
+		if (confirm("정말 삭제하시겠습니까?") == false) return;
+		
+		var deleteReview = {id : $(this).data("id")};
+		
+		$.ajax({
 	         type: "post",
 	         url : "/joongo/review/delete",
 	         contentType : "application/json; charset=utf-8",
@@ -25,11 +28,25 @@ $(function(){
 	         },
 	         error: function(request,status,error){
 	            alert('에러' + request.status+request.responseText+error);
-	         }
-	      })
-		}
-	})
+			}
+		})
+	});
+	
+	$("select[name=state]").change(function() {
+		var saleForm = document.saleForm;
+		saleForm.target = pathname;
+		saleForm.submit();
+	});
+	
 })
+	
+	function setFilteringPaging() {
+		var thisUrl = new URL(window.location.href);
+		pathname = thisUrl.pathname;
+		
+		var state = thisUrl.searchParams.get("state");
+		$("select[name=state]").val(state);
+	}
 </script>
 
 <div id="subContent">
@@ -57,8 +74,19 @@ $(function(){
 				</p>
 			</div>
 		</div>
+		<div class="profile_menu">
+			<a href="/profile/${member.id }/sale"><div class="menu selected">판매상품</div></a><a href="/profile/${member.id }/review"><div class="menu">받은 거래후기</div></a>
+			<span class="back_btn">뒤로가기</span>
+		</div>
 		<div class="profile_section">
-			<div class="title">판매상품<span class="more_btn">더 보기</span></div>
+			<form name="saleForm" method="get">
+				<select name="state">
+					<option value="" selected>전체</option>
+					<option value="ON_SALE">거래중</option>
+					<option value="SOLD_OUT">거래완료</option>
+				</select>
+			</form>
+			<div class="title">판매상품</div>
 			<ul class="product_list">
 				<c:forEach items="${saleList}" var="sale">
 				<c:choose>
@@ -98,63 +126,6 @@ $(function(){
 				<c:if test="${empty saleList}">
 					<li class="no_date">등록된 글이 없습니다.</li>
 				</c:if>
-			</ul>
-		</div>
-		<div class="profile_section">
-			<div class="title">받은 거래 후기<span class="more_btn">더 보기</span></div>
-			<ul class="joongo_review_list">
-				<c:choose>
-					<c:when test="${empty reviewList}">
-						<li class="no_board">
-	               			등록된 후기가 없습니다.
-	          			</li>
-					</c:when>
-					<c:otherwise>
-						<c:forEach items="${reviewList}" var="review">
-							<li>
-								<div class="user">
-								   <p class="img">
-								      <c:if test="${empty review.writer.profilePic}">
-								         <img alt="기본프로필" src="https://d1unjqcospf8gs.cloudfront.net/assets/users/default_profile_80-7e50c459a71e0e88c474406a45bbbdce8a3bf2ed4f2efcae59a064e39ea9ff30.png">
-								      </c:if>
-								      <c:if test="${not empty review.writer.profilePic}">
-								         <img src="/resources/${review.writer.profilePic}">
-								      </c:if>
-								   </p>
-								   <p class="name">${review.writer.nickname }<span>${review.writer.dongne1.name} ${review.writer.dongne2.name}</span></p>
-								</div>
-								<div class="content_box">
-									<div class="star_box star_box_data" data-star="${review.rating}">
-										<span class="star star_left"></span>
-										<span class="star star_right"></span>
-										
-										<span class="star star_left"></span>
-										<span class="star star_right"></span>
-										
-										<span class="star star_left"></span>
-										<span class="star star_right"></span>
-										
-										<span class="star star_left"></span>
-										<span class="star star_right"></span>
-										
-										<span class="star star_left"></span>
-										<span class="star star_right"></span>
-									</div>
-									<pre class="content">${review.content }</pre>
-									<div class="info">
-									   <p class="date"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/> </p>
-									   <c:if test="${loginUser.id == review.writer.id }">
-									   <ul>
-									      <li><a href="/joongo/review/update?id=${review.id}">수정</a></li>
-									      <li><a class="review_delete" data-id="${review.id}">삭제</a></li>
-									   </ul>
-									   </c:if>
-									</div>
-								</div>
-							</li>
-							</c:forEach>
-					</c:otherwise>
-				</c:choose>
 			</ul>
 		</div>
 	</div>
