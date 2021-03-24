@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>아이디 중복체크</title>
+<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 <script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 <script>
 
@@ -45,15 +46,15 @@ function confirm(){
 </script>
 </head>
 <body>
-    <div style="margin-top: 20px">  
+    <div class="id_check_div">  
   	<% String status = request.getParameter("status"); %>
   	<% if(status.equals("1")){ %>
-  		이미 사용중인 아이디입니다.
+  		<p class="id_check_p">이미 사용중인 아이디입니다.</p>
   		<input type="text" id="re_id">
-  		<input type="button" value="중복확인" onclick="re_check()">
+  		<input type="button" value="중복확인" onclick="re_check()" class="id_check_btn">
   	<% } else { %>
-  		사용가능한 아이디입니다.
-  		<input type="button" value="확인" onclick="confirm()">
+  		<p class="id_check_p">사용가능한 아이디입니다.</p>
+  		<input type="button" value="확인" onclick="confirm()" class="id_check_btn">
   	<% }%>
   	
     </div>

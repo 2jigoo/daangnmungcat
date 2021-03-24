@@ -144,7 +144,7 @@ function window_close(){
 </script>
 <style>
 .wrapper {margin:0 auto; padding:30px; margin-bottom:50px;}
-.wrapper input{font-family:'S-CoreDream'; margin:2px 2px;}
+.wrapper input{font-family:'S-CoreDream'; margin:3px 3px;}
 </style>
 </head>
 
@@ -173,7 +173,7 @@ function window_close(){
 		<td><input type="text" id="addr_phone1"></td>
 	</tr>
 	<tr>
-		<td><span class="asterisk">* </span>폰번호</td>
+		<td><span class="asterisk">* </span>휴대폰</td>
 		<td><input type="text" id="addr_phone2"></td>
 	</tr>
 	<tr>

@@ -218,7 +218,7 @@ $(document).ready(function(){
 							
 						<c:if test="${od.partcnt > 1}">
             				<td class="gubun final_price">
-            				<input type="hidden" id="order_id" value="${order.id}"><br>
+            					<input type="hidden" id="order_id" value="${order.id}">
             					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>
@@ -240,7 +240,7 @@ $(document).ready(function(){
 						
 						<c:if test="${od.partcnt == 1}">
             				<td class="final_price">
-            				<input type="hidden" id="order_id" value="${order.id}"><br>
+            					<input type="hidden" id="order_id" value="${order.id}">
 	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />	
 	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
 	            				<fmt:formatNumber value="${order.finalPrice}"/>

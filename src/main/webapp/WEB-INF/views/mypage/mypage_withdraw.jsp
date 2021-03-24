@@ -60,7 +60,7 @@ $(document).ready(function(){
 			<table id="withdraw_table">
 				<tr>
 					<td><span style="margin-left:150px;">비밀번호</span></td> 
-					<td class="tl"><input type="text" id="w_pwd" style="width:200px;"></td>
+					<td class="tl"><input type="password" id="w_pwd" style="width:200px;"></td>
 				</tr>
 			</table>
 			

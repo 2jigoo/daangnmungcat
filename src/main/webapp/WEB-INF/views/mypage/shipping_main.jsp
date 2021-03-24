@@ -22,8 +22,8 @@ $(document).ready(function(){
 				sCont += '<td>' + list[i].name + '</td>';
 				sCont += '<td>(' + list[i].zipcode +') <br>' + list[i].address1 + ', ' +  list[i].address2 + '<br> 배송메모 : ' + list[i].memo + '</td>';
 				sCont += '<td>전화번호 : ' + list[i].phone1 + '<br>휴대폰 : ' + list[i].phone2 +'</td>';
-				sCont += '<td><input type="button" value="수정" id="update_addr" class="pre_order_btn2" addrId=' + list[i].id;
-				sCont += '> <input type="button" value="삭제" id="delete_addr" class="pre_order_btn2" addrId=' + list[i].id + '></td>';
+				sCont += '<td><input type="button" value="수정" id="update_addr" class="pre_order_btn2" style="width:50px;" addrId=' + list[i].id;
+				sCont += '> <input type="button" value="삭제" id="delete_addr" class="pre_order_btn2" style="width:50px;" addrId=' + list[i].id + '></td>';
 				sCont += '</tr>';
 			}
 			$("#mypage_addr_main").append(sCont);

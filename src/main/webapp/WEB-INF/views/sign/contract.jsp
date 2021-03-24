@@ -23,7 +23,7 @@ function go_next() {
 	
 	  if ($('input[name=ok1]').is(":checked") == true && $('input[name=ok2]').is(":checked") == true ) {
 		  console.log('둘다체크')
-		  window.location.href= '/signup';
+		  window.location.href= '/sign/form';
 	  } else if ($('input[name=ok1]').is(":checked") == false || $('input[name=ok2]').is(":checked") == false) {
 	    alert('약관에 모두 동의하셔야만 합니다.');
 	  }
@@ -40,14 +40,14 @@ function go_next() {
 	<div class="step3">03.가입완료</div>
 </div>
 
-<div class="contract_div" style="margin-top:20px;">
+<div class="contract_div">
     
-	<div style="width:70%; text-align:left; margin-bottom:15px;">
+	<div style="width:70%; text-align:left; ">
 	
 		<input type="checkbox" id="all" name="all">
     	<label for="all" class="all_b"></label>
     	<label for="all" class="all_c">당근멍캣의 모든 약관을 확인하고 전체 동의합니다.</label>
-		<br>
+		<div style="margin-bottom:10px;"></div>
 		<input type="checkbox" id="ok1" name="ok1">
     	<label for="ok1" class="all_b"></label>
     	<label for="ok1" class="all_c"><span style="color:#ff7e15; font-weight:500">(필수)</span> 이용약관 <a href="/service/terms" class="a">전체보기</a></label>

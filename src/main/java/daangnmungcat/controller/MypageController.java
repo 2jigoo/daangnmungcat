@@ -34,9 +34,11 @@ import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
@@ -64,6 +66,9 @@ public class MypageController {
 	
 	@Autowired
 	private MileageService mileService;
+	
+	@Autowired
+	private JoongoSaleService joongoService;;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -381,6 +386,25 @@ public class MypageController {
 		
 		return mv;
 		
+	}
+	
+	@GetMapping("/mypage/mypage_main")
+	public ModelAndView myPage(AuthInfo loginUser) {
+		
+		Member member = service.selectMemberById(loginUser.getId());
+		int mileage = mileService.getMileage(member.getId());
+		
+		List<Sale> sale = joongoService.getListByMemID(member.getId());
+		int cnt = sale.size();
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("grade",member.getGrade().getName().toUpperCase());
+		mv.addObject("member", member);
+		mv.addObject("mile", mileage);
+		mv.addObject("saleCnt", cnt);
+		mv.setViewName("/mypage/mypage_main");
+	
+		return mv;
 	}
 
 	

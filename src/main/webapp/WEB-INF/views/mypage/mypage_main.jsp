@@ -2,11 +2,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <style>
 .wrapper {margin:0 auto; padding:70px; text-align:center}
-#mypage_table { width:800px; margin:0 auto; padding:20px}
-#mypage_table tr:first-child th {font-weight:bold; height:50px;}
+.grade_div {width:100%; background-color:#f7f7f7; padding:60px; margin-top:30px;}
+.mypage_grade {float:left;  margin-top:-10px;}
+.mypage_mile {float:right; text-align:center; padding:30px; margin-top:-65px; font-size:14px;}
+.mypage_num {font-size:20px; color:#ff7e15; font-weight:bold}
 </style>
 <script>
 $(document).ready(function(){
@@ -46,8 +49,21 @@ $(document).ready(function(){
 				<dd>마일리지</dd>
 			</dl>
 		</div>
-		<p class="mypage_grade">회원 등급 : ${loginUser.getGrade()}</p>
-	</div>
 
+	<div class="grade_div">
+		<span class="mypage_grade"><span style="color:#ff7e15;font-weight:bold">${member.name}</span>
+			님 회원등급은 <span style="font-weight:bold">${grade}</span> 입니다. </span>
+		<span class="mypage_mile">
+			마일리지 <br><br>
+			<span class="mypage_num"><fmt:formatNumber value="${mile}"/></span>
+		</span>
+		<span class="mypage_mile">
+			중고거래 <br><br>
+			<a class="mypage_num" href="/mypage/joongo/list?memId=${loginUser.getId()}">${saleCnt}</a>
+		</span>
+	</div>
+	
+	
+	</div>
 </div>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>
