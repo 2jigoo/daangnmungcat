@@ -45,7 +45,7 @@ public interface OrderMapper {
 	int updatePayment(Payment pay);
 	
 	List<OrderDetail> selectOrderDetailUsingPartCancelByOrderId(String orderId);
-	
+	List<Order> selectOrderByMonth(String memId);
 	
 	//admin
 	

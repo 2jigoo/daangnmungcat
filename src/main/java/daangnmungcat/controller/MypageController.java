@@ -224,6 +224,7 @@ public class MypageController {
 		}
 	}
 	
+	//옮기기
 	@PostMapping("/order-cancel")
 	public ResponseEntity<Object> orderCancel(@RequestBody Map<String, String> map) {
 		try {
@@ -249,6 +250,7 @@ public class MypageController {
 		
 	}
 	
+	//옮기기
 	//구매확정 -> 마일리지 인서트
 	@PostMapping("/order-confirm")
 	public ResponseEntity<Object> orderConfirm(@RequestBody Map<String, String> map, AuthInfo loginUser){
@@ -395,8 +397,19 @@ public class MypageController {
 		
 		List<Sale> sale = joongoService.getListByMemID(member.getId());
 		int cnt = sale.size();
+		
+		List<Order> orderList = orderService.selectOrderByMonth(member.getId());
+		for(Order o:orderList) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+
 
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", orderList);
 		mv.addObject("grade",member.getGrade().getName().toUpperCase());
 		mv.addObject("member", member);
 		mv.addObject("mile", mileage);

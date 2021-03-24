@@ -4,17 +4,13 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<style>
-.wrapper {margin:0 auto; padding:70px; text-align:center}
-.grade_div {width:100%; background-color:#f7f7f7; padding:60px; margin-top:30px;}
-.mypage_grade {float:left;  margin-top:-10px;}
-.mypage_mile {float:right; text-align:center; padding:30px; margin-top:-65px; font-size:14px;}
-.mypage_num {font-size:20px; color:#ff7e15; font-weight:bold}
-</style>
 <script>
 $(document).ready(function(){
 });
 </script>
+<Style>
+
+</Style>
 <div id="subContent">
 	<h2 id="subTitle">마이페이지</h2>
 	<div id="pageCont" class="s-inner">
@@ -50,8 +46,8 @@ $(document).ready(function(){
 			</dl>
 		</div>
 
-	<div class="grade_div">
-		<span class="mypage_grade"><span style="color:#ff7e15;font-weight:bold">${member.name}</span>
+	<div class="mypage_grade_div">
+		<span class="mypage_grade"><span style="color:#ff7e15;font-weight:bold">${member.nickname}</span>
 			님 회원등급은 <span style="font-weight:bold">${grade}</span> 입니다. </span>
 		<span class="mypage_mile">
 			마일리지 <br><br>
@@ -63,7 +59,160 @@ $(document).ready(function(){
 		</span>
 	</div>
 	
-	
+	<div class="mypage_sale_div">
+		<div class="mypage_title_div">
+			<span class="mypage_sub_title">최근 거래 정보</span> 
+			<span class="mypage_sub_exp">${member.name}님께서 최근 30일 내에 작성한 판매글입니다.</span>
+		</div>
 	</div>
+	
+	
+	<div class="mypage_sale_div">
+		<div class="mypage_title_div">
+			<span class="mypage_sub_title">최근 주문 정보</span> 
+			<span class="mypage_sub_exp">최근 30일 내에 진행중인 주문정보입니다.</span>
+		</div>
+		<table id="order_list_table" style="font-size:14px">
+		<colgroup>
+			<col width="200px">
+			<col width="400px">
+			<col width="100px">
+			<col width="200px">
+			<col width="150px">
+			<col width="150px">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>주문일/주문번호</th>
+				<th>상품명/옵션</th>
+				<th>수량</th>
+				<th>상품금액</th>
+				<th>주문상태</th>
+				<th>상품 합계 금액</th>
+			</tr>
+		</thead>
+		<tbody>
+		
+		<c:if test="${empty list}">
+			<tr>
+				<td colspan="6" style="padding:50px">주문 내역이 없습니다.</td>
+			</tr>
+		</c:if>
+		
+			<c:forEach var="order" items="${list}" varStatus="status">
+				<c:forEach var="od" items="${order.details}" varStatus="odstatus">
+            		<tr>
+            			<c:if test="${od.partcnt > 1}">
+            				<td class="gubun order_num">
+           						<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
+           						<input type="hidden" id="order_id" value="${order.id}"><br>
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
+            						${order.id}
+           						</span>
+           						
+           						<c:if test="${order.state == '대기'}">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_multiple" class="order_list_cancel" style="margin:10px;">
+           						</c:if>
+            				</td>
+            			</c:if>
+            			<c:if test="${od.partcnt == 1}">
+            				<td class="order_num">
+            					<fmt:parseDate value="${order.regDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+            					<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>
+           						<input type="hidden" id="order_id" value="${order.id}"><br>
+           						<span class="order_list_span" onclick="location.href='/mypage/mypage_order_list?id=${order.id}'">	
+            						${order.id}
+           						</span>
+           						<c:if test="${order.state == '대기'}">
+           							<br><input type="button" value="주문취소" orderId="${order.id}" id="cancel_single" class="order_list_cancel" style="margin:10px;">
+           						</c:if>
+	            				
+            				</td>
+            			</c:if>
+							
+						<td class="tl" >
+							<div class="order_img_wrapper">
+									<c:if test="${od.pdt.image1 eq null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources/images/no_image.jpg" class="order_list_img"></a></c:if>
+									<c:if test="${od.pdt.image1 ne null}"><a href="/mall/product/${od.pdt.id}"><img src="/resources${od.pdt.image1}" class="order_list_img"></a></c:if>
+								<span style="margin-left:30px; line-height:100px; overflow:hidden" id="part_pdt" pdt="${od.pdt.name}">
+									<a href="/mall/product/${od.pdt.id}">${od.pdt.name}</a>
+								</span>
+							</div>
+							
+						</td>
+						<td>${od.quantity}개</td>
+						<td><fmt:formatNumber value="${od.pdt.price}"/> 원</td>
+						<td>
+							<c:if test="${od.orderState.label == '대기'}">입금대기</c:if>
+							<c:if test="${od.orderState.label == '결제'}">결제완료</c:if>
+							<c:if test="${od.orderState.label == '배송'}">배송중</c:if>
+							<c:if test="${od.orderState.label == '완료'}">배송완료</c:if>
+							<c:if test="${od.orderState.label == '취소'}">결제취소</c:if>
+							<c:if test="${od.orderState.label == '반품'}">반품취소</c:if>
+							<c:if test="${od.orderState.label == '품절'}">품절취소</c:if>
+							<c:if test="${od.orderState.label == '환불'}">환불완료</c:if>
+							<c:if test="${od.orderState.label == '구매확정'}">구매확정</c:if>
+							<br>
+							<c:if test="${od.orderState.label == '완료' || od.orderState.label == '배송'}">
+								<input type="button" value="구매확정" id="order_confirm"  odId="${od.id}" class="pre_order_btn3" style="margin-top:5px;">
+							</c:if>
+						</td>
+							
+						<c:if test="${od.partcnt > 1}">
+            				<td class="gubun final_price">
+            				<span style="display:none;">${order.id }</span>
+            					<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />
+	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
+	            				<fmt:formatNumber value="${order.finalPrice}"/> 원
+	            				<br>
+	            				<c:if test="${order.state == '대기'}">입금대기</c:if>
+								<c:if test="${order.state == '결제'}">결제완료</c:if>
+								<c:if test="${order.state == '배송'}">배송중</c:if>
+								<c:if test="${order.state == '완료'}">배송완료</c:if>
+								<c:if test="${order.state == '취소'}">결제취소</c:if>
+								<c:if test="${order.state == '반품'}">반품취소</c:if>
+								<c:if test="${order.state == '퓸절'}">품절취소</c:if>
+								<c:if test="${order.state == '환불'}">환불완료</c:if>
+								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
+	            				<br>
+	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
+	            				
+            				</td>
+						</c:if>
+						
+						<c:if test="${od.partcnt == 1}">
+            				<td class="final_price">	
+	            			<span style="display:none;">${order.id }</span>	
+	            				<input type="hidden" value="<fmt:parseDate value="${order.payDate}" pattern="yyyy-MM-dd'T'HH:mm" var="parseDate" type="both" />	
+	            				<fmt:formatDate pattern="yyyy-MM-dd" value="${parseDate}"/>">
+	            				<fmt:formatNumber value="${order.finalPrice}"/> 원
+	            				<br>
+		            			<c:if test="${order.state == '대기'}">입금대기</c:if>
+								<c:if test="${order.state == '결제'}">결제완료</c:if>
+								<c:if test="${order.state == '배송'}">배송중</c:if>
+								<c:if test="${order.state == '완료'}">배송완료</c:if>
+								<c:if test="${order.state == '취소'}">결제취소</c:if>
+								<c:if test="${order.state == '반품'}">반품취소</c:if>
+								<c:if test="${order.state == '퓸절'}">품절취소</c:if>
+								<c:if test="${order.state == '환불'}">환불완료</c:if>
+								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
+	            				<br>
+	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
+
+            				</td>
+            			</c:if>
+						
+					</tr>
+					
+				</c:forEach>
+				
+			</c:forEach>
+		</tbody>
+	</table>
+	</div>
+
+</div>
+	
 </div>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

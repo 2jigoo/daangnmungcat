@@ -737,7 +737,7 @@ input#ok1:checked + label.all_b:before, input#ok2:checked + label.all_b:before {
 .mypage_main {width:100%; overflow:hidden;}
 .mypage_main dl {float:left; width:calc(25% - 11.25px); margin-right:15px; text-align:center;}
 .mypage_main dl:last-child {margin-right:0;}
-.mypage_main dl dt {font-size:1.7em; color:#111; font-weight:600; margin-bottom:20px;}
+.mypage_main dl dt {font-size:1.5em; color:#111; font-weight:600; margin-bottom:20px;}
 .mypage_main dl dd {width:100%; line-height:53px; border:1px solid #ddd; font-size:1em; color:#111; transition:background 0.5s; margin-bottom:5px;}
 .mypage_main dl dd:hover {background:#f7f7f7; color:#ff7e15;}
 .mypage_main dl dd:hover a {color:#ff7e15}
@@ -749,3 +749,13 @@ input#ok1:checked + label.all_b:before, input#ok2:checked + label.all_b:before {
 	.mypage_main dl dt {margin-bottom:10px;}
 	.mypage_main dl dd {line-height:48px;}
 }
+
+
+.mypage_grade_div {width:100%; background-color:#f7f7f7; padding:60px; margin-top:40px;}
+.mypage_sale_div {margin-top:40px;}
+.mypage_grade {float:left;  margin-top:-10px;}
+.mypage_mile {float:right; text-align:center; padding:30px; margin-top:-65px; font-size:14px;}
+.mypage_num {font-size:20px; color:#ff7e15; font-weight:bold}
+.mypage_title_div {padding:10px;}
+.mypage_sub_title {font-size:20px; font-weight:bold;}
+.mypage_sub_exp {font-size:13px; color:#676767; margin-left:10px;}

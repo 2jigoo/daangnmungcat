@@ -433,3 +433,21 @@ SELECT * FROM MALL_MILEAGE ORDER BY REGDATE desc;
 
 SELECT * FROM MEMBER_VIEW;
 UPDATE MEMBER SET phone = '010-5656-3345' WHERE id = 'adminadmin';
+
+SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+			FROM mall_order WHERE regdate BETWEEN to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')) AND to_date(to_char(add_months(sysdate,+1),'yyyy-mm-dd'))
+				and mem_id = 'test' order by regdate DESC;
+				
+SELECT ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, DONGNE1_ID, DONGNE2_ID, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT
+FROM JOONGO_SALE 
+WHERE regdate BETWEEN to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')) AND to_date(to_char(add_months(sysdate,+1),'yyyy-mm-dd'))
+				and mem_id = 'test' order by regdate DESC;
+
+SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON ji.SALE_ID = js.ID LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID 
+WHERE js.regdate BETWEEN to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')) AND to_date(to_char(add_months(sysdate,+1),'yyyy-mm-dd'))
+				and js.mem_id = 'test' order by regdate DESC;
