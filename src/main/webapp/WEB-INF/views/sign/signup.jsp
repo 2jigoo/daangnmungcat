@@ -4,8 +4,6 @@
 
 <style>
 .wrapper {margin:0 auto; padding:70px; margin-bottom:250px; }
-.wrapper input{font-family:'S-CoreDream'; margin:2px 2px; width:220px;}
-
 </style>
 <script>
 $(document).ready(function(){
@@ -44,7 +42,7 @@ $(document).ready(function(){
 	
 	$('#signup').on("click", function(json){
 		var pwdReg = /^[A-Za-z0-9]{6,20}$/;
-		
+	
 		if($('#id').val() != $('#id_confirm').val()){
 			alert('아이디 중복확인을 눌러주세요.');
 			return;
@@ -111,23 +109,30 @@ $(document).ready(function(){
 	
 	//비밀번호 일치여부
 		$('#pwdCheck').keyup(function(){
-			  if($('#pwd').val()!=$('#pwdCheck').val()){
+			
+			var pwdReg = /^[A-Za-z0-9]{6,20}$/;
+			if(pwdReg.test($('#pwd').val()) == false || pwdReg.test($('#pwdCheck').val() == false)){
+				$('font[name=check]').text("비밀번호는 한글과 숫자를 포함한 6~20자리 이내만 가능합니다.");
+			 	$('input[name=pwdCheck]').attr("style","border:2px solid #e35163");
+			   	$('input[name=pwd]').attr("style","border:2px solid #e35163");
+				$('input[name=pwd]').prop("status", "0");
+			
+			}else if($('#pwd').val()!=$('#pwdCheck').val()){
 			  	$('font[name=check]').text('');
 			   	$('font[name=check]').html("암호가 일치하지 않습니다.");
-			   	$('input[name=pwdCheck]').attr("style","border:2px solid red");
-			   	$('input[name=pwd]').attr("style","border:2px solid red");
-			   	
+			   	$('input[name=pwdCheck]').attr("style","border:2px solid #e35163");  
 			   	$('input[name=pwd]').prop("status", "0");
-			  }else{
+			  
+		   	}else{
 			  	$('font[name=check]').text('');
 			  	$('font[name=check]').html("암호가 일치합니다.");
 				$('input[name=pwdCheck]').attr("style","border:1px solid black");
 				$('input[name=pwd]').attr("style","border:1px solid black");
-				
 				$('input[name=pwd]').prop("status", "1");
-			  }
-			 pwd_status = document.getElementById('pwd').status;
-			 console.log('pwd:'+ pwd_status);
+		  }
+		
+		 pwd_status = document.getElementById('pwd').status;
+		 console.log('pwd:'+ pwd_status);
 	});	  
 	
 	//이메일 정규표현식 & 중복여부
@@ -254,11 +259,12 @@ function id_check() {
 	}else if(reg.test(id) == false){
 		alert("아이디는 4자리 이상의 영문자와 숫자만 사용가능합니다.");
 		return;
+	}else{
+		$.get(contextPath+"/id-check/"+id, function(json){
+			console.log(json);
+			window.open(contextPath+"/sign/id_check?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		});	
 	}
-	$.get(contextPath+"/id-check/"+id, function(json){
-		console.log(json);
-		window.open(contextPath+"/sign/id_check?id="+id+"&status="+json, "", "width=400, height=300, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
-	});
 }
 
 </script>
@@ -272,51 +278,48 @@ function id_check() {
 	<div class="step3">03.가입완료</div>
 </div>
 <div class="signup_table_div">
-	<table class="signup_table">
+	<table class="signup_table tc">
 		<tr>
 			<td>
-				<input type="text" name="id" id="id" placeholder="* 아이디 입력후 중복확인" autocomplete="false">
-				<input type="button" value="중복확인" onclick="id_check()">
+				<input type="text" name="id" id="id" placeholder=" * 아이디 입력후 중복확인" class="sign_text" style="width:45%">
+				<input type="button" value="중복확인" onclick="id_check()" class="sign_btn1" >
+				<input type="hidden" name="id_confirm" id="id_confirm" >
 			</td>
 		</tr>
 		<tr>
-			<td><input type="hidden" name="id_confirm" id="id_confirm"></td>
+			<td><input type="password" name="pwd" id="pwd" placeholder=" * 비밀번호 (한글, 숫자 포함  20자 이내)" class="sign_text"></td>
 		</tr>
 		<tr>
-			<td><input type="password" name="pwd" id="pwd" placeholder="* 비밀번호 (한글, 숫자 포함  20자 이내)"></td>
-		</tr>
-		<tr>
-			<td><input type="password" name="pwdCheck" id="pwdCheck" placeholder="* 비밀번호 확인"></td>
+			<td><input type="password" name="pwdCheck" id="pwdCheck" placeholder=" * 비밀번호 확인" class="sign_text"></td>
 		</tr>
 		<tr height="30px">
-			<td><font size="2" color="black" name="check">(임시)한글과 숫자를 포함한 6~20자리 이내만 가능합니다.</font></td>
+			<td><font size="2" color="black" name="check" class="tl">비밀번호는 한글과 숫자를 포함한 6~20자리 이내만 가능합니다.</font></td>
 		</tr>
 		<tr>
-			<td><input type="text" name="name" id="name" placeholder="* 이름"></td>
+			<td><input type="text" name="name" id="name" placeholder=" * 이름" class="sign_text"> </td>
 		</tr>
 		<tr>
-			<td><input type="text" name="nickname" id="nickname" placeholder="* 닉네임"></td>
+			<td><input type="text" name="nickname" id="nickname" placeholder=" * 닉네임" class="sign_text"></td>
 		</tr>
 		<tr>
-			<td><input type="text" name="email" id="email" placeholder="* 이메일주소"></td>
+			<td><input type="text" name="email" id="email" placeholder=" * 이메일주소" class="sign_text"></td>
 		</tr>
 		<tr height="30px">
 			<td><font size="2" color="black" name="email_check" id="email_check"></font></td>
 		</tr>
 		<tr class="phone">
-			<td class="replace"><input type="text" name="phone" id="phone" placeholder="* 연락처">
-			<input type="button" name="send" id="send" value="인증번호발송">
+			<td class="replace"><input type="text" name="phone" id="phone" placeholder=" * 연락처" class="sign_text" style="width:45%">
+			<input type="button" name="send" id="send" value="인증번호발송" class="sign_btn1">
 			<input type="hidden" id="certi" name="certi" value="1"></td> <!-- 0으로 변경해야됨 -->
 		</tr>
-		<tr><td>인증번호 해제해놨으니까 걍 번호입력만 하세유</td></tr>
 		<tr class="certi_tr">
-			<td><input type="text" name="certiNum" id="certiNum" disabled>
-			<input type="button" id="certiSubmit" value="확인" disabled>
+			<td><input type="text" name="certiNum" id="certiNum"class="sign_text" style="width:45%" disabled >
+			<input type="button" id="certiSubmit" value="확인" disabled class="sign_btn2" disabled>
 			</td>
 		</tr>
-		<tr>
+		<tr style="padding:5px;">
 			<td>
-			위치 설정 <br>
+			<span style="margin-right:10px;">동네 설정</span>
 			<select name="dongne1" id="dongne1">
 				<option value="0">지역을 선택하세요</option>
 			</select> 
@@ -329,7 +332,7 @@ function id_check() {
 	</table>
 </div>
 <div class="confirm_btns">
-	<input type="button" value="회원가입" id="signup" class="go_list" style="width:500px; border-radius:20px; padding:10px;">
+	<input type="button" value="회원가입" id="signup" class="go_list" style="width:22%; border-radius:20px; padding:10px;">
 </div>
 
 </div>

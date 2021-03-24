@@ -626,6 +626,7 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 #withdraw_table tr td {padding:20px;}
 .withdraw_span_div {padding:20px;  margin-top:30px;}
 
+
 /*회원가입약관*/
 .contract_div {width:70%; margin:0 auto; text-align:center; padding:20px;}
 .contract_textarea {width:100%; padding:10px; font-family:'S-CoreDream'; font-size:13px; font-weight:200; margin-top:10px; border:1px solid #ccc}
@@ -635,10 +636,69 @@ list_location {width:100%; overflow:hidden; margin-bottom:10px;}
 .step_now {background-color:#ff7e15; color:#fff; font-weight:500; border-radius:20px; z-index:6;}  
 .step_div {width:70%; margin:0 auto; text-align:center; padding:40px;}
 
+
+/*이용약관, 개인정보정책 페이지*/
+.area_div {width:80%; margin:0 auto; border-top: 1px solid #ccc; border-bottom:1px solid #ccc; margin-top:70px;}
+.terms_area {font-family:'S-CoreDream'; width:100%; height:100%; border:none; font-size:13px;}
+
+input#all {
+  display: none;
+}
+
+label.all_b:before {
+  content: "\f0c8";
+  font-family: "Font Awesome 5 Free";
+  color:#676767;
+  font-size: 20px;
+  font-weight:100;
+ 
+}
+input#all:checked + label.all_b:before {
+  content: "\f14a";
+  font-family: "Font Awesome 5 Free";
+  style:solid;
+  color:#ff7e15;
+  font-size: 20px;
+  font-weight:bold;
+}
+
+
+input#ok1 {
+  display: none;
+}
+
+input#ok2 {
+  display: none;
+}
+
+label.all_b:before {
+  content: "\f0c8";
+  font-family: "Font Awesome 5 Free";
+  color:#676767;
+  font-size: 20px;
+   font-weight:100;
+}
+input#ok1:checked + label.all_b:before, input#ok2:checked + label.all_b:before {
+  content: "\f14a";
+  font-family: "Font Awesome 5 Free";
+  style:solid;
+  color:#ff7e15;
+  font-size: 20px;
+  font-weight:bold;
+}
+
+.a { color:#ff7e15;}
+.a:hover { color:#ff7e15; text-decoration:underline;}
+
+
+
 /* 회원가입 */
 .signup_table {width:50%; margin:0 auto;}
+.signup_table tr td {padding:5px;}
 .signup_table_div {width:70%; margin:0 auto;}
-.signup_table_div input {margin:5px;}
+.sign_btn1 {font-family:'S-CoreDream'; width:14%; height:40px; color:#676767; background:#fff; border: 1px solid #ccc; cursor:pointer; font-size:13px; margin-left:5px; border-radius:3px; }
+.sign_btn2 {font-family:'S-CoreDream'; width:80px; height:40px; color:#ccc; background:#f7f7f7; border: 1px solid #ccc; border-radius:3px; font-size:13px; margin-left:5px;  }
+.sign_text{font-family:'S-CoreDream'; width:60%; height:40px; text-align:left}
 
 /* 마이페이지 */
 .mypage_main {width:100%; overflow:hidden;}
