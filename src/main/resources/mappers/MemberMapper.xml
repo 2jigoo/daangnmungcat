@@ -124,18 +124,18 @@
 	</update>
 	
 	<update id="updateInfo">
-		update member set 
+		update member set
 			name = #{name},
-			nickname = #{nickname}, 
-			email = #{email}, 
+			nickname = #{nickname},
+			email = #{email},
 			phone = #{phone}, 
-			birthday = #{birthday},
 			dongne1 = #{dongne1.id}, 
 			dongne2 = #{dongne2.id},
-			zipcode = #{zipcode},
-			address1 = #{address1},
-			address2 = #{address2} 
-		<include refid="whereSql"></include>
+			<if test="birthday != null">birthday = #{birthday},</if>
+			<if test="zipcode != null and zipcode != '' ">zipcode = #{zipcode},</if>
+			<if test="address1 != null and address1 != '' ">address1 = #{address1},</if>
+			<if test="address2 != null and address2 != '' ">address2 = #{address2} </if>
+		where id = #{id}
 	</update>
 	
 	<update id="updatePwd">

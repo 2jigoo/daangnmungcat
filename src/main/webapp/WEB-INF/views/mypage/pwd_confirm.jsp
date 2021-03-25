@@ -6,13 +6,12 @@
 </style>
 <script>
 $(function(){
-	var contextPath = "<%=request.getContextPath()%>";
 	
 	$('#pwd_confirm').on("click", function(){
 		var pwd = JSON.stringify({pwd: $('#pwd').val()});
 		
 			$.ajax({
-				url: contextPath + "/member/checkPwd",
+				url:  "/member/checkPwd",
 				type: "POST",
 				data: pwd,
 				contentType: "application/json",

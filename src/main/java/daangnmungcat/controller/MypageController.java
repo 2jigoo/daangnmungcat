@@ -43,6 +43,7 @@ import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
+import oracle.net.aso.m;
 
 @RestController
 @Controller
@@ -169,6 +170,7 @@ public class MypageController {
 	@PostMapping("/member/info/post")
 	public ResponseEntity<Object> updateMember(@RequestBody Member member) {
 		System.out.println("update member");
+		System.out.println(member);
 		try {
 			return ResponseEntity.ok(service.updateInfo(member));
 		} catch (DuplicateMemberException e) {
@@ -224,23 +226,16 @@ public class MypageController {
 		}
 	}
 	
-	//옮기기
 	@PostMapping("/order-cancel")
 	public ResponseEntity<Object> orderCancel(@RequestBody Map<String, String> map) {
 		try {
 			System.out.println(map.get("id").toString());
-			int res = 0;
+			
 			String id = map.get("id").toString();
 			Order order = orderService.getOrderByNo(id);
 			List<OrderDetail> odList = orderService.getOrderDetail(id);
 			
-			for(OrderDetail od:odList) {
-				od.setOrderState(OrderState.CANCEL);
-				res += orderService.updateAllOrderDetail(od, order.getId());
-			}
-			
-			order.setState(OrderState.CANCEL.getLabel());
-			res += orderService.updateOrder(order, order.getId());
+			int res = orderService.myPageOrderCancel(order, odList);
 			
 			return ResponseEntity.ok(res);
 		} catch(Exception e) {
@@ -250,7 +245,7 @@ public class MypageController {
 		
 	}
 	
-	//옮기기
+	
 	//구매확정 -> 마일리지 인서트
 	@PostMapping("/order-confirm")
 	public ResponseEntity<Object> orderConfirm(@RequestBody Map<String, String> map, AuthInfo loginUser){
@@ -259,19 +254,8 @@ public class MypageController {
 			
 			String odId = map.get("id").toString();
 			OrderDetail od = orderService.getOrderDetailById(odId);
-			int mileage = (int) Math.floor(od.getTotalPrice() * 0.01);
 			
-			Mileage mile = new Mileage();
-			mile.setMileage(mileage);
-			mile.setOrder(orderService.getOrderByNo(String.valueOf(od.getId())));
-			//order -> od도 상태 다를 수 있으니까 od로 바꿔서 개별 적립하는게 맞는듯
-			// 배송도 od로 바꾸는게 맞음
-			mile.setContent("상품 구매 적립");
-			mile.setMember(member);
-			mileService.insertMilegeInfo(mile);
-			
-			od.setOrderState(OrderState.PURCHASE_COMPLETED);
-			orderService.updatePartOrderDetail(od, od.getId());
+			int mileage = orderService.myPageOrderConfirm(od, member);
 			
 			return ResponseEntity.ok(mileage);
 		} catch(Exception e) {

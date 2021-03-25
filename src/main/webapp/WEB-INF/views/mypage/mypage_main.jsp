@@ -6,6 +6,95 @@
 
 <script>
 $(document).ready(function(){
+	var csrfToken = $("meta[name='_csrf']").attr("content");
+	$.ajaxPrefilter(function(options, originalOptions, jqXHR){
+	    if (options['type'].toLowerCase() === "post") {
+	        jqXHR.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+	    }
+	});
+
+	 $(".gubun").each(function () {
+	    var rows = $(".gubun:contains('" + $(this).text() + "')");
+	    if (rows.length > 1) {
+	        rows.eq(0).prop("rowspan", rows.length);
+	        rows.not(":eq(0)").remove();
+	        
+	    } 
+	});
+	 
+	 $(document).on('click', '#cancel_single', function(){
+			var id = {id: $(this).attr('orderId')};
+			console.log(id)
+			if(confirm('주문을 취소하시겠습니까?') == true){
+				$.ajax({
+					url: '/order-cancel',
+					type: "post",
+					contentType: "application/json; charset=utf-8",
+					data : JSON.stringify(id),
+					dataType: "json",
+					cache : false,
+					success: function(res) {
+						alert('주문 취소 완료');
+						location.reload();
+					},
+					error: function(request,status,error){
+						alert('에러' + request.status+request.responseText+error);
+					}
+				});
+			}else {
+				return;
+			}
+			
+		});
+		
+		$(document).on('click', '#cancel_multiple', function(){
+			var id = {id: $(this).attr('orderId')};
+			console.log(id)
+			if(confirm('주문을 취소하시겠습니까?') == true){
+				$.ajax({
+					url: '/order-cancel',
+					type: "post",
+					contentType: "application/json; charset=utf-8",
+					data : JSON.stringify(id),
+					dataType: "json",
+					cache : false,
+					success: function(res) {
+						alert('주문 취소 완료');
+					},
+					error: function(request,status,error){
+						alert('에러' + request.status+request.responseText+error);
+					}
+				});
+			}else {
+				return;
+			}
+			
+		});
+		
+		$(document).on('click', '#order_confirm', function(){
+			var id = {id: $(this).attr('odId')};
+			console.log(id)
+			if(confirm('구매확정 하시겠습니까? ') == true){
+				$.ajax({
+					url: '/order-confirm',
+					type: "post",
+					contentType: "application/json; charset=utf-8",
+					data : JSON.stringify(id),
+					dataType: "json",
+					cache : false,
+					success: function(mileage) {
+						alert(mileage + '원이 적립되었습니다.')
+						location.reload();
+					},
+					error: function(request,status,error){
+						alert('에러' + request.status+request.responseText+error);
+					}
+				});
+			}else {
+				return;
+			}
+		});
+	
 });
 </script>
 <Style>
@@ -63,6 +152,7 @@ $(document).ready(function(){
 		<div class="mypage_title_div">
 			<span class="mypage_sub_title">최근 거래 정보</span> 
 			<span class="mypage_sub_exp">${member.name}님께서 최근 30일 내에 작성한 판매글입니다.</span>
+			<table></table>
 		</div>
 	</div>
 	

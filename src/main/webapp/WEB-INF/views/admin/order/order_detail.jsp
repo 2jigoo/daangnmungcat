@@ -2,19 +2,26 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 
+<style>
+.admin_od_top {font-family:'S-CoreDream'; padding:10px; background-color:#f5f5f5; margin-top:10px;}
+.admin_order_status {font-family:'S-CoreDream'; vertical-align:middle; padding:5px;}
+.admin_od_pay_info {width:45%; display:inline-block; over-flow: hidden; margin-top:50px; }
+.admin_od_pay_info_div {font-family:'S-CoreDream'; display:inline-block; over-flow: hidden; width:100%;  margin:0 auto; text-align:center;}
+.admin_od_pay_info .info_confirm  { width:97%; text-align:left; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+.admin_od_pay_info .info_confirm tbody td { border-bottom:1px solid #ddd; padding:5px;}
+.admin_od_pay_info .info_confirm tbody td:nth-child(1)  { background-color:#f5f5f5; width:30%}
+
+.admin_od_pay_info .info_form { width:97%; text-align:left; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;}
+.admin_od_pay_info .info_form tbody td { border-bottom:1px solid #ddd; padding:10px; }
+.admin_od_pay_info .info_form tbody td:nth-child(1)  { background-color:#f5f5f5;  width:30%}
+.admin_od_pay_info_btn {padding:50px;}
+.admin_order_title {font-family:'S-CoreDream'; margin-top:50px; font-weight:bold;}
+
+
+</style>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
-$(document).ready(function(){
-	
-	$(".gubun").each(function () {
-	 	var rows = $(".gubun:contains('" + $(this).text() + "')");
-		if (rows.length > 1) {
-		     rows.eq(0).prop("rowspan", rows.length);
-		     rows.not(":eq(0)").remove();
-		        
-		} 
-	});
-	
+$(document).ready(function(){	
 	
 	$('#checked_all').on('click', function(){
 		if($('#checked_all').is(':checked')){
@@ -26,7 +33,7 @@ $(document).ready(function(){
 	
 	$('#order_price_chk').on('click', function(){
 		if($('#order_price_chk').is(':checked')){
-			$('#order_price_txt').attr('value', ${order.misu});
+			$('#order_price_txt').attr('value', ${order.totalPrice});
 		}else{
 			$('#order_price_txt').attr('value', '0');
         }
@@ -88,6 +95,15 @@ $(document).ready(function(){
 	});
 	
 	$('#pay_shipping_update').on('click', function(){
+
+		if($('#order_price_txt').val() != '0'){
+			if($('#order_regdate_txt').val() == ''){
+				alert('입금 확인일시를 입력하세요.');
+				return;
+			}
+		}
+	
+		
 		var data = {
 				price: $('#order_price_txt').val(),
 				depositor: $('#orderer_id').val(),
@@ -122,6 +138,8 @@ $(document).ready(function(){
 	});
 	
 	$('#kakao_shipping').on('click', function(){
+		
+		
 		var data = {
 				price: $('#kakao_price').val(),
 				payDate: $('#kakao_regdate_txt').val() ,
@@ -269,7 +287,6 @@ function execPostCode2(){
 	<div class="card-header py-2">
 		<h6 class=" font-weight-bold text-primary" style="font-size: 1.3em;">
 			<div class="mt-2 float-left">주문 상세  ${order.id} </div>
-			<button id="addNew" class="btn btn-success btn-sm" onclick="location.href='/admin/mileage/write' " style="float: right;">주문 등록</button>
 		</h6>
 	</div>
 	<!-- card-body -->
@@ -332,7 +349,7 @@ function execPostCode2(){
 	
 	
 	<div class="admin_order_status">
-		<span>주문 및 상태 변경</span>  			
+		<span style="line-height:10px;">주문 및 상태 변경</span>  			
 		<input type="button" value="대기" class="btn btn-warning btn-sm" name="status">
 		<input type="button" value="결제" class="btn btn-primary btn-sm" name="status">
 		<input type="button" value="배송" class="btn btn-info btn-sm" name="status">
@@ -348,10 +365,11 @@ function execPostCode2(){
 	</div>	
 	
 <!-- 주문결제내역 -->	
+
 	<div style="padding-top:100px;">
 	<h5 class="admin_order_title tc">주문결제 내역</h5>
 	<div class="admin_od_pay_info_div">
-		<span style="color:red; text-align:left">미수금 : ${order.misu}원</span><br>
+		<span style="color:red;">미수금 : <fmt:formatNumber value="${order.misu}"/>원</span><br>
 		
 		<table class="adm_table_style2">
 			<colgroup>
@@ -368,7 +386,7 @@ function execPostCode2(){
 				<tr>
 					<th>주문번호</th>
 					<th>결제방법</th>
-					<th>주문총엑</th>
+					<th>주문총액</th>
 					<th>배송비</th>
 					<th>추가 배송비</th>
 					<th>사용마일리지</th>
@@ -650,7 +668,9 @@ function execPostCode2(){
 	</c:if>
 </div>
 
+
 <!-- 주문자/배송지 정보 -->
+
 	<h5 class="admin_order_title tc">주문자/배송지 정보</h5>
 	<div class="admin_od_pay_info_div ">
 	<!-- form-data 415 오류 오ㅐ나,,,? -->
@@ -673,9 +693,17 @@ function execPostCode2(){
 						</tr>
 						<tr>
 							<td>주소</td>
-							<td><input type="text" value="${order.member.zipcode}" id="orderer_zip"><input type="button" value="우편번호검색" onclick="execPostCode1()"><br>
-								<input type="text" value="${order.member.address1}" id="orderer_add">
-								<input type="text" value="${order.member.address2}">
+							<td>
+								<p>
+									<input type="text" value="${order.member.zipcode}" id="orderer_zip">
+									<input type="button" value="우편번호검색" onclick="execPostCode1()" class="btn btn-outline-secondary btn-sm" style="margin-left:5px;">
+								</p>
+								<p style="margin-top:-10px">
+									<input type="text" value="${order.member.address1}" id="orderer_add" style="width:290px">
+								</p>
+								<p style="margin-top:-10px; margin-bottom:-1px">
+									<input type="text" value="${order.member.address2}">
+								</p>
 							</td>
 						</tr>
 						
@@ -700,9 +728,17 @@ function execPostCode2(){
 						</tr>
 						<tr>
 							<td>주소</td>
-							<td><input type="text" value="${order.zipcode}" id="recipient_zip"><input type="button" value="우편번호검색" onclick="execPostCode2()"><br>
-								<input type="text" value="${order.address1}" id="recipient_add1">
-								<input type="text" value="${order.address2}" name="address2" id="address2">
+							<td>
+								<p>
+									<input type="text" value="${order.zipcode}" id="recipient_zip">
+									<input type="button" value="우편번호검색" onclick="execPostCode2()" class="btn btn-outline-secondary btn-sm" style="margin-left:5px;">
+								</p>
+								<p style="margin-top:-10px">
+									<input type="text" value="${order.address1}" id="recipient_add1" style="width:290px">
+								</p>
+								<p style="margin-top:-10px; margin-bottom:-1px">
+									<input type="text" value="${order.address2}" name="address2" id="address2" >
+								</p>
 							</td>
 						</tr>
 						<tr>
