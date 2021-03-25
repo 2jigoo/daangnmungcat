@@ -46,8 +46,8 @@ $(document).ready(function(){
 				sCont += '<tr><td><input type="button" value="선택" class="pre_order_btn2" id="sel_add" aid="' + list[i].id +'"></td>';
 				sCont += '<td>' + list[i].subject + '</td>' ;
 				sCont += '<td>' + list[i].name + '</td>';
-				sCont += '<td>' + (list[i].zipcode) + ' ' + list[i].address1 + list[i].address2 + '</td>';
-				sCont += '<td>' + list[i].phone + '</td>';
+				sCont += '<td>(' + list[i].zipcode +') <br>' + list[i].address1 + ', ' +  list[i].address2 + '<br> 배송메모 : ' + list[i].memo + '</td>';
+				sCont += '<td>전화번호 : ' + list[i].phone1 + '<br>휴대폰 : ' + list[i].phone2 +'</td>';
 				sCont += '<td><input type="button" value="수정" id="update_addr" class="pre_order_btn2" addrId=' + list[i].id;
 				sCont += '> <input type="button" value="삭제" id="delete_addr" class="pre_order_btn2" addrId=' + list[i].id + '></td>';
 				sCont += '</tr>';
@@ -64,11 +64,13 @@ $(document).ready(function(){
 		var aid = $(this).attr('aid');
 		$.get("/address/"+aid, function(addr){
 			console.log(addr);
-			$('#zipcode', parent.opener.document).attr('value', addr.zipcode);
-			$('#address1', parent.opener.document).attr('value', addr.address1);
-			$('#address2', parent.opener.document).attr('value', addr.address2);
-			$('#address2', parent.opener.document).attr('value', addr.address2);
-			$('#order_name', parent.opener.document).attr('value', addr.name);
+			$('#zipcode', parent.opener.document).prop('value', addr.zipcode);
+			$('#address1', parent.opener.document).prop('value', addr.address1);
+			$('#address2', parent.opener.document).prop('value', addr.address2);
+			$('#phone1', parent.opener.document).prop('value', addr.phone1);
+			$('#phone2', parent.opener.document).prop('value', addr.phone2);
+			$('#memo', parent.opener.document).prop('value', addr.memo);
+			$('#order_name', parent.opener.document).prop('value', addr.name);
 		});
 		setTimeout(function(){
 		    self.close();
@@ -107,13 +109,13 @@ $(document).ready(function(){
 <h3 class="tc">배송지 관리</h3>
 
 <div class="addr_btns">
-	<input type="button" value="+새 배송지추가" id="add_addr" class="pre_order_btn3" style="padding:10px;"onclick="location.href='/mall/order/mall_shipping_add'">
+	<input type="button" value="+새 배송지추가" id="add_addr" class="pre_order_btn3" style="padding:10px"onclick="location.href='/mall/order/mall_shipping_add'">
 </div>
 
 <table id="addr">
 	<colgroup>
 		<col width=5%>
-		<col width=10%>
+		<col width=12%>
 		<col width=12%>
 		<col width=37%>
 		<col width=18%>

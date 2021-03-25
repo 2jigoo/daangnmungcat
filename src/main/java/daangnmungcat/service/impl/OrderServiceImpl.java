@@ -33,6 +33,7 @@ import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.mapper.OrderMapper;
 import daangnmungcat.service.CartService;
 import daangnmungcat.service.KakaoPayService;
+import daangnmungcat.service.MallPdtService;
 import daangnmungcat.service.MemberService;
 import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
@@ -44,6 +45,9 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private MallPdtService pdtService;
 	
 	@Autowired
 	private MemberService memberService;
@@ -114,7 +118,9 @@ public class OrderServiceImpl implements OrderService{
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
 			od.setOrderState(OrderState.PAID);
 			detailList.add(od);
+			pdtService.calculateStock(od.getPdt(), od.getQuantity()); // 주문 수량만큼 재고 차감
 			mapper.insertOrderDetail(od);
+			
 		}
 		System.out.println(detailList);
 		log.info("insert od..........................................");
@@ -330,8 +336,8 @@ public class OrderServiceImpl implements OrderService{
 											.filter(cart -> cart.getProduct().getDeliveryKind().equals("조건부 무료배송"))
 											.collect(Collectors.summingInt(Cart::getAmount));
 		
-		// 무료배송 상품이 있거나 조건부 무료배송 상품 총 금액이 3만원 이상인 경우는 무료배송
-		if(!(totalPriceOfCondiFeePdt >= 30000 || hasFreeDelivery == true)) {
+		// 조건부 무료배송 상품 총 금액이 3만원 미만이고 무료배송 상품도 없다면 조건부 유료배송
+		if(totalPriceOfCondiFeePdt > 0 && totalPriceOfCondiFeePdt <= 30000 && hasFreeDelivery == false) {
 			totalDeliveryFee = 3000;
 		}
 		
@@ -447,6 +453,7 @@ public class OrderServiceImpl implements OrderService{
 			od.setTotalPrice(c.getProduct().getPrice() * c.getQuantity());
 			od.setOrderState(OrderState.DEPOSIT_REQUEST);
 			detailList.add(od);
+			pdtService.calculateStock(od.getPdt(), od.getQuantity());
 			mapper.insertOrderDetail(od);
 		}
 		System.out.println(detailList);
@@ -724,6 +731,12 @@ public class OrderServiceImpl implements OrderService{
 	public List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId) {
 		// TODO Auto-generated method stub
 		return mapper.selectNotSoldOutOrderDetailById(orderId);
+	}
+
+	@Override
+	public List<Order> selectOrderByMonth(String memId) {
+		// TODO Auto-generated method stub
+		return mapper.selectOrderByMonth(memId);
 	}
 
 

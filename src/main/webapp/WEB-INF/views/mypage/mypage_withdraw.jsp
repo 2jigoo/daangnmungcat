@@ -2,9 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:50px; text-align:center}
-.box {text-align:left; padding:100px;}
-#withdraw-table {width:800px; padding:30px;}
+.wrapper {margin:0 auto; padding:70px; text-align:center; margin-bottom:50px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -47,32 +45,32 @@ $(document).ready(function(){
 </script>
 
 <div class="wrapper">
-<h2 id="subTitle">회원 탈퇴</h2>
-	<span>01. 회원탈퇴 안내</span>
-	<div class="box">
-		<p>당근멍캣 탈퇴안내</p>
+	<h2 id="subTitle">회원 탈퇴</h2>
+		<div class="withdraw_span_div"><span style="font-size:20px;">01. 회원탈퇴 안내</span></div>
+		<div class="withdraw_div">
+			<p>당근멍캣 탈퇴안내</p>
+			<br>
+			<p>■ 아울러 회원 탈퇴시의 아래 사항을 숙지하시기 바랍니다.</p>
+			<p>1. 회원 탈퇴 시 회원님의 정보는 상품 반품 및 A/S를 위해 전자상거래 등에서의 소비자 보호에 관한 법률에 의거한</p>
+			<p>고객정보 보호정책에 따라 관리 됩니다.</p>
+			<p>2. 탈퇴 시 회원님께서 보유하셨던 마일리지는 삭제 됩니다.</p>
+		</div>
+		<div class="withdraw_span_div"><span style="font-size:20px;">02. 회원탈퇴 하기</span></div>
+		<div>
+			<table id="withdraw_table">
+				<tr>
+					<td><span style="margin-left:150px;">비밀번호</span></td> 
+					<td class="tl"><input type="password" id="w_pwd" style="width:200px;"></td>
+				</tr>
+			</table>
+			
+		<div class="confirm_btns">
+			<input type="button" value="이전으로" onclick="history.back()"  class="go_list" style="padding:8px; background-color:#676767; font-size:15px; width:100px;">
+			<input type="button" value="탈퇴" id="del" class="go_list" style="padding:8px; font-size:15px; width:100px;">
+		</div>
+	</div>
 
-		<p>당근멍캣을 탈퇴하시는 이유는 무엇인가요?</p>
-		<p>탈퇴하시는 이유를 알려주시면 보다 좋은 서비스 제공을 위해 노력하겠습니다.</p>
-		<br>
-		<p>■ 아울러 회원 탈퇴시의 아래 사항을 숙지하시기 바랍니다.</p>
-		<p>1. 회원 탈퇴 시 회원님의 정보는 상품 반품 및 A/S를 위해 전자상거래 등에서의 소비자 보호에 관한 법률에 의거한</p>
-		<p>고객정보 보호정책에따라 관리 됩니다.</p>
-		<p>2. 탈퇴 시 회원님께서 보유하셨던 마일리지는 삭제 됩니다</p>
-	</div>
-	<span>02. 회원탈퇴 하기</span>
-	<div>
-		<table id="withdraw-table">
-			<tr>
-				<td>비밀번호</td> 
-				<td><input type="text" id="w_pwd"></td>
-			</tr>
-		</table>
-		<input type="button" value="이전으로" onclick="history.back()">
-		<input type="button" value="탈퇴" id="del">
-	</div>
-		
-	
 </div>
+
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

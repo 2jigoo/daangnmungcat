@@ -62,6 +62,7 @@ public interface OrderService {
 	
 	List<OrderDetail> selectOrderDetailUsingPartCancelByOrderId(String orderId);
 	Map<String, Integer> calculateDeliveryFee(List<Cart> list);
+	List<Order> selectOrderByMonth(String memId);
 	
 	/////////////////////////////////////
 	List<Order> selectOrderAll(Criteria cri);

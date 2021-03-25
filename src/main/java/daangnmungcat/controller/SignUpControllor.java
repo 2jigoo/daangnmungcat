@@ -45,8 +45,8 @@ public class SignUpControllor {
 
 	}
 	
-	@GetMapping("/id-check/{id}")
-	public int reIdConfirm(@PathVariable String id) {
+	@PostMapping("/id-check/post")
+	public int reIdConfirm(@RequestBody String id) {
 		int res = service.idCheck(id);
 		return res;
 	}
@@ -54,6 +54,7 @@ public class SignUpControllor {
 	@PostMapping("/email/post")
 	public int emailCheck(@RequestBody String json) {
 		int res = service.emailCheck(json);
+		System.out.println(json);
 		return res;
 	}
 

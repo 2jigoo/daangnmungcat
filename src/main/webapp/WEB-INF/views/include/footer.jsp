@@ -4,8 +4,8 @@
     
 <footer id="footer">
 	<ul class="f_util">
-		<li><a href="#">이용약관</a></li>
-		<li><a href="#">개인정보취급방침</a></li>
+		<li><a href="/service/terms">이용약관</a></li>
+		<li><a href="/service/policy">개인정보취급방침</a></li>
 		<li><a href="#">중고멍캣</a></li>
 	</ul>
 	<ul class="f_info">

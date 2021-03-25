@@ -120,6 +120,10 @@ $(document).ready(function(){
 							<c:if test="${od.orderState.label == '퓸절'}">품절취소</c:if>
 							<c:if test="${od.orderState.label == '환불'}">환불완료</c:if>
 							<c:if test="${od.orderState.label == '구매확정'}">구매확정</c:if>
+							<br>
+							<c:if test="${od.orderState.label == '완료' || od.orderState.label == '배송'}">
+								<input type="button" value="구매확정" id="order_confirm"  odId="${od.id}" class="pre_order_btn3" style="margin-top:5px;">
+							</c:if>
 						</td>
 						
 						<c:if test="${od.partcnt > 1}">
@@ -139,7 +143,7 @@ $(document).ready(function(){
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
-	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+	            	
             				</td>
 						</c:if>
 						
@@ -160,7 +164,7 @@ $(document).ready(function(){
 								<c:if test="${order.state == '구매확정'}">구매확정</c:if>
 	            				<br>
 	            				<c:if test="${order.trackingNumber != null}">[<a href="#" style="text-decoration:underline">${order.trackingNumber}</a>]</c:if>
-	            				<c:if test="${order.state == '완료'}"><input type="button" value="구매확정"></c:if>
+	            				
             				</td>
             			</c:if>
 				</tr>
@@ -251,12 +255,15 @@ $(document).ready(function(){
 				</c:if>
 				<tr>
 					<td>총 결제 금액</td>
-					<td style="font-weight:bold">
+					<td>
 						<c:if test="${order.settleCase == '카카오페이'}">
 							<fmt:formatNumber value="${kakao.kakao.amount.total}"/>
 						</c:if>
 						<c:if test="${order.settleCase == '무통장'}">
-							<fmt:formatNumber value="${account.payPrice}"/>
+							<c:if test="${account.payPrice == null}">입금대기</c:if>
+							<c:if test="${account.payPrice != null}">
+								<fmt:formatNumber value="${account.payPrice}"/>
+							</c:if>
 						</c:if>
 					</td>
 				</tr>

@@ -215,19 +215,28 @@ $(function(){
 		<div>
 			<ul class="product_list s-inner">
 				<c:forEach items="${list}" var="list">
-				<li><a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${list.id}">
+				<c:choose>
+					<c:when test="${list.saleState.code eq 'SOLD_OUT'}">
+						<li class="SOLD_OUT">
+					</c:when>
+					<c:otherwise>
+						<li>
+					</c:otherwise>
+				</c:choose>
+				<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${list.id}">
 					<div class="img">
 						<c:if test="${empty list.thumImg}">
-							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg"></div>
+							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
 						</c:if>
 						<c:if test="${not empty list.thumImg}">
-							<img src="<%=request.getContextPath() %>/resources/${list.thumImg}"></div>
+							<img src="<%=request.getContextPath() %>/resources/${list.thumImg}">
 						</c:if>
+					</div>
 					<div class="txt">
 						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
 						<p class="subject">${list.title}</p>
 						<p class="price">
-							<span>${list.saleState.label}</span>
+							<span class="${list.saleState.code }">${list.saleState.label}</span>
 							<span>
 								<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
 								<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>

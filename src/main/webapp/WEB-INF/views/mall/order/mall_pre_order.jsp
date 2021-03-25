@@ -16,7 +16,7 @@
 $(document).ready(function(){
 	
 	var price = $('#final_price').text();
-	$('input[name=final]').prop('value', price);
+	$('input[name=final]').prop('value', uncomma(price));
 	
 	$('#order_btn').on('click', function(){
 		$('#form').submit();
@@ -28,12 +28,24 @@ $(document).ready(function(){
 		$('#form').submit();
 	})
 	
-	$('input[name=chk]:eq(0)').on('click', function(){
-		$('#zipcode').attr('value', "${member.zipcode}");
-		$('#address1').attr('value', "${member.address1}");
-		$('#address2').attr('value', "${member.address2}");
-		$('#order_name').attr('value', "${member.name}");
-		$('#order_phone').attr('value', "${member.phone}");
+	$('input[name=chk]:eq(0)').on('change', function(){
+		if($('input[name=chk]:eq(0)').is(':checked')){
+			$('#zipcode').attr('value', "${member.zipcode}");
+			$('#address1').attr('value', "${member.address1}");
+			$('#address2').attr('value', "${member.address2}");
+			$('#order_name').attr('value', "${member.name}");
+			$('#phone1').attr('value', "");
+			$('#phone2').attr('value', "${member.phone}");
+			$('#memo').attr('value', "");
+		}else{
+			$('#zipcode').attr('value', "");
+			$('#address1').attr('value', "");
+			$('#address2').attr('value', "");
+			$('#order_name').attr('value', "");
+			$('#phone1').attr('value', "");
+			$('#phone2').attr('value', "");
+			$('#memo').attr('value', "");
+		}
 	});
 	
 	$('input[name=chk]:eq(1)').on('click',function(){
@@ -41,37 +53,41 @@ $(document).ready(function(){
 		$('#address1').attr('value', "");
 		$('#address2').attr('value', "");
 		$('#order_name').attr('value', "");
-		$('#order_phone').attr('value', "");
+		$('#phone1').attr('value', "");
+		$('#phone2').attr('value', "");
+		$('#memo').attr('value', "");
 	});
 	
 	$('#myAddress').on('click', function(){
-		window.open("/mall/order/mall_my_address", "", "width=700, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open("/mall/order/mall_my_address", "", "width=650, height=520, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 	
 	$('#mile_chk').on('change', function(){
+		
 		if($('#mile_chk').is(':checked')){
 			$('#use_mileage').prop('value', ${member.mileage});	
 			var use = $('#use_mileage').val();
-			$('#final_price').text(${final_price} - use);
-			$('input[name=final]').prop('value', ${final_price} - use);
+			$('#final_price').text(comma(${final_price} - use));
+			$('input[name=final]').prop('value', uncomma(${final_price} - use));
 		}else {
 			$('#use_mileage').prop('value', "0");
-			$('#final_price').text(${final_price});
-			$('input[name=final]').prop('value', ${final_price});
+			$('#final_price').text(comma(${final_price}));
+			$('input[name=final]').prop('value', uncomma(${final_price}));
 			
 		}
 	});
 	
 	$('#use_mileage').keyup(function() {
 		var use = $('#use_mileage').val();
+		
 		if(${member.mileage} < use){
 			alert('보유 마일리지가 부족합니다.');
 			$('#use_mileage').prop('value', "");
-			$('#final_price').text(${final_price});
-			$('input[name=final]').prop('value', ${final_price});
+			$('#final_price').text(comma(${final_price}));
+			$('input[name=final]').prop('value', uncomma(${final_price}));
 		}else {
-			$('#final_price').text(${final_price} - use);
-			$('input[name=final]').prop('value', ${final_price} - use);
+			$('#final_price').text(comma(${final_price} - use));
+			$('input[name=final]').prop('value', uncomma(${final_price} - use));
 		}
 	})
 	
@@ -89,16 +105,48 @@ $(document).ready(function(){
 	
 	$('#pay').on('click', function(){
 		
-		if(type == '카카오페이'){
-			$('#form').submit();
-		}else {
-			$("#form").attr("action", "/accountPay");
-			$('#form').submit();
-		}
-		
+		if($('#orderer_name').val() == ""){
+			alert("주문자 성함을 입력해주세요.");
+			return;
+		}else if($('#orderer_phone').val() == ""){
+			alert("주문자 연락처를 입력해주세요.");
+			return;
+		}else if($('#orderer_email').val() == ""){
+			alert("주문자 이메일을 입력해주세요.");
+			return;
+		}else if($('#order_name').val() == ""){
+			alert("받으실 분 성함을 입력해주세요.");
+			return;
+		}else if($('#zipcode').val() == ""){
+			alert("우편번호를 입력해주세요.");
+			return;
+		}else if($('#address1').val() == ""){
+			alert("주소를 입력해주세요.");
+			return;
+		}else if($('#address2').val() == ""){
+			alert("상세주소를 입력해주세요.");
+			return;
+		}else if($('#phone2').val() == ""){
+			alert("받으실 분 연락처를 입력해주세요.");
+			return;
+		}else if(!$('#use_mileage').val() < 1000 && !$('#use_mileage').val() == ''){
+			alert('마일리지는 1000원 이상 사용 가능합니다.')
+			return;
+		}else{
+			
+			if(type == '카카오페이'){
+				$('#form').submit();
+			}else {
+				$("#form").attr("action", "/accountPay");
+				$('#form').submit();
+			}
+		}	
 	});
 
 	
+	$('#orderer_phone').keyup(function(){
+		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
+	});
 	
 	$('#phone1').keyup(function(){
 		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
@@ -107,8 +155,6 @@ $(document).ready(function(){
 	$('#phone2').keyup(function(){
 		$(this).val( $(this).val().replace(/[^0-9]/g, "").replace(/(^02|^0505|^1[0-9]{3}|^0[0-9]{2})([0-9]+)?([0-9]{4})$/,"$1-$2-$3").replace("--", "-") );
 	});
-	
-	
 	
 });
 
@@ -136,8 +182,20 @@ function execPostCode(){
   });
 }
 
+function comma(num) {
+    str = String(num);
+    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,');
 
+}
 
+function uncomma(num) {
+    str = String(num);
+    return str.replace(/[^\d]+/g, '');
+}
+
+function inputNumberFormat(obj) {
+   obj.value = comma(uncomma(obj.value));
+}
 
 </script>
 <div class="wrapper">
@@ -152,8 +210,8 @@ function execPostCode(){
 	<input type="hidden" name="mem_id" value="${member.id}"> 
 	<input type="hidden" name="total_qtt" value="${total_qtt}"> <!-- 총 수량 -->
 	<input type="hidden" name="plus_mile" value="${mileage}"> <!-- 적립예정 -->
-	<input type="hidden" name="total" value="${total}"> <!-- 적립예정 -->
-	<input type="hidden" name="deli" value="${totalDeliveryFee}"> <!-- 적립예정 -->
+	<input type="hidden" name="total" value="${total}"> <!-- 총 -->
+	<input type="hidden" name="deli" value="${totalDeliveryFee}"> <!-- 배송비 -->
 	
 	<div class="pre_order_cart_div">
 		<table id="order_list_table">
@@ -190,9 +248,9 @@ function execPostCode(){
 					</td>
 
 					<td>${cart.quantity }</td>
-					<td><span class="price" value="${cart.product.price }">${cart.product.price}</span></td>
+					<td><span class="price" value="${cart.product.price }"><fmt:formatNumber value="${cart.product.price}"/></span></td>
 					<td><fmt:formatNumber value="${cart.product.price * 0.01}" /></td>
-					<td>${cart.product.price * cart.quantity}</td>
+					<td><fmt:formatNumber value="${cart.product.price * cart.quantity}"/></td>
 					<td>
 						<c:choose>
 							<c:when test="${cart.product.deliveryKind eq '조건부 무료배송' }">
@@ -247,7 +305,7 @@ function execPostCode(){
 		<table class="order_detail_table">
 			<tr>
 				<td><span class="asterisk">* </span>주문하시는 분</td> 
-				<td><input type="text" value="${member.name}" name=""></td> 
+				<td><input type="text" value="${member.name}" id="orderer_name"></td> 
 			</tr>
 			<tr>
 				<td>주소</td> 
@@ -260,11 +318,11 @@ function execPostCode(){
 			</tr>
 			<tr>
 				<td><span class="asterisk">* </span>연락처</td> 
-				<td><input type="text" value="${member.phone}" name=""></td> 
+				<td><input type="text" value="${member.phone}" id="orderer_phone"></td> 
 			</tr>
 			<tr>
 				<td><span class="asterisk">* </span>이메일</td> 
-				<td><input type="text" value="${member.email}" name=""></td> 
+				<td><input type="text" value="${member.email}" id="orderer_email"></td> 
 			</tr>
 		</table>
 	
@@ -273,23 +331,23 @@ function execPostCode(){
 				<tr>
 					<td>배송지 확인</td> 
 					<td>
-						<input type="checkbox" name="chk" onclick="check(this)" value="mem" checked> 주문자 정보와 동일
+						<input type="checkbox" name="chk" onclick="check(this)" value="mem"> 주문자 정보와 동일
 						<input type="checkbox" name="chk" onclick="check(this)" value="write"> 직접 입력   
 						<input type="button" value="배송지관리" id="myAddress" class="pre_order_btn2">
 					</td> 
 				</tr>
 				<tr>
 					<td> <span class="asterisk">* </span> 받으실 분</td> 
-					<td><input type="text" value="${member.name}" id="order_name" name="add_name"></td> 
+					<td><input type="text" id="order_name" name="add_name"></td> 
 				</tr>
 				<tr>
 					<td><span class="asterisk">* </span>받으실 곳</td> 
 					<td>
-						<input type="text" value="${member.zipcode}" id="zipcode" name="zipcode">
+						<input type="text" id="zipcode" name="zipcode">
 						<input type="button" value="우편번호 검색" onclick="execPostCode()" class="pre_order_btn3">
 						<br>
-						<input type="text" value="${member.address1}" id="address1" name="address1" style="width:280px">
-						<input type="text" value="${member.address2}" id="address2" name="address2">
+						<input type="text" id="address1" name="address1" style="width:280px">
+						<input type="text" id="address2" name="address2">
 					</td> 
 				</tr>
 				<tr>
@@ -298,11 +356,11 @@ function execPostCode(){
 				</tr>
 				<tr>
 					<td><span class="asterisk">* </span>받는 분 휴대폰</td> 
-					<td><input type="text" value="${member.phone}" id="phone2" name="phone2"></td> 
+					<td><input type="text" id="phone2" name="phone2"></td> 
 				</tr>
 				<tr>
 					<td>남기실 말씀</td> 
-					<td><input type="text" id="order_memo" name="order_memo"></td> 
+					<td><input type="text" id="memo" name="order_memo" style="width:280px"></td> 
 				</tr>
 			</table>
 
@@ -324,14 +382,14 @@ function execPostCode(){
 			</tr>
 			<tr>
 				<td>마일리지 사용</td>
-				<td><input type="text" id="use_mileage" name="use_mileage" value="">
+				<td><input type="text" id="use_mileage" name="use_mileage">
 				<input type="checkbox" id="mile_chk">전액 사용하기 
 										(보유 마일리지:<fmt:formatNumber value="${memberMileage}"/>원)
 				<input type="hidden" value="${memberMileage}" id="mem_mile"></td>
 			</tr>
 			<tr>
 				<td>최종 결제 금액</td>
-				<td><span id="final_price" style="font-weight:bold">${final_price}</span>
+				<td><span id="final_price" style="font-weight:bold"><fmt:formatNumber value="${final_price}"/></span>
 					
 				</td>
 			</tr>
@@ -354,7 +412,7 @@ function execPostCode(){
 </div>	
 
 	<div class="pre_order_btns">
-		<input type="button" value="결제하기" id="pay" class="go_list" style="width:150px; height:50px">
+		<input type="button" value="결제하기" id="pay" class="go_list" style="width:150px; height:50px; border-radius:70px; font-weight:500;">
 	</div>
 	</form>
 

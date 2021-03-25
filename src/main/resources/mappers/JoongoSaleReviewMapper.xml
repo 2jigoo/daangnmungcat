@@ -13,34 +13,55 @@
 		<result column="regdate" property="regdate"/>
 		
 		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" fetchType="lazy" />
-		<association property="buyMember" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
+		<association property="writer" columnPrefix="writer_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	
 	<select id="selectJoongoReviewByAll" resultMap="reviewResult">
 		<include refid="selectSQL" />
 	</select>
 	
-	<select id="selectJoongoReviewBySaleMemId" resultMap="reviewResult">
-		<include refid="selectSQL" /> WHERE SALE_MEM_ID = #{memId}
+	<select id="selectJoongoReviewOnMemId" resultMap="reviewResult">
+		<include refid="selectSQL"/>
+		WHERE (SALE_MEM_ID = #{memId} OR BUY_MEM_ID = #{memId})
+			AND WRITER_ID != #{memId}
 	</select>
 	
-	<select id="selectMypageJoongoReviewBySaleMemId" resultMap="reviewResult">
-		<include refid="selectSQL" /> WHERE BUY_MEM_ID = #{memId}
+	<select id="selectJoongoReviewByWriter" resultMap="reviewResult">
+		<include refid="selectSQL"/>
+		WHERE WRITER_ID = #{memId}
+	</select>
+	
+	<select id="selectJoongoReviewBySaleMemId" resultMap="reviewResult">
+		<include refid="selectSQL" />
+		WHERE SALE_MEM_ID = #{memId}
+			AND WRITER_ID != #{memId}
+	</select>
+	
+	<select id="selectJoongoReviewByBuyMemId" resultMap="reviewResult">
+		<include refid="selectSQL" />
+		WHERE BUY_MEM_ID = #{memId}
+			AND WRITER_ID != #{memId}
 	</select>
 	
 	<select id="selectJoongoReviewBySaleId" resultMap="reviewResult">
-		<include refid="selectSQL" /> WHERE SALE_ID = #{saleId}
+		<include refid="selectSQL" />
+		WHERE SALE_ID = #{saleId}
+			AND WRITER_ID != #{memId}
 	</select>
 	
 	<select id="selectJoongoReviewById" resultMap="reviewResult">
-		<include refid="selectSQL" /> WHERE ID = #{id}
+		<include refid="selectSQL" />
+		WHERE ID = #{id}
+		<if test="memId != null">
+			AND WRITER_ID != #{memId}
+		</if>	
 	</select>
 
 	<insert id="insertJoongoSaleReview" parameterType="SaleReview">
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT joongo_review_seq.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO JOONGO_REVIEW(ID, SALE_ID, BUY_MEM_ID, RATING, CONTENT) VALUES(#{id}, #{sale.id}, #{buyMember.id}, #{rating}, #{content})
+		INSERT INTO JOONGO_REVIEW(ID, SALE_ID, WRITER, RATING, CONTENT) VALUES(#{id}, #{sale.id}, #{writer.id}, #{rating}, #{content})
 	</insert>
 	
 	<update id="updateJoongoSaleReview" parameterType="SaleReview">
@@ -51,11 +72,26 @@
 		DELETE FROM JOONGO_REVIEW WHERE ID = #{id}
 	</delete>
 	
-	<select id="countMemId" resultType="int">
-		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW WHERE SALE_MEM_ID = #{memId}
+	<select id="countOnMemId" resultType="int">
+		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW
+		WHERE (SALE_MEM_ID = #{memId} OR BUY_MEM_ID = #{memId})
+			AND WRITER_ID != #{memId}
+	</select>
+	
+	<select id="countWriterId" resultType="int">
+		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW
+			WHERE WRITER_ID = #{memId}
+	</select> 
+	
+	<select id="countSaleMemId" resultType="int">
+		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW
+		WHERE SALE_MEM_ID = #{memId}
+			AND WRITER_ID != #{memId}
 	</select>
 	
 	<select id="countBuyMemId" resultType="int">
-		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW WHERE BUY_MEM_ID = #{memId}
+		SELECT COUNT(ID) FROM SALE_REVIEW_VIEW
+		WHERE BUY_MEM_ID = #{memId}
+			AND WRITER_ID != #{memId}
 	</select>
 </mapper>

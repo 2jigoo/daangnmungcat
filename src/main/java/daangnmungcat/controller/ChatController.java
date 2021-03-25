@@ -1,7 +1,6 @@
 package daangnmungcat.controller;
 
 import java.io.File;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +26,7 @@ import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Sale;
+import daangnmungcat.dto.SaleReview;
 import daangnmungcat.exception.AlreadySoldOut;
 import daangnmungcat.service.ChatService;
 import daangnmungcat.service.JoongoSaleReviewService;
@@ -86,7 +86,9 @@ public class ChatController {
 		Chat chat = chatService.getChatWithMessages(id, cri);
 		log.debug("chat: " + chat.toString());
 		
-		if(reviewService.selectJoongoReviewBySaleId(chat.getSale().getId()) != null) {
+		SaleReview review = reviewService.getReviewBySaleId(chat.getSale().getId(), loginUser.getId());
+		if(review != null) {
+			log.info("review: " + review.getId());
 			model.addAttribute("reviewed", true);
 		}
 		

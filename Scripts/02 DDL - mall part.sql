@@ -75,12 +75,14 @@ CREATE TABLE ORDER_ADDRESS (
 	mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
 	subject VARCHAR2(36) NOT NULL, /* 배송지명 */
 	name VARCHAR2(36) NOT NULL, /* 받는사람 */
-	phone VARCHAR2(20) NOT NULL, /* 전화번호 */
+	phone1 VARCHAR2(20), /* 일반전화 */
+	phone2 VARCHAR2(20) NOT NULL, /* 폰번호 */
 	zipcode NUMBER(5) NOT NULL, /* 우편번호 */
 	address1 VARCHAR2(255) NOT NULL, /* 주소1 */
 	address2 VARCHAR2(255) NOT NULL, /* 주소2 */
 	memo VARCHAR2(1500) /* 메모 */
 )SEGMENT CREATION IMMEDIATE;
+
 
 ALTER TABLE ORDER_ADDRESS ADD CONSTRAINT PK_ORDER_ADDRESS PRIMARY KEY (id);	
 
@@ -237,3 +239,4 @@ ALTER TABLE MALL_PAYMENT
 		PRIMARY KEY (
 			id
 		);
+	

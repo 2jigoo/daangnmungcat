@@ -28,16 +28,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.Mileage;
 import daangnmungcat.dto.Order;
 import daangnmungcat.dto.OrderDetail;
 import daangnmungcat.dto.OrderState;
 import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Payment;
+import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SearchCriteriaForOrder;
 import daangnmungcat.dto.kakao.KakaoPayApprovalVO;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.service.KakaoPayService;
 import daangnmungcat.service.MemberService;
+import daangnmungcat.service.MileageService;
 import daangnmungcat.service.OrderService;
 
 @RestController
@@ -59,6 +63,12 @@ public class MypageController {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private MileageService mileService;
+	
+	@Autowired
+	private JoongoSaleService joongoService;;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -194,6 +204,7 @@ public class MypageController {
 	@PostMapping("/withdrawal")
 	public ResponseEntity<Object> withdraw(AuthInfo loginUser, @RequestBody Map<String, String> data, HttpSession session) {
 		try {
+			
 			String pwd = (String) data.get("pwd");
 			System.out.println("pwd: " + pwd);
 			
@@ -213,6 +224,7 @@ public class MypageController {
 		}
 	}
 	
+	//옮기기
 	@PostMapping("/order-cancel")
 	public ResponseEntity<Object> orderCancel(@RequestBody Map<String, String> map) {
 		try {
@@ -238,19 +250,49 @@ public class MypageController {
 		
 	}
 	
+	//옮기기
+	//구매확정 -> 마일리지 인서트
+	@PostMapping("/order-confirm")
+	public ResponseEntity<Object> orderConfirm(@RequestBody Map<String, String> map, AuthInfo loginUser){
+		try {
+			Member member = service.selectMemberById(loginUser.getId());
+			
+			String odId = map.get("id").toString();
+			OrderDetail od = orderService.getOrderDetailById(odId);
+			int mileage = (int) Math.floor(od.getTotalPrice() * 0.01);
+			
+			Mileage mile = new Mileage();
+			mile.setMileage(mileage);
+			mile.setOrder(orderService.getOrderByNo(String.valueOf(od.getId())));
+			//order -> od도 상태 다를 수 있으니까 od로 바꿔서 개별 적립하는게 맞는듯
+			// 배송도 od로 바꾸는게 맞음
+			mile.setContent("상품 구매 적립");
+			mile.setMember(member);
+			mileService.insertMilegeInfo(mile);
+			
+			od.setOrderState(OrderState.PURCHASE_COMPLETED);
+			orderService.updatePartOrderDetail(od, od.getId());
+			
+			return ResponseEntity.ok(mileage);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+	}
+	
 	
 /////// 주문내역 mv
 	
 	@GetMapping("/mypage/mypage_order_list")
-	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, 
-			@Nullable @RequestParam String id) {
+	public ModelAndView orderList(SearchCriteriaForOrder cri, AuthInfo loginUser, @Nullable @RequestParam(name = "id") String id) {
+		ModelAndView mv = new ModelAndView();
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
 		
-		ModelAndView mv = new ModelAndView();
 		
 		if(id != null) {
 			Order order = orderService.getOrderByNo(id);
@@ -286,7 +328,8 @@ public class MypageController {
 			mv.addObject("list", list);
 			mv.addObject("pageMaker", pageMaker);
 			mv.setViewName("/mypage/mypage_order_list");
-			}
+		}
+		
 		
 		return mv;
 	}
@@ -296,13 +339,15 @@ public class MypageController {
 	@GetMapping("/mypage/mypage_order_cancel_list")
 	public ModelAndView getCancelOrder(SearchCriteriaForOrder cri, AuthInfo loginUser,
 			@Nullable @RequestParam String id) {
+		ModelAndView mv = new ModelAndView();
+		
 		Member member = service.selectMemberById(loginUser.getId());
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		cri.setPerPageNum(10);
 		
-		ModelAndView mv = new ModelAndView();
+		
 		
 		if(id != null) {
 			Order order = orderService.getOrderByNo(id);
@@ -342,6 +387,36 @@ public class MypageController {
 		
 		return mv;
 		
+	}
+	
+	@GetMapping("/mypage/mypage_main")
+	public ModelAndView myPage(AuthInfo loginUser) {
+		
+		Member member = service.selectMemberById(loginUser.getId());
+		int mileage = mileService.getMileage(member.getId());
+		
+		List<Sale> sale = joongoService.getListByMemID(member.getId());
+		int cnt = sale.size();
+		
+		List<Order> orderList = orderService.selectOrderByMonth(member.getId());
+		for(Order o:orderList) {
+			List<OrderDetail> odList = orderService.sortingOrderDetail(o.getId());
+			o.setDetails(odList);
+			for(OrderDetail od: odList) {
+				od.setOrderId(o.getId());
+			}
+		}
+
+
+		ModelAndView mv = new ModelAndView();
+		mv.addObject("list", orderList);
+		mv.addObject("grade",member.getGrade().getName().toUpperCase());
+		mv.addObject("member", member);
+		mv.addObject("mile", mileage);
+		mv.addObject("saleCnt", cnt);
+		mv.setViewName("/mypage/mypage_main");
+	
+		return mv;
 	}
 
 	

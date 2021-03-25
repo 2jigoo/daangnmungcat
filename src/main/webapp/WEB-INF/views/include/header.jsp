@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://sargue.net/jsptags/time" prefix="javatime" %>
 
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="loginUser"/>
@@ -23,6 +24,7 @@
 	<link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
 	<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/chat_room.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+	
 	<script src="<c:url value="/resources/js/jquery-1.12.4.min.js" />" type="text/javascript" ></script>
 	<script src="<c:url value="/resources/js/jquery.form.min.js" />" type="text/javascript" ></script>
 	<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js" type="text/javascript" ></script>
@@ -141,7 +143,7 @@
 			
 			<sec:authorize access="isAuthenticated()">
 				<ul class="h_util">
-				<li><a href="#">${loginUser.getNickname()}님 안녕하세요.</a></li>
+				<li><a href="/profile/${loginUser.id }">${loginUser.nickname}님 안녕하세요.</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 				</ul>
@@ -172,7 +174,7 @@
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
 			<ul>
-				<li><a href="#">${loginUser.getId()}님</a></li>
+				<li><a href="#">${loginUser.id}님</a></li>
 				<li><a href="<c:url value="/mypage/mypage_main" />">마이페이지</a></li>
 				<li><a href="<c:url value="/logout" />">로그아웃</a></li>
 			</ul>

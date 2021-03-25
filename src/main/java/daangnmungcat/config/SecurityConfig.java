@@ -34,6 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/logout").authenticated()
 			.antMatchers("/admin/**").hasRole("ADMIN")
 			.antMatchers("/chat/**").authenticated()
+			.antMatchers("/mypage/**").authenticated()
+			.antMatchers("/mall/pre-order/**").authenticated()
 			.anyRequest().permitAll();
 		
 		http.cors().configurationSource(corsConfigurationSource());

@@ -181,5 +181,10 @@
 		UPDATE MALL_PDT SET DOG_CATE = #{dogCate.id}, CAT_CATE = #{catCate.id}, name = #{name}, PRICE = #{price}, CONTENT = #{content}, SALE_YN = #{saleYn}, STOCK = #{stock}, IMAGE1 = #{image1}, IMAGE2 = #{image2}, IMAGE3 = #{image3}, DELIVERY_KIND = #{deliveryKind}, DELIVERY_CONDITION = #{deliveryCondition}, DELIVERY_PRICE = #{deliveryPrice} WHERE ID = #{id}
 	</update>
 	
+	<update id="updateMallProductStock">
+		UPDATE MALL_PDT
+		SET stock = stock - #{orderQuantity}
+		WHERE id = #{product.id}
+	</update>
 
 </mapper>

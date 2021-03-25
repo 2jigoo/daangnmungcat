@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {padding:50px;}
+.wrapper {padding:70px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -40,7 +40,7 @@ $(document).ready(function(){
 					결제방식: 
 						<c:if test="${kakao.payment_method_type == 'MONEY'}">현금</c:if>
 						<c:if test="${kakao.payment_method_type == 'CARD'}">카드</c:if><br>
-					결제금액: ${kakao.amount.total } <br>
+					결제금액: <fmt:formatNumber value="${kakao.amount.total }"/> <br>
 					결제상태:
 						<c:if test="${kakao.status == 'SUCCESS_PAYMENT'}">결제완료</c:if>
 						<c:if test="${kakao.status == 'PART_CANCEL_PAYMENT'}">부분취소</c:if>

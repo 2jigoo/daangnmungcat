@@ -4,12 +4,13 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:50px; text-align:center}
-table {width:800px; margin:0 auto;}
+.wrapper {margin:0 auto; padding:70px; text-align:center;  margin-bottom:80px;}
 
 </style>
 <script>
 $(document).ready(function(){
+	$('#col').hide();
+	
 	var contextPath = "<%=request.getContextPath()%>";
 	$.get(contextPath +"/address-list", function(list){
 		var datalength = list.length; 
@@ -17,18 +18,18 @@ $(document).ready(function(){
 		if(datalength >= 1){
 			var sCont = "";
 			for(i=0; i<datalength; i++){
-				sCont += '<tr><td>' + list[i].subject + '<input type="text" value=' + list[i].id +'></td>' ;
+				sCont += '<tr><td>' + list[i].subject + '<input type="hidden" value=' + list[i].id +'></td>' ;
 				sCont += '<td>' + list[i].name + '</td>';
-				sCont += '<td>' + (list[i].zipcode) + ' ' + list[i].address1 + list[i].address2 + '</td>';
-				sCont += '<td>' + list[i].phone + '</td>';
-				sCont += '<td><input type="button" value="수정" id="update_addr" addrId=' + list[i].id;
-				sCont += '> <input type="button" value="삭제" id="delete_addr" addrId=' + list[i].id + '></td>';
+				sCont += '<td>(' + list[i].zipcode +') <br>' + list[i].address1 + ', ' +  list[i].address2 + '<br> 배송메모 : ' + list[i].memo + '</td>';
+				sCont += '<td>전화번호 : ' + list[i].phone1 + '<br>휴대폰 : ' + list[i].phone2 +'</td>';
+				sCont += '<td><input type="button" value="수정" id="update_addr" class="pre_order_btn2" style="width:50px;" addrId=' + list[i].id;
+				sCont += '> <input type="button" value="삭제" id="delete_addr" class="pre_order_btn2" style="width:50px;" addrId=' + list[i].id + '></td>';
 				sCont += '</tr>';
 			}
-			$("#addr").append(sCont);
+			$("#mypage_addr_main").append(sCont);
 		}else if(datalength == 0){
-			var t = '배송지 목록이 없습니다.';
-			$("#txt").append(t);
+			$('#col').show();
+			
 		}
 	});
 	
@@ -36,7 +37,7 @@ $(document).ready(function(){
 	
 	$(document).on('click', '[id=update_addr]', function(){
 		var num = $(this).attr('addrId');
-		window.open(contextPath+"/mypage/shipping_update?id="+num, "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open(contextPath+"/mypage/shipping_update?id="+num, "", "width=650, height=520, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 
 	$(document).on('click', '[id=delete_addr]', function(){
@@ -54,7 +55,7 @@ $(document).ready(function(){
 	});
 	
 	$('#add_addr').on("click", function(){
-		window.open(contextPath+"/mypage/shipping_add", "", "width=600, height=500, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
+		window.open(contextPath+"/mypage/shipping_add", "", "width=650, height=520, left=100, top=50 ,location=no, directoryies=no, resizable=no, scrollbars=yes");
 	});
 	
 });
@@ -86,14 +87,31 @@ function execPostCode(){
 </script>
 <div class="wrapper">
 <h2 id="subTitle">배송지 관리</h2>
-<input type="button" value="배송지추가" id="add_addr">
-<table id="addr">
-	<tr>
-		<td>배송지이름</td> <td>받으실 분</td> <td>주소</td> <td>연락처</td> <td>수정/삭제</td>
-	</tr>
+<div class="mypage_addr_btns">
+	<input type="button" value="+새 배송지추가" id="add_addr" class="go_list" style="font-size:15px;">
+</div>
+
+<table id="mypage_addr_main">
+	<colgroup>
+			<col width=10%>
+			<col width=12%>
+			<col width=37%>
+			<col width=18%>
+			<col width=15%>
+	</colgroup>
+	<thead>
+		<tr>
+			<th>배송지이름</th> <th>받으실 분</th> <th>주소</th> <th>연락처</th> <th>수정/삭제</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr id="col">
+			<td colspan="5" style="padding:50px;">배송지 목록이 없습니다.</td>
+		</tr>
+	</tbody>
 	
 </table>
-<p id="txt" style="padding:30px"></p>
+
    </div>
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

@@ -28,7 +28,7 @@ public class SaleReview {
 
 	private int id;
 	private Sale sale;
-	private Member buyMember;
+	private Member writer;
 	private double rating;
 	private String content;
 	@JsonFormat(pattern = "yyyy-MM-dd kk:mm:ss")

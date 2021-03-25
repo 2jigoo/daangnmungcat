@@ -30,7 +30,7 @@ public class JoongoSaleReviewMapperTest {
 	@Test
 	public void testSelectJoongoReviewBySaleId() {
 		System.out.println("중고 상품 아이디 검색");
-		SaleReview review = mapper.selectJoongoReviewBySaleId(5);
+		SaleReview review = mapper.selectJoongoReviewBySaleId(5, null);
 		System.out.println(review);
 	}
 	
