@@ -64,14 +64,20 @@ public interface OrderService {
 	Map<String, Integer> calculateDeliveryFee(List<Cart> list);
 	List<Order> selectOrderByMonth(String memId);
 	
+	int myPageOrderCancel(Order order, List<OrderDetail> odList);
+	int myPageOrderConfirm(OrderDetail od, Member member);
+	
 	/////////////////////////////////////
+	
+	
 	List<Order> selectOrderAll(Criteria cri);
 	int listCount();
 	
-	List<Order> selectOrderBySearch(String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice, Criteria cri);
+	List<Order> selectOrderBySearch(Criteria cri, String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
 	int searchListCount(String content, String query, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice);
 	
 	List<OrderDetail> selectNotSoldOutOrderDetailById(String orderId);
+	int UpdateOrderState(String[] od, String status, HttpServletRequest request);
 	
 	
 	

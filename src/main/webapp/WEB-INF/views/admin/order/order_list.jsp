@@ -2,12 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
 
-   
 <script>
 
 $(document).ready(function(){
 	var length = $('#order_list tbody td').length;
-	console.log(length)
 
 	//미수금 있는 주문
 	/* for(i=7; i<length; i+=18){
@@ -29,17 +27,23 @@ $(document).ready(function(){
 		}
 	}
 	
+	var str;
 	var state;
 	var start = getParameter('start');
 	var end = getParameter('end');
 	var stateStr = getParameter('state');
 	var settleCase = getParameter('settle_case');
-	var content = getParameter('content');
+	var search = getParameter('search');
 	var query = getParameter('query');
+	var misu = getParameter('misu');
+	var return_price = getParameter('return_price');
+	
+	
 	
 	$('input[name=order_state]').change(function(){
 		state = $(this).val(); 
 	});
+	
 	
 	$('input[id=start_date]').change(function(){
 		start = $(this).val(); 
@@ -48,6 +52,8 @@ $(document).ready(function(){
 	$('input[id=end_date]').change(function(){
 		end = $(this).val(); 
 	});
+	
+	
 	
 	if(settleCase != null){
 		$('input:radio[name="pay_type"][value="' + settleCase + '"]').prop('checked', true);
@@ -62,24 +68,72 @@ $(document).ready(function(){
 		$('input:radio[name="order_state"][value="' + stateStr + '"]').prop('checked', true);
 	}
 	
-	if(content != null || query !=null){
-		$("select[name='search'").val(content).prop("selected", true);
-		$('#query').prop('value', query);  
+	if(search != null || query !=null){
+		$("select[name='search'").val("${search}").prop("selected", true);
+		$('#query').prop('value', "${query}");  
 	}
 	
+	if(misu == 'y'){
+		$('input:checkbox[name="other"][value="미수금"]').prop('checked', true);
+	}
+	
+	if(return_price == 'y'){
+		$('input:checkbox[name="other"][value="반품품절"]').prop('checked', true);
+	}
+	
+
+	
 	$('#searchBtn').on('click', function(){
-		var keyword = $("select[name=search]").val();
-		var query = $('#query').val();
-		console.log(keyword + query)
 		
 		if(query == ""){
 			alert('검색어를 입력하세요.');
 			return;
 		}
 		
-		var paging = 'page=1&perPageNum=10';
-		console.log(paging)
-		var add = '/admin/order/list?content=' + keyword + '&query=' + query;
+		var keyword = $("select[name=search]").val();
+		var query = $('#query').val();
+		var start_val = $("#start_date").val();
+		var end_val = $("#end_date").val();
+		var state = $('input[name=order_state]:checked').val();
+		var settle_case = $('input[name=pay_type]:checked').val();
+		var other = $('input[name=other]:checked').val();
+		
+		var part_cancel;
+		
+		if(keyword == null){
+			keyword = '';
+		}
+		if(state == '부분취소'){
+			part_cancel = 'y';
+		}else{
+			part_cancel= '';
+		}
+		if(state == '전체'){
+			state = '';
+		}
+		
+		if(other == undefined){
+			other = '';
+		}
+		
+		var add = '/admin/order/list?search=' + keyword + '&query=' + query + '&start='+ start_val + '&end=' + end_val + '&state=' + state
+		+ '&settle_case=' + settle_case + '&part_cancel=' + part_cancel;
+		
+		var chkArray = new Array();
+		 
+        $('input[name=other]:checked').each(function() {
+            chkArray.push(this.value);
+        });
+		for(i=0; i<chkArray.length; i++){
+			console.log(chkArray[i]);
+			if(chkArray[i] == '미수금'){
+				add += '&misu=y'
+			}else if(chkArray[i] == '반품품절'){
+				add += '&return_price=y'
+			}
+		}
+
+		console.log(add)
 		location.href= add;
 	});
 	
@@ -95,14 +149,24 @@ $(document).ready(function(){
 	
 	$(document).on('click', '#search', function(){
 		
+		if(query == ""){
+			alert('검색어를 입력하세요.');
+			return;
+		}
+		
+		var keyword = $("select[name=search]").val();
+		var query = $('#query').val();
 		var start_val = $("#start_date").val();
 		var end_val = $("#end_date").val();
 		var state = $('input[name=order_state]:checked').val();
 		var settle_case = $('input[name=pay_type]:checked').val();
 		var other = $('input[name=other]:checked').val();
 		
-
 		var part_cancel;
+		
+		if(keyword == null){
+			keyword = '';
+		}
 		if(state == '부분취소'){
 			part_cancel = 'y';
 		}else{
@@ -115,8 +179,12 @@ $(document).ready(function(){
 		if(other == undefined){
 			other = '';
 		}
+		/*
 		var add = '/admin/order/list?start='+ start_val + '&end=' + end_val + '&state=' + state
 					+ '&settle_case=' + settle_case + '&part_cancel=' + part_cancel;
+		*/
+		var add = '/admin/order/list?search=' + keyword + '&query=' + query + '&start='+ start_val + '&end=' + end_val + '&state=' + state
+		+ '&settle_case=' + settle_case + '&part_cancel=' + part_cancel;
 		
 		var chkArray = new Array();
 		 
@@ -236,7 +304,7 @@ function getDateStr(myDate){
 	
 	<div class="card-body" style="padding:30px;">
 		<div class="col-sm-12 col-md-6 p-0">
-			<div><a href="/admin/order/list">전체 목록</a> | 전체 주문내역  ${totalCnt}건</div>
+			<div style="padding:5px;"><a href="/admin/order/list">전체 목록</a>  |  전체 주문내역  ${totalCnt}건</div>
 			<div>
 				<select class="custom-select custom-select-sm" name="search" style="width:100px;">
 					<option value="id" selected>주문번호</option>
@@ -253,9 +321,8 @@ function getDateStr(myDate){
 				<input type="button" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
 			</div>
 		</div>
-		<hr>
-		<div>
-			<div>
+		<div class="admin_od_menu">
+			<div class="admin_od_sub" style="border-top:1px solid #ccc">
 				<span style="font-weight:bold; margin-right:20px;">주문상태 </span> 
 				<input type="radio" name="order_state" value="전체" checked> 전체 
 				<input type="radio" name="order_state" value="대기"> 대기 
@@ -264,35 +331,39 @@ function getDateStr(myDate){
 				<input type="radio" name="order_state" value="완료"> 완료 
 				<input type="radio" name="order_state" value="전체취소"> 전체취소
 				<input type="radio" name="order_state" value="부분취소"> 부분취소
-				<input type="radio" name="order_state" value="구매확정"> 구매확정  
 			</div>
-			<hr>
-			<div style="width:100%;">
+			<div class="admin_od_sub">
 				<span style="font-weight:bold; margin-right:20px;"> 결제수단 </span> 
 				<input type="radio" name="pay_type" value="전체" checked> 전체 
 				<input type="radio" name="pay_type" value="무통장"> 무통장
 				<input type="radio" name="pay_type" value="카카오페이"> KAKAOPAY
 			</div>
-			<hr>
-			<div style="width:100%">
+			
+			<div class="admin_od_sub">
 				<span style="font-weight:bold; margin-right:20px;"> 기타선택 </span> 
 				<input type="checkbox" name="other" value="미수금"> 미수금
 				<input type="checkbox" name="other" value="반품품절"> 반품,품절
 			</div>
-			<hr>
-			<div style="width:100%">
-				<span style="font-weight:bold; margin-right:20px;"> 주문일자 </span> 
-				<input type="date" id="start_date"> ~ <input type="date" id="end_date">
-				<input type="button" value="전체" id="all_day" class="btn btn-light">
-				<input type="button" value="오늘" id="today" class="btn btn-light">
-				<input type="button" value="7일" id="7days_ago" class="btn btn-light">
-				<input type="button" value="15일" id="15days_ago" class="btn btn-light">
-				<input type="button" value="1개월" id="1month_ago" class="btn btn-light">
-				<input type="button" value="6개월" id="6month_ago" class="btn btn-light">
-				<input type="button" value="1년" id="1years_ago" class="btn btn-light">
-				<input type="button" value="조회" id="search" class="btn btn-primary">
+			
+			<div class="admin_od_sub" style="border:none;">
+				<div style="width:30%;">
+					<span style="font-weight:bold; margin-right:20px; float:left;"> 주문일자 </span> 
+					<input type="date" id="start_date" class="form-control" style="width:150px;float:left;">
+					 <span style="float:left;">&nbsp ~ &nbsp</span>
+					 <input type="date" id="end_date" class="form-control input-sm" style="width:150px;float:left;">
+				 </div>
+					&nbsp&nbsp
+					<input type="button" value="전체" id="all_day" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="오늘" id="today" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="7일" id="7days_ago" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="15일" id="15days_ago" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="1개월" id="1month_ago" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="6개월" id="6month_ago" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="1년" id="1years_ago" class="btn btn-outline-secondary btn-sm">
+					<input type="button" value="조회" id="search" class="btn btn-primary btn-sm">
+				
 			</div>
-			<hr>
+			
 		</div>
 		<table class="adm_table_style1" style="padding:20px; text-align:center" id="order_list">
 			<!-- <colgroup>
@@ -361,7 +432,7 @@ function getDateStr(myDate){
 	            		<fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${parseDate}"/>
 					</td>
 					<td rowspan="3">
-						<a href="/admin/order?id=${order.id}">보기</a>
+						<input type="button" value="보기" class="btn" style="background-color:#738dc5; color:#fff" onclick="location.href='/admin/order?id=${order.id}'">
 					</td>
 				</tr>
 				<tr>
@@ -393,42 +464,23 @@ function getDateStr(myDate){
 		</table>
 		
 		<div class="board_page">
-			
-			 
-			<c:if test="${content != null || query != null}">
-			    <c:if test="${pageMaker.prev}">
-			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&content=${content}&query=${query}">이전</a></p>
-			    </c:if> 
-				<ul>
 				
-				  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-				  	<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&content=${content}&query=${query}">${idx}</a></li>
-				  </c:forEach>
-				</ul>
-				
-				  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-				  	
-				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&content=${content}&query=${query}">다음</a></p>
-				  </c:if> 
-			</c:if>
-			
-			<c:if test="${content == null || query == null}">
-			    <c:if test="${pageMaker.prev}">
-			    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&start=${start}&end=${end}&state=${state}&settle_case=${settleCase}&part_cancel=${partCancel}&misu=${misu}&return_price=${returnPrice}">이전</a></p>
-			    </c:if> 
-				<ul>
-				
-				  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-				  	<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&start=${start}&end=${end}&state=${state}&settle_case=${settleCase}&part_cancel=${partCancel}&misu=${misu}&return_price=${returnPrice}">${idx}</a></li>
-				  </c:forEach>
-				</ul>
-				
-				  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-				  	
-				    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&start=${start}&end=${end}&state=${state}&settle_case=${settleCase}&part_cancel=${partCancel}&misu=${misu}&return_price=${returnPrice}">다음</a></p>
-				  </c:if> 
-			</c:if>
 		
-	</div>
+		    <c:if test="${pageMaker.prev}">
+		    	<p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.startPage - 1)}&search=${search}&query=${query}&start=${start}&end=${end}&state=${state}&settle_case=${settleCase}&part_cancel=${partCancel}&misu=${misu}&return_price=${returnPrice}">이전</a></p>
+		    </c:if> 
+			<ul>
+			
+			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+			  	<li><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(idx)}&search=${search}&query=${query}&start=${start}&end=${end}&state=${state}&settle_case=${settleCase}&part_cancel=${partCancel}&misu=${misu}&return_price=${returnPrice}">${idx}</a></li>
+			  </c:forEach>
+			</ul>
+			
+			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+			  	
+			    <p><a href="<%=request.getContextPath()%>/admin/order/list${pageMaker.makeQuery(pageMaker.endPage + 1)}&search=${search}&query=${query}&start=${start}&end=${end}&state=${state}&settle_case=${settleCase}&part_cancel=${partCancel}&misu=${misu}&return_price=${returnPrice}">다음</a></p>
+			  </c:if>
+			
 		</div>
+	</div>
 <%@ include file="/WEB-INF/views/admin/include/footer.jsp" %>

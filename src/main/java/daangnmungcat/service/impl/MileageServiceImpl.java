@@ -69,4 +69,9 @@ public class MileageServiceImpl implements MileageService {
 		return mapper.insertEventMilege(mileage);
 	}
 
+	@Override
+	public int listSearchCount(Mileage mile) {
+		return mapper.mileageSearchCount(mile);
+	}
+
 }

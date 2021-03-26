@@ -17,6 +17,7 @@ public interface MileageService {
 	int getMileage(String id);
 
 	int listCount();
+	int listSearchCount(Mileage mile);
 	
 	List<Mileage> selectMileageBySearch(Mileage mileage, Criteria cri);
 

@@ -76,6 +76,17 @@
 		order by a.rnum		
 	</select>
 	
+	<select id="mileageSearchCount" parameterType="Mileage" resultType="int">
+		SELECT COUNT(A.ID)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT ROWNUM, ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
+		FROM MALL_MILEAGE 
+	<where>
+		<if test="member != null">and MEM_ID LIKE '%'||#{member.id}||'%' </if>
+	</where>
+		ORDER BY ID DESC) B)A 
+	</select>
+	
 	<select id="selectMileageInfoById" parameterType="int" resultMap="mileRes">
 		<include refid="selectSql"></include>
 		where id = #{id}
