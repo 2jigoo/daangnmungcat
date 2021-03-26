@@ -364,8 +364,47 @@ public class OrderServiceImpl implements OrderService{
 		
 		return deliveryFee;
 	}
+	
 
-////////////////admin////////////////////////////
+	@Transactional
+	@Override
+	public int myPageOrderCancel(Order order, List<OrderDetail> odList) {
+		
+		int res = 0;
+		for(OrderDetail od:odList) {
+			od.setOrderState(OrderState.CANCEL);
+			res += updateAllOrderDetail(od, order.getId());
+		}
+		
+		order.setState(OrderState.CANCEL.getLabel());
+		res += updateOrder(order, order.getId());
+		return res;
+	}
+
+	@Transactional
+	@Override
+	public int myPageOrderConfirm(OrderDetail od, Member member) {
+
+		int mileage = (int) Math.floor(od.getTotalPrice() * 0.01);
+		
+		Mileage mile = new Mileage();
+		mile.setMileage(mileage);
+		mile.setOrder(getOrderByNo(String.valueOf(od.getId())));
+		//order -> od도 상태 다를 수 있으니까 od로 바꿔서 개별 적립하는게 맞는듯
+		// 배송도 od로 바꾸는게 맞음
+		mile.setContent("상품 구매 적립");
+		mile.setMember(member);
+		mileService.insertMilegeInfo(mile);
+		
+		od.setOrderState(OrderState.PURCHASE_COMPLETED);
+		updatePartOrderDetail(od, od.getId());
+		
+		return mileage;
+	}
+	
+	
+
+////////////////admin///////////////////////////////////////////////////
 	
 	@Override
 	public List<Order> selectOrderAll(Criteria cri) {
@@ -380,7 +419,7 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public List<Order> selectOrderBySearch(String content, String word, String state,String start, String end, String settleCase, String partCancel, String misu, String returnPrice,  Criteria cri) {
+	public List<Order> selectOrderBySearch(Criteria cri, String content, String word, String state, String start, String end, String settleCase, String partCancel, String misu, String returnPrice) {
 		// TODO Auto-generated method stub
 		return mapper.selectOrderBySearch(cri, content, word, state, start, end, settleCase, partCancel, misu, returnPrice);
 	}
@@ -738,6 +777,228 @@ public class OrderServiceImpl implements OrderService{
 		// TODO Auto-generated method stub
 		return mapper.selectOrderByMonth(memId);
 	}
+
+	
+	@Transactional
+	@Override
+	public int UpdateOrderState(String[] od, String status, HttpServletRequest request) {
+		
+		int res = 0;
+		//od id list
+		Order order = null;
+		Payment pay = null;
+		
+		for(int i=0; i<od.length; i++) {
+			
+			OrderDetail ord = getOrderDetailById(od[i]);
+			order = getOrderByNo(ord.getOrderId());
+			List<OrderDetail> odList = getOrderDetail(ord.getOrderId());
+			pay = selectAccountPaymentByOrderId(order.getId());
+			
+			//품절상태에서 다른 상태로 되돌리면 복구
+			
+			if(!status.equals(OrderState.SOLD_OUT.getLabel()) && 
+					!status.equals(OrderState.CANCEL.getLabel()) &&
+					!status.equals(OrderState.RETURN.getLabel())) {
+					
+			//대기, 결제, 배송, 완료는 하나라도 변경 시 order도 변경
+			
+				if(!ord.getOrderState().getLabel().equals(OrderState.DEPOSIT_REQUEST.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.PAID.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.SHIPPING.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.DELIVERED.getLabel())){
+						
+						if(status.equals("대기")) {
+							ord.setOrderState(OrderState.DEPOSIT_REQUEST);
+							order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
+		
+						}else if(status.equals("결제")) {
+							ord.setOrderState(OrderState.PAID);
+							order.setState(OrderState.PAID.getLabel());
+			
+						}else if(status.equals("배송")) {
+							ord.setOrderState(OrderState.SHIPPING);
+							order.setState(OrderState.SHIPPING.getLabel());
+				
+						}else if(status.equals("완료")) {
+							ord.setOrderState(OrderState.DELIVERED);
+							order.setState(OrderState.DELIVERED.getLabel());
+						}
+						
+
+						if(order.getPayId() == null) {
+							System.out.println("pay 없음");
+							System.out.println(ord);
+							//현재 51000. return = 0 + 33000취소
+							//order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
+							//order.setMisu(order.getFinalPrice() - order.getReturnPrice());
+							//미수 = 51000 - 33000 + 0 = 18000
+							
+							//33000 - 33000 = 0
+							order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());
+							order.setMisu(order.getFinalPrice() - order.getReturnPrice()); 
+							
+							//54000 - 0
+						
+						}else {
+							System.out.println("pay있음");
+							order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());	
+							order.setMisu(order.getMisu() + ord.getTotalPrice());
+	
+							//order.setMisu(order.getFinalPrice() - order.getReturnPrice() + order.getCancelPrice() - ord.getTotalPrice() - pay.getPayPrice());
+						}
+						
+						updatePartOrderDetail(ord, ord.getId());
+						updateOrder(order, order.getId());
+						
+						
+				} else {
+						
+					if(status.equals("대기")) {
+						ord.setOrderState(OrderState.DEPOSIT_REQUEST);
+						order.setState(OrderState.DEPOSIT_REQUEST.getLabel());
+	
+					}else if(status.equals("결제")) {
+						ord.setOrderState(OrderState.PAID);
+						order.setState(OrderState.PAID.getLabel());
+		
+					}else if(status.equals("배송")) {
+						ord.setOrderState(OrderState.SHIPPING);
+						order.setState(OrderState.SHIPPING.getLabel());
+			
+					}else if(status.equals("완료")) {
+						ord.setOrderState(OrderState.DELIVERED);
+						order.setState(OrderState.DELIVERED.getLabel());
+					}
+					
+					updatePartOrderDetail(ord, ord.getId());
+					updateOrder(order, order.getId());
+				}
+				
+					
+				
+					
+					
+			//취소, 반품, 품절일때 -> 상세 각자 상태변경
+			//대기 상태에서 변경 order 미수금에서 해당 상품 금액 빼기
+			//입금 상태에서 품절 시 전체금액 - 해당상품금액 -> 미수금 마이너스됨 -> 취소/환불금액에서 입력하면 처리
+			//주문 총액은 변경 x 미수만 변경	
+			//반품,품절금액 -> return_price에 반영 
+			//결제 취소 금액 -> cancel_price. 최종미수금에서 + 
+				
+			//무통장일때 pay가 존재하지 않으면 미수도 0
+				
+			} else { 
+				
+				//취소반품 품절일때 중복 변경 x
+				if(!ord.getOrderState().getLabel().equals(OrderState.CANCEL.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.RETURN.getLabel()) 
+						&& !ord.getOrderState().getLabel().equals(OrderState.SOLD_OUT.getLabel())){
+					
+					if(status.equals("취소")) {
+						ord.setOrderState(OrderState.CANCEL);
+					}else if(status.equals("반품")) {
+						ord.setOrderState(OrderState.RETURN);	
+					}else if(status.equals("품절")) {
+						ord.setOrderState(OrderState.SOLD_OUT);
+					}
+
+					if(order.getPayId() == null) {
+						System.out.println("pay 없음");
+						
+						// 무통장시 미수금 있음 지금 미수에서 -> 취소시 해당 ord의 total 빼기
+						//현재 51000. return = 0 + 33000취소
+						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
+						order.setMisu(order.getFinalPrice() - order.getReturnPrice());
+						//미수 = 51000 - 33000 + 0 = 18000
+						
+						//대기,결제
+						//order.setReturnPrice(order.getReturnPrice() - ord.getTotalPrice());
+						//order.setMisu(order.getFinalPrice() - order.getReturnPrice()); 
+					
+					}else {
+						//주문취소에 추가  => 현재 취소액 + 선택한 금액
+						System.out.println("pay있음");
+						order.setReturnPrice(order.getReturnPrice() + ord.getTotalPrice());
+						order.setMisu(order.getMisu() - ord.getTotalPrice());
+	
+					}
+					
+				}else {
+					System.out.println("취반품");
+					System.out.println(status + " - " + ord.getOrderState().getLabel());
+					if(status.equals("취소")) {
+						ord.setOrderState(OrderState.CANCEL);
+					}else if(status.equals("반품")) {
+						ord.setOrderState(OrderState.RETURN);	
+					}else if(status.equals("품절")) {
+						ord.setOrderState(OrderState.SOLD_OUT);
+					}
+
+				}
+
+				updatePartOrderDetail(ord, ord.getId());
+				updateOrder(order, order.getId());
+				
+			}
+				
+			
+			if(odList.size() == od.length) {
+				// 전체선택 ->  order의 상태도 같이 변경
+				// 하나라도 있으면 유지
+				// 하나 취소 -> 상태유지
+				order.setState(status);
+				updateOrder(order, order.getId());
+			}
+			
+	
+		} //end
+		
+		//모든 처리 후 현재 모든 status가 동일하면 order도 같이 변경
+		
+		List<OrderDetail> odList = null;
+		for(int i=0; i<od.length; i++) {
+			OrderDetail ord = getOrderDetailById(od[i]);
+			odList = getOrderDetail(ord.getOrderId());
+			order = getOrderByNo(ord.getOrderId());
+			
+			int j = 0;
+			for(i=0; i<odList.size(); i++) {
+				if(odList.get(i).getOrderState().getLabel().equals(status)) {
+					j++;
+				}
+			}
+			if(j == odList.size()) {
+				order.setState(status);
+				updateOrder(order, order.getId());
+			}
+			
+		}
+		
+		//최종 미수: 품절 아닌 odList의 가격 - 입금액
+		int deposit = 0;
+		int pdtPrice = 0;
+		
+		List<OrderDetail> notSoldOutList = selectNotSoldOutOrderDetailById(order.getId());
+		
+		if(pay == null) {
+			deposit = 0;
+			for(OrderDetail notSoldOutOd: notSoldOutList) {
+				pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+			}
+			
+		}else {
+			deposit = pay.getPayPrice();
+			for(OrderDetail notSoldOutOd: notSoldOutList) {
+				pdtPrice += notSoldOutOd.getPdt().getPrice() * notSoldOutOd.getQuantity();
+			}
+			System.out.println(pdtPrice);
+		}
+		
+					
+		return res;
+	}
+
 
 
 }

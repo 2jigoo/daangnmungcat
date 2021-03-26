@@ -2,8 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:70px; text-align:center; margin-bottom:250px; }
-.wrapper input{font-family:'S-CoreDream'; margin:2px 2px; width:220px;}
+.wrapper {margin:0 auto; padding:70px; text-align:center; margin-bottom:150px; }
 
 </style>
 <script>
@@ -83,30 +82,33 @@ $(function(){
 
 <div class="wrapper">
 	<h2 id="subTitle">비밀번호 변경</h2>
-<table class="pwd_update_table">
-	<tr>
-		<td><span class="asterisk">* </span> 현재 비밀번호</td>
-		<td><input type="password" id="now_pwd" name="now_pwd"></td> 
-	</tr>
-	<tr>
-		<td><span class="asterisk">* </span> 새 비밀번호</td>
-		<td><input type="password" id="new_pwd" name="new_pwd"></td>
-	</tr>
-	<tr>
-		<td><span class="asterisk">* </span> 비밀번호 확인</td>
-		<td><input type="password" id="re_pwd" name="re_pwd"></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td>
-			<font size="2" color="black" name="check"></font>
-		</td>
-	</tr>
-</table>
-
-<div class="confirm_btns">
+	<div>
+		<table class="pwd_update_table">
+			<tr>
+				<td><span class="asterisk">* </span> 현재 비밀번호</td>
+				<td><input type="password" id="now_pwd" name="now_pwd" class="mypage_pwd_text"></td> 
+			</tr>
+			<tr>
+				<td><span class="asterisk">* </span> 새 비밀번호</td>
+				<td><input type="password" id="new_pwd" name="new_pwd" class="mypage_pwd_text"></td>
+			</tr>
+			<tr>
+				<td><span class="asterisk">* </span> 비밀번호 확인</td>
+				<td><input type="password" id="re_pwd" name="re_pwd" class="mypage_pwd_text"></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<font size="2" color="black" name="check"></font>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<div class="confirm_btns">
 		<input type="button" id="cancel" value="취소" onclick="history.back()"  class="go_list" style="padding:8px; background-color:#676767; font-size:15px; width:100px;">
 		<input type="button" id="pwd_update" value="변경" class="go_list" style="padding:8px; font-size:15px; width:100px;">
 	</div>
 </div>
+	
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>
