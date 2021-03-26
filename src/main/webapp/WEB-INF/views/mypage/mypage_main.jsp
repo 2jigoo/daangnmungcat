@@ -140,7 +140,7 @@ $(document).ready(function(){
 			님 회원등급은 <span style="font-weight:bold">${grade}</span> 입니다. </span>
 		<span class="mypage_mile">
 			마일리지 <br><br>
-			<span class="mypage_num"><fmt:formatNumber value="${mile}"/></span>
+			<a class="mypage_num" href="/mypage/mileage/list?memId=${loginUser.getId()}"><fmt:formatNumber value="${mile}"/></a>
 		</span>
 		<span class="mypage_mile">
 			중고거래 <br><br>
