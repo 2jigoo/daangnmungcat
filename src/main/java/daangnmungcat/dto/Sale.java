@@ -60,6 +60,6 @@ public class Sale {
 	public Sale(int id) {
 		this.id = id;
 	}
-	
+
 	
 }

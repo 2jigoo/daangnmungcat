@@ -350,5 +350,4 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return joongoListMapper.listSearchCount(sale);
 	}
 
-	
 }

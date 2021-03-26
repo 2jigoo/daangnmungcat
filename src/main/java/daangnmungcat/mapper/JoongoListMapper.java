@@ -17,6 +17,8 @@ public interface JoongoListMapper {
 	
 	List<Sale> selectJoongoByDongne2(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2, @Param("cri") Criteria cri);
 	
+	
+	
 	List<Sale> selectJoongoBySearch(@Param("sale") Sale sale, @Param("cri") Criteria cri);
 	
 	//insertForm용
@@ -37,5 +39,8 @@ public interface JoongoListMapper {
 	List<Sale> selectHeartedJoongoByMemberIdWithPaging(@Param("memberId") String memberId, @Param("criteria") Criteria criteria);
 //	int insertFileForm(FileForm FileForm);
 	int nextID();
+
+
+	
 	
 }
