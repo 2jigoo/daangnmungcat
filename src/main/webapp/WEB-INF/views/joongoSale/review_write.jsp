@@ -4,7 +4,7 @@
 
 
 <c:choose>
-	<c:when test="${loginUser.id eq sale.member.id }">
+	<%-- <c:when test="${loginUser.id eq sale.member.id }">
 	<script>
 		alert("본인의 판매글에 대해 거래후기를 남길 수 없습니다.");
 		window.location = "/";
@@ -15,7 +15,7 @@
 			alert("본인이 구매한 판매글에만 거래후기를 남길 수 있습니다.")
 			window.location = "/";
 		</script>
-	</c:when>
+	</c:when> --%>
 	<c:when test="${not empty review}">
 		<script>
 			alert("이미 해당 판매글에 대해 거래후기를 남겼습니다.")
@@ -84,8 +84,17 @@ $(function(){
 	<div id="pageCont" class="s-inner">
 		<div class="joongo_review">
 			<input type="hidden" name="sale" value="${sale.id}">
-			<input type="hidden" name="writer.id" value="${sale.writer.id}">
+			<input type="hidden" name="writer.id" value="${loginUser.id}">
 			<ul>
+				<li>
+					<p>거래상대</p>
+					<div>
+						<c:choose>
+							<c:when test="${loginUser.id eq sale.member.id }">${sale.buyMember.id }</c:when>
+							<c:otherwise>${sale.member.id }</c:otherwise>
+						</c:choose>
+					</div>
+				</li>
 				<li>
 					<p>구매상품</p>
 					<div>

@@ -34,7 +34,7 @@ public interface MemberService {
 	int emailCheck(String email);
 	int phoneCheck(String phone);
 	
-
+	String modifyProfile(Member member, MultipartFile uploadFile, File realPath, boolean isChanged);
 	int deleteProfilePic(String id, File realPath);
 	int updateProfilePic(String id, MultipartFile[] uploadFile, File realPath);
 	int updateProfileText(Member member);

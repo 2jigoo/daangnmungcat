@@ -46,6 +46,10 @@ public interface JoongoSaleService {
 	// 검색 조건에 따른 리스트
 	List<Sale> getListsSearchedBy(Sale sale, Criteria cri);
 	
+	// 프로필. 판매상태와 멤버아이디에 따른 리스트
+	List<Sale> getListsByStateAndMember(String state, String memberId, Criteria cri);
+	int countsByStateAndMember(String state, String memberId);
+	
 	//상세보기 - 수정에서 사진 db삭제
 	int deleteSaleFile(String fileName);
 	int deleteSaleFileBySaleId(int id);

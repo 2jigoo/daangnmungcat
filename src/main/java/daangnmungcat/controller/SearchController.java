@@ -36,7 +36,7 @@ public class SearchController {
 			
 			PageMaker pageMaker = new PageMaker();
 			pageMaker.setCri(cri);
-			pageMaker.setTotalCount(joongoService.listCount());
+			pageMaker.setTotalCount(joongoService.listSearchCount(sale));
 			model.addAttribute("pageMaker", pageMaker);
 			
 			return "/joongo_list";

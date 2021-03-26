@@ -35,6 +35,7 @@
 		<!-- <result column="is_heart" property="isHeart"/> -->
 		<result column="heart_count" property="heartCount"/>
 		<result column="thum_name" property="thumImg"/>
+		<result column="reviewed" property="reviewed"/>
 		
 		<association property="dongne1" resultMap="dongne1Result"/>
 		<association property="dongne2" resultMap="dongne2Result"/>
@@ -133,7 +134,9 @@
 		  	<if test="sale.member != null">and mem_id LIKE '%'||#{sale.member.id}||'%' </if>
 		  	<if test="sale.dongne1 != null">and d1.NAME = #{sale.dongne1.name} </if>
 		  	<if test="sale.dongne2 != null">AND d2.NAME = #{sale.dongne2.name} </if>
-		  </where>) b) a
+		  </where>
+		 	ORDER BY js.id DESC 
+		 ) b) a
 		 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 		ORDER BY a.rnum
 	</select>
@@ -153,9 +156,14 @@
 	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
 	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
 	  <where>
+	  	<if test="title != null">and title LIKE '%'||#{title}||'%' </if>
+	  	<if test="dogCate != null">and dog_cate = #{dogCate} </if>
+	  	<if test="catCate != null">and cat_cate = #{catCate} </if>
 	  	<if test="member != null">and MEM_ID LIKE '%'||#{member.id}||'%' </if>
+	  	<if test="dongne1 != null">and d1.NAME = #{dongne1.name} </if>
+	  	<if test="dongne2 != null">AND d2.NAME = #{dongne2.name} </if>
 	  </where>
-	  ORDER BY js.id desc) b) a
+	  ) b) a
 	</select>
 	
 	<select id="listCount1" parameterType="map" resultType="int">
@@ -172,6 +180,45 @@
 	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
 	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} and d2.NAME = #{dongne2} 
 	  ORDER BY js.id desc) b) a
+	</select>
+	
+	
+	<select id="selectJoongoListByMemberAndState" resultMap="saleResult">
+		SELECT a.*
+		FROM (SELECT rownum AS rnum, b.*
+			FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name
+			, (SELECT count(id)
+				FROM JOONGO_REVIEW r
+				WHERE sale_id = js.id AND writer = #{memberId}) AS reviewd
+			  FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID
+			  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+			  LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+			  <where>
+			  	<choose>
+			  		<when test="state != null and state.equalsIgnoreCase('SOLD_OUT')">sale_state = '판매 완료' and </when>
+			  		<when test="state != null and state.equalsIgnoreCase('ALL')"></when>
+			  		<otherwise>sale_state != '판매 완료' and </otherwise>
+			  	</choose>
+			  	mem_id = #{memberId}
+			  </where>	
+			  ORDER BY js.ID DESC
+		  ) b
+	  ) a
+	  WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+	  ORDER BY a.rnum
+	</select>
+	
+	<select id="selectCountJoongoByMemberIdAndState" resultType="int">
+		SELECT COUNT(*)
+		FROM JOONGO_SALE
+		<where>
+		  	<choose>
+		  		<when test="state != null and state.equalsIgnoreCase('SOLD_OUT')">sale_state = '판매 완료' and</when>
+		  		<when test="state != null and state.equalsIgnoreCase('ALL')"></when>
+		  		<otherwise>sale_state != '판매 완료' and </otherwise>
+		  	</choose>
+			mem_id = #{memberId}
+		</where>
 	</select>
 	
 	
