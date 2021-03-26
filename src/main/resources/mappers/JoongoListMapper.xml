@@ -130,7 +130,7 @@
 		  	<if test="sale.title != null">and title LIKE '%'||#{sale.title}||'%' </if>
 		  	<if test="sale.dogCate != null">and dog_cate = #{sale.dogCate} </if>
 		  	<if test="sale.catCate != null">and cat_cate = #{sale.catCate} </if>
-		  	<if test="sale.member != null">and mem_id LIKE '%'||#{sale.member.id}||'%' </if>
+		  	<if test="sale.member != null">and mem_id = #{sale.member.id} </if>
 		  	<if test="sale.dongne1 != null">and d1.NAME = #{sale.dongne1.name} </if>
 		  	<if test="sale.dongne2 != null">AND d2.NAME = #{sale.dongne2.name} </if>
 		  </where>) b) a

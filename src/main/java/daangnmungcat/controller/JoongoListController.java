@@ -265,6 +265,7 @@ public class JoongoListController {
 			Sale sale = new Sale();
 			sale.setMember(new Member(memId));
 			System.out.println("memID : "+ memId);
+			System.out.println("sale : "+ sale);
 			List<Sale> list = saleService.getListsSearchedBy(sale, cri);
 			model.addAttribute("list", list);
 			
