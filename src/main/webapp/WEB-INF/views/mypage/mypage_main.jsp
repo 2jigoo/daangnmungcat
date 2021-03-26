@@ -42,7 +42,7 @@ $(document).ready(function(){
 				<dt>커뮤니티</dt>
 				<dd>내 게시물</dd>
 				<dd>내 댓글</dd>
-				<dd>마일리지</dd>
+				<dd><a href="/mypage/mileage/list?memId=${loginUser.id}">마일리지</a></dd>
 			</dl>
 		</div>
 
