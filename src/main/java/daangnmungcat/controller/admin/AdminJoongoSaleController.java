@@ -31,6 +31,9 @@ public class AdminJoongoSaleController {
 		List<Sale> list = Collections.emptyList();
 		System.out.println(cri);
 		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		
 		if (name != null || category != null || id != null || dongne1 != null) {
 			Sale sale = new Sale();
 			if(name != null) {
@@ -55,15 +58,13 @@ public class AdminJoongoSaleController {
 			}
 			
 			list = service.getListsSearchedBy(sale, cri);
-			
+			pageMaker.setTotalCount(service.listSearchCount(sale));
 		} else {
 			list = service.getLists(cri);
+			pageMaker.setTotalCount(service.listCount());
 		}
-		model.addAttribute("list", list);
 		
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(service.listCount());
+		model.addAttribute("list", list);
 		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/admin/joongo/joongo_list";

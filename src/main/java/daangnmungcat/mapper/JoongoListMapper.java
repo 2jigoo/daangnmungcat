@@ -25,6 +25,10 @@ public interface JoongoListMapper {
 	List<Sale> selectDongne1ByAll(@Param("dongne1") String dongne1);
 	List<Sale> selectDongne2ByAll(@Param("dongne1") String dongne1, @Param("dongne2") String dongne2);
 	
+	// 프로필 쪽에서 쓰는 검색
+	List<Sale> selectJoongoListByMemberAndState(@Param("state") String state, @Param("memberId") String memberId, @Param("cri") Criteria cri);
+	int selectCountJoongoByMemberIdAndState(@Param("state") String state, @Param("memberId") String memberId);
+	
 	int listCount();
 	int listSearchCount(Sale sale);
 	int listCount1(@Param("dongne1") String dongne1);

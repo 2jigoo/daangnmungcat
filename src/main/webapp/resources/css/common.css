@@ -210,7 +210,9 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .product_list .price span:first-child {font-size:1em; float:left; font-weight:normal; margin-top:4px;}
 .product_list .price .ON_SALE { display: none;}
 .product_list .price .RESERVED { color: white; background-color: seagreen; padding: 2px 6px; border-radius: 4px;}
-.product_list .price .SOLD_OUT { color: white; background-color: lightslategray; padding: 2px 6px; border-radius: 4px;}
+.product_list .price .SOLD_OUT { color: white; background-color: #333; padding: 2px 6px; border-radius: 4px;}
+.product_list .review {text-align: center; padding: 8px 0; border: 1px solid #e6e6e6; border-radius: 6px; margin-top: 10px; font-weight: 600;}
+.product_list .review.send {color: darkorange;}
 
 @media screen and (max-width:1199px){
 	.product_list.s-inner {width:100%;}
@@ -363,7 +365,7 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .joongo_review .btn.history_back_btn {background:#111}
 
 .member_info {width:100%; overflow:hidden; margin-bottom:20px; border: 1px solid #e6e6e6; padding: 20px; background-color: #fafafa;}
-.member_info .img_box {float:left; width:80px; height:80px; border-radius:50%; overflow:hidden; margin-right:20px; border: 1px solid #e6e6e6;}
+.member_info .img_box {float:left; width:80px; height:80px; border-radius:50%; overflow:hidden; margin-right:20px; border: 1px solid #e6e6e6; cursor: pointer;}
 .member_info .img_box img {max-block-size: -webkit-fill-available;}
 .member_info .txt_box {float:left; width:calc(100% - 110px); margin-top:8px;}
 .member_info .txt_box .name {color:#111; font-weight: 600; font-size: 20px;}
@@ -405,7 +407,7 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .profile_section {padding: 30px 0px; border-top: 1px solid #e6e6e6;}
 .profile_section select {width: 140px; border: 1px solid #ccc; font-size: 16px; font-family: inherit; border-radius: 5px; padding: 4px 6px; margin-bottom: 40px;}
 .profile_section .title {font-weight: 500; font-size: 24px; margin-bottom: 40px; color: darkorange;}
-.profile_section .more_btn {font-size: 16px; color: #888; background-color: #efefef; border-radius: 4px; float: right; border: 1px solid #e6e6e6; padding: 4px 10px; text-align: center; cursor: pointer; }
+.profile_section .btn, .member_info .btn {font-size: 16px; color: #888; background-color: #efefef; border-radius: 4px; float: right; border: 1px solid #e6e6e6; padding: 4px 10px; text-align: center; cursor: pointer; }
 .profile_menu .back_btn {font-size: 16px; color: #888; background-color: #efefef; border-radius: 4px; float: right; border: 1px solid #e6e6e6; padding: 4px 10px; text-align: center; cursor: pointer; }
 .profile_menu .menu {width: 160px; display: inline-block; text-align: center; padding: 12px 0 10px 0; border: 1px solid #e6e6e6; border-bottom: none; margin: 0; box-sizing: border-box; cursor: pointer;}
 .profile_menu .menu:not(:first-child) {border-left: none;}

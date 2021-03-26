@@ -124,18 +124,20 @@
 	</update>
 	
 	<update id="updateInfo">
-		update member set
-			name = #{name},
-			nickname = #{nickname},
-			email = #{email},
-			phone = #{phone}, 
-			dongne1 = #{dongne1.id}, 
-			dongne2 = #{dongne2.id},
+		update member
+		<set>
+			<if test="name != null">name = #{name},</if>
+			<if test="nickname != null">nickname = #{nickname}, </if>
+			<if test="email != null">email = #{email},</if>
+			<if test="phone != null">phone = #{phone}, </if>
 			<if test="birthday != null">birthday = #{birthday},</if>
-			<if test="zipcode != null and zipcode != '' ">zipcode = #{zipcode},</if>
-			<if test="address1 != null and address1 != '' ">address1 = #{address1},</if>
-			<if test="address2 != null and address2 != '' ">address2 = #{address2} </if>
-		where id = #{id}
+			<if test="dongne1 != null and dongne1.id != 0">dongne1 = #{dongne1.id}, </if>
+			<if test="dongne2 != null and dongne2.id != 0">dongne2 = #{dongne2.id}, </if>
+			<if test="zipcode != null and zipcode != 0">zipcode = #{zipcode}, </if>
+			<if test="address1 != null">address1 = #{address1}, </if>
+			<if test="address2 != null">address2 = #{address2} </if>
+		</set> 
+		WHERE id = #{id}
 	</update>
 	
 	<update id="updatePwd">

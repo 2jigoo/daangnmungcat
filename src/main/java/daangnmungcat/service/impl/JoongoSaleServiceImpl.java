@@ -328,7 +328,22 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		setChatCount(list);
 		return list;
 	}
+	
+	/**
+	 * 프로필 메뉴에서 사용하는 검색 메서드
+	 * 판매상태: 판매중(예약포함) / 판매완료
+	 */
+	@Override
+	public List<Sale> getListsByStateAndMember(String state, String memberId, Criteria cri) {
+		List<Sale> list = joongoListMapper.selectJoongoListByMemberAndState(state, memberId, cri); 
+		setChatCount(list);
+		return list;
+	}
 
+	@Override
+	public int countsByStateAndMember(String state, String memberId) {
+		return joongoListMapper.selectCountJoongoByMemberIdAndState(state, memberId);
+	}
 	
 	/**
 	 *  받은 List에 setChatCount 처리. (해당 상품글에 대해 개설된 채팅방 수)
