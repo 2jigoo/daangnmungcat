@@ -751,15 +751,13 @@ input#ok1:checked + label.all_b:before, input#ok2:checked + label.all_b:before {
 
 
 /* 마이페이지 */
-.mypage_main {width:100%; overflow:hidden;}
-.mypage_main dl {float:left; width:calc(25% - 11.25px); margin-right:15px; text-align:center;}
+.mypage_main {width: 100%; overflow: hidden; padding-bottom: 8px; border-bottom: 1px solid #e6e6e6;}
+.mypage_main dl {float:left; width:25%; text-align:center;}
 .mypage_main dl:last-child {margin-right:0;}
-.mypage_main dl dt {font-size:1.5em; color:#111; font-weight:600; margin-bottom:20px;}
-.mypage_main dl dd {width:100%; line-height:53px; border:1px solid #ddd; font-size:1em; color:#111; transition:background 0.5s; margin-bottom:5px;}
+.mypage_main dl dt {font-size:1.5em; color:#111; font-weight:600; border-top: 1px solid #e6e6e6; border-bottom: 1px solid #e6e6e6; padding: 12px 0px; margin-bottom: 8px;}
+.mypage_main dl dd {width:100%; font-size:1em; color:#111; transition:background 0.5s; padding: 8px 0;}
 .mypage_main dl dd:hover {background:#f7f7f7; color:#ff7e15;}
 .mypage_main dl dd:hover a {color:#ff7e15}
-.mypage_main dl dd:hover a {color:#ff7e15}
-
 
 
 @media screen and (max-width:767px){
@@ -770,12 +768,38 @@ input#ok1:checked + label.all_b:before, input#ok2:checked + label.all_b:before {
 }
 
 
-.mypage_grade_div {width:100%; background-color:#f7f7f7; padding:60px; margin-top:40px;}
+/* .member_info {width:100%; overflow:hidden; margin-bottom:20px; border: 1px solid #e6e6e6; padding: 20px; background-color: #fafafa;}
+.member_info .img_box {float:left; width:80px; height:80px; border-radius:50%; overflow:hidden; margin-right:20px; border: 1px solid #e6e6e6; cursor: pointer;}
+.member_info .img_box img {max-block-size: -webkit-fill-available;}
+.member_info .txt_box {float:left; width:calc(100% - 110px); margin-top:8px;}
+.member_info .txt_box .name {color:#111; font-weight: 600; font-size: 20px;}
+.member_info .txt_box .name span {color:#888; font-weight:normal; margin-left:10px;}
+.member_info .txt_box .count {margin-top:10px;}
+.member_info .txt_box .bio {margin-top:10px;}
+.member_info .txt_box .bio .none {color: #cecece; font-style: italic;} */
+
+
+.mypage_grade_div {width:100%; height: 160px; background-color:#f7f7f7; padding:30px 50px; margin-top:40px; overflow:hidden;}
+
+.mypage_grade_div .img_box {float:left; width:100px; height:100px; border-radius:50%; overflow:hidden; margin-right:40px; border: 1px solid #e6e6e6; cursor: pointer;}
+.mypage_grade_div .img_box img {max-block-size: -webkit-fill-available;}
+
+.mypage_grade_div .txt_box {float:left; font-size: 20px; padding: 20px 0;}
+.mypage_grade_div .txt_box .bold {font-weight: 600;}
+.mypage_grade_div .txt_box .orange {color: darkorange;}
+.mypage_grade_div .txt_box .dongne {font-size: 16px; color: #999; margin-top: 6px;}
+
+.mypage_grade_div .info_box {float: right; margin-right: 40px; margin-top: 14px;}
+.mypage_grade_div .info_box .item {float:right; text-align:center; width: 80px; margin-right: 20px; font-size:1em; font-weight: 500;}
+.mypage_grade_div .info_box .num {font-size:20px; color:darkorange; font-weight:600;}
+
+.mypage_grade_div .btn_box {float: right; display: grid; text-align: center;}
+.mypage_grade_div .btn_box .item {background-color: darkorange; color: white; font-weight: 500; padding: 4px 20px; margin-bottom: 4px; border-radius: 4px;}
+
 .mypage_sale_div {margin-top:40px;}
-.mypage_grade {float:left;  margin-top:-10px;}
-.mypage_mile {float:right; text-align:center; padding:30px; margin-top:-65px; font-size:14px;}
-.mypage_num {font-size:20px; color:#ff7e15; font-weight:bold}
 .mypage_title_div {padding:10px;}
+.mypage_title_div .btn {font-size: 16px; color: #888; background-color: #efefef; border-radius: 4px; float: right; border: 1px solid #e6e6e6; padding: 4px 10px; text-align: center; cursor: pointer; }
+
 .mypage_sub_title {font-size:20px; font-weight:bold;}
 .mypage_sub_exp {font-size:13px; color:#676767; margin-left:10px;}
 

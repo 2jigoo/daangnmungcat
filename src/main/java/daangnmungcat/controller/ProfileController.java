@@ -51,7 +51,6 @@ public class ProfileController {
 		List<SaleReview> reviewList = reviewService.getReviewListOnMe(memberId);
 		int countReviewList = reviewList.size();
 		
-		// select가 이상함. joongo_image 제대로 안 걸러짐.
 		Criteria cri = new Criteria(1, 8);
 		List<Sale> saleList = saleService.getListsByStateAndMember("ALL", memberId, cri);
 		

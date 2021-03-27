@@ -152,7 +152,7 @@
 		</div>
 		<div class="profile_menu">
 			<a href="/profile/${member.id }/joongo"><div class="menu">판매상품</div></a><a href="/profile/${member.id }/review"><div class="menu selected">받은 거래후기</div></a>
-			<span class="back_btn">뒤로가기</span>
+			<span class="back_btn">프로필 메인</span>
 		</div>
 		<div class="profile_section">
 			<form name="reviewForm" method="get">
