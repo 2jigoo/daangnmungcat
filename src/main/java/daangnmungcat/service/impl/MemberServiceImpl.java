@@ -297,4 +297,9 @@ public class MemberServiceImpl implements MemberService {
 		return count;
 	}
 
+	@Override
+	public int findMember(String name, String email) {
+		return mapper.findMember(name, email);
+	}
+
 }

@@ -132,14 +132,18 @@ $(document).ready(function(){
 		}else if(!$('#use_mileage').val() < 1000 && !$('#use_mileage').val() == ''){
 			alert('마일리지는 1000원 이상 사용 가능합니다.')
 			return;
-		}else{
-			
-			if(type == '카카오페이'){
-				$('#form').submit();
-			}else {
-				$("#form").attr("action", "/accountPay");
-				$('#form').submit();
+		}else {
+			if(!$("[name=pay_type]:radio").is(":checked")){
+				alert('결제 방식을 선택해주세요.');
+			}else{
+				if(type == '카카오페이'){
+					$('#form').submit();
+				}else {
+					$("#form").attr("action", "/accountPay");
+					$('#form').submit();
+				}	
 			}
+			
 		}	
 	});
 

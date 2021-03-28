@@ -63,6 +63,8 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		registry.addViewController("sign/contract").setViewName("sign/contract");
 		registry.addViewController("sign/form").setViewName("sign/signup");
 		registry.addViewController("sign/welcome").setViewName("sign/welcome");
+		registry.addViewController("sign/find_id").setViewName("sign/find_id");
+		registry.addViewController("sign/find_pwd").setViewName("sign/find_pwd");
 
 		registry.addViewController("service/terms").setViewName("service/terms_of_service");
 		registry.addViewController("service/policy").setViewName("service/privacy_policy");

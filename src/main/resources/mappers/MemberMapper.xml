@@ -337,4 +337,8 @@
 		<include refid="whereSearchSql"/>
 	</select>
 	
+	
+	<select id="findMember" resultType="int">
+		SELECT nvl((SELECT 1 FROM MEMBER WHERE NAME = #{name} AND EMAIL = #{email}) , 0) AS res FROM dual
+	</select>
 </mapper>

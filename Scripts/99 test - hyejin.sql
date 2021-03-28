@@ -456,18 +456,9 @@ FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON ji.SALE_ID = js.ID LEFT JOIN DO
 WHERE js.regdate BETWEEN to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')) AND to_date(to_char(add_months(sysdate,+1),'yyyy-mm-dd'))
 				and js.mem_id = 'test' order by regdate DESC;
 				
-			
-			
-			
-			SELECT A.*
-			FROM (SELECT ROWNUM AS RNUM, B.*
-				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
-					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
-					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
-					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
-					FROM MALL_ORDER
-					where SETTLE_CASE LIKE '%무통장%'
-					ORDER BY regdate DESC )B)A
-				WHERE A.RNUM BETWEEN 11 AND 20
-			ORDER BY A.RNUM;
+
+SELECT * FROM MEMBER;
+
+SELECT nvl((SELECT 1 FROM MEMBER WHERE NAME = '이름변경' AND EMAIL = 'admin2@admin2.co.kr'), 0) AS find FROM dual;
+
+UPDATE MEMBER SET EMAIL = 'bumkkey@naver.com' WHERE id = 'test';

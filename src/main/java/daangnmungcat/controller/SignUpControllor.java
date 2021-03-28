@@ -1,5 +1,7 @@
 package daangnmungcat.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import daangnmungcat.dto.Mail;
 import daangnmungcat.dto.Member;
 import daangnmungcat.exception.DuplicateMemberException;
+import daangnmungcat.service.EmailService;
 import daangnmungcat.service.MemberService;
 
 @RestController
@@ -22,6 +26,9 @@ public class SignUpControllor {
 	
 	@Autowired
 	private MemberService service;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@GetMapping("/dongne1")
 	public ResponseEntity<Object> dongne1() {
@@ -61,6 +68,18 @@ public class SignUpControllor {
 	@GetMapping("/phone/post/{phone}")
 	public int phoneCheck(@PathVariable String phone) {
 		int res = service.phoneCheck(phone);
+		return res;
+	}
+	
+	@PostMapping("/find-id")
+	public int findId(@RequestBody Map<String, String> map) {
+		System.out.println("findid");
+		String name = map.get("name");
+		String email = map.get("email");
+		int res = service.findMember(name, email);
+		Map<String, String> certi = emailService.sendEmail(email);
+		String key = certi.get("certi");
+		System.out.println("key -> " + key);
 		return res;
 	}
 
