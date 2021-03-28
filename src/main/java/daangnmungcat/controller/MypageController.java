@@ -379,9 +379,12 @@ public class MypageController {
 		Member member = service.selectMemberById(loginUser.getId());
 		int mileage = mileService.getMileage(member.getId());
 		
-		Criteria cri = new Criteria(1, 8);
+		Criteria cri = new Criteria(1, 4);
 		List<Sale> saleList = joongoService.getListsByStateAndMember("ALL", loginUser.getId(), cri);
 		int saleTotal = joongoService.countsByStateAndMember("ALL", loginUser.getId());
+		
+		List<Sale> heartedList = joongoService.getHeartedList(loginUser.getId(), cri);
+		int heartedTotal = joongoService.getHeartedCounts(loginUser.getId());
 		
 		List<Order> orderList = orderService.selectOrderByMonth(member.getId());
 		for(Order o:orderList) {
@@ -396,6 +399,8 @@ public class MypageController {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("saleList", saleList);
 		mv.addObject("saleTotal", saleTotal);
+		mv.addObject("heartedList", heartedList);
+		mv.addObject("heartedTotal", heartedTotal);
 		mv.addObject("list", orderList);
 		mv.addObject("grade",member.getGrade().getName().toUpperCase());
 		mv.addObject("member", member);

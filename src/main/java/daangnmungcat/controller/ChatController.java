@@ -90,6 +90,7 @@ public class ChatController {
 		if(review != null) {
 			log.info("review: " + review.getId());
 			model.addAttribute("reviewed", true);
+			model.addAttribute("review", review);
 		}
 		
 		model.addAttribute("chat", chat);

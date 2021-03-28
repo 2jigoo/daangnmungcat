@@ -91,9 +91,6 @@ public class JoongoSaleReviewController {
 		if (id != null) {
 			SaleReview review = service.getReviewByReviewId(Integer.parseInt(id));
 			model.addAttribute("review", review);
-			
-			Sale sale = saleService.getSaleById(review.getSale().getId());
-			model.addAttribute("sale", sale);
 		}
 		
 		return "joongoSale/review_update";
