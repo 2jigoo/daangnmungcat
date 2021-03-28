@@ -31,4 +31,6 @@ public interface MileageMapper {
 	
 	int insertEventMilege(Mileage mile);
 	
+	int mileageSearchCount(Mileage mile);
+	
 }

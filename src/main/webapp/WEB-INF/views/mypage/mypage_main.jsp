@@ -106,54 +106,118 @@ $(document).ready(function(){
 		<div class="mypage_main">
 			<dl>
 				<dt>회원정보</dt>
-				<dd><a href="<c:url value="/mypage/pwd_confirm" />">회원정보 변경</a></dd>
-				<dd><a href="<c:url value="/mypage/mypage_pwd" />">비밀번호 변경</a></dd>
-				<dd><a href="<c:url value="/mypage/shipping_main" />">배송지 관리</a></dd>
-				<dd><a href="<c:url value="/mypage/mypage_withdraw" />">회원 탈퇴</a></dd>
+				<a href="<c:url value="/mypage/pwd_confirm" />"><dd>회원정보 변경</dd></a>
+				<a href="<c:url value="/mypage/mypage_pwd" />"><dd>비밀번호 변경</dd></a>
+				<a href="<c:url value="/mypage/shipping_main" />"><dd>배송지 관리</dd></a>
+				<a href="<c:url value="/mypage/mypage_withdraw" />"><dd>회원 탈퇴</dd></a>
 			</dl>
 			<dl>
 				<dt>거래정보</dt>
-				<dd>내 채팅목록</dd>
-				<dd><a href="/mypage/joongo/list?memId=${loginUser.id}">내 판매글</a></dd>
-				<dd><a href="/mypage/joongo/comment?memId=${loginUser.id}">내 댓글</a></dd>
-				<dd><a href="<c:url value="/mypage/joongo/heart/list"/>">찜 목록</a></dd>
-				<dd><a href="/mypage/joongo/review/list?memId=${loginUser.id}">거래후기</a></dd>
+				<a href="/chat"><dd>내 채팅목록</dd></a>
+				<a href="/mypage/joongo/list?memId=${loginUser.id}"><dd>내 판매글</dd></a>
+				<a href="/mypage/joongo/comment?memId=${loginUser.id}"><dd>내 댓글</dd></a>
+				<a href="<c:url value="/mypage/joongo/heart/list"/>"><dd>찜 목록</dd></a>
+				<a href="/mypage/joongo/review/list?memId=${loginUser.id}"><dd>거래후기</dd></a>
 			</dl>
 			<dl>
 				<dt>쇼핑정보</dt>
-				<dd><a href="<c:url value="/mall/cart/list"/>">장바구니</a></dd>
-				<dd><a href="<c:url value="/mypage/mypage_order_list" />">주문내역</a></dd>
-				<dd><a href="<c:url value="/mypage/mypage_order_cancel_list" />">취소/환불내역</a></dd>
-				<dd>상품 후기</dd>
-				<dd>찜리스트</dd>
+				<a href="<c:url value="/mall/cart/list"/>"><dd>장바구니</dd></a>
+				<a href="<c:url value="/mypage/mypage_order_list" />"><dd>주문내역</dd></a>
+				<a href="<c:url value="/mypage/mypage_order_cancel_list" />"><dd>취소/환불내역</dd></a>
+				<!-- <dd>상품 후기</dd>
+				<dd>찜리스트</dd> -->
+				<a href="/mypage/mileage/list?memId=${loginUser.id}"><dd>마일리지</dd></a>
 			</dl>
 			<dl>
 				<dt>커뮤니티</dt>
 				<dd>내 게시물</dd>
 				<dd>내 댓글</dd>
-				<dd>마일리지</dd>
 			</dl>
 		</div>
 
 	<div class="mypage_grade_div">
-		<span class="mypage_grade"><span style="color:#ff7e15;font-weight:bold">${member.nickname}</span>
-			님 회원등급은 <span style="font-weight:bold">${grade}</span> 입니다. </span>
-		<span class="mypage_mile">
-			마일리지 <br><br>
-			<span class="mypage_num"><fmt:formatNumber value="${mile}"/></span>
-		</span>
-		<span class="mypage_mile">
-			중고거래 <br><br>
-			<a class="mypage_num" href="/mypage/joongo/list?memId=${loginUser.getId()}">${saleCnt}</a>
-		</span>
+		<div class="img_box">
+			<a href="/profile/${member.id }">
+			<c:if test="${empty member.profilePic}">
+				<img alt="기본프로필" src="/resources/images/default_user_image.png">
+			</c:if>
+			<c:if test="${not empty member.profilePic}">
+				<img src="/resources/${member.profilePic}">
+			</c:if>
+			</a>
+		</div>
+		<div class="txt_box">
+			<p><span class="bold orange">${member.nickname}</span>
+			님 회원등급은 <span class="bold">${grade}</span> 입니다.</p>
+			<p class="dongne">
+				${member.dongne1.name } ${member.dongne2.name }
+			</p>
+		</div>
+		<div class="btn_box">
+			<a class="item" href="/chat">채팅</a>
+			<a class="item" href="/joongo/comment">댓글</a>
+			<a class="item" href="/joongo/review">거래후기</a>
+		</div>
+		<div class="info_box">
+			<span class="item">
+				마일리지 <br><br>
+				<a class="num" href="/mypage/mileage/list?memId=${loginUser.getId()}"><fmt:formatNumber value="${mile}"/></a>
+			</span>
+			<span class="item">
+				중고거래 <br><br>
+				<a class="num" href="/mypage/joongo/list?memId=${loginUser.getId()}">${saleTotal}</a>
+			</span>
+		</div>
 	</div>
 	
 	<div class="mypage_sale_div">
 		<div class="mypage_title_div">
-			<span class="mypage_sub_title">최근 거래 정보</span> 
-			<span class="mypage_sub_exp">${member.name}님께서 최근 30일 내에 작성한 판매글입니다.</span>
-			<table></table>
+			<span class="mypage_sub_title">최근 판매상품</span> 
+			<span class="mypage_sub_exp">${member.name}님께서 최근 작성한 중고판매글입니다.</span>
+			<a href="/profile/${member.id }/joongo"><span class="btn" list="joongo">더 보기</span></a>
 		</div>
+	</div>
+	<div class="profile_section" style="border-bottom: 1px solid #e6e6e6; margin-bottom: 80px;">
+		<ul class="product_list">
+			<c:forEach items="${saleList}" var="sale">
+			<c:choose>
+				<c:when test="${sale.saleState.code eq 'SOLD_OUT'}">
+					<li class="SOLD_OUT">
+				</c:when>
+				<c:otherwise>
+					<li>
+				</c:otherwise>
+			</c:choose>
+			<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${sale.id}">
+				<div class="img">
+					<c:if test="${empty sale.thumImg}">
+						<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
+					</c:if>
+					<c:if test="${not empty sale.thumImg}">
+						<img src="<%=request.getContextPath() %>/resources/${sale.thumImg}">
+					</c:if>
+				</div>
+				<div class="txt">
+					<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+					<p class="subject">${sale.title}</p>
+					<p class="price">
+						<span class="${sale.saleState.code }">${sale.saleState.label}</span>
+						<span>
+							<c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
+							<c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
+						</span>
+					</p>
+					<ul>
+						<li class="heart">${sale.heartCount}</li>
+						<li class="chat">${sale.chatCount}</li>
+					</ul>
+				</div>
+			</a></li>
+			</c:forEach>
+			<c:if test="${empty saleList}">
+				<li class="no_date">등록된 글이 없습니다.</li>
+			</c:if>
+		</ul>
 	</div>
 	
 	

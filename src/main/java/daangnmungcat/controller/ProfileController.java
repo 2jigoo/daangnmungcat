@@ -1,20 +1,29 @@
 package daangnmungcat.controller;
 
+import java.io.File;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleReview;
-import daangnmungcat.dto.SaleState;
 import daangnmungcat.service.JoongoSaleReviewService;
 import daangnmungcat.service.JoongoSaleService;
 import daangnmungcat.service.MemberService;
@@ -41,19 +50,22 @@ public class ProfileController {
 		Member member = memberService.selectMemberById(memberId);
 		List<SaleReview> reviewList = reviewService.getReviewListOnMe(memberId);
 		int countReviewList = reviewList.size();
-
-		Sale saleCondition = new Sale();
-		saleCondition.setMember(new Member(memberId));
 		
 		Criteria cri = new Criteria(1, 8);
-		List<Sale> saleList = saleService.getListsSearchedBy(saleCondition, cri);
+		List<Sale> saleList = saleService.getListsByStateAndMember("ALL", memberId, cri);
 		
 		model.addAttribute("member", member);
 		model.addAttribute("reviewList", reviewList);
-		model.addAttribute("countReviewList", countReviewList);
+		model.addAttribute("countReviewList", countReviewList);	
 		model.addAttribute("saleList", saleList);
 		
 		return "/profile/profile_view";
+	}
+	
+	@GetMapping("/edit")
+	public String profileEditView(AuthInfo loginUser, Model model) {
+		
+		return "/profile/profile_edit_view";
 	}
 	
 	@GetMapping("/{memberId}/review")
@@ -83,23 +95,52 @@ public class ProfileController {
 	}
 	
 	
-	@GetMapping("/{memberId}/sale")
-	public String profileSalesView(@PathVariable(name = "memberId") String memberId, @RequestParam(name = "state", required = false) SaleState state, Model model) {
+	@GetMapping("/{memberId}/joongo")
+	public String profileJoongoView(@PathVariable(name = "memberId") String memberId, @RequestParam(name = "state", required = false) String state, Criteria cri, Model model) {
+		
+		log.info("cri: " + cri.toString());
+		System.out.println("stae: " + state);
 		
 		Member member = memberService.selectMemberById(memberId);
 		
-		if(state != null) {
-			log.info("state: " + state);
-		}
+		List<Sale> saleList = saleService.getListsByStateAndMember(state, memberId, cri);
+		int total = saleService.countsByStateAndMember(state, memberId);
 		
-		List<Sale> saleList = null;
-		
-		saleList = saleService.getListByMemID(memberId);
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(total);
 		
 		model.addAttribute("member", member);
 		model.addAttribute("saleList", saleList);
+		model.addAttribute("total", total);
+		model.addAttribute("pageMaker", pageMaker);
 		
-		return "/profile/profile_sale_list";
+		return "/profile/profile_joongo_list";
 	}
 	
+	
+	@PostMapping("/{memberId}")
+	@ResponseBody
+	public ResponseEntity<Object> modifyProfile(@PathVariable(name = "memberId") String memberId, Member member, MultipartFile uploadImage, @RequestParam boolean isChanged, AuthInfo loginUser, HttpSession session) {
+		String id = null;
+		try {
+			log.info(member.toString());
+			log.info("파일 변경? " + isChanged);
+			log.info("uploadFile: " + (uploadImage.isEmpty() ? "null" : uploadImage.getOriginalFilename()));
+			
+			id = memberService.modifyProfile(member, uploadImage, getRealPath(session), isChanged);
+			loginUser.setNickname(member.getNickname());
+			loginUser.setProfilePic(member.getProfilePic());
+			
+		} catch(RuntimeException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
+		
+		return ResponseEntity.ok(id);
+	}
+	
+	
+	private File getRealPath(HttpSession session) {
+		return new File(session.getServletContext().getRealPath("")); 
+	}
 }

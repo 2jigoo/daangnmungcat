@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modal</title>
+    <style>
+        #modal.modal-overlay {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        #modal .modal-window {
+            background-color: white;
+            border-radius: 10px;
+            border: 1px solid rgba( 255, 255, 255, 0.18 );
+
+            width: 400px;
+            position: relative;
+            top: -100px;
+            box-sizing: border-box;
+        }
+
+        #modal .title {
+            display: block;
+            padding: 20px 20px;
+            border-bottom: 1px solid #e6e6e6;
+        }
+
+        #modal .title h2 {
+            display: inline;
+        }
+
+        #modal .close-area {
+            display: inline;
+            float: right;
+            cursor: pointer;
+            line-height: 30px;
+        }
+        
+        #modal .content {
+            padding: 20px;
+        }
+
+        #modal .bottom {
+            padding: 20px;
+            border-top: 1px solid #e6e6e6;
+            text-align: right;
+        }
+
+        #modal #modal_submit {
+            background-color: darkorange;
+            color: white;
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        #modal .img_box {
+            margin: 0 auto 20px auto;
+            width: 100px; height: 100px;
+            border-radius: 50%;
+            border: 1px solid #e6e6e6;
+            overflow: hidden;
+        }
+
+        #modal .input_row {
+            font-family: inherit;
+            font-size: inherit;
+            width: 100%;
+            height: 48px;
+            margin-bottom: 8px;
+            padding: 10px 11px 10px 11px;
+            border: solid 1px #dadada;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h2>Lorem Ipsum</h2>
+        <button id="btn-modal">모달 열기</button>
+        <div id="lorem-ipsum"></div>
+    </div>
+
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="title">
+                <h2>프로필 수정</h2>
+                <div class="close-area">X</div>
+            </div>
+            <div class="content">
+                <form name="profile_edit">
+                    <div class="img_box">
+
+                    </div>
+                    <input class="input_row" type="text" name="nickname" value="뽀리뤼" placeholder="닉네임">
+                    <textarea class="input_row" name="profileText"  placeholder="소개말을 입력해주세요">뽀리야 사랑햇</textarea>
+                </form>
+            </div>
+            <div class="bottom"><submit id="modal_submit">프로필 수정</submit></div>
+        </div>
+    </div>
+
+    <script>
+        const loremIpsum = document.getElementById("lorem-ipsum")
+
+        fetch("https://baconipsum.com/api/?type=all-meat&paras=200&format=html")
+            .then(response => response.text())
+            .then(result => loremIpsum.innerHTML = result);
+
+            const modal = document.getElementById("modal")
+            console.log(modal);
+
+            function modalOn() {
+                modal.style.display = "flex"
+            }
+            function isModalOn() {
+                return modal.style.display === "flex"
+            }
+            function modalOff() {
+                modal.style.display = "none"
+            }
+
+            // 특정 버튼을 누르면 모달창이 켜지게 하기
+            const btnModal = document.getElementById("btn-modal")
+            btnModal.addEventListener("click", e => {
+                modalOn()
+            })
+
+            //모달창의 클로즈(x) 버튼을 누르면 모달창이 꺼지게 하기
+            const closeBtn = modal.querySelector(".close-area")
+            closeBtn.addEventListener("click", e => {
+                modalOff()
+            })
+
+            // 모달 바깥 영역
+            modal.addEventListener("click", e => {
+                const evTarget = e.target
+                if(evTarget.classList.contains("modal-overlay")) {
+                    modalOff()
+                }
+            })
+
+            // 모달창이 켜진 상태에서 ESC 버튼을 누르면 모달창이 꺼지게 하기
+            window.addEventListener("keyup", e => {
+                if(isModalOn() && e.key === "Escape") {
+                    modalOff()
+                }
+            })
+    </script>
+</body></html>

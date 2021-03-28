@@ -149,7 +149,7 @@
 				</ul>
 			</sec:authorize>
 			<ul class="h_util2">
-				<li><a href="#"><img src="/resources/images/ico_salesarticle.png"><span>판매글</span></a></li>
+				<li><a href="<c:url value="/mypage/joongo/list?memId=${loginUser.id}" />"><img src="/resources/images/ico_salesarticle.png"><span>판매글</span></a></li>
 				<li><a href="<c:url value="/chat" />"><img src="/resources/images/ico_chatting.png"><span>채팅</span></a></li>
 				<li><a href="<c:url value="/mall/cart/list" />"><img src="/resources/images/ico_cart.png"><span>장바구니</span></a></li>
 				<li><a href="/mypage/mypage_order_list"><img src="/resources/images/ico_buy.png"><span>구매내역</span></a></li>
@@ -181,7 +181,13 @@
 			</sec:authorize>
 		</div>
 		<ul>
-			<li><a href="<c:url value="/joongo_list" />">중고</a></li>
+			<li><a href="<c:url value="/joongo_list" />">중고</a>
+				<ul>
+					<li><a href="<c:url value="/joongo_list/all/1"/>">멍</a></li>
+					<li><a href="<c:url value="/joongo_list/all/2"/>">냥</a></li>
+					<li><a href	="<c:url value="/joongo_list/all/3"/>">멍·냥</a></li>
+				</ul>
+			</li>
 			<li class="depth2"><a href="<c:url value="/mall/product/list/dog" />">멍</a>
 				<ul id="dog_cate">
 				</ul>

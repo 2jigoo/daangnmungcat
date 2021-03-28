@@ -69,7 +69,7 @@ public class MypageController {
 	private MileageService mileService;
 	
 	@Autowired
-	private JoongoSaleService joongoService;;
+	private JoongoSaleService joongoService;
 	
 	//프로필사진 삭제 -> default로
 	@GetMapping("/profile/get")
@@ -379,8 +379,9 @@ public class MypageController {
 		Member member = service.selectMemberById(loginUser.getId());
 		int mileage = mileService.getMileage(member.getId());
 		
-		List<Sale> sale = joongoService.getListByMemID(member.getId());
-		int cnt = sale.size();
+		Criteria cri = new Criteria(1, 8);
+		List<Sale> saleList = joongoService.getListsByStateAndMember("ALL", loginUser.getId(), cri);
+		int saleTotal = joongoService.countsByStateAndMember("ALL", loginUser.getId());
 		
 		List<Order> orderList = orderService.selectOrderByMonth(member.getId());
 		for(Order o:orderList) {
@@ -393,11 +394,12 @@ public class MypageController {
 
 
 		ModelAndView mv = new ModelAndView();
+		mv.addObject("saleList", saleList);
+		mv.addObject("saleTotal", saleTotal);
 		mv.addObject("list", orderList);
 		mv.addObject("grade",member.getGrade().getName().toUpperCase());
 		mv.addObject("member", member);
 		mv.addObject("mile", mileage);
-		mv.addObject("saleCnt", cnt);
 		mv.setViewName("/mypage/mypage_main");
 	
 		return mv;
