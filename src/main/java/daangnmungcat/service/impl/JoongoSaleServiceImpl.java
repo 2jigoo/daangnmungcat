@@ -104,6 +104,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 	@Override
+	@Transactional
 	public int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		
@@ -186,7 +187,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return fileMapper.deleteSaleFile(fileName);
 	}
 
+	
 	@Override
+	@Transactional
 	public int updateJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile  file, HttpServletRequest request) throws Exception {
 		int res = joongoListMapper.updateJoongoSale(sale);
 

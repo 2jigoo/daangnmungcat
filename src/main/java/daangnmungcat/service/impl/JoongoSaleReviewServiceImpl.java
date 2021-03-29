@@ -64,7 +64,8 @@ public class JoongoSaleReviewServiceImpl implements JoongoSaleReviewService {
 	/* 쓰기, 수정, 삭제 */
 	@Override
 	public int writeReview(SaleReview review) {
-		return mapper.insertJoongoSaleReview(review);
+		mapper.insertJoongoSaleReview(review);
+		return review.getId();
 	}
 
 	@Override
