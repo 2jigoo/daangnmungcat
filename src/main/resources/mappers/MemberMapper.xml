@@ -200,7 +200,7 @@
 	
 	<insert id="insertAddress" parameterType="Address">
 		INSERT INTO order_address VALUES(ORDER_ADDRESS_seq.nextval, 
-			#{memId}, #{subject}, #{name}, #{zipcode}, #{address1}, #{address2}, #{memo}, #{phone1}, #{phone2})
+			#{memId}, #{subject}, #{name}, #{phone1}, #{phone2}, #{zipcode}, #{address1}, #{address2}, #{memo})
 	</insert>
 	
 	<update id="updateMyAddress">

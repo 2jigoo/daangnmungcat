@@ -47,7 +47,7 @@ $(document).ready(function(){
 				sCont += '<td>' + list[i].subject + '</td>' ;
 				sCont += '<td>' + list[i].name + '</td>';
 				sCont += '<td>(' + list[i].zipcode +') <br>' + list[i].address1 + ', ' +  list[i].address2 + '<br> 배송메모 : ' + list[i].memo + '</td>';
-				sCont += '<td>전화번호 : ' + list[i].phone1 + '<br>휴대폰 : ' + list[i].phone2 +'</td>';
+				sCont += '<td>' + list[i].phone1 + '<br>' + list[i].phone2 +'</td>';
 				sCont += '<td><input type="button" value="수정" id="update_addr" class="pre_order_btn2" addrId=' + list[i].id;
 				sCont += '> <input type="button" value="삭제" id="delete_addr" class="pre_order_btn2" addrId=' + list[i].id + '></td>';
 				sCont += '</tr>';
@@ -55,8 +55,9 @@ $(document).ready(function(){
 			}
 			$("#addr").append(sCont);
 		}else if(datalength == 0){
-			var t = '배송지 목록이 없습니다.';
-			$("#txt").append(t);
+			var t = '<tr><td colspan="6" style="padding:80px">배송지 목록이 없습니다.</td></tr>';
+			$("#addr").append(t);
+			
 		}
 	});
 	
@@ -102,6 +103,7 @@ $(document).ready(function(){
 <style>
 .wrapper {margin:0 auto; padding:30px; margin-bottom:50px;}
 .wrapper input{font-family:'S-CoreDream'; margin:2px 2px;}
+#addr tr td:nth-child(5) {text-align:left;}
 </style>
 </head>
 <body>
