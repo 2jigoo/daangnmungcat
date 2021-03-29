@@ -25,6 +25,7 @@ import daangnmungcat.dto.Chat;
 import daangnmungcat.dto.ChatMessage;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
+import daangnmungcat.dto.PageMaker;
 import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleReview;
 import daangnmungcat.exception.AlreadySoldOut;
@@ -47,32 +48,60 @@ public class ChatController {
 	private JoongoSaleReviewService reviewService;
 	
 	@GetMapping("/chat")
-	public String myChatList(Model model, AuthInfo loginUser) {
-		/*
-		Enumeration<String> e = session.getAttributeNames();
-		while(e.hasMoreElements()) {
-			String name = e.nextElement();
-			System.out.printf("%s - %s", name, session.getAttribute(name).toString());
+	public String myChatList(Model model, Criteria cri, AuthInfo loginUser) {
+		
+		if(cri.getPerPageNum() == 20) {
+			cri.setPerPageNum(10);
 		}
-		*/
 		
-		log.debug("loginUser's ID: " + loginUser.getId());
+		List<Chat> list = chatService.getMyChatsList(loginUser.getId(), cri);
+		int totalCount = chatService.countMyChatsList(loginUser.getId());
 		
-		List<Chat> list = chatService.getMyChatsList(loginUser.getId());
-		list.stream().forEach(chat -> log.debug(chat.toString()));
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
 		
 		model.addAttribute("list", list);
+		model.addAttribute("cri", cri);
+		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/chat/mychats";
 	}
 	
 	@GetMapping("/chat/sale/{id}")
-	public String myChatList(@PathVariable("id") int id, Model model, AuthInfo loginUser) {
-		log.debug("loginUser's ID: " + loginUser.getId());
+	public String myChatList(@PathVariable("id") int id, Criteria cri, Model model, AuthInfo loginUser, RedirectAttributes ra) {
+		Sale sale = saleService.getSaleById(id);
 		
-		List<Chat> list = chatService.getMyChatsList(id);
-		list.stream().forEach(chat -> log.debug(chat.toString()));
+		if (sale == null) {
+			ra.addFlashAttribute("errorCode", -1);
+			return "redirect:/joongo_list";
+		}
+		
+		if(cri.getPerPageNum() == 20) {
+			cri.setPerPageNum(10);
+		}
+		
+		String memberId = loginUser.getId();
+		int totalCount = chatService.countsMyChatsOnSale(memberId, id);
+		List<Chat> list = chatService.getMyChatsListOnSale(memberId, id, cri);
+		
+		if (!loginUser.getId().equals(sale.getMember().getId())) {
+			if(totalCount == 0) {
+				ra.addFlashAttribute("errorCode", -2);
+				return "redirect:/joongo_list";
+			} else {
+				return "redirect:/chat/" + list.get(0).getId();
+			}
+		}
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(totalCount);
+		
+		model.addAttribute("sale", sale);
 		model.addAttribute("list", list);
+		model.addAttribute("cri", cri);
+		model.addAttribute("pageMaker", pageMaker);
 		
 		return "/chat/mychats";
 	}
@@ -114,25 +143,22 @@ public class ChatController {
 	public String goToChatFromSale(@RequestParam(value = "id") int saleId, AuthInfo loginUser, RedirectAttributes redirectAttributes, Model model) {
 		
 		Sale sale = null;
-		String loginUserId = null;
+		String memberId = loginUser.getId();
 
-		// 로그아웃 상태이거나 해당 글이 없는 경우
-		try {
-			loginUserId = loginUser.getId();
-			sale = saleService.getSaleById(saleId);
-		} catch (Exception e) {
-			e.printStackTrace();
+		sale = saleService.getSaleById(saleId);
+		
+		if (sale == null) {
+			redirectAttributes.addFlashAttribute("errorMsg", -1);
 			return "redirect:/joongo_list";
 		}
 		
-		// 본인이 작성한 글에 접근했을 때
-		if(sale.getMember().getId().equals(loginUserId)) {
+		if(sale.getMember().getId().equals(memberId)) {
 			return "redirect:/chat/sale/" + saleId;
 		}
 		
-		Chat chat = chatService.getChatInfoFromSale(loginUserId, saleId);
-		// 기존의 채팅이 있는 경우 해당 채팅방으로 이동
-		if(chat != null) {
+		int totalCount = chatService.countsMyChatsOnSale(loginUser.getId(), saleId);
+		if(totalCount != 0) {
+			Chat chat = chatService.getMyChatsListOnSale(memberId, saleId, null).get(0);
 			return "redirect:/chat/" + chat.getId();
 		}
 		

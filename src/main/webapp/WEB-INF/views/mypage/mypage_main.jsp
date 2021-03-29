@@ -114,10 +114,10 @@ $(document).ready(function(){
 			<dl>
 				<dt>거래정보</dt>
 				<a href="/chat"><dd>내 채팅목록</dd></a>
-				<a href="/mypage/joongo/list?memId=${loginUser.id}"><dd>내 판매글</dd></a>
+				<a href="/profile/${loginUser.id }/joongo"><dd>내 판매글</dd></a>
 				<a href="/mypage/joongo/comment?memId=${loginUser.id}"><dd>내 댓글</dd></a>
 				<a href="<c:url value="/mypage/joongo/heart/list"/>"><dd>찜 목록</dd></a>
-				<a href="/mypage/joongo/review/list?memId=${loginUser.id}"><dd>거래후기</dd></a>
+				<a href="/profile/${loginUser.id }/review"><dd>거래후기</dd></a>
 			</dl>
 			<dl>
 				<dt>쇼핑정보</dt>

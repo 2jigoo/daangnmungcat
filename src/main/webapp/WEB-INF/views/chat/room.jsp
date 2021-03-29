@@ -56,7 +56,7 @@
 								// 너
 								li_str += "<li class='chat-message you' msg_id='" + msg.id + "' sender='" + msg.member.id +"'>";
 								li_str += "<div class='chat-message you profile_img'>";
-								li_str += "<a href='" + contextPath + "/member/profile?id=" + msg.member.id + "'>";
+								li_str += "<a href='" + contextPath + "/profile/" + msg.member.id + "'>";
 								if(msg.member.profilePic == null) {
 									li_str += "<img alt='기본프로필' src='" + contextPath + "/resources/images/default_user_image.png'>";
 								} else {
@@ -203,7 +203,7 @@
 						<c:choose>
 							<c:when test="${sender eq 'you' }">
 								<div class="chat-message ${sender } profile_img">
-									<a href="${pageContext.request.contextPath }/member/profile?id=${msg.member.id}">
+									<a href="${pageContext.request.contextPath }/profile/${msg.member.id}">
 									<c:choose>
 										<c:when test="${msg.member.profilePic eq null}">
 											<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
