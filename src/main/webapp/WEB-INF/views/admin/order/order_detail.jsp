@@ -33,7 +33,7 @@ $(document).ready(function(){
 	
 	$('#order_price_chk').on('click', function(){
 		if($('#order_price_chk').is(':checked')){
-			$('#order_price_txt').attr('value', ${order.totalPrice});
+			$('#order_price_txt').attr('value', "${order.finalPrice}");
 		}else{
 			$('#order_price_txt').attr('value', '0');
         }
@@ -113,6 +113,7 @@ $(document).ready(function(){
 				shippingDate: $('#order_shipping_txt').val(),
 				qtt: ${order.details.size()},
 				order: ${order.id},
+				usedMile: $('#order_used_mile').val(),
 				deli: $('#deliveryPrice').val(),
 				addDeli: $('#addDeliveryPrice').val()
 		};
@@ -145,6 +146,7 @@ $(document).ready(function(){
 				payDate: $('#kakao_regdate_txt').val() ,
 				order: ${order.id},
 				qtt: ${order.details.size()},
+				usedMile: $('#kakao_used_mile').val(),
 				cancelPrice: $('#kakao_return').val(),
 				trackingNum: $('#kakao_shipping_num').val(),
 				shippingDate: $('#kakao_shipping_txt').val(),
@@ -498,7 +500,10 @@ function execPostCode2(){
 						<td>취소/환불 금액</td>
 						<td><input type="text" id="order_cancel" value="${order.cancelPrice }"></td>
 					</tr>
-					
+					<tr>
+						<td>포인트 사용</td>
+						<td><input type="text" id="order_used_mile" value="${order.usedMileage}"></td>
+					</tr>
 					<tr>
 						<td>운송장번호</td>
 						<td><input type="text" id="order_shipping_num" value="${order.trackingNumber }"></td>
@@ -642,6 +647,10 @@ function execPostCode2(){
 					<tr>
 						<td>취소/환불 금액</td>
 						<td><input type="text" id="kakao_return" value="${order.cancelPrice}"></td>
+					</tr>
+					<tr>
+						<td>포인트 사용</td>
+						<td><input type="text" id="kakao_used_mile" value="${order.usedMileage}"></td>
 					</tr>
 					<tr>
 						<td>운송장번호</td>

@@ -476,3 +476,5 @@ SELECT * FROM MALL_MILEAGE;
 
 SELECT * FROM ORDER_ADDRESS;
 test(String), 집(String), 나(String), 13536(Integer), 경기 성남시 분당구 판교역로 4(String), 2층(String), 메모메모(String), 010-5656-5656(String), 010-5615-6004(String) 
+
+SELECT * FROM MALL_ORDER;

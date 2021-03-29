@@ -579,6 +579,7 @@ public class OrderServiceImpl implements OrderService{
 		String depositor = null;
 		String cancelPrice = null; 
 		int payPrice = 0;
+		String usedMile = null;
 		
 		if(map.get("price") != null) {
 			price = map.get("price");
@@ -592,6 +593,10 @@ public class OrderServiceImpl implements OrderService{
 		
 		if(map.get("cancelPrice") != null) {
 			cancelPrice = map.get("cancelPrice");
+		}
+		
+		if(map.get("usedMile") != null) {
+			usedMile = map.get("usedMile");
 		}
 		
 		String order = map.get("order");
@@ -652,6 +657,7 @@ public class OrderServiceImpl implements OrderService{
 			log.info("update pay");
 			res += updatePayment(pay, pay.getId());
 			
+			o.setUsedMileage(Integer.parseInt(usedMile));
 			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice() - o.getUsedMileage());
 			o.setMisu(o.getFinalPrice() - o.getReturnPrice() + Integer.parseInt(cancelPrice) - payPrice - partCancel);
 			
@@ -706,14 +712,16 @@ public class OrderServiceImpl implements OrderService{
 			
 			}
 			
-
+			o.setUsedMileage(Integer.parseInt(usedMile));
+			updateOrder(o, o.getId());
+			
 			o.setCancelPrice(Integer.parseInt(cancelPrice));
 			o.setDeliveryPrice(Integer.parseInt(deli));
 			o.setAddDeliveryPrice(Integer.parseInt(addDeli));
 			
 			//최종금액 = 현재 total + 배송비 + 추가 배송비 
 			o.setFinalPrice(o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice() - o.getUsedMileage());
-			System.out.println("최종금액:" + o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice());
+			System.out.println("최종금액:" + (o.getTotalPrice() + o.getDeliveryPrice() + o.getAddDeliveryPrice()));
 			
 
 			if(payPrice == 0) {
