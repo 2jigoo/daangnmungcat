@@ -341,6 +341,15 @@
 	
 	
 	<select id="findMember" resultType="int">
-		SELECT nvl((SELECT 1 FROM MEMBER WHERE NAME = #{name} AND EMAIL = #{email}) , 0) AS res FROM dual
+		SELECT nvl((SELECT 1 FROM MEMBER 
+		WHERE <if test="id != null"> id = #{id} AND </if>
+		NAME = #{name} AND EMAIL = #{email}) , 0) AS res FROM dual
 	</select>
+	
+	<select id="selectIdByCondition" resultType="string">
+		SELECT nvl((SELECT id FROM MEMBER 
+		WHERE <if test="id != null"> id = #{id} AND </if>
+		NAME = #{name} AND EMAIL = #{email}), null) AS id FROM dual
+	</select>
+	
 </mapper>

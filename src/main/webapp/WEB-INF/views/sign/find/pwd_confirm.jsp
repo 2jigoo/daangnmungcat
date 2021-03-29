@@ -2,8 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp"%>
 <style>
-.wrapper {margin:0 auto; padding:70px; magin-bottom:70px;}
+.wrapper {margin:0 auto; padding:70px; magin-bottom:70px; text-align:center;}
 </style>
+
 
 
 <%@ include file="/WEB-INF/views/include/footer.jsp"%>

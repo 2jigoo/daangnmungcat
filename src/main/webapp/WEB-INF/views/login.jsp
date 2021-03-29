@@ -68,7 +68,7 @@
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 			</form>
 			<div class="link_row">
-				<a class="link_items" href="/sign/find_id">아이디 찾기</a><span class="bar" aria-hidden="true"></span><a class="link_items" href="/sign/find_pwd">비밀번호 찾기</a><span class="bar" aria-hidden="true"></span><a class="link_items" href="/sign/contract">회원가입</a>
+				<a class="link_items" href="/sign/find/find_id">아이디 찾기</a><span class="bar" aria-hidden="true"></span><a class="link_items" href="/sign/find/find_pwd">비밀번호 찾기</a><span class="bar" aria-hidden="true"></span><a class="link_items" href="/sign/contract">회원가입</a>
 			</div>
 		</div>
 	</div>

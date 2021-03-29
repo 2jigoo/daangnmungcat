@@ -368,7 +368,7 @@ $(document).ready(function(){
 	</table>
 </div>
 <div class="confirm_btns">
-	<input type="button" value="회원가입" id="signup" class="go_list" style="width:340px; border-radius:20px; padding:10px; font-size:13px">
+	<input type="button" value="회원가입" id="signup" class="go_list" style="width:340px; border-radius:20px; padding:10px; ">
 </div>
 
 </div>

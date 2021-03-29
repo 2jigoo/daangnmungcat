@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import daangnmungcat.dto.Mail;
 import daangnmungcat.service.EmailService;
@@ -22,6 +23,7 @@ public class EmailServiceImpl implements EmailService {
 	@Autowired
     JavaMailSender mailSender;
 	
+	@Transactional
 	@Override
     public Map<String, String> sendEmail(String email) {
 		
@@ -33,10 +35,11 @@ public class EmailServiceImpl implements EmailService {
 			String ran = Integer.toString(rand.nextInt(10));
 			numStr += ran;
 		}
-
+		
         mail.setTo(email);
-        mail.setSubject("This is Email test.");
-        mail.setContent("인증번호는 [" + numStr + "]입니다.");
+        mail.setFrom("daangndaangn@gmail.com");
+        mail.setSubject("당근멍캣 이메일 인증");
+        mail.setContent("인증번호는 [" + numStr + "] 입니다.");
  
         final MimeMessagePreparator preparator = new MimeMessagePreparator() {
             @Override

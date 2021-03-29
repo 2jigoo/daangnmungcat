@@ -6,7 +6,7 @@ SELECT * FROM MALL_MILEAGE;
 
 UPDATE MEMBER SET MILEAGE = 2000 WHERE id = 'test';
 INSERT INTO MEMBER(ID,PWD,NAME,NICKNAME,EMAIL,PHONE ,DONGNE1,DONGNE2, BIRTHDAY,ZIPCODE,ADDRESS1,ADDRESS2) 
-VALUES('test', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234',1, 1, '1991-12-19', 40404, '대구광역시웅앵', '2222');
+VALUES('test', '{bcrypt}$2a$10$GSaAHVXDhPsyAVZU8IrokuSuLznhh0SiIl.ZFgs/iHNIS.b6upXF2', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234',1, 1, '1991-12-19', 40404, '대구광역시웅앵', '2222');
 DELETE FROM MEMBER;
 SELECT * FROM dongne_view;
 SELECT * FROM member_view;
@@ -460,5 +460,10 @@ WHERE js.regdate BETWEEN to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')) A
 SELECT * FROM MEMBER;
 
 SELECT nvl((SELECT 1 FROM MEMBER WHERE NAME = '이름변경' AND EMAIL = 'admin2@admin2.co.kr'), 0) AS find FROM dual;
+SELECT * FROM MEMBER;
+UPDATE MEMBER SET PHONE = '010-5554-5512' WHERE id = 'adminn';
 
-UPDATE MEMBER SET EMAIL = 'bumkkey@naver.com' WHERE id = 'test';
+SELECT nvl((SELECT id FROM MEMBER WHERE id = 'test' AND NAME = '이름변경' AND EMAIL = 'bumkkey@naver.com') , null) AS id FROM dual;
+SELECT id FROM MEMBER WHERE NAME = '이름변경' AND EMAIL = 'bumkkey@naver.com';
+
+SELECT * FROM JOONGO_REVIEW;

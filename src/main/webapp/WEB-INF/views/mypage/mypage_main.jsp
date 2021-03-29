@@ -223,10 +223,11 @@ $(document).ready(function(){
 	
 	<div class="mypage_sale_div">
 		<div class="mypage_title_div">
+			<a href="/mypage/mypage_order_list"><span class="btn">더 보기</span></a>
 			<span class="mypage_sub_title">최근 주문 정보</span> 
 			<span class="mypage_sub_exp">최근 30일 내에 진행중인 주문정보입니다.</span>
 		</div>
-		<table id="order_list_table" style="font-size:14px">
+		<table id="order_list_table">
 		<colgroup>
 			<col width="200px">
 			<col width="400px">
@@ -249,7 +250,7 @@ $(document).ready(function(){
 		
 		<c:if test="${empty list}">
 			<tr>
-				<td colspan="6" style="padding:50px">주문 내역이 없습니다.</td>
+				<td colspan="6" style="padding:80px">주문 내역이 없습니다.</td>
 			</tr>
 		</c:if>
 		
