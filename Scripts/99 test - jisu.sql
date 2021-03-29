@@ -455,6 +455,11 @@ FROM (SELECT rownum AS rnum, b.*
 WHERE a.rnum BETWEEN 1 AND 9
 ORDER BY a.rnum
 
-SELECT * FROM joongo_image;
+SELECT * FROM JOONGO_review
+ORDER BY id desc;
 
-SELECT * FROM JOONGO_SALE js WHERE mem_id = 'chattest1';
+SELECT rownum AS rnum, a.*
+FROM (SELECT *
+FROM SALE_view
+ORDER BY regdate DESC) a
+WHERE rownum BETWEEN 1 AND 20;

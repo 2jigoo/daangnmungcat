@@ -103,11 +103,12 @@
 		display: inline-block;
 	}
 	
-	#product_list {
+	.product_list_title {
 		border-bottom: 1px solid #e9ecef;
+		padding-bottom: 40px;
 	}
 	
-	#product_list > span {
+	.product_list_title > span {
 		display: block;
 		margin: 30px 0;
 		font-weight: 500;
@@ -128,7 +129,7 @@
    
    /* section_goods 부분 */
 
-         .section_goods_cl {overflow:hidden; margin-bottom: 50px;}
+         <%-- .section_goods_cl {overflow:hidden; margin-bottom: 50px;}
          .section_goods_cl > li {float:left; width:calc(25% - 15px); margin-right:20px;}
 		 .section_goods_cl > li:nth-of-type(4n) {margin-right:0;}
 		 .section_goods_cl > li:nth-of-type(4) ~ li {margin-top:40px;}
@@ -162,7 +163,7 @@
             .product_list > li:nth-of-type(4) ~ li, .product_list > li:nth-child(2) ~ li {margin-top:5%;}
             .product_list .img {height:40vw;}
          }
-         
+          --%>
          #description_title  a{
          	float: right;
          	padding-right: 10px;
@@ -221,10 +222,10 @@ $(document).ready(function(){
 	   //var timeBeforeRes = timeBefore(writeNow);
 	   //document.getElementsByClassName("lastTime")[0].innerHTML = timeBeforeRes;
 	   
-	   var regdate = document.getElementById('regdate').innerHTML;
+	   /* var regdate = document.getElementById('regdate').innerHTML;
 	   var writeNow = dayjs(regdate).toDate();
 	   document.getElementsByClassName("lastTime")[0].innerHTML = timeBefore(writeNow);
-	   document.getElementById('regdate').style.display='none';
+	   document.getElementById('regdate').style.display='none'; */
 	   
    
 	   $("#saleState").val("${sale.saleState.code}").prop("selected", true);
@@ -527,7 +528,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		         		<c:when test="${sale.dogCate eq 'y' }">멍</c:when>
 		         		<c:otherwise>냥</c:otherwise>
 		         	</c:choose>
-		            · <div class="lastTime"></div> <div class="regdate" id="regdate">${sale.regdate }</div> 
+		            · <div class="lastTime"></div> <div class="regdate" id="regdate" regdate="${sale.regdate }">${sale.regdate }</div> 
 		         </div>
 		         <h3>
 		            <c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
@@ -562,41 +563,50 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		      </section>
 		      
 		      	<c:if test="${mlist.size() ne 0}">
-		      		<section id="section_goods">
-			         <div id = "product_list">
-		             	<span>${sale.member.nickname }님의 판매 상품</span>
-			            <ul class="section_goods_cl">
-			               <c:forEach items="${mlist }" var="mlist">
-			                  <li>
-			                     <a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${mlist.id}">
-			                        <div class="section_img">
-			                        	<c:if test="${empty mlist.thumImg}">
-											<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg"></div>
-										</c:if>
-										<c:if test="${not empty mlist.thumImg}">
-											<img src="<%=request.getContextPath() %>/resources/${mlist.thumImg}"></div>
-										</c:if>
-			                        <div class="section_txt">
-			                           <p class="section_location">${mlist.dongne1.name} ${mlist.dongne2.name}</p>
-			                           <p class="section_subject">${mlist.title}</p>
-			                           <p class="section_price">
-			                           <span>
-			                              <c:if test="${mlist.price eq 0 }" >무료 나눔</c:if>
-			                              <c:if test="${mlist.price ne 0 }"> ${mlist.price }원</c:if>
-			                           </span>
-			                           </p>
-			                           <ul>
-			                              <li class="section_heart">${mlist.heartCount}</li>
-			                              <li class="section_chat">${mlist.chatCount}</li>
-			                           </ul>
-			                        </div>   
-			                       </a>   
-			                 	</li>
-			               </c:forEach>
-			            </ul>
-			         </div>
-			      </section>
-		      	</c:if>
+		      		<div class="product_list_title">
+		      			<span>${sale.member.nickname }님의 판매 상품</span>
+						<ul class="product_list s-inner">
+							<c:forEach items="${mlist}" var="list" begin="0" end="7">
+							<c:choose>
+								<c:when test="${list.saleState.code eq 'SOLD_OUT'}">
+									<li class="SOLD_OUT">
+								</c:when>
+								<c:otherwise>
+									<li>
+								</c:otherwise>
+							</c:choose>
+							<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${list.id}">
+								<div class="img">
+									<c:if test="${empty list.thumImg}">
+										<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
+									</c:if>
+									<c:if test="${not empty list.thumImg}">
+										<img src="<%=request.getContextPath() %>/resources/${list.thumImg}">
+									</c:if>
+								</div>
+								<div class="txt">
+									<p class="location">${list.dongne1.name} ${list.dongne2.name} · <span class="regdate" regdate="${list.regdate}"><javatime:format value="${list.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
+									<p class="subject">${list.title}</p>
+									<p class="price">
+										<span class="${list.saleState.code }">${list.saleState.label}</span>
+										<span>
+											<c:if test="${list.price eq 0 }" >무료 나눔</c:if>
+											<c:if test="${list.price ne 0 }"> ${list.price }원</c:if>
+										</span>
+									</p>
+									<ul>
+										<li class="heart">${list.heartCount}</li>
+										<li class="chat">${list.chatCount}</li>
+									</ul>
+								</div>
+							</a></li>
+							</c:forEach>
+							<c:if test="${empty mlist}">
+								<li class="no_date">등록된 글이 없습니다.</li>
+							</c:if>
+						</ul>
+					</div>
+			  </c:if>
 		      
 		      <div class="joongo_comment s-inner" id="joongo_comment">
 		         <p class="tit">댓글 ${commentList.size() }</p>
@@ -624,7 +634,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		                  </c:if>
 		                  <pre class="content">${commentList.content}</pre>
 		                  <div class="info">
-		                     <p class="date">${commentList.regdate}</p> 
+		                     <p class="date regdate" regdate="${commentList.regdate }">${commentList.regdate}</p> 
 		                     <ul>
 		                        <li class="comment_btn">답글쓰기</li>
 		                        <c:if test="${loginUser.id == commentList.member.id}">
@@ -637,7 +647,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		            </c:forEach>
 		            <c:if test="${empty commentList}">
 		            <li class="no_comment">
-		               등록된 댓글이 없습니다.
+		               	등록된 댓글이 없습니다.
 		            </li>
 		            </c:if>
 		         </ul>

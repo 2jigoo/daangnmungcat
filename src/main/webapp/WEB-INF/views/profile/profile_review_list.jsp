@@ -205,7 +205,7 @@
 									</div>
 									<pre class="content">${review.content }</pre>
 									<div class="info">
-									   <p class="date"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/> </p>
+									   <p class="date"><span class="regdate" regdate="${review.regdate}"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/></span></p>
 									   <c:if test="${loginUser.id == review.writer.id }">
 									   <ul>
 									      <li><a href="/joongo/review/update?id=${review.id}">수정</a></li>

@@ -320,7 +320,7 @@
 						</c:if>
 					</div>
 					<div class="txt">
-						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+						<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${sale.title}</p>
 						<p class="price">
 							<span class="${sale.saleState.code }">${sale.saleState.label}</span>
@@ -383,7 +383,7 @@
 									</div>
 									<pre class="content">${review.content }</pre>
 									<div class="info">
-									   <p class="date"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/> </p>
+									   <p class="date"><span class="regdate" regdate="${review.regdate}"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/></span></p>
 									   <c:if test="${loginUser.id == review.writer.id }">
 									   <ul>
 									      <li><a href="/joongo/review/update?id=${review.id}">수정</a></li>

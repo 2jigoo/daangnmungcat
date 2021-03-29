@@ -34,7 +34,7 @@
 		<result property="regdate" column="regdate" />
 		<result property="latestDate" column="latest_date" />
 		
-		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" fetchType="lazy" />
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" />
 		<association property="buyer" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	

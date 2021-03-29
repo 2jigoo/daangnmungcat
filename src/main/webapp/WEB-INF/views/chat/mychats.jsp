@@ -3,28 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
-<script>
-$(document).ready(function(){
-	
-	/* 글쓴 시간 비교시간 변경 */
-	var regdate = document.getElementsByClassName("regdate");
-	$.each(regdate, function(idx, item) {
-		var writeNow = dayjs(item.innerText).toDate();
-	 	item.innerHTML = timeBefore(writeNow);
-	});
-	
-	/* $.ajax({
-		url: "/daangnmungcat/api/chat/",
-		type: "get",
-		dataType: "json",
-		success: function(data) {
-			console.log(data);
-		}
-	}); */
-	
-});
-</script>
-
 <div id="subContent">
 	<h2 id="subTitle">내 채팅 목록</h2>
 	<div id="pageCont" class="s-inner" style="width: 800px;">
@@ -38,7 +16,7 @@ $(document).ready(function(){
 				</c:if>
 				<section class="section_chat">
 					<div class="section_chat_profile_img">
-						<a href="${pageContext.request.contextPath }/member/profile?id=${member.id}">
+						<a href="${pageContext.request.contextPath }/profile/${member.id}">
 							<c:choose>
 								<c:when test="${member.profilePic eq null}">
 									<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
@@ -54,7 +32,7 @@ $(document).ready(function(){
 							<div class="user_info" user_id="${you.id }">
 								<span class="nickname"> ${you.nickname } </span>
 								${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}
-								/ <span class="regdate" regdate="${chat.latestDate }"> ${chat.latestDate }</span>
+								· <span class="regdate" regdate="${chat.latestDate }"> ${chat.latestDate }</span>
 							</div>
 							<div class="dongnename">
 								<c:choose>
@@ -64,6 +42,13 @@ $(document).ready(function(){
 							</div>
 						</div>		
 					</a>
+					<c:if test="${not empty chat.sale.thumImg }">
+						<a href="/joongoSale/detailList?id=${chat.sale.id }">
+						<div class="section_chat_right">
+							<img src="/resources/${chat.sale.thumImg }">
+						</div>
+						</a>
+					</c:if>
 				</section>
 			</c:forEach>
 		</article>

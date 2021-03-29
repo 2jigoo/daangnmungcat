@@ -18,43 +18,45 @@
 	
 	<select id="selectJoongoReviewByAll" resultMap="reviewResult">
 		<include refid="selectSQL" />
+		ORDER BY regdate desc
 	</select>
 	
 	<select id="selectJoongoReviewOnMemId" resultMap="reviewResult">
 		<include refid="selectSQL"/>
 		WHERE (SALE_MEM_ID = #{memId} OR BUY_MEM_ID = #{memId})
 			AND WRITER_ID != #{memId}
+		ORDER BY regdate desc
 	</select>
 	
 	<select id="selectJoongoReviewByWriter" resultMap="reviewResult">
 		<include refid="selectSQL"/>
 		WHERE WRITER_ID = #{memId}
+		ORDER BY regdate desc
 	</select>
 	
 	<select id="selectJoongoReviewBySaleMemId" resultMap="reviewResult">
 		<include refid="selectSQL" />
 		WHERE SALE_MEM_ID = #{memId}
 			AND WRITER_ID != #{memId}
+		ORDER BY regdate desc
 	</select>
 	
 	<select id="selectJoongoReviewByBuyMemId" resultMap="reviewResult">
 		<include refid="selectSQL" />
 		WHERE BUY_MEM_ID = #{memId}
 			AND WRITER_ID != #{memId}
+		ORDER BY regdate desc
 	</select>
 	
 	<select id="selectJoongoReviewBySaleId" resultMap="reviewResult">
 		<include refid="selectSQL" />
 		WHERE SALE_ID = #{saleId}
-			AND WRITER_ID != #{memId}
+			AND WRITER_ID = #{memId}
 	</select>
 	
 	<select id="selectJoongoReviewById" resultMap="reviewResult">
 		<include refid="selectSQL" />
 		WHERE ID = #{id}
-		<if test="memId != null">
-			AND WRITER_ID != #{memId}
-		</if>	
 	</select>
 
 	<insert id="insertJoongoSaleReview" parameterType="SaleReview">

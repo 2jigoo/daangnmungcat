@@ -233,7 +233,7 @@ $(function(){
 						</c:if>
 					</div>
 					<div class="txt">
-						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
+						<p class="location">${list.dongne1.name} ${list.dongne2.name} · <span class="regdate" regdate="${list.regdate}"><javatime:format value="${list.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${list.title}</p>
 						<p class="price">
 							<span class="${list.saleState.code }">${list.saleState.label}</span>
