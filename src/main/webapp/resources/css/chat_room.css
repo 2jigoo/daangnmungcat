@@ -233,10 +233,6 @@ button.accent {
     font-weight: 500;
 }
 
-.chat-header span {
-   	color: #9e9e9e;
-}
-
 .chat-message.loading-btn {
 	text-align: center;
 	width: 100%;

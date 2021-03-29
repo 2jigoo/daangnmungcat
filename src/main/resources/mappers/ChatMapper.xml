@@ -34,7 +34,7 @@
 		<result property="regdate" column="regdate" />
 		<result property="latestDate" column="latest_date" />
 		
-		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" fetchType="lazy" />
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" />
 		<association property="buyer" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	
@@ -43,15 +43,41 @@
 	</sql>
 	
 	<select id="selectAllChatsByMemberId" resultMap="chatRes">
-		<include refid="selectSQL" />
-		where sale_mem_id = #{memberId} or buy_mem_id = #{memberId}
-		ORDER BY latest_date DESC
+		SELECT b.* FROM (
+		SELECT rownum as rnum, a.*
+		FROM (<include refid="selectSQL" />
+		WHERE sale_mem_id = #{memberId} or buy_mem_id = #{memberId}
+		ORDER BY latest_date DESC) a
+		) b
+		<if test="cri != null">
+			WHERE rnum between #{cri.rowStart} and #{cri.rowEnd} 
+		</if>
+		ORDER BY rnum
+	</select>
+	
+	<select id="countAllChatsByMemberId" resultType="int">
+		SELECT NVL(count(*), 0)
+		FROM chat_list_view
+		WHERE sale_mem_id = #{memberId} or buy_mem_id = #{memberId}
 	</select>
 	
 	<select id="selectAllChatsBySaleId" resultMap="chatRes">
-		<include refid="selectSQL" />
-		where sale_id = #{saleId}
-		ORDER BY latest_date DESC
+		SELECT b.* FROM (
+		SELECT rownum as rnum, a.*
+		FROM (<include refid="selectSQL" />
+		WHERE sale_id = #{saleId}
+		ORDER BY latest_date DESC) a
+		) b
+		<if test="cri != null">
+			WHERE rnum between #{cri.rowStart} and #{cri.rowEnd}
+		</if>
+		ORDER BY rnum
+	</select>
+	
+	<select id="countAllChatsBySaleId" resultType="int">
+		SELECT NVL(count(*), 0)
+		FROM chat_list_view
+		WHERE sale_id = #{saleId}
 	</select>
 	
 	<select id="selectChatByChatId" resultMap="chatRes">
@@ -60,9 +86,24 @@
 	</select>
 	
 	<select id="selectChatByMemberIdAndSaleId" resultMap="chatRes">
-		<include refid="selectSQL" />
+		SELECT b.* FROM (
+		SELECT rownum as rnum, a.*
+		FROM(<include refid="selectSQL" />
 		where (sale_mem_id = #{memberId} or buy_mem_id = #{memberId})
 		and sale_id = #{saleId}
+		ORDER BY latest_date DESC) a
+		) b
+		<if test="cri != null">
+			WHERE rnum BETWEEN #{cri.rowStart} and #{cri.rowEnd} 
+		</if>
+		ORDER BY rnum
+	</select>
+	
+	<select id="countAllChatsByMemberIdAndSaleId" resultType="int">
+		SELECT NVL(count(*), 0)
+		FROM chat_list_view
+		WHERE (sale_mem_id = #{memberId} or buy_mem_id = #{memberId})
+			and sale_id = #{saleId}
 	</select>
 	
 	<select id="selectCountBySaleId" resultType="int">

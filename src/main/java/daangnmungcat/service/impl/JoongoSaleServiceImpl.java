@@ -86,7 +86,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public Sale getSaleById(int id) {
 		JSHits(id);
 		Sale sale = mapper.selectJoongoSaleById(id);
-		sale.setChatCount(chatService.getChatCounts(id)); // 채팅수 set
+		if(sale != null) {
+			sale.setChatCount(chatService.getChatCounts(id)); // 채팅수 set
+		}
 		//이미지들 구해와서 set
 		return sale;
 	}

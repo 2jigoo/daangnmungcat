@@ -11,10 +11,16 @@ import daangnmungcat.dto.Criteria;
 
 public interface ChatService {
 
-	List<Chat> getMyChatsList(String memberId);
-	List<Chat> getMyChatsList(int saleId);
+	List<Chat> getMyChatsList(String memberId, Criteria cri);
+	int countMyChatsList(String memberId);
+	
+	List<Chat> getMyChatsList(int saleId, Criteria cri);
+	int countMyChatsList(int saleId);
+	
+	List<Chat> getMyChatsListOnSale(String memberId, int saleId, Criteria cri);
+	int countsMyChatsOnSale(String memberId, int saleId);
+	
 	Chat getChatInfo(int chatId);
-	Chat getChatInfoFromSale(String memberId, int saleId);
 	int getChatCounts(int saleId);
 	
 	Chat getChatWithMessages(int chatId);

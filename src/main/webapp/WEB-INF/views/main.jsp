@@ -20,7 +20,7 @@
 					<img src="<%=request.getContextPath() %>/resources/${saleList.thumImg}"></div>
 				</c:if>
 			<div class="txt">
-				<p class="location">${saleList.dongne1.name} ${saleList.dongne2.name}</p>
+				<p class="location">${saleList.dongne1.name} ${saleList.dongne2.name} · <span class="regdate" regdate="${saleList.regdate}"><javatime:format value="${saleList.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 				<p class="subject">${saleList.title}</p>
 				<p class="price">
 					<span>${saleList.saleState.label}</span>

@@ -191,12 +191,12 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .mProduct.bg01 {background:#f3f3f3;}
 .mProduct .tit {font-size:2.8em; color:#111; line-height:1em; font-weight:600; text-align:center; margin-bottom:50px;}
 .product_list {overflow:hidden;}
-.product_list .SOLD_OUT {opacity: 0.5;}
+.product_list > li.SOLD_OUT {opacity: 0.5;}
 .product_list > li {float:left; width:calc(25% - 15px); margin-right:20px;}
 .product_list > li:nth-child(4n) {margin-right:0;}
 .product_list > li:nth-child(4) ~ li {margin-top:40px;}
 .product_list > li.no_date {float:none; width:100%; padding:100px 0; text-align:center;}
-.product_list .img {width:100%; padding-bottom: 100%; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:left; position: relative; overfolow: hidden; box-sizing: content-box;}
+.product_list .img {width:100%; padding-bottom: 100%; border:1px solid #ddd; margin-bottom:20px; background:#fff; text-align:left; position: relative; overflow: hidden; box-sizing: content-box;}
 .product_list .img img {max-width:100%; max-height:100%; min-width:100%; min-height:100%; position: absolute; max-block-size: -webkit-fill-available;}
 .product_list .txt {position:relative; color:#111;}
 .product_list .txt ul {position:absolute; right:0; top:0; color: #888;}
@@ -210,7 +210,7 @@ html.no_scroll {position:fixed; left:0; top:0; right:0; bottom:0;}
 .product_list .price span:first-child {font-size:1em; float:left; font-weight:normal; margin-top:4px;}
 .product_list .price .ON_SALE { display: none;}
 .product_list .price .RESERVED { color: white; background-color: seagreen; padding: 2px 6px; border-radius: 4px;}
-.product_list .price .SOLD_OUT { color: white; background-color: #333; padding: 2px 6px; border-radius: 4px;}
+.product_list .price .SOLD_OUT { color: white; background-color: #999; padding: 2px 6px; border-radius: 4px;}
 .product_list .review {text-align: center; padding: 8px 0; border: 1px solid #e6e6e6; border-radius: 6px; margin-top: 10px; font-weight: 600;}
 .product_list .review.send {color: darkorange;}
 
@@ -447,20 +447,9 @@ img {
     vertical-align: top;
    }
 
-.section_chat:nth-child(1) {
-    border-top: 1px solid #efefef;
-}
-   
-.section_chat {
-    border-bottom: 1px solid #efefef;
-    padding: 12px 12px;
-}
-
-.section_chat .section_chat_profile_img {
-    width: 60px;
-    height: 60px;
-    display: inline-block;
-}
+.section_chat:nth-child(1) {border-top: 1px solid #efefef;}
+.section_chat { border-bottom: 1px solid #efefef; padding: 12px 12px;}
+.section_chat .section_chat_profile_img {width: 60px; height: 60px; display: inline-block;}
 
 .section_chat_profile_img img {
     border-radius: 60px;
@@ -507,6 +496,21 @@ img {
 
 }
 
+.section_chat .section_chat_right {float: right; width: 60px; height: 60px; overflow: hidden; border-radius: 4px; }
+.section_chat .section_chat_right img {width: 100%; height: 100%; }
+
+.chat-header .info {float: left;width: calc(100% - 120px);text-align: left;}
+.chat-header .info .thumb {display: inline-block; margin-right: 10px;}
+.chat-header .info .thumb img {width: 80px; height: 80px; border-radius: 4px;}
+.chat-header .info .txt {display: inline-grid;}
+.chat-header .title { color: #333; font-weight: 600; margin-bottom: 4px;}
+.chat-header .dongne { color: #999; }
+.chat-header .ON_SALE { display: none;}
+.chat-header .RESERVED { color: white; background-color: seagreen; padding: 2px 6px; border-radius: 4px;}
+.chat-header .SOLD_OUT { color: white; background-color: #999; padding: 2px 6px; border-radius: 4px;}
+.chat-header .btn-box {float: right; width: 120px; margin: auto 0;}
+.chat-header .chat-btn {font-family: inherit; font-size: 14px;line-height: 20px;padding: 6px 15px;}
+.chat-message img {width: 200px; border-radius: 12px; margin-bottom: 10px;}
 
 
 /* joongo - addList */

@@ -170,7 +170,7 @@ $(function(){
 						</c:if>
 					</div>
 					<div class="txt">
-						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+						<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${sale.title}</p>
 						<p class="price">
 							<span class="${sale.saleState.code }">${sale.saleState.label}</span>
@@ -185,9 +185,18 @@ $(function(){
 						</ul>
 					</div>
 					<c:if test="${sale.saleState.code eq 'SOLD_OUT' }">
-						<div class="review send">
-							거래후기 보내기
-						</div>
+						<c:choose>
+							<c:when test="${sale.reviewed eq true }">
+								<div class="review confirm">
+									작성한 후기 확인
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="review send">
+									거래후기 보내기
+								</div>
+							</c:otherwise>
+						</c:choose>
 					</c:if>
 				</a></li>
 				</c:forEach>

@@ -4,22 +4,22 @@
 
 
 <c:choose>
-	<%-- <c:when test="${loginUser.id eq sale.member.id }">
-	<script>
-		alert("본인의 판매글에 대해 거래후기를 남길 수 없습니다.");
-		window.location = "/";
-	</script>
-	</c:when>
-	<c:when test="${loginUser.id ne sale.buyMember.id }">
+	<c:when test="${loginUser.id ne sale.member.id and loginUser.id ne sale.buyMember.id}">
 		<script>
-			alert("본인이 구매한 판매글에만 거래후기를 남길 수 있습니다.")
-			window.location = "/";
+			alert("본인이 거래하지 않은 거래에 대해서 후기를 남길 수 없습니다.");
+			window.history.go(-1);
 		</script>
-	</c:when> --%>
+	</c:when>
+	<c:when test="${sale.saleState.code ne 'SOLD_OUT' }">
+		<script>
+			alert("거래완료 처리가 되지 않은 판매글입니다.");
+			window.history.go(-1);
+		</script>
+	</c:when>
 	<c:when test="${not empty review}">
 		<script>
 			alert("이미 해당 판매글에 대해 거래후기를 남겼습니다.")
-			window.location = "/";
+			window.history.go(-1);
 		</script>
 	</c:when>
 </c:choose>
@@ -44,14 +44,14 @@ $(function(){
 			sale : {
 				id : $("input[name='sale']").val(),
 			},
-			buyMember : {
+			writer : {
 				id : $("input[name='writer.id']").val(),
 			},
 			rating : star_num,
 			content : $("textarea[name='content']").val(),
 		}
 		
-		console.log(saleReview)
+		console.log(saleReview);
 		
 		$.ajax({
          type: "post",
@@ -64,7 +64,8 @@ $(function(){
             xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
          },
          success:function(data){
-            alert("리뷰가 등록됐습니다")
+        	// data: 작성한 리뷰 id
+            alert("리뷰를 등록했습니다.")
             window.location = "/";
          },
          error: function(request,status,error){
@@ -90,8 +91,8 @@ $(function(){
 					<p>거래상대</p>
 					<div>
 						<c:choose>
-							<c:when test="${loginUser.id eq sale.member.id }">${sale.buyMember.id }</c:when>
-							<c:otherwise>${sale.member.id }</c:otherwise>
+							<c:when test="${loginUser.id eq sale.member.id }"><a href="/profile/${sale.buyMember.id}">${sale.buyMember.nickname } 님 (${sale.buyMember.id })</a></c:when>
+							<c:otherwise><a href="/profile/${sale.member.id}">${sale.member.nickname }님 (${sale.member.id })</a></c:otherwise>
 						</c:choose>
 					</div>
 				</li>
@@ -99,17 +100,19 @@ $(function(){
 					<p>구매상품</p>
 					<div>
 						<div class="product">
-							<div class="img">
-								<c:if test="${empty sale.thumImg}">
-									<img src="/resources/images/no_image.jpg">
-								</c:if>
-								<c:if test="${not empty sale.thumImg }">
-									<img src="/resources/${sale.thumImg }">
-								</c:if>
-							</div>
-							<div class="txt">
-								<p class="name">${sale.title}</p>
-							</div>
+							<a href="/joongoSale/detailList?id=${sale.id }">
+								<div class="img">
+									<c:if test="${empty sale.thumImg}">
+										<img src="/resources/images/no_image.jpg">
+									</c:if>
+									<c:if test="${not empty sale.thumImg }">
+										<img src="/resources/${sale.thumImg }">
+									</c:if>
+								</div>
+								<div class="txt">
+									<p class="name">${sale.title}</p>
+								</div>
+							</a>
 						</div>
 					</div>
 				</li>

@@ -114,10 +114,10 @@ $(document).ready(function(){
 			<dl>
 				<dt>거래정보</dt>
 				<a href="/chat"><dd>내 채팅목록</dd></a>
-				<a href="/mypage/joongo/list?memId=${loginUser.id}"><dd>내 판매글</dd></a>
+				<a href="/profile/${loginUser.id }/joongo"><dd>내 판매글</dd></a>
 				<a href="/mypage/joongo/comment?memId=${loginUser.id}"><dd>내 댓글</dd></a>
 				<a href="<c:url value="/mypage/joongo/heart/list"/>"><dd>찜 목록</dd></a>
-				<a href="/mypage/joongo/review/list?memId=${loginUser.id}"><dd>거래후기</dd></a>
+				<a href="/profile/${loginUser.id }/review"><dd>거래후기</dd></a>
 			</dl>
 			<dl>
 				<dt>쇼핑정보</dt>
@@ -164,6 +164,10 @@ $(document).ready(function(){
 				<a class="num" href="/mypage/mileage/list?memId=${loginUser.getId()}"><fmt:formatNumber value="${mile}"/></a>
 			</span>
 			<span class="item">
+				찜 <br><br>
+				<a class="num" href="/mypage/joongo/heart/list"><fmt:formatNumber value="${heartedTotal}"/></a>
+			</span>
+			<span class="item">
 				중고거래 <br><br>
 				<a class="num" href="/mypage/joongo/list?memId=${loginUser.getId()}">${saleTotal}</a>
 			</span>
@@ -172,8 +176,8 @@ $(document).ready(function(){
 	
 	<div class="mypage_sale_div">
 		<div class="mypage_title_div">
-			<span class="mypage_sub_title">최근 판매상품</span> 
-			<span class="mypage_sub_exp">${member.name}님께서 최근 작성한 중고판매글입니다.</span>
+			<span class="mypage_sub_title">최근 중고거래글</span> 
+			<span class="mypage_sub_exp">${member.name}님께서 최근 작성한 중고거래글입니다.</span>
 			<a href="/profile/${member.id }/joongo"><span class="btn" list="joongo">더 보기</span></a>
 		</div>
 	</div>
@@ -198,7 +202,7 @@ $(document).ready(function(){
 					</c:if>
 				</div>
 				<div class="txt">
-					<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+					<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 					<p class="subject">${sale.title}</p>
 					<p class="price">
 						<span class="${sale.saleState.code }">${sale.saleState.label}</span>
@@ -215,7 +219,57 @@ $(document).ready(function(){
 			</a></li>
 			</c:forEach>
 			<c:if test="${empty saleList}">
-				<li class="no_date">등록된 글이 없습니다.</li>
+				<li class="no_date">등록한 중고거래글이 없습니다.</li>
+			</c:if>
+		</ul>
+	</div>
+	
+	<div class="mypage_sale_div">
+		<div class="mypage_title_div">
+			<span class="mypage_sub_title">최근 찜한 중고거래</span> 
+			<span class="mypage_sub_exp">${member.name}님께서 최근 찜한 중고거래글입니다.</span>
+			<a href="/mypage/joongo/heart/list"><span class="btn" list="heart">더 보기</span></a>
+		</div>
+	</div>
+	<div class="profile_section" style="border-bottom: 1px solid #e6e6e6; margin-bottom: 80px;">
+		<ul class="product_list">
+			<c:forEach items="${heartedList}" var="sale">
+			<c:choose>
+				<c:when test="${sale.saleState.code eq 'SOLD_OUT'}">
+					<li class="SOLD_OUT">
+				</c:when>
+				<c:otherwise>
+					<li>
+				</c:otherwise>
+			</c:choose>
+			<a href="<%=request.getContextPath()%>/joongoSale/detailList?id=${sale.id}">
+				<div class="img">
+					<c:if test="${empty sale.thumImg}">
+						<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
+					</c:if>
+					<c:if test="${not empty sale.thumImg}">
+						<img src="<%=request.getContextPath() %>/resources/${sale.thumImg}">
+					</c:if>
+				</div>
+				<div class="txt">
+					<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
+					<p class="subject">${sale.title}</p>
+					<p class="price">
+						<span class="${sale.saleState.code }">${sale.saleState.label}</span>
+						<span>
+							<c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
+							<c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
+						</span>
+					</p>
+					<ul>
+						<li class="heart">${sale.heartCount}</li>
+						<li class="chat">${sale.chatCount}</li>
+					</ul>
+				</div>
+			</a></li>
+			</c:forEach>
+			<c:if test="${empty saleList}">
+				<li class="no_date">찜한 중고거래글이 없습니다.</li>
 			</c:if>
 		</ul>
 	</div>
