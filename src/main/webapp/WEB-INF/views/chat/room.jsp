@@ -96,7 +96,7 @@
 					dataType: "json",
 					success: function(data) {
 						if(confirm("거래가 완료되었습니다! 지금 바로 거래 후기를 남기시겠습니까?") == true) {
-							location.href = "/joongo/review/write?saleId=" + data;
+							location.href = "/joongo/review/write?saleId=" + data + "&buyer=${chat.buyer.id}";
 						} else {
 							location.reload();
 						}
@@ -110,11 +110,11 @@
 		});
 		
 		$("#write-review-btn").click(function() {
-			location.href = "/joongo/review/write?saleId=${chat.sale.id}";
+			location.href = "/joongo/review/write?saleId=${chat.sale.id}&buyer=${chat.buyer.id}";
 		});
 		
 		$("#check-review-btn").click(function() {
-			
+			location.href = "/joongo/review/" + $(this).attr("review-id");			
 		});
 		
 		$("#customFile").on("change", function() {
@@ -169,9 +169,14 @@
 									<c:when test="${not empty review}">
 										<span id="check-review-btn" class="chat-btn" review-id="${review.id }">작성한<br>후기 보기</span>
 									</c:when>
-									<c:otherwise>
+									<c:when test="${loginUser.id eq chat.sale.member.id }"> 
 										<span id="write-review-btn" class="chat-btn">거래 후기<br>남기기</span>
-									</c:otherwise>
+									</c:when>
+									<c:when test="${chat.sale.buyMember eq null }"> 
+									</c:when>
+									<c:when test="${loginUser.id eq chat.sale.buyMember.id }">
+										<span id="write-review-btn" class="chat-btn">거래 후기<br>남기기</span>
+									</c:when>
 								</c:choose>
 							</c:when>
 							<c:otherwise>

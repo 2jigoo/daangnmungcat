@@ -118,7 +118,6 @@ public class ChatController {
 		SaleReview review = reviewService.getReviewBySaleId(chat.getSale().getId(), loginUser.getId());
 		if(review != null) {
 			log.info("review: " + review.getId());
-			model.addAttribute("reviewed", true);
 			model.addAttribute("review", review);
 		}
 		

@@ -44,6 +44,7 @@ SELECT
 	C.id			AS id,
 	C.sale_id		AS sale_id,
 	S.MEM_ID 		AS sale_mem_id,
+	S.BUY_MEM_ID 	AS sale_buy_mem_id,
 	SM.nickname		AS sale_mem_nickname,
 	SM.grade		AS sale_mem_grade,
 	S.title			AS sale_title,

@@ -40,7 +40,7 @@ $(function(){
 			return false;
 		}
 		
-		var saleReview = {
+		const saleReview = {
 			sale : {
 				id : $("input[name='sale']").val(),
 			},
@@ -49,6 +49,12 @@ $(function(){
 			},
 			rating : star_num,
 			content : $("textarea[name='content']").val(),
+		}
+		
+		var buyer = $("input[name='sale.buyMember.id']").val();
+		if(buyer) {
+			const buyMember = {id: buyer};
+			saleReview.sale.buyMember = buyMember;
 		}
 		
 		console.log(saleReview);
@@ -86,12 +92,15 @@ $(function(){
 		<div class="joongo_review">
 			<input type="hidden" name="sale" value="${sale.id}">
 			<input type="hidden" name="writer.id" value="${loginUser.id}">
+			<input type="hidden" name="sale.buyMember.id" value="${buyer }">
 			<ul>
 				<li>
 					<p>거래상대</p>
 					<div>
 						<c:choose>
-							<c:when test="${loginUser.id eq sale.member.id }"><a href="/profile/${sale.buyMember.id}">${sale.buyMember.nickname } 님 (${sale.buyMember.id })</a></c:when>
+							<c:when test="${loginUser.id eq sale.member.id }">
+								<a href="/profile/${sale.buyMember.id}">${sale.buyMember.nickname } 님 (${sale.buyMember.id })</a>
+							</c:when>
 							<c:otherwise><a href="/profile/${sale.member.id}">${sale.member.nickname }님 (${sale.member.id })</a></c:otherwise>
 						</c:choose>
 					</div>

@@ -106,7 +106,7 @@
 		
 		$("select[name=writer]").change(function() {
 			var reviewForm = document.reviewForm;
-			reviewForm.target = pathname;
+			reviewForm.action = pathname;
 			reviewForm.submit();
 		});
 		
@@ -136,7 +136,7 @@
 			</div>
 			<div class="txt_box">
 				<p class="name">${member.nickname } <span>${member.dongne1.name } ${member.dongne2.name } ${member.grade.name }</span>
-					<c:if test="${loginUser.id eq member.id }"><a href="/profile/edit"><span class="btn">프로필 수정</span></a></c:if>
+					<c:if test="${loginUser.id eq member.id }"><span class="btn" id="btn-modal">프로필 수정</span></c:if>
 				</p>
 				<p class="bio">
 					<c:choose>

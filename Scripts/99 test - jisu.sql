@@ -472,3 +472,6 @@ FROM (SELECT rownum as rnum, a.*
 		where rnum BETWEEN 11 AND 20
 	ORDER BY rnum;
 	
+
+SELECT * FROM JOONGO_SALE js
+WHERE MEM_ID = 'chattest1' AND SALE_STATE = '판매 완료';

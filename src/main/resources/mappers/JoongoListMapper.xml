@@ -243,7 +243,8 @@
 	
 	<update id="updateSold" parameterType="Sale">
 		UPDATE joongo_sale
-		SET	sale_state = #{saleState}, buy_mem_id = #{buyMember.id}
+		SET	<if test="buyMember != null and buyMember.id.length() != 0">buy_mem_id = #{buyMember.id}, </if>
+			sale_state = #{saleState}
 		WHERE id = #{id}
 	</update>
 	
