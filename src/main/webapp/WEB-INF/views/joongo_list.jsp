@@ -4,6 +4,13 @@
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 
 <script type="text/javascript">
+<c:if test="${param.errorCode eq -1}">
+alert("존재하지 않는 판매글입니다.");
+</c:if>
+<c:if test="${param.errorCode eq -2}">
+alert("해당 거래글에 대해 개설한 채팅이 존재하지 않습니다.");
+</c:if>
+
 var dongne1Id;
 var dongne1Name = "${dongne1Name}"
 var pageNum = "${pageMaker.cri.page}"
@@ -233,7 +240,7 @@ $(function(){
 						</c:if>
 					</div>
 					<div class="txt">
-						<p class="location">${list.dongne1.name} ${list.dongne2.name}</p>
+						<p class="location">${list.dongne1.name} ${list.dongne2.name} · <span class="regdate" regdate="${list.regdate}"><javatime:format value="${list.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${list.title}</p>
 						<p class="price">
 							<span class="${list.saleState.code }">${list.saleState.label}</span>

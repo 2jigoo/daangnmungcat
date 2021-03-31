@@ -31,23 +31,38 @@ $(function(){
 		 console.log('pwd_status:'+ pwd_status);
 	});
 	
+	$('#new_pwd').keyup(function(){
+		  if($('#new_pwd').val()!=$('#re_pwd').val()){
+		  	$('font[name=check]').text('');
+		   	$('font[name=check]').html("암호가 일치하지 않습니다.");
+		   	$('input[name=new_pwd]').prop("status", "0");
+		  }else{
+		  	$('font[name=check]').text('');
+		  	$('font[name=check]').html("암호가 일치합니다.");
+			$('input[name=new_pwd]').prop("status", "1");
+		  }
+		 pwd_status = document.getElementById('new_pwd').status;
+		 console.log('pwd_status:'+ pwd_status);
+	});
 	
 	$('#pwd_update').on("click", function(){
 		var pwdReg = /^[A-Za-z0-9]{6,20}$/;
 		
 		if(pwdReg.test($('#new_pwd').val()) == false ){
 			alert("비밀번호는 한글과 숫자를 포함한 6~20자리 이내만 가능합니다.");
-		
+			return;
 		}else if($('#now_pwd').val() == ""){
 			alert('현재 비밀번호를 입력하세요');
-			
+			return;
 		}else if($('#new_pwd').val() == ""){
 			alert('새 비밀번호를 입력하세요');
-			
+			return;
 		}else if($('#re_pwd').val() == ""){
 			alert('새 비밀번호를 다시 입력하세요');
+			return;
 		}else if(pwd_status == 0){
 			alert('새 비밀번호가 일치하지 않습니다.')
+			return;
 		}else {
 			if (confirm("비밀번호를 변경하시겠습니까?") == true) {
 				var pwd = {

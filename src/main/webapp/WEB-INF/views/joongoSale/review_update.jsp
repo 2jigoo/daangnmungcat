@@ -4,6 +4,17 @@
 
 
 <script>
+<c:choose>
+	<c:when test="${empty review}">
+		alert("작성하지 않은 리뷰입니다.");
+		window.history.go(-1);
+	</c:when>
+	<c:when test="${loginUser.id ne review.writer.id}">
+		alert("작성하지 않은 리뷰입니다.");
+		window.history.go(-1);
+	</c:when>
+</c:choose>
+
 $(function(){
 	$(".joongo_review #update").click(function(){
 		var star_num = ($(".star_box .star.on:last").index() + 1) * 0.5;
@@ -22,8 +33,8 @@ $(function(){
 			sale : {
 				id : $("input[name='sale']").val(),
 			},
-			buyMember : {
-				id : $("input[name='buyMember']").val(),
+			writer : {
+				id : $("input[name='writer']").val(),
 			},
 			rating : star_num,
 			content : $("textarea[name='content']").val(),
@@ -60,24 +71,35 @@ $(function(){
 	<div id="pageCont" class="s-inner">
 		<div class="joongo_review">
 			<input type="hidden" name="id" value="${review.id}">
-			<input type="hidden" name="sale" value="${sale.id}">
-			<input type="hidden" name="buyMember" value="${sale.buyMember.id}">
+			<input type="hidden" name="sale" value="${review.sale.id}">
+			<input type="hidden" name="writer" value="${loginUser.id}">
 			<ul>
+				<li>
+					<p>거래상대</p>
+					<div>
+						<c:choose>
+							<c:when test="${loginUser.id eq sale.member.id }"><a href="/profile/${sale.buyMember.id}">${sale.buyMember.nickname } 님 (${sale.buyMember.id })</a></c:when>
+							<c:otherwise><a href="/profile/${sale.member.id}">${sale.member.nickname }님 (${sale.member.id })</a></c:otherwise>
+						</c:choose>
+					</div>
+				</li>
 				<li>
 					<p>구매상품</p>
 					<div>
 						<div class="product">
-							<div class="img">
-								<c:if test="${empty sale.thumImg}">
-									<img src="/resources/images/no_image.jpg">
-								</c:if>
-								<c:if test="${not empty sale.thumImg }">
-									<img src="/resources/${sale.thumImg }">
-								</c:if>
-							</div>
-							<div class="txt">
-								<p class="name">${sale.title}</p>
-							</div>
+							<a href="/joongoSale/detailList?id=${review.sale.id }">
+								<div class="img">
+									<c:if test="${empty review.sale.thumImg}">
+										<img src="/resources/images/no_image.jpg">
+									</c:if>
+									<c:if test="${not empty review.sale.thumImg }">
+										<img src="/resources/${review.sale.thumImg }">
+									</c:if>
+								</div>
+								<div class="txt">
+									<p class="name">${review.sale.title}</p>
+								</div>
+							</a>
 						</div>
 					</div>
 				</li>

@@ -52,6 +52,7 @@ public class Sale {
 	private int chatCount;
 	private boolean hearted;
 	private int heartCount;
+	private boolean reviewed;
 	
 	private String thumImg;
 	private List<SaleImage> images;
@@ -60,6 +61,6 @@ public class Sale {
 	public Sale(int id) {
 		this.id = id;
 	}
-	
+
 	
 }

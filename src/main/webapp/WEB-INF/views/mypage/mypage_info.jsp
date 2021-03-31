@@ -403,7 +403,8 @@ function execPostCode(){
 <div class="wrapper">
 
 	<h2 id="subTitle">회원정보 변경</h2>
-	
+
+<!--	
 <div class="mypage_info_div">
 		<table class="mypage_profile">
 			<tr style="padding:30px;">
@@ -412,7 +413,7 @@ function execPostCode(){
 				<img id="myPic">
 				<i class="fas fa-camera" style="cursor:pointer; margin:-25px; margin-top:55px; color:#849199; font-size:17px; background-color:#fff; padding:5px; border-radius:50px; border:1px solid #ccc"></i>
 				</label>
-				<!-- <span id="profile_nick"></span> --></td>
+				<span id="profile_nick"></span></td>
 				<td><span id="profile_text"></span></td>
 			</tr>
 			<tr>
@@ -430,7 +431,8 @@ function execPostCode(){
 			</tr>
 		</table>
 </div>
-	
+-->
+
 <div class="mypage_info_div">
 
 	<table class="mypage_info_table">

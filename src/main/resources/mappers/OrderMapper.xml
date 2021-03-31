@@ -337,6 +337,7 @@
 			<if test="payId != null"> pay_id = #{payId}, </if>
 			<if test="payDate != null"> pay_date = #{payDate}, </if>
 			<if test="misu != null"> misu = #{misu}, </if>
+			<if test="usedMileage != null"> used_mileage = #{usedMileage}, </if>
 			<if test="returnPrice != null"> return_price = #{returnPrice}, </if>
 			<if test="cancelPrice != null"> cancel_price = #{cancelPrice}, </if>
 			<if test="state != null"> state = #{state}, </if>

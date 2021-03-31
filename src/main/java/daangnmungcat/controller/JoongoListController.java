@@ -73,6 +73,34 @@ public class JoongoListController {
 		
 		return "/joongo_list";
 	}
+
+	@GetMapping("/joongo_list/all/{cate}")
+	public String listCate(Model model, Criteria cri, AuthInfo loginUser, @PathVariable("cate") int cate) throws UnsupportedEncodingException {
+		Sale sale = new Sale();
+		switch (cate) {
+		case 1:
+			sale.setDogCate("y");
+			sale.setCatCate("n");
+			break;
+		case 2:
+			sale.setDogCate("n");
+			sale.setCatCate("y");
+			break;
+		case 3:
+			sale.setDogCate("y");
+			sale.setCatCate("y");
+			break;
+		}
+		List<Sale> list = saleService.getListsSearchedBy(sale, cri);
+		model.addAttribute("list", list);
+		
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		pageMaker.setTotalCount(saleService.listSearchCount(sale));
+		model.addAttribute("pageMaker", pageMaker);
+		
+		return "/joongo_list";
+	}
 	
 	@GetMapping("/joongo_list/{dongne1}")
 	public String listDongne1(Model model, @PathVariable("dongne1") String dongne1, Criteria cri){
@@ -87,6 +115,7 @@ public class JoongoListController {
 		model.addAttribute("pageMaker", pageMaker);
 		return "/joongo_list";
 	}
+
 	
 	@GetMapping("/joongo_list/{dongne1}/{dongne2}")
 	public String listDongne2(Model model, @PathVariable("dongne1") String dongne1, @PathVariable("dongne2") String dongne2, Criteria cri) {

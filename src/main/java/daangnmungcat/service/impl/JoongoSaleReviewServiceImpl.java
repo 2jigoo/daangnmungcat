@@ -6,8 +6,13 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import daangnmungcat.dto.Sale;
 import daangnmungcat.dto.SaleReview;
+import daangnmungcat.dto.SaleState;
+import daangnmungcat.mapper.JoongoListMapper;
+import daangnmungcat.mapper.JoongoSaleMapper;
 import daangnmungcat.mapper.JoongoSaleReviewMapper;
 import daangnmungcat.service.JoongoSaleReviewService;
 
@@ -19,6 +24,12 @@ public class JoongoSaleReviewServiceImpl implements JoongoSaleReviewService {
 	@Autowired
 	private JoongoSaleReviewMapper mapper;
 
+	@Autowired
+	private JoongoListMapper joongoListMapper;
+	
+	@Autowired
+	private JoongoSaleMapper joongoSaleMapper;
+	
 	@Override
 	public List<SaleReview> getAllList() {
 		return mapper.selectJoongoReviewByAll();
@@ -63,8 +74,20 @@ public class JoongoSaleReviewServiceImpl implements JoongoSaleReviewService {
 	
 	/* 쓰기, 수정, 삭제 */
 	@Override
+	@Transactional
 	public int writeReview(SaleReview review) {
-		return mapper.insertJoongoSaleReview(review);
+		mapper.insertJoongoSaleReview(review);
+		
+		Sale originalSale = joongoSaleMapper.selectJoongoSaleById(review.getSale().getId());
+		Sale sale = review.getSale();
+		
+		if(originalSale.getBuyMember() != null) {
+			sale.setBuyMember(null);
+		}
+		
+		sale.setSaleState(SaleState.SOLD_OUT);
+		joongoListMapper.updateSold(sale);
+		return review.getId();
 	}
 
 	@Override

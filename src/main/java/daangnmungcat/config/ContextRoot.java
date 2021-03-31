@@ -13,7 +13,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
-@Import({ContextDataSource.class, ContextSqlSession.class, SecurityConfig.class, WebSocketMessageBrokerConfig.class})
+@Import({ContextDataSource.class, ContextSqlSession.class, SecurityConfig.class, WebSocketMessageBrokerConfig.class, MailConfig.class})
 @ComponentScan(basePackages = {
 		"daangnmungcat.mapper",
 		"daangnmungcat.service",

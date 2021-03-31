@@ -402,3 +402,76 @@ WHERE (SALE_MEM_ID = 'chattest1' OR BUY_MEM_ID = 'chattest1')
 
  SELECT * FROM sale_review_view WHERE sale_id = 42;
 SELECT * FROM JOONGO_SALE WHERE id = 42;
+
+
+SELECT a.*
+	FROM (SELECT rownum AS rnum, b.*
+		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name
+		, (SELECT count(id)
+			FROM JOONGO_REVIEW r
+			WHERE sale_id = js.id AND writer = 'chattest1') AS reviewd
+		  FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID
+		  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
+		  LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+		  WHERE sale_state = '판매 완료' AND mem_id = 'chattest1'
+	  ) b
+  ) a;
+  
+SELECT count(id)
+FROM JOONGO_REVIEW r
+WHERE sale_id = '42';
+
+SELECT id, nickname, profile_pic
+FROM MEMBER;
+
+UPDATE MEMBER
+SET profile_pic = 'images/default_user_image.png'
+WHERE profile_pic IS null;
+
+
+SELECT a.*
+FROM (SELECT rownum AS rnum, b.*
+	FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name    , (SELECT count(id)     FROM JOONGO_REVIEW r     WHERE sale_id = js.id AND writer = ?) AS reviewd
+	FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID
+	LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID 
+	LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	WHERE sale_state != '판매 완료', mem_id = ?
+	ORDER BY js.ID DESC
+	) b
+) a
+WHERE a.rnum BETWEEN 1 AND 20
+ORDER BY a.rnum;
+
+SELECT a.*
+FROM (SELECT rownum AS rnum, b.*
+	FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name    , (SELECT count(id)     FROM JOONGO_REVIEW r     WHERE sale_id = js.id AND writer = 'chattest1') AS reviewd
+	FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID
+	LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID 
+	LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+	WHERE mem_id = 'chattest1'
+	ORDER BY js.ID DESC
+	) b
+) a
+WHERE a.rnum BETWEEN 1 AND 9
+ORDER BY a.rnum
+
+SELECT * FROM JOONGO_review
+ORDER BY id desc;
+
+SELECT rownum AS rnum, a.*
+FROM (SELECT *
+FROM SALE_view
+ORDER BY regdate DESC) a
+WHERE rownum BETWEEN 1 AND 20;
+
+SELECT b.* 
+FROM (SELECT rownum as rnum, a.*
+		FROM(SELECT * FROM CHAT_LIST_VIEW clv 
+		where (sale_mem_id = 'chattest1' or buy_mem_id = 'chattest1')
+		ORDER BY latest_date DESC) a ) b
+		where rnum BETWEEN 11 AND 20
+	ORDER BY rnum;
+	
+
+SELECT * FROM JOONGO_SALE js
+WHERE MEM_ID = 'chattest1' AND SALE_STATE = '판매 완료';

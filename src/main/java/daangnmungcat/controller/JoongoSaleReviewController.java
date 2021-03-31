@@ -62,13 +62,17 @@ public class JoongoSaleReviewController {
 	}
 	
 	@GetMapping("/joongo/review/write")
-	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId, AuthInfo loginUser) {
+	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId, @RequestParam(name = "buyer", required = false) String buyer, AuthInfo loginUser) {
 		if (saleId != null) {
 			SaleReview review = service.getReviewBySaleId(Integer.parseInt(saleId), loginUser.getId());
 			model.addAttribute("review", review);
 			
 			Sale sale = saleService.getSaleById(Integer.parseInt(saleId));
 			model.addAttribute("sale", sale);
+		}
+		
+		if (buyer != null) {
+			model.addAttribute("buyer", buyer);
 		}
 		
 		return "joongoSale/review_write";
@@ -91,9 +95,6 @@ public class JoongoSaleReviewController {
 		if (id != null) {
 			SaleReview review = service.getReviewByReviewId(Integer.parseInt(id));
 			model.addAttribute("review", review);
-			
-			Sale sale = saleService.getSaleById(review.getSale().getId());
-			model.addAttribute("sale", sale);
 		}
 		
 		return "joongoSale/review_update";

@@ -20,7 +20,8 @@
 		/* 글쓴 시간 비교시간 변경 */
 		var regdate = document.getElementsByClassName("regdate");
 		$.each(regdate, function(idx, item) {
-			var writeNow = dayjs(item.innerText).format("YYYY년 M월 D일 h:mm");
+			var time = $(item).attr("regdate");
+			var writeNow = dayjs(time).format("YYYY년 M월 D일 h:mm");
 		 	item.innerHTML = writeNow;
 		});
 		
@@ -35,8 +36,6 @@
 				/* beforeSend : function(xhr){xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");}, */
 				dataType: "json",
 				success: function(data) {
-					console.log(data);
-					console.log(data.length);
 					if(data.length != 0) {
 						var li_str = "";
 						
@@ -51,14 +50,18 @@
 									li_str += "<img src='" + contextPath + "/" + msg.image + "'>";
 								}
 								li_str += "</p><span class='read_yn' read_yn='" + msg.readYn + "'>";
-								li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + "</span>";
+								li_str += (msg.readYn == 'y' ? "읽음" : "읽지 않음") + "</span> ";
 								li_str += "<span class='regdate' regdate='" + msg.regdate + "'>" + dayjs(msg.regdate).format("YYYY년 M월 D일 h:mm") + "</span></div></li>";
 							} else {
 								// 너
 								li_str += "<li class='chat-message you' msg_id='" + msg.id + "' sender='" + msg.member.id +"'>";
 								li_str += "<div class='chat-message you profile_img'>";
-								li_str += "<a href='" + contextPath + "/member/profile?id=" + msg.member.id + "'>";
-								li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/" + msg.member.profilePic + "'>";
+								li_str += "<a href='" + contextPath + "/profile/" + msg.member.id + "'>";
+								if(msg.member.profilePic == null) {
+									li_str += "<img alt='기본프로필' src='" + contextPath + "/resources/images/default_user_image.png'>";
+								} else {
+									li_str += "<img alt='개인프로필' src='" + contextPath + "/resources/" + msg.member.profilePic + "'>";
+								}
 								li_str += "</a></div>";
 								li_str += "<div class='chat-message you bubble'><span class='nickname'>" + msg.member.nickname + "</span>";
 								if(msg.content != null) {
@@ -71,7 +74,6 @@
 							}
 						});
 						
-						console.log(li_str);
 						$(".loading-btn").after(li_str);
 						
 						if(data.length < perPage) {
@@ -93,14 +95,10 @@
 					type: "post",
 					dataType: "json",
 					success: function(data) {
-						if(memberId == "${chat.buyer.id}") {
-							if(confirm("거래가 완료되었습니다! 지금 바로 거래 후기를 남기시겠습니까?") == true) {
-								location.href = "/joongo/review/write?saleId=" + data;
-							} else {
-								location.reload();
-							}
+						if(confirm("거래가 완료되었습니다! 지금 바로 거래 후기를 남기시겠습니까?") == true) {
+							location.href = "/joongo/review/write?saleId=" + data + "&buyer=${chat.buyer.id}";
 						} else {
-							alert("거래가 완료되었습니다!");
+							location.reload();
 						}
 					},
 					error: function(e) {
@@ -112,9 +110,11 @@
 		});
 		
 		$("#write-review-btn").click(function() {
-			if (confirm("해당 판매글에 대한 후기를 남기시겠습니까?") == true) {
-				location.href = "/joongo/review/write?saleId=${chat.sale.id}";
-			}
+			location.href = "/joongo/review/write?saleId=${chat.sale.id}&buyer=${chat.buyer.id}";
+		});
+		
+		$("#check-review-btn").click(function() {
+			location.href = "/joongo/review/" + $(this).attr("review-id");			
 		});
 		
 		$("#customFile").on("change", function() {
@@ -129,32 +129,31 @@
 		        <div class="chat-header">
 		            <h2>
 			        	<c:if test="${chat.sale.member.id eq loginUser.id }">
-			        		<a href="${pageContext.request.contextPath }/member/profile?id=${chat.sale.member.id}">
-								${chat.sale.member.nickname }
+							<a href="${pageContext.request.contextPath }/profile/${chat.buyer.id }">
+								${chat.buyer.nickname }
 							</a>
 						</c:if>
 						<c:if test="${chat.buyer.id eq loginUser.id }">
-							<a href="${pageContext.request.contextPath }/member/profile?id=${chat.buyer.nickname }">
-								${chat.buyer.nickname }
+			        		<a href="${pageContext.request.contextPath }/profile/${chat.sale.member.id}">
+								${chat.sale.member.nickname }
 							</a>
 						</c:if>
 					</h2>
 				</div>
 					
 				<div class="chat-header" style="display: flex;">
-					<div style="float: left;width: calc(100% - 120px);text-align: left;">
+					<div class="info">
 						<a href="/joongoSale/detailList?id=${chat.sale.id }">
-  						<div style="display: inline-block; margin-right: 10px;">
+  						<div class="thumb">
   							<c:if test="${chat.sale.thumImg eq null }">
-  								<img src="/resources/images/no_image.jpg" width="80px">
+  								<img src="/resources/images/no_image.jpg">
   							</c:if>
   							<c:if test="${chat.sale.thumImg ne null }">
-  								<img src="/resources/${chat.sale.thumImg }" width="80px">
+  								<img src="/resources/${chat.sale.thumImg }">
   							</c:if>
-							
 			 		   	</div>
-					    <div style="display: inline-grid">
-							[${chat.sale.saleState.label }] ${chat.sale.title }
+					    <div class="txt">
+							<span class="title"><span class="${chat.sale.saleState.code }">${chat.sale.saleState.label }</span> ${chat.sale.title }</span>
 							<span class="dongne">${chat.sale.dongne2.dongne1.name } ${chat.sale.dongne2.name}</span>
 							<c:choose>
 								<c:when test="${chat.sale.price eq 0}">무료나눔</c:when>
@@ -163,25 +162,32 @@
 					    </div>
 						</a>
 					</div>
-					<div style="float:  right; width: 120px; margin: auto 0;">
+					<div class="btn-box">
 						<c:choose>
-							<c:when test="${chat.sale.saleState.code ne 'SOLD_OUT'}">
-								<button type="button" id="sold-out-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">거래완료</button>
+							<c:when test="${chat.sale.saleState.code eq 'SOLD_OUT' }">
+								<c:choose>
+									<c:when test="${not empty review}">
+										<span id="check-review-btn" class="chat-btn" review-id="${review.id }">작성한<br>후기 보기</span>
+									</c:when>
+									<c:when test="${loginUser.id eq chat.sale.member.id }"> 
+										<span id="write-review-btn" class="chat-btn">거래 후기<br>남기기</span>
+									</c:when>
+									<c:when test="${chat.sale.buyMember eq null }"> 
+									</c:when>
+									<c:when test="${loginUser.id eq chat.sale.buyMember.id }">
+										<span id="write-review-btn" class="chat-btn">거래 후기<br>남기기</span>
+									</c:when>
+								</c:choose>
 							</c:when>
 							<c:otherwise>
-							reviewed ${reviewed }
-								<c:if test="${reviewed ne true }">
-									<button type="button" id="write-review-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">
-										거래 후기
-										남기기
-									</button>
+								<c:if test="${chat.sale.member.id eq loginUser.id }">
+									<span id="sold-out-btn" class="chat-btn">거래완료<br>처리</span>
 								</c:if>
 							</c:otherwise>
 						</c:choose>
 				    </div>
 		        </div>
 		        <div class="connecting">
-		          	  연결중...
 		        </div>
 		        <ul id="messageArea">
 		        	<c:if test="${chat.messages.size() eq 20}">
@@ -199,26 +205,25 @@
 						</c:otherwise>
 					</c:choose>
 					<li class="chat-message ${sender }" msg_id="${msg.id }" sender="${msg.member.id }">
-						<!-- <i style="background-color: rgb(57, 187, 176);">*</i> -->
-							<c:choose>
-								<c:when test="${sender eq 'you' }">
-									<div class="chat-message ${sender } profile_img">
-										<a href="${pageContext.request.contextPath }/member/profile?id=${msg.member.id}">
-										<c:choose>
-											<c:when test="${msg.member.profilePic eq null}">
-												<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
-											</c:when>
-											<c:otherwise>
-												<img alt="개인프로필" src="<%=request.getContextPath() %>/resources/upload/profile/${msg.member.profilePic}">
-											</c:otherwise>
-										</c:choose>
-										</a>
-									</div>
-								</c:when>
-								<c:otherwise>
-									<!-- 내가 보낸 메시지 -->
-								</c:otherwise>
-							</c:choose>
+						<c:choose>
+							<c:when test="${sender eq 'you' }">
+								<div class="chat-message ${sender } profile_img">
+									<a href="${pageContext.request.contextPath }/profile/${msg.member.id}">
+									<c:choose>
+										<c:when test="${msg.member.profilePic eq null}">
+											<img alt="기본프로필" src="<%=request.getContextPath() %>/resources/images/default_user_image.png">
+										</c:when>
+										<c:otherwise>
+											<img alt="개인프로필" src="<%=request.getContextPath() %>/resources/upload/profile/${msg.member.profilePic}">
+										</c:otherwise>
+									</c:choose>
+									</a>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<!-- 내가 보낸 메시지 -->
+							</c:otherwise>
+						</c:choose>
 						<div class="chat-message ${sender } bubble">
 							<c:if test="${sender eq 'you' }">
 								<span class="nickname">${msg.member.nickname }</span>
@@ -253,26 +258,6 @@
 		    </div>	
 		</div>
 	</article>
-	<%-- <article>
-		<div id="article">
-			<section class="section_chat">
-				${chat.sale.title } <br>
-				${chat.sale.saleState.label } <br>
-				${chat.sale.price } <br>
-				<hr>
-				<c:forEach items="${chat.messages }" var="msg">
-					${msg.member.id } <br>
-					${msg.member.nickname } <br>
-					${msg.content } <br>			
-					<javatime:format value="${msg.regdate }" pattern="yyyy-MM-dd HH:mm:ss" /> <br>			
-					${msg.image } <br>			
-					${msg.readYn } <br>					
-					<br>
-				</c:forEach>
-			</section>
-		</div>
-	</article> --%>
-	
 </div>
 <script src="${pageContext.request.contextPath }/resources/js/chat_stomp.js"></script>
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

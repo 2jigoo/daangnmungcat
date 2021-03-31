@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <style>
-.wrapper {margin:0 auto; padding:70px;}
+.wrapper {margin:0 auto; padding-top:70px; margin-bottom:70px;}
 </style>
 <script>
 $(document).ready(function(){
@@ -116,7 +116,7 @@ $(document).ready(function(){
 <div class="wrapper">
 	<h2 id="subTitle">취소/환불 내역</h2>
 	<div class="order_list_search_div">
-		조회 기간  
+		<span style="margin-right:5px;">조회 기간</span> 
 		<input type="button" value="전체" onclick="location.href='/mypage/mypage_order_cancel_list'" class="order_list_btn">
 		<input type="button" value="오늘" id="today" class="order_list_btn">
 		<input type="button" value="7일" id="7days_ago" class="order_list_btn">
@@ -128,7 +128,6 @@ $(document).ready(function(){
 		<input type="text" id="end_date" value="${pageMaker.cri.end}" class="order_list_period">
 		<input type="button" value="조회" id="search" class="order_list_search">
 	</div>
-<div>	
 	
 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" >
 	<table id="order_list_table">
@@ -154,7 +153,7 @@ $(document).ready(function(){
 		
 		<c:if test="${empty list}">
 			<tr>
-				<td colspan="6" style="padding:50px">주문 내역이 없습니다.</td>
+				<td colspan="6" style="padding:80px">주문 내역이 없습니다.</td>
 			</tr>
 		</c:if>
 		
@@ -283,6 +282,6 @@ $(document).ready(function(){
 			</c:if>
 		</div>
 	
-</div>
+
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>

@@ -1,6 +1,7 @@
 package daangnmungcat.config;
 
 import java.io.IOException;
+import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 @MapperScan(basePackages = {"daangnmungcat.mapper"})
@@ -36,4 +39,6 @@ public class ContextSqlSession {
 	public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
 		return new SqlSessionTemplate(sqlSessionFactory);
 	}
+	
+	
 }
