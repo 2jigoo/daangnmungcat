@@ -83,50 +83,31 @@
 		<div id="chat-page">
 		    <div class="chat-container">
 		        <div class="chat-header">
-		            <h2>
-						${sale.member.nickname }
-					</h2>
+		            <h2><a href="/profile/${sale.member.id}">${sale.member.nickname }</a></h2>
 		        </div>
 		        <div class="chat-header" style="display: flex;">
-					<div style="float: left;width: calc(100% - 120px);text-align: left;">
-						<a href="/joongoSale/detailList?id=$sale.id }">
-  						<div style="display: inline-block; margin-right: 10px;">
+					<a href="/joongoSale/detailList?id=$sale.id }">
+					<div class="info">
+  						<div class="thumb">
   							<c:if test="${sale.thumImg eq null }">
   								<img src="/resources/images/no_image.jpg" width="80px">
   							</c:if>
   							<c:if test="${sale.thumImg ne null }">
   								<img src="/resources/${sale.thumImg }" width="80px">
   							</c:if>
-							
 			 		   	</div>
-					    <div style="display: inline-grid">
-							[${sale.saleState.label }] ${sale.title }
+					    <div class="txt">
+					    	<span class="title"><span class="${sale.saleState.code }">${sale.saleState.label }</span>${sale.title }</span>
 							<span class="dongne">${sale.dongne1.name } ${sale.dongne2.name}</span>
 							<c:choose>
 								<c:when test="${sale.price eq 0}">무료나눔</c:when>
 								<c:otherwise>${sale.price}원</c:otherwise>
 							</c:choose>
 					    </div>
-						</a>
 					</div>
-					<div style="float:  right; width: 120px; margin: auto 0;">
-						<c:choose>
-							<c:when test="${sale.saleState.code ne 'SOLD_OUT'}">
-								<button type="button" id="sold-out-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">거래완료</button>
-							</c:when>
-							<c:otherwise>
-								<c:if test="${reviewed ne true }">
-									<button type="button" id="write-review-btn" class="chat-btn" style="font-size: 14px;line-height: 20px;padding: 6px 15px;">
-										거래 후기
-										남기기
-									</button>
-								</c:if>
-							</c:otherwise>
-						</c:choose>
-				    </div>
+					</a>
 		        </div>
 		        <div class="connecting">
-		          	  연결중...
 		        </div>
 		        <ul id="messageArea">
 		        </ul>

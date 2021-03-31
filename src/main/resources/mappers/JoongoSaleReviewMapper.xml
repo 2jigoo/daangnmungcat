@@ -12,7 +12,8 @@
 		<result column="content" property="content"/>
 		<result column="regdate" property="regdate"/>
 		
-		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" fetchType="lazy" />
+		<association property="sale" columnPrefix="sale_" resultMap="daangnmungcat.mapper.JoongoListMapper.saleResultForJoin" />
+		<association property="sale.buyMember" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 		<association property="writer" columnPrefix="writer_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	

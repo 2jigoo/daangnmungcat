@@ -473,5 +473,4 @@ FROM (SELECT rownum as rnum, a.*
 	ORDER BY rnum;
 	
 
-SELECT * FROM JOONGO_SALE js
-WHERE MEM_ID = 'chattest1' AND SALE_STATE = '판매 완료';
+SELECT * FROM JOONGO_REVIEW jr ;

@@ -48,7 +48,6 @@
 		<result column="title" property="title"/>
 		<result column="content" property="content"/>
 		<result column="price" property="price"/>
-		<result column="buy_mem_id" property="buyMember.id"/>
 		<result column="sale_state" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 		<result column="regdate" property="regdate"/>
 		<result column="redate" property="redate"/>
@@ -58,6 +57,7 @@
 		<result column="thum_name" property="thumImg"/>
 		<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
 		<association property="dongne2" column="dongne2_id" select="daangnmungcat.mapper.MemberMapper.selectDongneByDongne2" />
+		<association property="buyMember" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 		<association property="member" columnPrefix="mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
 	<!-- 	<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />

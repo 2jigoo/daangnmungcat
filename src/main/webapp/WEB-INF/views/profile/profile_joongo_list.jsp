@@ -165,14 +165,14 @@ $(function(){
 				<c:if test="${sale.saleState.code eq 'SOLD_OUT' }">
 					<c:choose>
 						<c:when test="${sale.reviewed eq true }">
-							<div class="review confirm">
+							<a href="/joongo/review?saleId=${sale.id }"><div class="review confirm">
 								작성한 후기 보기
-							</div>
+							</div></a>
 						</c:when>
 						<c:otherwise>
-							<div class="review send">
+							<a href="/chat/sale/${sale.id}"><div class="review send">
 								거래후기 보내기
-							</div>
+							</div></a>
 						</c:otherwise>
 					</c:choose>
 				</c:if>
