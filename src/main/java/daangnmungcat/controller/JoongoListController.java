@@ -80,14 +80,8 @@ public class JoongoListController {
 		switch (cate) {
 		case 1:
 			sale.setDogCate("y");
-			sale.setCatCate("n");
 			break;
 		case 2:
-			sale.setDogCate("n");
-			sale.setCatCate("y");
-			break;
-		case 3:
-			sale.setDogCate("y");
 			sale.setCatCate("y");
 			break;
 		}

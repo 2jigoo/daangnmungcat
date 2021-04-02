@@ -185,7 +185,6 @@
 				<ul>
 					<li><a href="<c:url value="/joongo_list/all/1"/>">멍</a></li>
 					<li><a href="<c:url value="/joongo_list/all/2"/>">냥</a></li>
-					<li><a href	="<c:url value="/joongo_list/all/3"/>">멍·냥</a></li>
 				</ul>
 			</li>
 			<li class="depth2"><a href="<c:url value="/mall/product/list/dog" />">멍</a>

@@ -31,10 +31,13 @@ public class MileageController {
 		List<Mileage> list = mileageService.selectMileageBySearch(mile, cri);
 		model.addAttribute("list",list);
 		
+		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(mileageService.listSearchCount(mile));
+		int totalCount = list.size();
+		pageMaker.setTotalCount(totalCount);
 		model.addAttribute("pageMaker", pageMaker);
+		
 		
 		return "/mypage/mileage_list";
 	}

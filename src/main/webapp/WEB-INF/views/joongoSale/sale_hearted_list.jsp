@@ -52,16 +52,16 @@ $(function(){
 		
 		<div class="board_page">
 			<c:if test="${pageMaker.prev}">
-		    	<p><a href="<%=request.getContextPath()%>/joongo/heart/${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    	<p><a href="<%=request.getContextPath()%>/mypage/joongo/heart/list/${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
 		    </c:if> 
 			<ul>
 				<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-			    	<li><a href="<%=request.getContextPath()%>/joongo/heart/${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			    	<li><a href="<%=request.getContextPath()%>/mypage/joongo/heart/list/${pageMaker.makeQuery(idx)}">${idx}</a></li>
 				</c:forEach>
 			</ul>
 			
 			<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-	    		<p><a href="<%=request.getContextPath()%>/joongo/heart/${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+	    		<p><a href="<%=request.getContextPath()%>/mypage/joongo/heart/list/${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
 			</c:if> 
 		</div>
 	</div>

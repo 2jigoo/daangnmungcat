@@ -8,9 +8,9 @@
 	
 	.trLineClass {width: 100%; border-collapse: collapse; border-top: 1px solid #e9ecef;}
 	.trLineClass tr {border-bottom: 1px solid #e9ecef;}
-	.trLineClass td:nth-child(2) {
+	/* .trLineClass td:nth-child(2) {
  	   text-align: left;
-	}
+	} */
 	.trLineClass td {text-align: center;}
 	.trLineClass td, .trLineClass th {
 		padding: 12px 6px;
@@ -22,7 +22,6 @@
 </style>
 <div id="subContent">
 	<h2 id="subTitle">${loginUser.nickname}님의 마일리지 내역</h2>
-	<div id="subContent">
 	<div id="pageCont" class="s-inner">
 		<table class="table_style1 trLineClass" style="width: 100%">
 			<!-- 글 있는 경우 -->
@@ -54,8 +53,22 @@
 				<td colspan="5" class="no_date">등록된 글이 없습니다.</td>
 			</c:if>
 		</table>
+		
+		<div class="board_page">
+			<c:if test="${pageMaker.prev}">
+		    	<p><a href="<%=request.getContextPath()%>/mypage/mileage/list/${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    </c:if> 
+			<ul>
+				<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+			    	<li><a href="<%=request.getContextPath()%>/mypage/mileage/list/${pageMaker.makeQuery(idx)}">${idx}</a></li>
+				</c:forEach>
+			</ul>
+			
+			<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+	    		<p><a href="<%=request.getContextPath()%>/mypage/mileage/list/${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			</c:if> 
+		</div>
 	</div>
 </div>
-
 
 <%@ include file="/WEB-INF/views/include/footer.jsp" %>
