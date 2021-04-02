@@ -86,7 +86,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	public Sale getSaleById(int id) {
 		JSHits(id);
 		Sale sale = mapper.selectJoongoSaleById(id);
-		sale.setChatCount(chatService.getChatCounts(id)); // 채팅수 set
+		if(sale != null) {
+			sale.setChatCount(chatService.getChatCounts(id)); // 채팅수 set
+		}
 		//이미지들 구해와서 set
 		return sale;
 	}
@@ -104,6 +106,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 	@Override
+	@Transactional
 	public int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file,
 			HttpServletRequest request) throws Exception {
 		
@@ -186,7 +189,9 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 		return fileMapper.deleteSaleFile(fileName);
 	}
 
+	
 	@Override
+	@Transactional
 	public int updateJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile  file, HttpServletRequest request) throws Exception {
 		int res = joongoListMapper.updateJoongoSale(sale);
 

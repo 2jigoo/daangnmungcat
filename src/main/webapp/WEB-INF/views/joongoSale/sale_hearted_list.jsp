@@ -26,22 +26,29 @@ $(function(){
 							<img src="<%=request.getContextPath()%>/resources/images/no_image.jpg">
 						</c:if>
 						<c:if test="${not empty sale.thumImg}">
-							<img src="<%=request.getContextPath() %>/resources/${list.thumImg}">
+							<img src="<%=request.getContextPath() %>/resources/${sale.thumImg}">
 						</c:if>
-						<%-- <img src="<c:url value="/resources/images/mProduct_img1.png" />"> --%>
 					</div>
 					<div class="txt">
-						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+						<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${sale.title}</p>
-						<p class="price"><span>
-							<c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
-							<c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
-						</span></p>
+						<p class="price">
+							<span class="${sale.saleState.code }">${sale.saleState.label}</span>
+							<span>
+								<c:if test="${sale.price eq 0 }" >무료 나눔</c:if>
+								<c:if test="${sale.price ne 0 }"> ${sale.price }원</c:if>
+							</span>
+						</p>
 						<ul>
 							<li class="heart">${sale.heartCount}</li>
 							<li class="chat">${sale.chatCount}</li>
 						</ul>
 					</div>
+					<c:if test="${sale.saleState.code eq 'SOLD_OUT' and sale.buyMember.id eq loginUser.id and reviewed ne true}">
+						<div class="review send">
+							거래후기 보내기
+						</div>
+					</c:if>
 				</a></li>
 				</c:forEach>
 				<c:if test="${empty list}">

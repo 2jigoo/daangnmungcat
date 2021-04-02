@@ -9,6 +9,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,13 +63,17 @@ public class JoongoSaleReviewController {
 	}
 	
 	@GetMapping("/joongo/review/write")
-	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId, AuthInfo loginUser) {
+	public String insertViewJoongoReview(Model model, @RequestParam @Nullable String saleId, @RequestParam(name = "buyer", required = false) String buyer, AuthInfo loginUser) {
 		if (saleId != null) {
 			SaleReview review = service.getReviewBySaleId(Integer.parseInt(saleId), loginUser.getId());
 			model.addAttribute("review", review);
 			
 			Sale sale = saleService.getSaleById(Integer.parseInt(saleId));
 			model.addAttribute("sale", sale);
+		}
+		
+		if (buyer != null) {
+			model.addAttribute("buyer", buyer);
 		}
 		
 		return "joongoSale/review_write";
@@ -91,9 +96,6 @@ public class JoongoSaleReviewController {
 		if (id != null) {
 			SaleReview review = service.getReviewByReviewId(Integer.parseInt(id));
 			model.addAttribute("review", review);
-			
-			Sale sale = saleService.getSaleById(review.getSale().getId());
-			model.addAttribute("sale", sale);
 		}
 		
 		return "joongoSale/review_update";
@@ -116,4 +118,21 @@ public class JoongoSaleReviewController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
+	
+	@GetMapping("/joongo/review")
+	public String reviewView(Model model, @RequestParam(name = "id", required = false) Integer id,
+			@RequestParam(name = "saleId", required = false) Integer saleId, AuthInfo loginUser) {
+		SaleReview review = null;
+		if(id != null) {
+			review = service.getReviewByReviewId(id);
+		}
+		
+		if(saleId != null) {
+			review = service.getReviewBySaleId(saleId, loginUser.getId());
+		}
+		model.addAttribute("review", review);
+		
+		return "joongoSale/review_view";
+	}
+	
 }

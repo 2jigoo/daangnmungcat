@@ -5,8 +5,7 @@ SELECT ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE FROM MALL_MILEAGE;
 SELECT * FROM MALL_MILEAGE;
 
 UPDATE MEMBER SET MILEAGE = 2000 WHERE id = 'test';
-INSERT INTO MEMBER(ID,PWD,NAME,NICKNAME,EMAIL,PHONE ,DONGNE1,DONGNE2, BIRTHDAY,ZIPCODE,ADDRESS1,ADDRESS2) 
-VALUES('test', '1234', '관리자', '관리자', 'admin@admin.co.kr', '010-1234-1234',1, 1, '1991-12-19', 40404, '대구광역시웅앵', '2222');
+
 DELETE FROM MEMBER;
 SELECT * FROM dongne_view;
 SELECT * FROM member_view;
@@ -456,18 +455,26 @@ FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON ji.SALE_ID = js.ID LEFT JOIN DO
 WHERE js.regdate BETWEEN to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')) AND to_date(to_char(add_months(sysdate,+1),'yyyy-mm-dd'))
 				and js.mem_id = 'test' order by regdate DESC;
 				
-			
-			
-			
-			SELECT A.*
-			FROM (SELECT ROWNUM AS RNUM, B.*
-				FROM (SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
-					ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
-					USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
-					ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
-					STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
-					FROM MALL_ORDER
-					where SETTLE_CASE LIKE '%무통장%'
-					ORDER BY regdate DESC )B)A
-				WHERE A.RNUM BETWEEN 11 AND 20
-			ORDER BY A.RNUM;
+
+SELECT * FROM MEMBER;
+
+SELECT nvl((SELECT 1 FROM MEMBER WHERE NAME = '이름변경' AND EMAIL = 'admin2@admin2.co.kr'), 0) AS find FROM dual;
+SELECT * FROM MEMBER;
+UPDATE MEMBER SET PHONE = '010-5554-5512' WHERE id = 'adminn';
+
+SELECT nvl((SELECT id FROM MEMBER WHERE id = 'test' AND NAME = '이름변경' AND EMAIL = 'bumkkey@naver.com') , null) AS id FROM dual;
+SELECT id FROM MEMBER WHERE NAME = '이름변경' AND EMAIL = 'bumkkey@naver.com';
+
+SELECT * FROM JOONGO_REVIEW;
+
+UPDATE MEMBER SET EMAIL = 'bumkkey@naver.com' WHERE id = 'test';
+INSERT INTO MEMBER(ID,PWD,NAME,NICKNAME,EMAIL,PHONE ,DONGNE1,DONGNE2, BIRTHDAY,ZIPCODE,ADDRESS1,ADDRESS2) 
+VALUES('test', '{bcrypt}$2a$10$GSaAHVXDhPsyAVZU8IrokuSuLznhh0SiIl.ZFgs/iHNIS.b6upXF2', '관리자', '관리자', 'bumkkey@naver.com', '010-1234-1234',1, 1, '1991-12-19', 40404, '대구광역시웅앵', '2222');
+
+INSERT INTO MALL_MILEAGE VALUES(mall_mileage_seq.nextval, NULL, 'test', 5000, 'asdasd', sysdate);
+SELECT * FROM MALL_MILEAGE;
+
+SELECT * FROM ORDER_ADDRESS;
+test(String), 집(String), 나(String), 13536(Integer), 경기 성남시 분당구 판교역로 4(String), 2층(String), 메모메모(String), 010-5656-5656(String), 010-5615-6004(String) 
+
+SELECT * FROM MALL_ORDER;

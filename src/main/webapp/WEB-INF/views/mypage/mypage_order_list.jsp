@@ -231,7 +231,7 @@ $(document).ready(function(){
 		
 		<c:if test="${empty list}">
 			<tr>
-				<td colspan="6" style="padding:50px">주문 내역이 없습니다.</td>
+				<td colspan="6" style="padding:80px">주문 내역이 없습니다.</td>
 			</tr>
 		</c:if>
 		

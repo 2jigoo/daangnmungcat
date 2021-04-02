@@ -129,17 +129,21 @@ $(document).ready(function(){
 		}else if($('#phone2').val() == ""){
 			alert("받으실 분 연락처를 입력해주세요.");
 			return;
-		}else if(!$('#use_mileage').val() < 1000 && !$('#use_mileage').val() == ''){
+		}else if($('#use_mileage').val() != "" && $('#use_mileage').val() < 1000){
 			alert('마일리지는 1000원 이상 사용 가능합니다.')
-			return;
-		}else{
-			
-			if(type == '카카오페이'){
-				$('#form').submit();
-			}else {
-				$("#form").attr("action", "/accountPay");
-				$('#form').submit();
+			return;	
+		}else {
+			if(!$("[name=pay_type]:radio").is(":checked")){
+				alert('결제 방식을 선택해주세요.');
+			}else{
+				if(type == '카카오페이'){
+					$('#form').submit();
+				}else {
+					$("#form").attr("action", "/accountPay");
+					$('#form').submit();
+				}	
 			}
+			
 		}	
 	});
 

@@ -48,6 +48,10 @@ public interface MemberMapper {
 	
 	int selectMileage(String id);
 	
+	//find
+	int findMember(@Param("id") String id, @Param("name")String name, @Param("email")String email);
+	String selectIdByCondition(@Param("id") String id, @Param("name")String name, @Param("email")String email);
+
 	// admin
 	List<Member> selectMemberBySearch(@Param("scri") SearchCriteria scri, @Param("member") Member member);
 	int selectMemberCountBySearch(@Param("scri") SearchCriteria scri, @Param("member") Member member);

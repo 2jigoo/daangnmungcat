@@ -37,8 +37,8 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 나의 모든 채팅목록 얻어오기
 	@Override
-	public List<Chat> getMyChatsList(String memberId) {
-		List<Chat> myChatList = chatMapper.selectAllChatsByMemberId(memberId);
+	public List<Chat> getMyChatsList(String memberId, Criteria cri) {
+		List<Chat> myChatList = chatMapper.selectAllChatsByMemberId(memberId, cri);
 		
 		// 채팅목록에 가장 최근 메시지 띄우기
 		for(Chat chat : myChatList) {
@@ -53,10 +53,17 @@ public class ChatServiceImpl implements ChatService {
 		return myChatList;
 	}
 	
-	// 해당 내 판매글에 대한 채팅목록 얻어오기
 	@Override
-	public List<Chat> getMyChatsList(int saleId) {
-		List<Chat> myChatList = chatMapper.selectAllChatsBySaleId(saleId);
+	public int countMyChatsList(String memberId) {
+		return chatMapper.countAllChatsByMemberId(memberId);
+	}
+	
+	
+	
+	// 해당 판매글에 대한 채팅목록 얻어오기 (회원쪽에서 쓸 일 없을 듯)
+	@Override
+	public List<Chat> getMyChatsList(int saleId, Criteria cri) {
+		List<Chat> myChatList = chatMapper.selectAllChatsBySaleId(saleId, cri);
 		
 		// 채팅목록에 가장 최근 메시지 띄우기
 		for(Chat chat : myChatList) {
@@ -70,6 +77,37 @@ public class ChatServiceImpl implements ChatService {
 		
 		return myChatList;
 	}
+	
+	@Override
+	public int countMyChatsList(int saleId) {
+		return chatMapper.countAllChatsBySaleId(saleId);
+	}
+	
+	
+	
+	// 해당 판매글에 해딩 member가 참여한 채팅 List (본인 판매글이면 list, 구매자입장이라면 size <= 1)
+	@Override
+	public List<Chat> getMyChatsListOnSale(String memberId, int saleId, Criteria cri) {
+		List<Chat> list = chatMapper.selectChatByMemberIdAndSaleId(memberId, saleId, cri);
+		
+		// 채팅목록에 가장 최근 메시지 띄우기
+		for(Chat chat : list) {
+			ChatMessage msg = messageMapper.selectLatestChatMessageByChatId(chat.getId());
+			
+			ArrayList<ChatMessage> msgList = new ArrayList<ChatMessage>();
+			msgList.add(msg);
+			
+			chat.setMessages(msgList);
+		}
+		
+		return list;
+	}
+
+	@Override
+	public int countsMyChatsOnSale(String memberId, int saleId) {
+		return chatMapper.countAllChatsByMemberIdAndSaleId(memberId, saleId);
+	}
+	
 	
 	
 	// 채팅 하나 정보 읽어오기
@@ -188,14 +226,6 @@ public class ChatServiceImpl implements ChatService {
 		}
 		
 		return res;
-	}
-
-
-	// 해당 판매글에 member가 참여한 채팅 정보 조회
-	@Override
-	public Chat getChatInfoFromSale(String memberId, int saleId) {
-		Chat chat = chatMapper.selectChatByMemberIdAndSaleId(memberId, saleId);
-		return chat;
 	}
 
 

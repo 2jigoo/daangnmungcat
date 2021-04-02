@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
 <script>
+var pathname;
+var profileUrl;
+
 $(function(){
 	$(document).ready(function(){
 		setFilteringPaging();
@@ -75,37 +78,11 @@ $(function(){
 		location.href = profileUrl;
 	});
 	
-	$(".review_delete").click(function(){
-		if (confirm("정말 삭제하시겠습니까?") == false) return;
-		
-		var deleteReview = {id : $(this).data("id")};
-		
-		$.ajax({
-	         type: "post",
-	         url : "/joongo/review/delete",
-	         contentType : "application/json; charset=utf-8",
-	         cache : false,
-	         dataType : "json",
-	         data : JSON.stringify(deleteReview),
-	         beforeSend : function(xhr){
-	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-	         },
-	         success:function(){
-	            alert("리뷰가 삭제됐습니다.");
-	            location.reload();
-	         },
-	         error: function(request,status,error){
-	            alert('에러' + request.status+request.responseText+error);
-			}
-		})
-	});
-	
 	$("select[name=state]").change(function() {
 		var saleForm = document.saleForm;
-		saleForm.target = pathname;
+		saleForm.action = pathname;
 		saleForm.submit();
 	});
-	
 })
 	
 	function setFilteringPaging() {
@@ -131,7 +108,7 @@ $(function(){
 			</div>
 			<div class="txt_box">
 				<p class="name">${member.nickname } <span>${member.dongne1.name } ${member.dongne2.name } ${member.grade.name }</span>
-					<c:if test="${loginUser.id eq member.id }"><span class="btn">프로필 수정</span></c:if>
+					<c:if test="${loginUser.id eq member.id }"><span class="btn" id="btn-modal">프로필 수정</span></c:if>
 				</p>
 				<p class="bio">
 					<c:choose>
@@ -147,7 +124,7 @@ $(function(){
 		</div>
 		<div class="profile_menu">
 			<a href="/profile/${member.id }/joongo"><div class="menu selected">판매상품</div></a><a href="/profile/${member.id }/review"><div class="menu">받은 거래후기</div></a>
-			<span class="back_btn">뒤로가기</span>
+			<span class="back_btn">프로필 메인</span>
 		</div>
 		<div class="profile_section">
 			<form name="saleForm" method="get">
@@ -170,7 +147,7 @@ $(function(){
 						</c:if>
 					</div>
 					<div class="txt">
-						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+						<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${sale.title}</p>
 						<p class="price">
 							<span class="${sale.saleState.code }">${sale.saleState.label}</span>
@@ -184,12 +161,22 @@ $(function(){
 							<li class="chat">${sale.chatCount}</li>
 						</ul>
 					</div>
-					<c:if test="${sale.saleState.code eq 'SOLD_OUT' }">
-						<div class="review send">
-							거래후기 보내기
-						</div>
-					</c:if>
-				</a></li>
+				</a>
+				<c:if test="${sale.saleState.code eq 'SOLD_OUT' }">
+					<c:choose>
+						<c:when test="${sale.reviewed eq true }">
+							<a href="/joongo/review?saleId=${sale.id }"><div class="review confirm">
+								작성한 후기 보기
+							</div></a>
+						</c:when>
+						<c:otherwise>
+							<a href="/chat/sale/${sale.id}"><div class="review send">
+								거래후기 보내기
+							</div></a>
+						</c:otherwise>
+					</c:choose>
+				</c:if>
+				</li>
 				</c:forEach>
 				<c:if test="${empty saleList}">
 					<li class="no_date">등록된 글이 없습니다.</li>

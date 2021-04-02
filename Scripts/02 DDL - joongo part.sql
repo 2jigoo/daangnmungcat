@@ -128,7 +128,7 @@ ADD CONSTRAINT PK_JOONGO_HEART PRIMARY KEY (id);
 CREATE TABLE JOONGO_REVIEW (
 	id NUMBER(12) NOT NULL, /* 리뷰글아이디 */
 	sale_id NUMBER(12) NOT NULL, /* 중고판매글아이디 */
-	buy_mem_id VARCHAR2(20) NOT NULL, /* 회원아이디 */
+	writer VARCHAR2(20) NOT NULL, /* 회원아이디 */
 	rating NUMBER(2,1) NOT NULL, /* 평점 */
 	content VARCHAR2(1500), /* 내용 */
 	regdate DATE DEFAULT SYSDATE /* 작성일 */

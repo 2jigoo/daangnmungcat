@@ -106,7 +106,7 @@
 		
 		$("select[name=writer]").change(function() {
 			var reviewForm = document.reviewForm;
-			reviewForm.target = pathname;
+			reviewForm.action = pathname;
 			reviewForm.submit();
 		});
 		
@@ -136,7 +136,7 @@
 			</div>
 			<div class="txt_box">
 				<p class="name">${member.nickname } <span>${member.dongne1.name } ${member.dongne2.name } ${member.grade.name }</span>
-					<c:if test="${loginUser.id eq member.id }"><a href="/profile/edit"><span class="btn">프로필 수정</span></a></c:if>
+					<c:if test="${loginUser.id eq member.id }"><span class="btn" id="btn-modal">프로필 수정</span></c:if>
 				</p>
 				<p class="bio">
 					<c:choose>
@@ -152,7 +152,7 @@
 		</div>
 		<div class="profile_menu">
 			<a href="/profile/${member.id }/joongo"><div class="menu">판매상품</div></a><a href="/profile/${member.id }/review"><div class="menu selected">받은 거래후기</div></a>
-			<span class="back_btn">뒤로가기</span>
+			<span class="back_btn">프로필 메인</span>
 		</div>
 		<div class="profile_section">
 			<form name="reviewForm" method="get">
@@ -205,7 +205,7 @@
 									</div>
 									<pre class="content">${review.content }</pre>
 									<div class="info">
-									   <p class="date"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/> </p>
+									   <p class="date"><span class="regdate" regdate="${review.regdate}"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/></span></p>
 									   <c:if test="${loginUser.id == review.writer.id }">
 									   <ul>
 									      <li><a href="/joongo/review/update?id=${review.id}">수정</a></li>

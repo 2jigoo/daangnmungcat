@@ -1,89 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/include/header.jsp" %>
-<style>
-#modal.modal-overlay {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-    
-    background: rgba(0,0,0,0.5);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-#modal .modal-window {
-    background-color: white;
-    border-radius: 10px;
-    border: 1px solid rgba( 255, 255, 255, 0.18 );
-
-    width: 400px;
-    height: 450px;
-    position: relative;
-    top: -100px;
-    box-sizing: border-box;
-}
-
-#modal .title {
-    display: block;
-    padding: 20px 20px;
-    border-bottom: 1px solid #e6e6e6;
-}
-
-#modal .title h2 {
-    display: inline;
-}
-
-#modal .close-area {
-    display: inline;
-    float: right;
-    cursor: pointer;
-    line-height: 30px;
-}
-
-#modal .content {
-    padding: 20px;
-}
-
-#modal .btn {background-color: #999; color: white; font-weight: 500; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin: 0 auto 20px auto;}
-#modal .content .img_box img { max-width: 100%; max-height: 100%; min-width: 100%; min-height: 100%; max-block-size: -webkit-fill-available;}
-
-#modal .bottom {padding: 16px 20px; border-top: 1px solid #e6e6e6; text-align: right;}
-
-#modal #modal_submit {
-    background-color: darkorange;
-;
-}
-
-#modal .img_box {
-    margin: 0 auto 12px auto;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    border: 1px solid #e6e6e6;
-    overflow: hidden;
-}
-
-#modal .input_row {
-    font-family: inherit;
-    font-size: inherit;
-    width: 100%;
-    height: 48px;
-    margin-bottom: 8px;
-    padding: 10px 11px 10px 11px;
-    border: solid 1px #dadada;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-#modal .input_file_btn {cursor: pointer;}
-.hidden {display: none;}
-</style>
 <script>
 	$(function(){
 		$(document).ready(function() {
@@ -320,7 +237,7 @@
 						</c:if>
 					</div>
 					<div class="txt">
-						<p class="location">${sale.dongne1.name} ${sale.dongne2.name}</p>
+						<p class="location">${sale.dongne1.name} ${sale.dongne2.name} · <span class="regdate" regdate="${sale.regdate}"><javatime:format value="${sale.regdate }"  pattern="yyyy-MM-dd HH:mm:ss"/></span></p>
 						<p class="subject">${sale.title}</p>
 						<p class="price">
 							<span class="${sale.saleState.code }">${sale.saleState.label}</span>
@@ -383,7 +300,7 @@
 									</div>
 									<pre class="content">${review.content }</pre>
 									<div class="info">
-									   <p class="date"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/> </p>
+									   <p class="date"><span class="regdate" regdate="${review.regdate}"><javatime:format value="${review.regdate }" pattern="yyyy-MM-dd"/></span></p>
 									   <c:if test="${loginUser.id == review.writer.id }">
 									   <ul>
 									      <li><a href="/joongo/review/update?id=${review.id}">수정</a></li>

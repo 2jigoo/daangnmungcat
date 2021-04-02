@@ -112,6 +112,13 @@
 				$('#cat_cate').append(sCont);
 			}
 		})
+		
+		/* 글쓴 시간 비교시간 변경 */
+		var regdate = document.getElementsByClassName("regdate");
+		$.each(regdate, function(idx, item) {
+			var writeNow = dayjs(item.getAttribute("regdate")).toDate();
+		 	item.innerHTML = timeBefore(writeNow);
+		});
 	});
 	</script>
 </head>

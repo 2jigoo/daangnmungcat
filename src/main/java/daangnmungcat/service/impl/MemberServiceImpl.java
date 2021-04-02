@@ -353,4 +353,14 @@ public class MemberServiceImpl implements MemberService {
 		return count;
 	}
 
+	@Override
+	public int findMember(String id, String name, String email) {
+		return mapper.findMember(id, name, email);
+	}
+
+	@Override
+	public String selectIdByCondition(String id, String name, String email) {
+		return mapper.selectIdByCondition(id, name, email);
+	}
+
 }

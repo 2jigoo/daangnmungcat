@@ -106,7 +106,7 @@ function execPostCode(){
 	</thead>
 	<tbody>
 		<tr id="col">
-			<td colspan="5" style="padding:50px;">배송지 목록이 없습니다.</td>
+			<td colspan="5" style="padding:70px;">배송지 목록이 없습니다.</td>
 		</tr>
 	</tbody>
 	

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -30,12 +31,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		System.out.println("security 작동");
 		http.authorizeRequests()
 			.antMatchers("/").permitAll()
-			.antMatchers("/login").anonymous()
+			.antMatchers("/login", "/sign-up").anonymous()
 			.antMatchers("/logout").authenticated()
 			.antMatchers("/admin/**").hasRole("ADMIN")
-			.antMatchers("/chat/**").authenticated()
 			.antMatchers("/mypage/**").authenticated()
+			.antMatchers("/joongoSale/addList/**", "/joongoSale/modiList/**", "/joongoSale/modify/**", "/joongoSale/delete", "/joongoSale/insert", "/joongoSale/modify", "/joongo/sale/**", "/joongoSale/pic/delete").authenticated()
+			.antMatchers("/joongo/comment/**", "/heart", "/heartNo").authenticated()
+			.antMatchers("/joongo/review/**").authenticated()
+			.antMatchers("/chat/**", "/api/chat/message", "/go-to-chat").authenticated()
+			.antMatchers("/mall/product/write").hasRole("ADMIN")
 			.antMatchers("/mall/pre-order/**").authenticated()
+			.antMatchers("/address-list/**", "/address/**").authenticated()
+			.antMatchers("/dongneUpdate").authenticated()
+			.antMatchers("/profile/get", "/profile/post", "/profile-text/post", "/member/**", "/phone/post", "/pwd/post", "withdrawal", "order-cancel", "order-confirm").authenticated()
+			.antMatchers("/kakao-pay", "/kakaoPaySuccess", "/kakaoPayCancel", "/kakao-cancel", "kakaoPayCancelSuccess", "accountPay", "/mall/order/**").authenticated()
+			.antMatchers(HttpMethod.POST, "/profile/**").authenticated()
 			.anyRequest().permitAll();
 		
 		http.cors().configurationSource(corsConfigurationSource());
@@ -56,9 +66,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.headers()
 	        .frameOptions().disable();
 		
-		// 403 접근 권한 없을 때 페이지
-		http.exceptionHandling()
-			.accessDeniedPage("/WEB-INF/views/error/403.jsp");
+		/*http.exceptionHandling()
+			.authenticationEntryPoint(authenticationEntryPoint) // 인증 실패시
+			.accessDeniedPage(""); // 인가 실패시 */
 		
 //		http.csrf().ignoringAntMatchers("/logout");
 		// csrf 활성화: LoginFilter에서 POST만 처리

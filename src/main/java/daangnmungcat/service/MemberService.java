@@ -60,4 +60,9 @@ public interface MemberService {
 	// admin
 	List<Member> search(SearchCriteria scri, Member member);
 	int getTotalBySearch(SearchCriteria scri, Member member);
+	
+	//find
+	int findMember(String id, String name, String email);
+	String selectIdByCondition(String id, String name, String email);
+	
 }

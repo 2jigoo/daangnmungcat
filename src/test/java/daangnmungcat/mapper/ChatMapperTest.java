@@ -74,7 +74,7 @@ public class ChatMapperTest {
 		log.debug(Thread.currentThread().getStackTrace()[1].getMethodName() + "()");
 		log.debug("-- 해당 유저의 채팅 리스트 가져오기");
 		
-		List<Chat> list = cMapper.selectAllChatsByMemberId("chattest1");
+		List<Chat> list = cMapper.selectAllChatsByMemberId("chattest1", null);
 		Assert.assertNotNull(list);
 		
 		list.stream().forEach(chat -> log.debug(chat.toString()));
