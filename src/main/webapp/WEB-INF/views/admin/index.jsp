@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <title>당근멍캣 - Admin</title>
 <script>
-	location.href = "/admin/main";
+	location.href = "/admin/member/list";
 </script>
 </head>
 <body>

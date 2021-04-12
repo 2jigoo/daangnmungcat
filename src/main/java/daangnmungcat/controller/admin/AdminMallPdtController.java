@@ -1,10 +1,12 @@
 package daangnmungcat.controller.admin;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -80,8 +82,8 @@ public class AdminMallPdtController {
 	}
 	
 	@PostMapping("/admin/product/write")
-	public String insertWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
-		service.insertMallProduct(product, thumbFile, file, request);
+	public String insertWriteProduct(HttpSession session, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
+		service.insertMallProduct(product, thumbFile, file, getRealPath(session));
 
 		return "redirect:/admin/product/list";
 	}
@@ -103,8 +105,8 @@ public class AdminMallPdtController {
 	}
 	
 	@PostMapping("/admin/product/update")
-	public String updateWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
-		service.updateMallProduct(product, thumbFile, file, request);
+	public String updateWriteProduct(HttpSession session, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
+		service.updateMallProduct(product, thumbFile, file, getRealPath(session));
 
 		return "redirect:/admin/product/list";
 	}
@@ -113,5 +115,15 @@ public class AdminMallPdtController {
 	public String deleteProduct(@RequestParam int id) {
 		service.deleteMallProduct(id);
 		return "redirect:/admin/product/list";
+	}
+	
+	private static File getRealPath(HttpSession session) {
+		File realPath = new File(session.getServletContext().getRealPath("resources" + File.separator + "upload" + File.separator + "product"));
+		
+		if(!realPath.exists()) {
+			realPath.mkdirs();
+		}
+		
+		return realPath; 
 	}
 }

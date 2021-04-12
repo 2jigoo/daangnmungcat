@@ -1,7 +1,6 @@
 package daangnmungcat.config;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -13,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 @MapperScan(basePackages = {"daangnmungcat.mapper"})
@@ -25,8 +22,8 @@ public class ContextSqlSession {
 	
 	// RefreshableSqlSessionFactoryBean : Mapper.xml 수정 시 바로 반영
 	@Bean
-	public RefreshableSqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws IOException {
-		RefreshableSqlSessionFactoryBean factoryBean = new RefreshableSqlSessionFactoryBean();
+	public SqlSessionFactoryBean sqlSessionFactoryBean(DataSource dataSource) throws IOException {
+		SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
 		
 		factoryBean.setDataSource(dataSource);
 		factoryBean.setConfigLocation(ApplicationContext.getResource("classpath:/mybatis-config.xml"));

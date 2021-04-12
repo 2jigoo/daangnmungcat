@@ -1,9 +1,11 @@
 package daangnmungcat.controller;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +53,8 @@ public class MallPdtController {
 	}
 	
 	@PostMapping("/mall/product/write")
-	public String insertWriteProduct(HttpServletRequest request, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
-		service.insertMallProduct(product, thumbFile, file, request);
+	public String insertWriteProduct(HttpSession session, MallProduct product, @RequestParam("thumbFile") MultipartFile thumbFile, @RequestParam("file") List<MultipartFile> file) throws UnsupportedEncodingException {
+		service.insertMallProduct(product, thumbFile, file, getRealPath(session));
 
 		return "redirect:/admin/product/list";
 	}
@@ -151,6 +153,14 @@ public class MallPdtController {
 		return view;
 	}
 	
-	
+	private static File getRealPath(HttpSession session) {
+		File realPath = new File(session.getServletContext().getRealPath("resources" + File.separator + "upload" + File.separator + "product"));
+		
+		if(!realPath.exists()) {
+			realPath.mkdirs();
+		}
+		
+		return realPath; 
+	}
 	
 }

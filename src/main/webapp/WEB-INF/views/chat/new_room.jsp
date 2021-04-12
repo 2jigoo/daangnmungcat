@@ -86,8 +86,8 @@
 		            <h2><a href="/profile/${sale.member.id}">${sale.member.nickname }</a></h2>
 		        </div>
 		        <div class="chat-header" style="display: flex;">
-					<a href="/joongoSale/detailList?id=$sale.id }">
 					<div class="info">
+						<a href="/joongoSale/detailList?id=$sale.id }">
   						<div class="thumb">
   							<c:if test="${sale.thumImg eq null }">
   								<img src="/resources/images/no_image.jpg" width="80px">
@@ -104,8 +104,8 @@
 								<c:otherwise>${sale.price}원</c:otherwise>
 							</c:choose>
 					    </div>
+						</a>
 					</div>
-					</a>
 		        </div>
 		        <div class="connecting">
 		        </div>

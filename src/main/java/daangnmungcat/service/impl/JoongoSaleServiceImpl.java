@@ -3,16 +3,12 @@ package daangnmungcat.service.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import daangnmungcat.dto.Criteria;
@@ -31,8 +27,6 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 public class JoongoSaleServiceImpl implements JoongoSaleService {
-	
-	protected static final Log log = LogFactory.getLog(JoongoSaleServiceImpl.class);
 	
 	@Autowired
 	private JoongoSaleMapper mapper;
@@ -107,19 +101,11 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 
 	@Override
 	@Transactional
-	public int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file,
-			HttpServletRequest request) throws Exception {
+	public int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, File realPath) throws Exception {
 		
 		int res = joongoListMapper.insertJoongoSale(sale);
 
-		String uploadFolder = getFolder(request);
-		System.out.println("uploadPath:" + uploadFolder);
-		
-		File uploadPath = new File(uploadFolder, getFolder(request));
-		
-		if (!uploadPath.exists()) {
-			uploadPath.mkdirs();
-		}
+		System.out.println("realPath:" + realPath.getAbsolutePath());
 		
 		/*	
 		 * 
@@ -133,10 +119,10 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				String thumFileName = "1_" + file.getOriginalFilename().trim();
 				FileForm thumFileForm = new FileForm();
 				thumFileForm.setSale(sale);
-				thumFileForm.setFileName("upload/joongosale/"+thumFileName);
-				thumFileForm.setThumName("upload/joongosale/"+thumFileName);
+				thumFileForm.setFileName("upload" + File.separator + "joongosale" + File.separator + thumFileName);
+				thumFileForm.setThumName("upload" + File.separator + "joongosale" + File.separator + thumFileName);
 				fileMapper.insertSaleFile(thumFileForm);
-				file.transferTo(new File(uploadFolder, thumFileName));
+				file.transferTo(new File(realPath, thumFileName));
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -151,12 +137,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				String uploadFileName = multipartFile.getOriginalFilename();
 				uploadFileName = cnt + "_" + uploadFileName.trim();
 				
-				File saveFile = new File(uploadFolder, uploadFileName);
+				File saveFile = new File(realPath, uploadFileName);
 				
 				//db저장
 				FileForm fileForm = new FileForm();
 				fileForm.setSale(sale);
-				fileForm.setFileName("upload/joongosale/"+uploadFileName);
+				fileForm.setFileName("upload" + File.separator + "joongosale" + File.separator + uploadFileName);
 				res += fileMapper.insertSaleFile(fileForm);
 				
 				try {
@@ -173,7 +159,7 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	}
 
 	private String getFolder(HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\joongosale");
+		String path = request.getSession().getServletContext().getRealPath("resources" + File.separator + "upload" + File.separator + "joongosale");
 		return path;
 	}
 
@@ -192,14 +178,11 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 	
 	@Override
 	@Transactional
-	public int updateJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile  file, HttpServletRequest request) throws Exception {
+	public int updateJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, File realPath) throws Exception {
 		int res = joongoListMapper.updateJoongoSale(sale);
 
-		String uploadFolder = getFolder(request);
-		
 		//UUID uuid = UUID.randomUUID();
 		List<FileForm> list = fileMapper.selectImgPath(sale.getId());
-		
 		
 		//썸네일 이미지 정정 
 		if(file.getSize() != 0) {
@@ -207,10 +190,10 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				String thumFileName = "1_" + file.getOriginalFilename().trim();
 				FileForm thumFileForm = new FileForm();
 				thumFileForm.setSale(sale);
-				thumFileForm.setFileName("upload/joongosale/" + thumFileName);
-				thumFileForm.setThumName("upload/joongosale/" + thumFileName);
+				thumFileForm.setFileName("upload" + File.separator + "joongosale" + File.separator + thumFileName);
+				thumFileForm.setThumName("upload" + File.separator + "joongosale" + File.separator+ thumFileName);
 				fileMapper.insertSaleFile(thumFileForm);
-				file.transferTo(new File(uploadFolder, thumFileName));
+				file.transferTo(new File(realPath, thumFileName));
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -227,12 +210,12 @@ public class JoongoSaleServiceImpl implements JoongoSaleService {
 				int num = list.size() + 1;
 				uploadFileName = num + "_" + uploadFileName;
 					
-				File saveFile = new File(uploadFolder, uploadFileName);
+				File saveFile = new File(realPath, uploadFileName);
 	
 				//파일 db저장 
 				FileForm fileForm = new FileForm();
 				fileForm.setSale(sale);
-				fileForm.setFileName("upload/joongosale/"+uploadFileName);
+				fileForm.setFileName("upload" + File.separator + "joongosale" + File.separator +uploadFileName);
 				
 				res += fileMapper.insertSaleFile(fileForm);
 				

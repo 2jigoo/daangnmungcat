@@ -77,9 +77,7 @@ CREATE TABLE JOONGO_SALE (
 	buy_mem_id VARCHAR2(20), /* 구매자 아이디 */
 	sale_state varchar2(30) DEFAULT '판매중' NOT NULL, /* 판매상태 */
 	regdate DATE NOT NULL, /* 작성일시 */
-	redate DATE, /* 끌올일시 */
 	hits NUMBER(12) NOT NULL, /* 조회수 */
-	chat_count NUMBER(12), /* 채팅수 */
 	heart_count NUMBER(12) DEFAULT 0/* 찜수 */
 )SEGMENT CREATION IMMEDIATE;
 
@@ -402,7 +400,7 @@ ALTER TABLE JOONGO_REVIEW
 	ADD
 		CONSTRAINT FK_MEMBER_TO_JOONGO_REVIEW
 		FOREIGN KEY (
-			buy_mem_id
+			writer
 		)
 		REFERENCES MEMBER (
 			id

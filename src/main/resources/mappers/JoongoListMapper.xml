@@ -3,7 +3,7 @@
 <mapper namespace="daangnmungcat.mapper.JoongoListMapper">
 
 	<sql id="selectSQL">
-		SELECT rownum, js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+		SELECT rownum, js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, HITS, HEART_COUNT FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
 	</sql>
 	
 	
@@ -29,10 +29,7 @@
 		<result column="buy_mem_id" property="buyMember.id"/>
 		<result column="sale_state" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 		<result column="regdate" property="regdate"/>
-		<result column="redate" property="redate"/>
 		<result column="hits" property="hits"/>
-		<result column="chat_count" property="chatCount"/>
-		<!-- <result column="is_heart" property="isHeart"/> -->
 		<result column="heart_count" property="heartCount"/>
 		<result column="thum_name" property="thumImg"/>
 		<result column="reviewed" property="reviewed"/>
@@ -50,9 +47,7 @@
 		<result column="price" property="price"/>
 		<result column="sale_state" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 		<result column="regdate" property="regdate"/>
-		<result column="redate" property="redate"/>
 		<result column="hits" property="hits"/>
-		<result column="chat_count" property="chatCount"/>
 		<result column="heart_count" property="heartCount"/>
 		<result column="thum_name" property="thumImg"/>
 		<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
@@ -60,9 +55,6 @@
 		<association property="buyMember" columnPrefix="buy_mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 		<association property="member" columnPrefix="mem_" resultMap="daangnmungcat.mapper.MemberMapper.memberResult" />
 	</resultMap>
-	<!-- 	<association property="dongne1" columnPrefix="dongne1_" resultMap="daangnmungcat.mapper.MemberMapper.dongne1Result" />
-		<association property="dongne2" columnPrefix="dongne2_" resultMap="daangnmungcat.mapper.MemberMapper.dongne2Result" /> -->
-	
 	
 	<resultMap type="Dongne1" id="dongne1Result">
 		<id column="DONGNE1ID" property="id"/>
@@ -92,7 +84,7 @@
 	<select id="selectJoongoByAllPage" resultMap="saleResult">
 	SELECT a.*
 		FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name
+	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, HITS, HEART_COUNT, thum_name
 	FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID LEFT OUTER JOIN (SELECT sale_id, thum_name FROM JOONGO_IMAGE WHERE THUM_NAME IS NOT null) ji ON js.id = ji.SALE_ID  ORDER BY js.id DESC) b) a
 		WHERE a.rnum BETWEEN #{rowStart} AND #{rowEnd}
 		ORDER BY a.rnum
@@ -102,7 +94,7 @@
 	<select id="selectJoongoByDongne1" parameterType="map" resultMap="saleResult">
 	SELECT a.*
 	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, HITS, HEART_COUNT , thum_name
 	  FROM JOONGO_SALE js LEFT OUTER JOIN (SELECT sale_id, thum_name FROM JOONGO_IMAGE WHERE THUM_NAME IS NOT null) ji ON js.id = ji.SALE_ID  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1}  ORDER BY js.id desc) b) a
 	 WHERE a.rnum BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 	 ORDER BY a.rnum
@@ -114,7 +106,7 @@
 	<select id="selectJoongoByDongne2" parameterType="map" resultMap="saleResult">
 	SELECT a.*
 	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+	  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, HITS, HEART_COUNT , thum_name
 	  FROM JOONGO_SALE js
 	  LEFT OUTER JOIN (SELECT sale_id, thum_name FROM JOONGO_IMAGE WHERE THUM_NAME IS NOT null) ji ON js.id = ji.SALE_ID 
 	  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID
@@ -130,7 +122,7 @@
 	<select id="selectJoongoBySearch" parameterType="map" resultMap="saleResult">
 		SELECT a.*
 		  FROM (SELECT rownum AS rnum, b.*
-		  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT , thum_name
+		  		FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, HITS, HEART_COUNT , thum_name
 		  FROM JOONGO_SALE js LEFT JOIN JOONGO_IMAGE ji ON  ji.SALE_ID = js.ID  LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID   
 		  <where>
 		  	<if test="sale.title != null">and title LIKE '%'||#{sale.title}||'%' </if>
@@ -148,18 +140,13 @@
 	
 	
 	<select id="listCount" parameterType="map" resultType="int">
-	SELECT count(a.id)
-	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+	  SELECT count(js.id)
 	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID 
-	  ORDER BY js.id desc) b) a
 	</select>
 
 	<select id="listSearchCount" parameterType="Sale" resultType="int">
-	SELECT count(a.id)
-	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
-	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
+		SELECT count(js.id)
+		FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID
 	  <where>
 	  <if test="title != null">and title LIKE '%'||#{title}||'%' </if>
 	  	<if test="dogCate != null">and dog_cate = #{dogCate} </if>
@@ -168,30 +155,23 @@
 	  	<if test="dongne1 != null">and d1.NAME = #{dongne1.name} </if>
 	  	<if test="dongne2 != null">AND d2.NAME = #{dongne2.name} </if>
 	  </where>
-	  ) b) a
 	</select>
 	
 	
 	<select id="listCount1" parameterType="map" resultType="int">
-	SELECT count(a.id)
-	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+	  SELECT count(js.id)
 	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} 
-	  ORDER BY js.id desc) b) a
 	</select>
 	
 	<select id="listCount2" parameterType="map" resultType="int">
-	SELECT count(a.id)
-	  FROM (SELECT rownum AS rnum, b.*
-	  		FROM (SELECT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT 
+	  SELECT count(js.id)
 	  FROM JOONGO_SALE js LEFT JOIN DONGNE1 d1 ON js.DONGNE1_ID = d1.ID LEFT JOIN DONGNE2 d2 ON js.DONGNE2_ID = d2.ID WHERE d1.NAME = #{dongne1} and d2.NAME = #{dongne2} 
-	  ORDER BY js.id desc) b) a
 	</select>
 	
 	<select id="selectJoongoListByMemberAndState" resultMap="saleResult">
 		SELECT a.*
 		FROM (SELECT rownum AS rnum, b.*
-			FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, REDATE, HITS, CHAT_COUNT, HEART_COUNT, thum_name
+			FROM (SELECT DISTINCT js.ID, MEM_ID, DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, d1.ID AS DONGNE1ID, d1.NAME AS DONGNE1NAME, d2.ID AS DONGNE2ID, d2.NAME AS DONGNE2NAME, BUY_MEM_ID, SALE_STATE, REGDATE, HITS, HEART_COUNT, thum_name
 			, (SELECT count(id)
 				FROM JOONGO_REVIEW r
 				WHERE sale_id = js.id AND writer = #{memberId}) AS reviewed
@@ -231,8 +211,8 @@
 		<selectKey keyProperty="id" resultType="int" order="BEFORE">
 			SELECT sale_seq.nextval FROM DUAL
 		</selectKey>
-		INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID, REGDATE, HITS, CHAT_COUNT ,HEART_COUNT)
-		values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id}, sysdate, 0, 0, 0)
+		INSERT INTO JOONGO_SALE (ID, MEM_ID, DOG_CATE , CAT_CATE , TITLE , CONTENT , PRICE, DONGNE1_ID , DONGNE2_ID, REGDATE, HITS)
+		values (#{id}, #{member.id}, #{dogCate}, #{catCate}, #{title}, #{content}, #{price}, #{dongne1.id}, #{dongne2.id}, sysdate, 0)
 	</insert>
 	
 	<update id="updateJoongoSale" parameterType="Sale">
@@ -281,9 +261,7 @@
 					BUY_MEM_ID,
 					SALE_STATE,
 					js.REGDATE,
-					REDATE,
 					HITS,
-					CHAT_COUNT,
 					HEART_COUNT,
 					thum_name,
 					h.mem_id		as heart_mem_id,
