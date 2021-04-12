@@ -28,10 +28,11 @@ public class HomeController {
 	
 	@RequestMapping(value= "/" ,method={RequestMethod.POST,RequestMethod.GET})
 	public String main(Model model,HttpServletRequest request, HttpServletResponse response) throws Exception{
-		List<Sale> saleList = saleService.getLists();
 		Criteria cri = new Criteria();
 		cri.setRowStart(1);
 		cri.setRowEnd(8);
+		
+		List<Sale> saleList = saleService.getLists(cri);
 		
 		List<MallProduct> dogList = mallService.selectDogByAll(cri);
 		List<MallProduct> catList = mallService.selectCatByAll(cri);
