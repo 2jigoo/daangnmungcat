@@ -56,6 +56,7 @@
 	<result column="CAT_CATE" property="catCate"/>
 	<result column="TITLE" property="title"/>
 	<result column="CONTENT" property="content"/>
+	<result column="PRICE" property="price"/>
 	<result column="regdate" property="regdate"/>
 	<result column="SALE_STATE" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 	<result column="HITS" property="hits"/>
