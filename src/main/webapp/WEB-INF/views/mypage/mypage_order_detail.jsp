@@ -218,7 +218,7 @@ $(document).ready(function(){
 				</tr>
 				<tr>
 					<td>받으실 주소</td>
-					<td>(${order.zipcode}) ${order.address1} ${order.address1}</td>
+					<td>(${order.zipcode}) ${order.address1} ${order.address2}</td>
 				<tr>
 					<td>전화번호</td>
 					<td>${order.addPhone1}</td>
