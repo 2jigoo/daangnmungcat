@@ -206,9 +206,10 @@ public class KakaoPayServiceImpl implements KakaoPayService {
         
         
         HttpEntity<MultiValueMap<String, String>> body = new HttpEntity<MultiValueMap<String, String>>(params, headers);
-       
+       //ResponseEntity<원하는 클래스 타입> resultMap = restTemplate.exchange(uri.toString(), HttpMethod.GET, entity, 원하는클래스타입.class);
         try {
         	KakaoPayApprovalVO kakaoPayApprovalVO = restTemplate.postForObject(new URI(HOST + "/v1/payment/approve"), body, KakaoPayApprovalVO.class);
+        	//restTemplate.post(or get)ForObject("요청할 URI 주소", "응답내용과 자동으로 매핑시킬 java object")
             log.info("" + kakaoPayApprovalVO);
             
             //결제, 주문상세 , 주문, payment, 마일리지사용내역 테이블 트랜잭션처리
