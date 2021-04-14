@@ -268,7 +268,7 @@ $(document).ready(function(){
 				</div>
 			</a></li>
 			</c:forEach>
-			<c:if test="${empty saleList}">
+			<c:if test="${empty saleList or saleList eq null}">
 				<li class="no_date">찜한 중고거래글이 없습니다.</li>
 			</c:if>
 		</ul>

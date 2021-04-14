@@ -119,6 +119,29 @@
 		var writer = thisUrl.searchParams.get("writer");
 		$("select[name=writer]").val(writer);
 	}
+
+	function modifyProfile() {
+		var form = $("#profile_edit")[0];
+		var formData = new FormData(form);
+
+		$.ajax({
+			url : "/profile/${member.id}",
+			type : "POST",
+			enctype : "multipart/form-data",
+			data : formData,
+			contentType : false,
+			processData : false,
+			cache : false,
+			success : function(data) {
+				console.log(data);
+				alert("프로필을 수정했습니다.");
+ 				location.reload();
+			},
+			error : function(e) {
+				alert("프로필을 수정하는 도중 에러가 발생했습니다.");
+				console.log(e);
+			}
+		})
 	
 </script>
 
