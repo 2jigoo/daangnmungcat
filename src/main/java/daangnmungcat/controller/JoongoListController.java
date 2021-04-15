@@ -139,7 +139,7 @@ public class JoongoListController {
 			PrintWriter out = rs.getWriter();
 			out.print(jso.toString());
 		} catch (Exception e) {
-			System.out.println("오류");
+			System.out.println("오류!!");
 		}
 	}
 	

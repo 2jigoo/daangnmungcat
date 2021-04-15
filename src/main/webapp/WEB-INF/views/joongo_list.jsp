@@ -97,17 +97,14 @@ $(function(){
        $.ajax({
          type:"post",
          contentType:"application/json; charset=utf-8",
-         url:contextPath+"/gpsToAddress",
+         url:"/gpsToAddress",
          cache:false,
          dataType: "json",
          data:JSON.stringify(test),
-         beforeSend : function(xhr){   /*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
-            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-         },
            success:function(data){
             console.log(data.address);
             if(confirm("검색된 주소로 검색하시겠습니다? - "+ data.address1+" "+ data.address2) == true){
-               window.location=contextPath+"/joongo_list/"+ data.address1 +"/"+ data.address2;
+               window.location="/joongo_list/"+ data.address1 +"/"+ data.address2;
              }
              else{
                  return ;

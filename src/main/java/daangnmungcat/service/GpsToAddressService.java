@@ -23,7 +23,7 @@ public class GpsToAddressService {
 	private String getApiAddress() {
 		//https://maps.googleapis.com/maps/api/geocode/json?latlng=37.566535,126.977969&language=ko&key=AIzaSyCI3czUjEtTIOLyljHyhEUo6ZVhAiel4Is
 		//String apiURL = "http://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&language=ko";
-		String apiURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&language=ko&key=AIzaSyCI3czUjEtTIOLyljHyhEUo6ZVhAiel4Is";
+		String apiURL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latitude + "," + longitude + "&language=ko&key=AIzaSyBydfS3SpBFCvXonhHL9Z-FYm7wzDMTeoQ";
 		return apiURL;
 	}
 
