@@ -1,10 +1,8 @@
 package daangnmungcat.service;
 
+import java.io.File;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,8 +25,8 @@ public interface JoongoSaleService {
 	void JSHits(int id); // 게시물 조회시 조회수 증가
 
 
-	int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, HttpServletRequest request) throws Exception;
-	int updateJoongoSale(Sale sale, MultipartFile[] fileList,   MultipartFile file, HttpServletRequest request) throws Exception;
+	int insertJoongoSale(Sale sale, MultipartFile[] fileList, MultipartFile file, File realPath) throws Exception;
+	int updateJoongoSale(Sale sale, MultipartFile[] fileList,   MultipartFile file, File realPath) throws Exception;
 	int deleteJoongoSale(int id);
 	
 	List<FileForm> selectImgPath(int id);

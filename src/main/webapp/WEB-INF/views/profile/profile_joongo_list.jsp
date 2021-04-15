@@ -92,6 +92,30 @@ $(function(){
 		var state = thisUrl.searchParams.get("state");
 		$("select[name=state]").val(state);
 	}
+
+	function modifyProfile() {
+		var form = $("#profile_edit")[0];
+		var formData = new FormData(form);
+
+		$.ajax({
+			url : "/profile/${member.id}",
+			type : "POST",
+			enctype : "multipart/form-data",
+			data : formData,
+			contentType : false,
+			processData : false,
+			cache : false,
+			success : function(data) {
+				console.log(data);
+				alert("프로필을 수정했습니다.");
+ 				location.reload();
+			},
+			error : function(e) {
+				alert("프로필을 수정하는 도중 에러가 발생했습니다.");
+				console.log(e);
+			}
+		})
+	}
 </script>
 
 <div id="subContent">
@@ -165,14 +189,14 @@ $(function(){
 				<c:if test="${sale.saleState.code eq 'SOLD_OUT' }">
 					<c:choose>
 						<c:when test="${sale.reviewed eq true }">
-							<div class="review confirm">
+							<a href="/joongo/review?saleId=${sale.id }"><div class="review confirm">
 								작성한 후기 보기
-							</div>
+							</div></a>
 						</c:when>
 						<c:otherwise>
-							<div class="review send">
+							<a href="/chat/sale/${sale.id}"><div class="review send">
 								거래후기 보내기
-							</div>
+							</div></a>
 						</c:otherwise>
 					</c:choose>
 				</c:if>

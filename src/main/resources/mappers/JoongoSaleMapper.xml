@@ -10,10 +10,10 @@
 	dv.D2NAME as dongne2_name,
 	sm.grade AS mem_grade,
 	sm.profile_pic AS mem_profile_pic, 
-	DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, s.REGDATE AS regdate, REDATE, SALE_STATE,
+	DOG_CATE, CAT_CATE, TITLE, CONTENT, PRICE, s.REGDATE AS regdate, SALE_STATE,
 	BUY_MEM_ID,
 	bm.nickname AS BUY_MEM_NICkNAME,
-	HITS, CHAT_COUNT, HEART_COUNT, THUM_NAME 
+	HITS, HEART_COUNT, THUM_NAME 
 	FROM JOONGO_SALE s 
 	JOIN DONGNE_VIEW dv on s.DONGNE2_ID = dv.D2ID
 	LEFT JOIN (SELECT * FROM JOONGO_IMAGE WHERE THUM_NAME IS NOT NULL) ji ON s.ID = ji.SALE_ID
@@ -56,11 +56,10 @@
 	<result column="CAT_CATE" property="catCate"/>
 	<result column="TITLE" property="title"/>
 	<result column="CONTENT" property="content"/>
+	<result column="PRICE" property="price"/>
 	<result column="regdate" property="regdate"/>
-	<result column="REDATE" property="redate"/>
 	<result column="SALE_STATE" property="saleState" jdbcType="VARCHAR" typeHandler="daangnmungcat.dto.SaleState$TypeHandler"/>
 	<result column="HITS" property="hits"/>
-	<result column="CHAT_COUNT" property="chatCount"/>
 	<result column="HEART_COUNT" property="heartCount"/>
 	<result column="THUM_NAME" property="thumImg"/>
 	

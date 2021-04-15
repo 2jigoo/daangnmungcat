@@ -1,5 +1,6 @@
 package daangnmungcat.service;
 
+import java.io.File;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ import daangnmungcat.dto.MallProduct;
 
 @Service
 public interface MallPdtService {
-	int insertMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request);
+	int insertMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, File realPath);
 	
 	List<MallProduct> selectProductByAll();
 	List<MallProduct> selectDogByAll(Criteria cri);
@@ -38,7 +39,7 @@ public interface MallPdtService {
 	int productCatCount();
 	int productCatCateCount(int cateId);
 	
-	int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request);
+	int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, File realPath);
 
 	List<MallProduct> selectProductBySearch(@Param("product") MallProduct product, @Param("cri") Criteria cri);
 

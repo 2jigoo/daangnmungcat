@@ -108,17 +108,8 @@
             </a>
 
             <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="/admin/main">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>대시보드</span></a>
-            </li>
-
-            <!-- Divider -->
             <hr class="sidebar-divider">
+
 
             <!-- Heading -->
             <div class="sidebar-heading">
@@ -149,7 +140,6 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="/admin/joongo/list">상품 관리</a>
                         <a class="collapse-item" href="/admin/comment/list">댓글 관리</a>
-                        <a class="collapse-item" href="#">채팅 관리</a>
                         <a class="collapse-item" href="#">후기 관리</a>
                     </div>
                 </div>
@@ -182,18 +172,6 @@
             <hr class="sidebar-divider">
             
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>통계</span></a>
-            </li>
-            
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>테이블</span></a>
-            </li>
-            
-            <li class="nav-item">
                 <a class="nav-link" href="/admin/notice/list">
                     <i class="fas fa-fw fa-exclamation"></i>
                     <span>공지사항 관리</span></a>
@@ -210,7 +188,6 @@
             <!-- Sidebar Message -->
             <div class="sidebar-card">
                 <!-- <img class="sidebar-card-illustration mb-2" src="/resources/img/undraw_rocket.svg" alt=""> -->
-                <p class="text-center mb-2">ㅎㅇㅎㅇ</p>
                 <a class="btn btn-success btn-sm" href="/">GO TO USER PAGE</a>
             </div> 
 

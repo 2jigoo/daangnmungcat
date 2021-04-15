@@ -24,19 +24,15 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class MallPdtServiceImpl implements MallPdtService {
 	
+	private static final String UPLOAD_PRODUCT = File.separator + "upload" + File.separator + "product" + File.separator;
+	
 	@Autowired
 	private MallPdtMapper mapper;
 
 	@Override
-	public int insertMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request) {
+	public int insertMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, File realPath) {
 		
-		String uploadFolder = getFolder(request);
-		
-		File uploadPath = new File(uploadFolder, getFolder(request));
-		
-		if (!uploadPath.exists()) {
-			uploadPath.mkdirs();
-		}
+		System.out.println("realPath: " + realPath.getAbsolutePath());
 		
 		UUID uuid = UUID.randomUUID();
 		String savedName = null;
@@ -45,8 +41,8 @@ public class MallPdtServiceImpl implements MallPdtService {
 		if (!thumbFile.isEmpty()) {
 			try {
 				savedName = uuid.toString() +"_"+ thumbFile.getOriginalFilename();
-				product.setImage1("/upload/product/"+ savedName);
-				thumbFile.transferTo(new File(uploadFolder, savedName));
+				product.setImage1(UPLOAD_PRODUCT + savedName);
+				thumbFile.transferTo(new File(realPath, savedName));
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -61,11 +57,11 @@ public class MallPdtServiceImpl implements MallPdtService {
 			for (MultipartFile multipartFile : fileList) {
 				savedName = uuid.toString() +"_"+ multipartFile.getOriginalFilename();
 				if (num == 1) {
-					product.setImage2("/upload/product/"+ savedName);
+					product.setImage2(UPLOAD_PRODUCT + savedName);
 				} else {
-					product.setImage3("/upload/product/"+ savedName);
+					product.setImage3(UPLOAD_PRODUCT + savedName);
 				}
-				File saveFile = new File(uploadFolder, savedName);
+				File saveFile = new File(realPath, savedName);
 				try {
 					multipartFile.transferTo(saveFile);
 					num++;
@@ -82,10 +78,10 @@ public class MallPdtServiceImpl implements MallPdtService {
 		return res;
 	}
 	
-	private String getFolder(HttpServletRequest request) {
-		String path = request.getSession().getServletContext().getRealPath("resources\\upload\\product");
-		return path;
-	}
+	/*	private String getFolder(HttpServletRequest request) {
+			String path = request.getSession().getServletContext().getRealPath("resources" + File.separator + "upload" + File.separator + "product");
+			return path;
+		}*/
 
 	@Override
 	public List<MallProduct> selectProductByAll() {
@@ -144,15 +140,9 @@ public class MallPdtServiceImpl implements MallPdtService {
 	}
 
 	@Override
-	public int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, HttpServletRequest request) {
+	public int updateMallProduct(MallProduct product, MultipartFile thumbFile, List<MultipartFile> fileList, File realPath) {
 		
-		String uploadFolder = getFolder(request);
-		
-		File uploadPath = new File(uploadFolder, getFolder(request));
-		
-		if (!uploadPath.exists()) {
-			uploadPath.mkdirs();
-		}
+		System.out.println("realPath: " + realPath.getAbsolutePath());
 		
 		UUID uuid = UUID.randomUUID();
 		String savedName = null;
@@ -161,8 +151,8 @@ public class MallPdtServiceImpl implements MallPdtService {
 		if (!thumbFile.isEmpty()) {
 			try {
 				savedName = uuid.toString() +"_"+ thumbFile.getOriginalFilename();
-				product.setImage1("/upload/product/"+ savedName);
-				thumbFile.transferTo(new File(uploadFolder, savedName));
+				product.setImage1(UPLOAD_PRODUCT + savedName);
+				thumbFile.transferTo(new File(realPath, savedName));
 			} catch (IllegalStateException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -177,11 +167,11 @@ public class MallPdtServiceImpl implements MallPdtService {
 			for (MultipartFile multipartFile : fileList) {
 				savedName = uuid.toString() +"_"+ multipartFile.getOriginalFilename();
 				if (num == 1) {
-					product.setImage2("/upload/product/"+ savedName);
+					product.setImage2(UPLOAD_PRODUCT + savedName);
 				} else {
-					product.setImage3("/upload/product/"+ savedName);
+					product.setImage3(UPLOAD_PRODUCT + savedName);
 				}
-				File saveFile = new File(uploadFolder, savedName);
+				File saveFile = new File(realPath, savedName);
 				try {
 					multipartFile.transferTo(saveFile);
 					num++;

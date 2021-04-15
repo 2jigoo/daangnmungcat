@@ -114,7 +114,7 @@
 		});
 		
 		$("#check-review-btn").click(function() {
-			location.href = "/joongo/review/" + $(this).attr("review-id");			
+			location.href = "/joongo/review?id=" + $(this).attr("review-id");
 		});
 		
 		$("#customFile").on("change", function() {

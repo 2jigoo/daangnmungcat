@@ -37,7 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/mypage/**").authenticated()
 			.antMatchers("/joongoSale/addList/**", "/joongoSale/modiList/**", "/joongoSale/modify/**", "/joongoSale/delete", "/joongoSale/insert", "/joongoSale/modify", "/joongo/sale/**", "/joongoSale/pic/delete").authenticated()
 			.antMatchers("/joongo/comment/**", "/heart", "/heartNo").authenticated()
-			.antMatchers("/joongo/review/write", "/joongo/review/update", "/joongo/review/delete").authenticated()
+			.antMatchers("/joongo/review/**").authenticated()
 			.antMatchers("/chat/**", "/api/chat/message", "/go-to-chat").authenticated()
 			.antMatchers("/mall/product/write").hasRole("ADMIN")
 			.antMatchers("/mall/pre-order/**").authenticated()

@@ -1,5 +1,6 @@
 package daangnmungcat.controller;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -45,7 +46,7 @@ public class JoongoListController {
 
 	@Autowired
 	private JoongoSaleService saleService;
-
+	
 	@GetMapping("/joongo_list")
 	public String list(Model model, Criteria cri, AuthInfo loginUser) throws UnsupportedEncodingException {
 		if (loginUser == null) {
@@ -80,14 +81,8 @@ public class JoongoListController {
 		switch (cate) {
 		case 1:
 			sale.setDogCate("y");
-			sale.setCatCate("n");
 			break;
 		case 2:
-			sale.setDogCate("n");
-			sale.setCatCate("y");
-			break;
-		case 3:
-			sale.setDogCate("y");
 			sale.setCatCate("y");
 			break;
 		}
@@ -211,9 +206,7 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/insert")
-	public String add(AuthInfo loginUser, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
-		request.setCharacterEncoding("UTF-8");
-		
+	public String add(AuthInfo loginUser, Model model, HttpSession session, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 		switch (category) {
 		case 1:
 			sale.setDogCate("y");
@@ -230,7 +223,7 @@ public class JoongoListController {
 		}
 
 		sale.setMember(new Member(loginUser.getId()));
-		int res = saleService.insertJoongoSale(sale, fileList, file, request);
+		int res = saleService.insertJoongoSale(sale, fileList, file, getRealPath(session));
 		System.out.println("중고글 작성 결과: " + res);
 		int id = sale.getId();
 		String textUrl = "detailList?id=" + id;
@@ -240,8 +233,7 @@ public class JoongoListController {
 	}
 	
 	@PostMapping("/joongoSale/modify")
-	public String modify(@RequestParam int id, Model model, HttpServletRequest request, HttpServletResponse response, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
-		request.setCharacterEncoding("UTF-8");
+	public String modify(@RequestParam int id, Model model, HttpSession session, Sale sale, int category, @RequestParam("file") MultipartFile[] fileList, @RequestParam("thum") MultipartFile file) throws Exception {
 
 		switch (category) {
 		case 1:
@@ -258,7 +250,7 @@ public class JoongoListController {
 			break;
 		}
 		
-		saleService.updateJoongoSale(sale, fileList, file, request);
+		saleService.updateJoongoSale(sale, fileList, file, getRealPath(session));
 		String textUrl = "detailList?id=" + id;
 		model.addAttribute("msg", "수정되었습니다.");
 		model.addAttribute("url", textUrl);
@@ -283,7 +275,7 @@ public class JoongoListController {
 	}
 	
 	@GetMapping("/joongoSale/pic/delete")
-	public String picDel(@RequestParam int id, @RequestParam String fileName) throws Exception {
+	public String picDel(@RequestParam int id, @RequestParam String fileName, HttpSession session) throws Exception {
 		saleService.deleteSaleFile(fileName);
 		return "redirect:/joongoSale/modiList?id="+id;
 	}
@@ -308,4 +300,15 @@ public class JoongoListController {
 		
 		return "/mypage/joongo_list";
 	}
+	
+	private static File getRealPath(HttpSession session) {
+		File realPath = new File(session.getServletContext().getRealPath("resources" + File.separator + "upload" + File.separator + "joongosale"));
+		
+		if(!realPath.exists()) {
+			realPath.mkdirs();
+		}
+		
+		return realPath; 
+	}
+	
 }

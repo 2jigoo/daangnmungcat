@@ -135,25 +135,5 @@ public class WebMvcContextConfig implements WebMvcConfigurer {
 		WebMvcConfigurer.super.addArgumentResolvers(resolvers);
 	}
 	
-	
-	/*@Bean
-	public LocaleChangeInterceptor localeChangeInterceptor(){
-		LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
-		localeChangeInterceptor.setParamName("lang");
-		return localeChangeInterceptor;
-	}
-	
-	@Bean
-	public LocaleResolver localeResolver(){
-		SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-		localeResolver.setDefaultLocale(Locale.KOREAN);
-		return localeResolver;
-	}
-	
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		// TODO Auto-generated method stub
-		registry.addInterceptor(localeChangeInterceptor());
-	}*/
 
 }

@@ -33,30 +33,31 @@ $(function(){
 	            sCont += '</option>';
 	         }
 	         $("select[name=dongne1]").append(sCont);
+	         
+	         var dongne2Box = $("select[name=dongne2]");
+		     
+		     if(dongne1Name != "" && dongne1Name != "전체 선택"){
+		         dongne2Box.prop('disabled', false);
+	             dongne2Box.empty();
+	             dongne2Box.append("<option val='all'>전체 선택</option>");
+		         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
+		            var datalength = json.length; 
+		            var sCont = "";
+		            for(i=0; i<datalength; i++){
+		               if (json[i].name == "${dongne2Name}"){
+		                  sCont += '<option value="' + json[i].id + '" selected>';
+		               } else {
+		                  sCont += '<option value="' + json[i].id + '">';
+		               }
+		               sCont += json[i].name;
+		               sCont += '</option>';
+		            }
+		            dongne2Box.append(sCont);   
+		         });
+		     }
 	      }
 	   });
-	   
-	   setTimeout(function(){
-		  var dongne2Box = $("select[name=dongne2]");
-	      if (dongne1Name != ""){
-	         $.get(contextPath+"/dongne2/"+ dongne1Id, function(json){
-	            var datalength = json.length; 
-	            var sCont = "";
-	            for(i=0; i<datalength; i++){
-	               if (json[i].name == "${dongne2Name}"){
-	                  sCont += '<option value="' + json[i].id + '" selected>';
-	               } else {
-	                  sCont += '<option value="' + json[i].id + '">';
-	               }
-	               sCont += json[i].name;
-	               sCont += '</option>';
-	            }
-	            dongne2Box.prop('disabled', false);
-	            dongne2Box.empty();   
-	            dongne2Box.append(sCont);   
-	         });
-	      }
-	   }, 50);
+   
 
    
    $("select[name=dongne1]").change(function(){
@@ -69,7 +70,7 @@ $(function(){
    });
    
    $("select[name=dongne2]").change(function(){
-      if ($("select[name=dongne2]").val() == "동네를 선택하세요"){
+      if ($("select[name=dongne2]").val() == "all"){
          window.location = "<c:url value='/joongo_list/"+ dongne1Name +"' />";
       } else {
          var dong1 = $("select[name=dongne1] option:checked").text();
@@ -169,7 +170,7 @@ $(function(){
 			profile_pic:null
 		};
 		console.log(dongneData);
-    	if ($("select[name='dongne1']").val() == "전체 선택" || $("select[name='dongne2']").val() == "동네를 선택하세요"){
+    	if ($("select[name='dongne1']").val() == "전체 선택" || $("select[name='dongne2']").val() == "all"){
     		alert("저장할 동네를 검색해주세요.")
     	} else {
         	if (confirm("내 동네로 설정하시겠습니까? - "+ $("select[name='dongne1'] option:checked").text() +" "+ $("select[name='dongne2'] option:checked").text()) == true){

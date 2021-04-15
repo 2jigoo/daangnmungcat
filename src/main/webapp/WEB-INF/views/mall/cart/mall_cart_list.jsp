@@ -212,7 +212,7 @@ function deleteCartItems(items) {
 									<a href="/mall/product/${cart.product.id }">
 										<div product-id="${cart.product.id}">
 											<c:if test="${cart.product.image1 eq null}"><img src="/resources/images/no_image.jpg"></c:if>
-											<c:if test="${cart.product.image1 ne null}"><img src="/resources${pdt.image1}"></c:if>
+											<c:if test="${cart.product.image1 ne null}"><img src="/resources${cart.product.image1}"></c:if>
 										</div>
 									</a>
 								</td>

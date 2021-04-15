@@ -473,5 +473,21 @@ FROM (SELECT rownum as rnum, a.*
 	ORDER BY rnum;
 	
 
-SELECT * FROM JOONGO_SALE js
-WHERE MEM_ID = 'chattest1' AND SALE_STATE = '판매 완료';
+SELECT * FROM JOONGO_REVIEW jr ;
+
+
+SELECT ID, MEM_ID, MEM_NAME, MEM_EMAIL, MEM_PHONE, ADDRESS_NAME, ZIPCODE,
+		ADDRESS1, ADDRESS2, ADDRESS_PHONE1, ADDRESS_PHONE2, ADDRESS_MEMO, TOTAL_PRICE,
+		USED_MILEAGE, FINAL_PRICE, PLUS_MILEAGE, DELIVERY_PRICE, tracking_number, 
+		ADD_DELIVERY_PRICE, PAY_ID, PAY_DATE, REGDATE, RETURN_PRICE, CANCEL_PRICE, 
+		STATE, shipping_date, settle_case, misu, COUNT(*)OVER(PARTITION BY MEM_ID) AS order_cnt 
+FROM mall_order WHERE regdate >= TRUNC(add_months(sysdate, -1))
+	and mem_id = 'chattest1' order by regdate DESC;
+	
+SELECT to_date(to_char(add_months(sysdate,-1),'yyyy-mm-dd')), TRUNC(add_months(sysdate, -1)) FROM dual;
+
+SELECT * FROM JOONGO_IMAGE ji ;
+
+UPDATE joongo_image
+SET image_name = 'upload/joongosale/1_KakaoTalk_20200417_190801824_01.jpg'
+WHERE id = 22;

@@ -15,13 +15,10 @@ import org.springframework.stereotype.Service;
 import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Authority;
 import daangnmungcat.dto.Member;
-import daangnmungcat.exception.WrongIdPasswordException;
 import daangnmungcat.service.AuthoritiesService;
 import daangnmungcat.service.MemberService;
-import lombok.extern.log4j.Log4j2;
 
 @Service
-@Log4j2
 public class CustomUserDetailService implements UserDetailsService {
 
 	@Autowired
@@ -35,7 +32,7 @@ public class CustomUserDetailService implements UserDetailsService {
 		Member member = memberService.selectMemberById(id);
 		
 		if(member == null) {
-			throw new WrongIdPasswordException();
+			throw new UsernameNotFoundException(id);
 		}
 		
 		AuthInfo authInfo = new AuthInfo(member.getId(), member.getPwd(), member.getNickname(), member.getDongne1(), member.getDongne2(), member.getProfilePic(), member.getGrade());

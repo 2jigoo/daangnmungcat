@@ -158,7 +158,6 @@
             	<a href="/admin/notice/write" id="addBtn" class="btn btn-success btn-sm" style="float: right;  margin-right: 10px;"><span class="text">등록</span></a>
 				<button id="deselectAll" class="btn btn-outline-secondary btn-sm" style="float: right;  margin-right: 10px;">선택해제</button>
 				<button id="selectAll" class="btn btn-secondary btn-sm" style="float: right;  margin-right: 10px;">전체선택</button>
-	           	<button id="deleteSelected"class="btn btn-danger btn-sm" style="float: right; margin-right: 10px;">예약 취소</button>
 		</h6>
 	</div>
 	<!-- card-body -->
@@ -191,7 +190,7 @@
 						<div class="col-sm-12 col-md-12 p-0">
 							<div class="form-inline justify-content-center" style="height: 32px;">
 								<div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-								  <span class="btn btn-sm btn-outline-secondary active" style="cursor: default;">가입일 기준</span>
+								  <span class="btn btn-sm btn-outline-secondary active" style="cursor: default;">작성일 기준</span>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" id="allBtn">전체</button>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="1" id="todayBtn">오늘</button>
 								  <button type="button" class="btn btn-sm btn-outline-secondary dateBtn" value="7" id="aWeekBtn">1주</button>

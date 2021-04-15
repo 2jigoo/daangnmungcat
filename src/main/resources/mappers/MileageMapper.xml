@@ -82,7 +82,7 @@
 				FROM (SELECT ROWNUM, ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
 		FROM MALL_MILEAGE 
 	<where>
-		<if test="member != null">and MEM_ID LIKE '%'||#{member.id}||'%' </if>
+		<if test="member != null">and MEM_ID = '%'||#{member.id}||'%' </if>
 	</where>
 		ORDER BY ID DESC) B)A 
 	</select>
