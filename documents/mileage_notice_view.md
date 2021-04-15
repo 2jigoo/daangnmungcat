@@ -21,7 +21,6 @@
 ## 마일리지 등록
 
 <img src="https://user-images.githubusercontent.com/75772990/114681171-d879d000-9d48-11eb-86a0-fb5d0517c132.png" width="400px">
-![image](#m)
 
 </br>
 
