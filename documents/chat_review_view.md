@@ -18,7 +18,7 @@
 
 ## 대화창 화면
 
-<img src="" width="600px">
+<img src="https://user-images.githubusercontent.com/75772990/114674036-c5afcd00-9d41-11eb-8de7-e7e0d6dca9b7.png" width="600px">
 
 <img src="https://user-images.githubusercontent.com/75772990/114678010-cc404380-9d45-11eb-8dc2-2c36d732d1cd.png" width="600px">
 
