@@ -41,13 +41,6 @@
 		});
 		
 		$("#endDate").datepicker("update", dateToString(new Date()));
-		/* $("#startDate").change(function(){
-			console.log("startDate: " + this.value);
-			$("#endDate").datepicker({
-				startDate: $("#startDate").val()
-			});
-		}); */
-		
 		
 		$("select[name=state]").change(function(){
 			document.searchForm.submit();
@@ -104,7 +97,15 @@
 				e.preventDefault();
 			}
 		});
-		
+
+		$("#selectAll").click(function() {
+			$(".ckbox").prop("checked", true);
+		});
+
+		$("#deselectAll").click(function() {
+			$(".ckbox").prop("checked", false);
+		});
+
 	})
 	
 	
@@ -271,11 +272,6 @@
 	
 </script>
 <!-- Page Heading -->
-<!--<h1 class="h3 mb-2 text-gray-800 font-weight">목록 템플릿</h1>
-<p class="mb-4">
-	여기에 간단한 설명 추가해주세요. 이렇게 링크도 달아도 됩니다.
-	<a target="_blank" href="https://datatables.net">링크</a>
-</p> -->
 
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
@@ -385,7 +381,7 @@
 								<label>
 									<input type="search" name="keyword" class="form-control form-control-sm" placeholder="" aria-controls="dataTable">
 								</label>
-								<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn"></input>
+								<input type="submit" class="btn btn-primary btn-sm" value="검색" id="searchBtn">
 								<input type="hidden" name="page" value="1">
 							</div>
 						</div>
@@ -437,8 +433,8 @@
 								<a href="#" class="btn bg-gray-200 btn-sm detailViewButton"><span class="text-gray-800">회원 정보</span></a>
 							</td>
 							<td>
-								<a href="#" class="btn bg-warning btn-sm bookingToOrderButton"><span class="text-gray-800">주문내역</span></a>
-								<a href="#" class="btn btn-danger btn-sm deleteButton" ><span class="text">커뮤니티</span> </a>
+								<a href="/admin/joongo/list?id=${member.id}" class="btn btn-info btn-sm" ><span class="text">거래글</span></a>
+								<a href="/admin/order/list?search=mem_id&query=${member.id}&state=&settle_case=전체" class="btn bg-warning btn-sm"><span class="text-gray-800">주문내역</span></a>
 							</td>
 						</tr>
 						</c:forEach>

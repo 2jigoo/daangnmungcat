@@ -48,10 +48,8 @@
 	</select>
 	
 	<select id="listCount" parameterType="map" resultType="int">
-		SELECT count(a.id)
-		FROM (SELECT ROWNUM AS RNUM, B.*
-		FROM (SELECT ROWNUM, ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
-		FROM MALL_MILEAGE )B)A
+		SELECT count(id)
+		FROM MALL_MILEAGE
 	</select>
 	
 	<select id="selectMileageByAll" resultMap="mileRes">
@@ -71,20 +69,18 @@
 			<if test="mileage.content !=null">and content like '%'||#{mileage.content}||'%'</if>
 			<if test="mileage.member !=null">and mem_id like '%'||#{mileage.member.id}||'%'</if>
 			<if test="mileage.order !=null">and od_id like '%'||#{mileage.order.id}||'%'</if>
-		</where>)b)a
+		</where>
+		ORDER BY id DESC)b)a
 		WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 		order by a.rnum		
 	</select>
 	
 	<select id="mileageSearchCount" parameterType="Mileage" resultType="int">
-		SELECT COUNT(A.ID)
-			FROM (SELECT ROWNUM AS RNUM, B.*
-				FROM (SELECT ROWNUM, ID, OD_ID, MEM_ID, MILEAGE, CONTENT, REGDATE
+		SELECT COUNT(ID)
 		FROM MALL_MILEAGE 
 	<where>
 		<if test="member != null">and MEM_ID = '%'||#{member.id}||'%' </if>
 	</where>
-		ORDER BY ID DESC) B)A 
 	</select>
 	
 	<select id="selectMileageInfoById" parameterType="int" resultMap="mileRes">

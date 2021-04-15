@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/views/admin/include/header.jsp" %>
+<style>
+	tbody td {text-align: center;}
+	tbody td:nth-child(5) {text-align: left;}
+</style>
 <script>
 $(function(){
 	var contextPath = "<%=request.getContextPath()%>";
@@ -80,13 +84,13 @@ $(function(){
 	
 		<table class="adm_table_style1">
 			<colgroup>
-				<col width="5%">
-				<col width="7%">
-				<col width="25%">
-				<col width="15%">
-				<col width="27%">
-				<col width="10%">
-				<col width="12%">
+				<col width="100px">
+				<col width="160px">
+				<col width="160px">
+				<col width="100px">
+				<col>
+				<col width="170px">
+				<col width="128px">
 			</colgroup>
 			<thead>
 				<tr>

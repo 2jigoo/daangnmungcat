@@ -3,12 +3,11 @@ package daangnmungcat.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import daangnmungcat.dto.AuthInfo;
 import daangnmungcat.dto.Criteria;
 import daangnmungcat.dto.Member;
 import daangnmungcat.dto.Mileage;
@@ -24,10 +23,10 @@ public class MileageController {
 	private MileageService mileageService;
 
 	@GetMapping("/mypage/mileage/list")
-	public String mileageMypageList(Model model, @RequestParam @Nullable String memId, Criteria cri) {
+	public String mileageMypageList(Model model, AuthInfo loginUser, Criteria cri) {
 	
 		Mileage mile = new Mileage();
-		mile.setMember(new Member(memId));
+		mile.setMember(new Member(loginUser.getId()));
 		List<Mileage> list = mileageService.selectMileageBySearch(mile, cri);
 		model.addAttribute("list",list);
 		

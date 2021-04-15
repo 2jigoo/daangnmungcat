@@ -41,7 +41,8 @@
 			</thead>
 			<c:forEach var="list" items="${list }">
 				<tr class="board">
-					<td>${list.order.id }</td>
+					${list.order}
+					<td><c:if test="${list.order.id ne null}"><a href="/mypage/mypage_order_list?id=${list.order.id}">${list.order.id }</a></c:if></td>
 					<td>${list.content }</td>
 					<td><fmt:formatNumber value="${list.mileage}"></fmt:formatNumber> 원</td>
 					<td><javatime:format value="${list.regDate }" pattern="yyyy-MM-dd HH:mm"/></td>
@@ -50,7 +51,7 @@
 
 			<!-- 글 없는 경우 -->
 			<c:if test="${empty list}">
-				<td colspan="5" class="no_date">등록된 글이 없습니다.</td>
+				<td colspan="4" class="no_date">마일리지 적립내역이 없습니다.</td>
 			</c:if>
 		</table>
 		

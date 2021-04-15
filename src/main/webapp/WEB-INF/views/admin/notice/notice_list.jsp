@@ -72,6 +72,14 @@
 				e.preventDefault();
 			}
 		});
+
+		$("#selectAll").click(function() {
+			$(".ckbox").prop("checked", true);
+		});
+
+		$("#deselectAll").click(function() {
+			$(".ckbox").prop("checked", false);
+		});
 		
 	})
 	
