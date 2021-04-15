@@ -50,14 +50,3 @@
 <img src="https://user-images.githubusercontent.com/75772990/114680152-d3685100-9d47-11eb-9d28-2960ce77eeab.png" width="200px">
 
 
-## 카테고리
-
-<img src="https://user-images.githubusercontent.com/75772990/114680552-47a2f480-9d48-11eb-9c20-e1311941a8cc.png" width="400px">
-
-<br>
-
-## 상품 관리
-
-<img src="https://user-images.githubusercontent.com/75772990/114680631-58536a80-9d48-11eb-82d3-29ea38f16beb.png" width="600px">
-
-<img src="https://user-images.githubusercontent.com/75772990/114681687-5a69f900-9d49-11eb-89f2-550120126b7d.png" width="400px">
