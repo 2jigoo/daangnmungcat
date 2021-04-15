@@ -485,8 +485,7 @@ $(document).on("click", ".go_to_chat_btn", function(e) {
 		      </section>
 	      
 		      <section id="section_profile">
-		         <a id="section_profile_link" href="/mypage/mypage_main">
-		        <%--  <a id="section_profile_link" href="/joongo/review/list?memId=${sale.member.id}"> --%>
+		         <a id="section_profile_link" href="/profile/${sale.member.id}">
 		            <div>
 		               <div id="section_profile_img">
 		                        <img alt="프로필" src="<%=request.getContextPath() %>/resources/${sale.member.profilePic}">
