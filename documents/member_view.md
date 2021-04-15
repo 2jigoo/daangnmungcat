@@ -1,25 +1,3 @@
-<style>
-img
-{
-    display:block; 
-    float:none; 
-    margin: 60px auto;
-    width:600px;
-}
-
-img[src *= "#l"] {
-    width: 100%;
-}
-
-img[src *= "#m" ] {
-    width: 400px;
-}
-
-img[src *= "#s" ] {
-    width: 300px;
-}
-</style>
-
 ### 파트별 상세 설명
 - [README.md](https://github.com/ssuktteok/daangnmungcat#readme)
 - [회원 및 프로필 / 마이페이지](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/member_view.md)
@@ -36,21 +14,21 @@ img[src *= "#s" ] {
 
 ## 프로필 수정 모달
 
-![daangnmungcat herokuapp com_profile_edit](https://user-images.githubusercontent.com/75772990/114681697-5c33bc80-9d49-11eb-92ba-6bde084f3f14.png#s)
+<img src="https://user-images.githubusercontent.com/75772990/114681697-5c33bc80-9d49-11eb-92ba-6bde084f3f14.png" width="300px">
 
 <br>
 
 ## 프로필 판매 상품 - 거래 완료
 
-![image](https://user-images.githubusercontent.com/75772990/114679605-458c6600-9d47-11eb-9fb4-bb73784764c6.png#m)
+<img src="https://user-images.githubusercontent.com/75772990/114679605-458c6600-9d47-11eb-9fb4-bb73784764c6.png" width="200px">
 
 <br>
 
 # 마이페이지
 
-![daangnmungcat herokuapp com_mypage_mypage_main](https://user-images.githubusercontent.com/75772990/114681696-5b9b2600-9d49-11eb-8a7a-ce2227491b2b.png#l)
+<img src="https://user-images.githubusercontent.com/75772990/114681696-5b9b2600-9d49-11eb-8a7a-ce2227491b2b.png" width="600px">
 
 
 # 회원 관리
 
-![image](https://user-images.githubusercontent.com/75772990/114680328-027ec280-9d48-11eb-8d86-c7bef3de13e3.png#l)
+![image](https://user-images.githubusercontent.com/75772990/114680328-027ec280-9d48-11eb-8d86-c7bef3de13e3.png)
