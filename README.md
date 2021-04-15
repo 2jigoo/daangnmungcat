@@ -1,11 +1,23 @@
 # 당근멍캣 프로젝트
+<div>
+<img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white">
+<img src="http://img.shields.io/badge/Spring_&_Spring_Secuirty-6DB33F?style=for-the-badge&logo=Spring&logoColor=white">
+<img src="http://img.shields.io/badge/Oracle_DBMS-F80000?style=for-the-badge&logo=Oracle&logoColor=white">
+<img src="https://img.shields.io/badge/MyBatis-060606?style=for-the-badge">
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=HTML5&logoColor=white">
+<img src="https://img.shields.io/badge/css3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+<img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+<img src="https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jQuery&logoColor=white">
+</div>
+<br>
+
 **http://daangnmungcat.herokuapp.com/**
+
 
 **당근마켓 클론 및 쇼핑몰 프로젝트**
 
 - 거래지역을 현재 위치 또는 특정 지역으로 설정 후, 반려동물 용품을 중고 거래할 수 있는 서비스
 - 반려동물 용품 쇼핑몰 서비스
-
 
 <br>
 
@@ -39,7 +51,7 @@
 
 ### 1. 지역 설정
 
->GPS 정보 수집 동의 후 현재 위치의 시/구를 '내 동네'로 설정한다.  
+>**Google Maps**를 이용해 GPS 정보 수집 후 현재 위치의 시/구를 '내 동네'로 설정한다.  
 택배 거래를 위해 다른 지역을 설정할 수도 있다.
 　
 
@@ -57,7 +69,7 @@
 
 ### 4. 1:1 대화
 
-Stomp 프로토콜을 이용한 채팅  
+**Stomp 프로토콜**을 이용한 채팅  
 읽음 여부 확인, 이미지 파일 전송 가능. 구매자 지정과 함께 판매완료 처리.
 
 
