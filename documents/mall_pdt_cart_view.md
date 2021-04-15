@@ -1,25 +1,3 @@
-<style>
-img
-{
-    display:block; 
-    float:none; 
-    margin: 60px auto;
-    width:600px;
-}
-
-img[src *= "#l"] {
-    width: 100%;
-}
-
-img[src *= "#m" ] {
-    width: 400px;
-}
-
-img[src *= "#s" ] {
-    width: 300px;
-}
-</style>
-
 ### 파트별 상세 설명
 - [README.md](https://github.com/ssuktteok/daangnmungcat#readme)
 - [회원 및 프로필 / 마이페이지](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/member_view.md)
@@ -36,10 +14,10 @@ img[src *= "#s" ] {
 
 ## 상품
 
-![image](https://user-images.githubusercontent.com/75772990/114679656-563cdc00-9d47-11eb-8a0c-8b021d5eebcd.png)
+<img src="https://user-images.githubusercontent.com/75772990/114679656-563cdc00-9d47-11eb-8a0c-8b021d5eebcd.png" width=600px">
 
 <br>
 
 ## 장바구니
 
-![image](https://user-images.githubusercontent.com/75772990/114674691-76b66780-9d42-11eb-9416-e783b8d95f6a.png)
+<img src="https://user-images.githubusercontent.com/75772990/114674691-76b66780-9d42-11eb-9416-e783b8d95f6a.png" width=600px">
