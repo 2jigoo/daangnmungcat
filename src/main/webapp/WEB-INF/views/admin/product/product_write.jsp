@@ -168,14 +168,32 @@ $(document).on("change", "select[name='deliveryKind']", function(){
 					<li>
 						<p>상품 썸네일 이미지</p>
 						<div>
-							<input multiple="multiple" type="file" name="thumbFile" accept="image/*">
+							<input multiple="multiple" type="file" name="thumbFile" accept="image/*" class="admin_pdt_image">
+							<div class="admin_product_img">
+								<img src="#" width="30px">
+								<p class="delete">이미지 삭제</p>
+								<p class="view">이미지 보기</p>
+								<img src="#">
+							</div>
 						</div>
 					</li>
 					<li>
 						<p>상품 상세 이미지</p>
 						<div>
-							<input multiple="multiple" type="file" name="file">
-							<input multiple="multiple" type="file" name="file">
+							<input multiple="multiple" type="file" name="file" class="admin_pdt_image">
+							<div class="admin_product_img">
+								<img src="#" width="30px">
+								<p class="delete">이미지 삭제</p>
+								<p class="view">이미지 보기</p>
+								<img src="#">
+							</div>
+							<input multiple="multiple" type="file" name="file" class="admin_pdt_image">
+							<div class="admin_product_img">
+								<img src="#" width="30px">
+								<p class="delete">이미지 삭제</p>
+								<p class="view">이미지 보기</p>
+								<img src="#">
+							</div>
 						</div>
 					</li>
 				</ul>

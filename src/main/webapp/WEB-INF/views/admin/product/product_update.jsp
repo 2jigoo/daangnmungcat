@@ -183,20 +183,37 @@ $(function(){
 					<li>
 						<p>상품 썸네일 이미지</p>
 						<div>
-							<input multiple="multiple" type="file" name="thumbFile" accept="image/*">
-							<input type="hidden" name="image1" value="${pdt.image1}">
+							<input multiple="multiple" type="file" name="thumbFile" accept="image/*" class="admin_pdt_image">
+							
+							<div class="admin_product_img" <c:if test="${not empty pdt.image1}">style="display:block"</c:if>>
+								<img src="<c:url value="/resources${pdt.image1}"/>" width="30px">
+								<p class="delete">이미지 삭제</p>
+								<p class="view">이미지 보기</p>
+								<img src="<c:url value="/resources${pdt.image1}"/>">
+							</div>
 						</div>
 					</li>
 					<li>
 						<p>상품 상세 이미지</p>
 						<div>
-							<input multiple="multiple" type="file" name="file">
-							<input type="hidden" name="image2" value="${pdt.image2}">
-							<input multiple="multiple" type="file" name="file">
-							<input type="hidden" name="image3" value="${pdt.image3}">
+							<input multiple="multiple" type="file" name="file" class="admin_pdt_image">
+							<div class="admin_product_img" <c:if test="${not empty pdt.image2}">style="display:block"</c:if>>
+								<img src="<c:url value="/resources${pdt.image2}"/>" width="30px">
+								<p class="delete">이미지 삭제</p>
+								<p class="view">이미지 보기</p>
+								<img src="<c:url value="/resources${pdt.image2}"/>">
+							</div>
+							<input multiple="multiple" type="file" name="file" class="admin_pdt_image">
+							<div class="admin_product_img" <c:if test="${not empty pdt.image3}">style="display:block"</c:if>>
+								<img src="<c:url value="/resources${pdt.image3}"/>" width="30px">
+								<p class="delete">이미지 삭제</p>
+								<p class="view">이미지 보기</p>
+								<img src="<c:url value="/resources${pdt.image3}"/>">
+							</div>
 						</div>
 					</li>
 				</ul>
+				<input type="hidden" id="isChanged" name="isChanged" value="false">
 				
 				<a href="#" class="history_back_btn fr ml5">목록</a>
 				<input type="submit" id="pdt_update_btn" value="수정">
