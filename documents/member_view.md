@@ -33,6 +33,10 @@
 <img src="https://user-images.githubusercontent.com/75772990/114681696-5b9b2600-9d49-11eb-8a7a-ce2227491b2b.png" width="600px">
 
 
+
+
 # 회원 관리
 
-![image](https://user-images.githubusercontent.com/75772990/114680328-027ec280-9d48-11eb-8d86-c7bef3de13e3.png)
+![image](https://user-images.githubusercontent.com/75772990/114857055-cd936e00-9e22-11eb-85a3-68e188888561.png)
+
+날짜 / 상태 / 등급 / 동네 / 검색어 필터링
