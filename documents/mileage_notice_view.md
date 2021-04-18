@@ -14,7 +14,7 @@
 
 ## 마일리지 확인
 
-프로필 - 마일리지 캡쳐
+<img src="https://user-images.githubusercontent.com/75772990/115137831-53056100-a063-11eb-9618-475f37bfd76a.png" width="600px">
 
 </br>
 
@@ -36,16 +36,25 @@
 ## 사용자 화면
 
 <img src="https://user-images.githubusercontent.com/75772990/114668774-14f2ff00-9d3c-11eb-950e-f707e1b84651.png" width="600px">
-![image]()
 
-<img src="https://user-images.githubusercontent.com/75772990/114668837-263c0b80-9d3c-11eb-83e8-411fa8fb22cc.png" width="600px">
-![image]()
+</br>
+</br>
+
+중요 공지사항을 상단에 노출
+
+
+<br>
+
+<img src="https://user-images.githubusercontent.com/75772990/115137595-f3f31c80-a061-11eb-87ac-a67a059ae343.png" width="600px">
+
+게시글 조회시 하단에 이전글, 다음글 노출
+
 
 </br>
 
 ## 공지사항 목록
 
-![image](https://user-images.githubusercontent.com/75772990/114681407-1676f400-9d49-11eb-9ee1-a49dbe44aaa6.png)
+![image](https://user-images.githubusercontent.com/75772990/115137870-89db7700-a063-11eb-8cd8-fa13d2661d02.png)
 
 </br>
 
@@ -53,3 +62,4 @@
 
 <img src="https://user-images.githubusercontent.com/75772990/114681673-58a03580-9d49-11eb-80bb-6103225aa937.png" width="400px">
 
+첨부 이미지 썸네일 및 파일명 확인 가능 

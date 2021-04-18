@@ -1,25 +1,3 @@
-<style>
-img
-{
-    display:block; 
-    float:none; 
-    margin: 60px auto;
-    width:600px;
-}
-
-img[src *= "#l"] {
-    width: 100%;
-}
-
-img[src *= "#m" ] {
-    width: 400px;
-}
-
-img[src *= "#s" ] {
-    width: 300px;
-}
-</style>
-
 ### 파트별 상세 설명
 - [README.md](https://github.com/ssuktteok/daangnmungcat#readme)
 - [회원 및 프로필 / 마이페이지](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/member_view.md)
@@ -37,26 +15,30 @@ img[src *= "#s" ] {
 
 ## 주문 화면
 
-![daangnmungcat herokuapp com_mall_pre-order_list](https://user-images.githubusercontent.com/75772990/114681694-5b9b2600-9d49-11eb-8001-7886a4e0729e.png)
+<img src="https://user-images.githubusercontent.com/75772990/114681694-5b9b2600-9d49-11eb-8001-7886a4e0729e.png" width="600px">
 
 <br>
 
 ## 주문 완료 화면
 
-![daangnmungcat herokuapp com_mall_order_order_end](https://user-images.githubusercontent.com/75772990/114681691-5b028f80-9d49-11eb-8b5c-54f665ba0452.png)
+
+<img src="https://user-images.githubusercontent.com/75772990/114681691-5b028f80-9d49-11eb-8b5c-54f665ba0452.png" width="400px">
 
 <br>
 
 ## 주문 내역
 
-![image](https://user-images.githubusercontent.com/75772990/114679726-65238e80-9d47-11eb-9b49-a6018a851353.png)
+<img src="https://user-images.githubusercontent.com/75772990/114679726-65238e80-9d47-11eb-9b49-a6018a851353.png">
 
+<br>
 
 # 주문 관리
 
 ## 주문 목록
 
 ![daangnmungcat herokuapp com_admin_order_list](https://user-images.githubusercontent.com/75772990/114681683-59d16280-9d49-11eb-8fef-e2ec9a10c2a5.png)
+
+<br>
 
 ## 주문 상세
 
