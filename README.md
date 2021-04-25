@@ -22,7 +22,7 @@
 <br>
 
 #### 팀원
-- [ssuktteok](https://github.com/ssuktteok) - 스프링 시큐리티, 채팅, 장바구니, 공지사항, 프로필
+- [ssuktteok](https://github.com/2jigoo) - 스프링 시큐리티, 채팅, 장바구니, 공지사항, 프로필
 - [xoxohjkim](https://github.com/xoxohjkim) - 회원, 주문(카카오페이), 배송지 설정, 마이페이지
 - [22seungIs](https://github.com/22seungIs) - 중고거래글, 마일리지
 - [5sujung](https://github.com/5sujung) - 내동네, 중고거래 댓글, 리뷰, 쇼핑몰 상품관리
@@ -133,12 +133,12 @@
 <br>
 
 ## 파트별 상세 설명
-- [README.md](https://github.com/ssuktteok/daangnmungcat#readme)
-- [회원 및 프로필 / 마이페이지](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/member_view.md)
-- [중고거래](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/joongo_view.md)
-- [1:1 채팅 및 리뷰](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/chat_review_view.md)
-- [쇼핑몰 상품 및 장바구니](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/mall_pdt_cart_view.md)
-- [쇼핑몰 주문](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/order_view.md)
-- [마일리지 및 공지사항](https://github.com/ssuktteok/daangnmungcat/blob/master/documents/mileage_notice_view.md)
+- [README.md](https://github.com/2jigoo/daangnmungcat#readme)
+- [회원 및 프로필 / 마이페이지](https://github.com/2jigoo/daangnmungcat/blob/master/documents/member_view.md)
+- [중고거래](https://github.com/2jigoo/daangnmungcat/blob/master/documents/joongo_view.md)
+- [1:1 채팅 및 리뷰](https://github.com/2jigoo/daangnmungcat/blob/master/documents/chat_review_view.md)
+- [쇼핑몰 상품 및 장바구니](https://github.com/2jigoo/daangnmungcat/blob/master/documents/mall_pdt_cart_view.md)
+- [쇼핑몰 주문](https://github.com/2jigoo/daangnmungcat/blob/master/documents/order_view.md)
+- [마일리지 및 공지사항](https://github.com/2jigoo/daangnmungcat/blob/master/documents/mileage_notice_view.md)
 
 
